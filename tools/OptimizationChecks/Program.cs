@@ -177,6 +177,24 @@ long guideCached = Allocations(() => RoleGuideSync.CurrentSignature(config));
 long guideCold = Allocations(() => { RoleGuideSync.Invalidate(); RoleGuideSync.CurrentSignature(config); });
 Check(assignmentCached < assignmentCold, "Assignment allocation reduction");
 Check(guideCached < guideCold, "Guide allocation reduction");
+// New languages consume the host's V2 English text without substituting guest values.
+SemiFunc.Multiplayer = true;
+PhotonNetwork.IsMasterClient = false;
+PhotonNetwork.CurrentRoom = new TestRoom();
+string hostText = "Increases maximum health by setting the Health upgrade to level 937.";
+string encoded = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(hostText));
+string japaneseText = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("ホスト937"));
+PhotonNetwork.CurrentRoom.CustomProperties["RoleShuffleGuideV2"] = string.Join(";", RoleCatalog.AllRoles.Select(role => $"{(int)role}:{encoded}:{japaneseText}"));
+foreach (var language in Enum.GetValues<RoleGuideLanguage>().Where(RoleLanguage.NeedsTranslation))
+{
+    var received = RoleGuideSync.Read(config, language);
+    Check(received[StageRole.Tank].Contains("937") && received[StageRole.Tank] != hostText, "Translated host values: " + language);
+    Check(ReferenceEquals(received, RoleGuideSync.Read(config, language)), "Cached translated host values: " + language);
+}
+PhotonNetwork.CurrentRoom.CustomProperties.Remove("RoleShuffleGuideV2");
+PhotonNetwork.CurrentRoom.CustomProperties["RoleShuffleGuideV1"] = string.Join(";", RoleCatalog.AllRoles.Select(role => $"{(int)role}:{encoded}"));
+Check(RoleGuideSync.Read(config, RoleGuideLanguage.Korean)[StageRole.Tank].Contains("937"), "Legacy host values in Korean");
+Check(RoleGuideSync.Read(config, RoleGuideLanguage.English)[StageRole.Tank] == hostText, "Switch back to English");
 Console.WriteLine($"PASS: {assertions} assertions.");
 Console.WriteLine($"5000 reads, 30 assignments: cached {assignmentCached:N0} bytes; forced reparse {assignmentCold:N0} bytes.");
 Console.WriteLine($"5000 guide signatures (stub role text): cached {guideCached:N0} bytes; forced regeneration {guideCold:N0} bytes.");

@@ -61,11 +61,14 @@ internal static class BaseUpgradeHistory
         RoleSyncStatus.Instance?.PublishNow();
     }
 
-    internal static string Describe(UpgradeDrawRecord record, bool japanese)
+    internal static string Describe(UpgradeDrawRecord record, bool japanese) =>
+        Describe(record, japanese ? RoleGuideLanguage.Japanese : RoleGuideLanguage.English);
+
+    internal static string Describe(UpgradeDrawRecord record, RoleGuideLanguage language)
     {
-        string target = record.Upgrade < 0 ? (japanese ? "全アップグレード" : "All Upgrades")
+        string target = record.Upgrade < 0 ? RoleText.Get("All Upgrades", language, "全アップグレード")
             : DrawHistoryStore.UpgradeNames[record.Upgrade];
-        StringBuilder text = new($"#{record.Number}  Level {record.Level}  {target}  {record.Delta:+0;-0;0}\n");
+        StringBuilder text = new($"#{record.Number}  {RoleText.Get("Level", language, "ステージ")} {record.Level}  {target}  {record.Delta:+0;-0;0}\n");
         bool changed = false;
         for (int i = 0; i < record.Before.Length; i++)
         {
@@ -74,7 +77,7 @@ internal static class BaseUpgradeHistory
             changed |= delta != 0;
             text.AppendLine($"  {DrawHistoryStore.UpgradeNames[i]}: {record.Before[i]} → {record.After[i]} ({delta:+0;-0;0})");
         }
-        if (!changed) text.AppendLine(japanese ? "  変化なし（抽選値0、または上限・下限）" : "  No change (zero draw or level limit)");
+        if (!changed) text.AppendLine("  " + RoleText.Get("No change (zero draw or level limit)", language, "変化なし（抽選値0、または上限・下限）"));
         return text.ToString().TrimEnd();
     }
 }
@@ -157,9 +160,11 @@ internal sealed class RoleSyncStatus : MonoBehaviour
         PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { [RequestKey] = _requestedAt.Value });
     }
 
-    internal string Describe(bool ja)
+    internal string Describe(bool ja) => Describe(ja ? RoleGuideLanguage.Japanese : RoleGuideLanguage.English);
+
+    internal string Describe(RoleGuideLanguage language)
     {
-        string Pick(string en, string jp) => ja ? jp : en;
+        string Pick(string en, string jp) => RoleText.Get(en, language, jp);
         if (PhotonNetwork.CurrentRoom == null) return Pick("Local / no room", "ローカル / ルーム未参加");
         if (PhotonNetwork.IsMasterClient) return Pick("Host — publishing display data", "ホスト — 表示データを配信中");
         string? stamp = Property(StampKey);
@@ -176,7 +181,7 @@ internal sealed class RoleSyncStatus : MonoBehaviour
                 ? Pick("Waiting for new host", "新しいホストからの同期を待機中")
                 : Pick("New host data unavailable / status may be unsupported", "新しいホストのデータ未受信 / 状態表示に未対応の可能性あり");
         int age = SyncStamp.AgeMilliseconds(PhotonNetwork.ServerTimestamp, sent);
-        string suffix = $"\nHost v{version} / Local v{StageRolesPlugin.PluginVersion}";
+        string suffix = "\n" + RoleText.Format("Host v{0} / Local v{1}", language, version, StageRolesPlugin.PluginVersion);
         if (age < -1000 || age > 20000) return Pick("Host updates delayed", "ホストの更新が遅延しています") + suffix;
         string?[] payloads = Keys.Select(Property).ToArray();
         if (_cachedStamp != stamp || !_cachedPayloads.SequenceEqual(payloads))

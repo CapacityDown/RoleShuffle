@@ -47,7 +47,7 @@ internal sealed class RoleHudEditor : MonoBehaviour
     private RoleHud _preview = null!;
     private HudLayoutSettings _draft = null!;
     private TMP_FontAsset _font = null!;
-    private bool _japanese;
+    private RoleGuideLanguage _language;
     private TextMeshProUGUI _status = null!;
     private readonly List<(RectTransform Rect, Image Background, TextMeshProUGUI Label, Func<string> Text, Action Click)> _buttons = new();
     private readonly List<(Behaviour Component, bool Enabled)> _disabled = new();
@@ -61,13 +61,13 @@ internal sealed class RoleHudEditor : MonoBehaviour
     private int _openedFrame;
     private bool _closed;
 
-    internal static void Open(StageRolesConfig config, REPOPopupPage page, TMP_FontAsset font, bool japanese)
+    internal static void Open(StageRolesConfig config, REPOPopupPage page, TMP_FontAsset font, RoleGuideLanguage language)
     {
         if (IsOpen) return;
         GameObject obj = new("RoleShuffle_HudEditor");
         RoleHudEditor editor = obj.AddComponent<RoleHudEditor>();
         Instance = editor;
-        try { editor.Initialize(config, page, font, japanese); }
+        try { editor.Initialize(config, page, font, language); }
         catch (Exception exception)
         {
             editor.Close(false);
@@ -75,10 +75,10 @@ internal sealed class RoleHudEditor : MonoBehaviour
         }
     }
 
-    private void Initialize(StageRolesConfig config, REPOPopupPage page, TMP_FontAsset font, bool japanese)
+    private void Initialize(StageRolesConfig config, REPOPopupPage page, TMP_FontAsset font, RoleGuideLanguage language)
     {
-        _config = config; _page = page; _draft = HudLayoutSettings.Read(config); _japanese = japanese;
-        _font = (japanese ? RoleGuideFont.ForPrimary(font) : font) ?? font;
+        _config = config; _page = page; _draft = HudLayoutSettings.Read(config); _language = language;
+        _font = RoleGuideFont.ForLanguage(font, language) ?? font;
         _openedFrame = Time.frameCount;
         _pageGroup = page.GetComponent<CanvasGroup>();
         _addedGroup = _pageGroup == null;
@@ -107,17 +107,17 @@ internal sealed class RoleHudEditor : MonoBehaviour
         _toolbar.pivot = new Vector2(0.5f, 1); _toolbar.sizeDelta = new Vector2(0, 154);
         Label(_toolbar, Pick("HUD EDITOR — drag the preview; changes apply only after Save", "HUD編集 — プレビューをドラッグ / 保存するまで設定は変わりません"),
             new Vector2(16, -7), new Vector2(900, 34), 18);
-        Add(16, 44, 244, () => Pick("Display: ", "表示: ") + _draft.Display,
+        Add(16, 44, 244, () => Pick("Display: ", "表示: ") + Pick(_draft.Display),
             () => { _draft.Display = Next(_draft.Display, "NameOnly", "IconAndName", "IconOnly"); Changed(); });
-        Add(272, 44, 230, () => "Anchor: " + _draft.Anchor, () =>
+        Add(272, 44, 230, () => Pick("Anchor: ") + Pick(_draft.Anchor), () =>
         {
             _draft.Anchor = Next(_draft.Anchor, "BottomLeft", "BottomCenter", "BottomRight", "MiddleLeft", "MiddleCenter", "MiddleRight", "TopLeft", "TopCenter", "TopRight");
             _draft.X = 0; _draft.Y = 0; Changed();
         });
-        Add(514, 44, 194, () => Pick("Align: ", "整列: ") + _draft.Alignment,
+        Add(514, 44, 194, () => Pick("Align: ", "整列: ") + Pick(_draft.Alignment),
             () => { _draft.Alignment = Next(_draft.Alignment, "Left", "Center", "Right"); Changed(); });
-        Add(720, 44, 220, () => "HUD: " + (_draft.Enabled ? "ON" : "OFF"), () => _draft.Enabled = !_draft.Enabled);
-        Pair(16, 80, "Scale", () => _draft.Scale, delta => { _draft.Scale = Mathf.Clamp(_draft.Scale + delta * 5, 50, 200); Changed(); });
+        Add(720, 44, 220, () => "HUD: " + Pick(_draft.Enabled ? "ON" : "OFF"), () => _draft.Enabled = !_draft.Enabled);
+        Pair(16, 80, Pick("Scale"), () => _draft.Scale, delta => { _draft.Scale = Mathf.Clamp(_draft.Scale + delta * 5, 50, 200); Changed(); });
         Pair(272, 80, Pick("Text", "文字"), () => _draft.FontSize, delta => { _draft.FontSize = Mathf.Clamp(_draft.FontSize + delta * 2, 16, 48); Changed(); });
         Pair(514, 80, Pick("Icon", "アイコン"), () => _draft.IconSize, delta => { _draft.IconSize = Mathf.Clamp(_draft.IconSize + delta * 8, 32, 128); Changed(); });
         Add(720, 80, 68, () => Pick("SAVE", "保存"), () => Close(true));
@@ -129,7 +129,7 @@ internal sealed class RoleHudEditor : MonoBehaviour
         Changed();
     }
 
-    private string Pick(string english, string japanese) => _japanese ? japanese : english;
+    private string Pick(string english, string? japanese = null) => RoleText.Get(english, _language, japanese);
     private static string Next(string current, params string[] values) => values[(Array.IndexOf(values, current) + 1) % values.Length];
     private void Pair(float x, float y, string name, Func<int> value, Action<int> adjust)
     {
@@ -145,6 +145,7 @@ internal sealed class RoleHudEditor : MonoBehaviour
         rect.anchoredPosition = new Vector2(x, -y); rect.sizeDelta = new Vector2(width, 28);
         var label = Label(rect, text(), new Vector2(5, -1), new Vector2(width - 10, 26), width < 75 ? 14 : 16);
         label.alignment = TextAlignmentOptions.Center;
+        label.enableAutoSizing = true; label.fontSizeMin = 10; label.fontSizeMax = label.fontSize;
         _buttons.Add((rect, rect.GetComponent<Image>(), label, text, click));
     }
     private static RectTransform Box(string name, Transform parent, Color color)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore.LowLevel;
 
 namespace REPOJP.StageRoles;
 
@@ -17,6 +18,81 @@ internal static class RoleGuideFont
     private static TMP_FontAsset? _font;
     private static TMP_FontAsset? _scaledJapaneseFont;
     private static readonly Dictionary<int, TMP_FontAsset> MixedFonts = new();
+    private static readonly Dictionary<(int, RoleGuideLanguage), TMP_FontAsset> LocalizedFonts = new();
+    private static readonly Dictionary<int, TMP_FontAsset> OriginalFonts = new();
+    private static readonly Dictionary<string, TMP_FontAsset?> UnicodeFonts = new();
+    private static bool _nativeNamesInstalled;
+
+    // Also supplies native language names to REPOConfig's own dropdown labels.
+    internal static void InstallNativeNameFallback()
+    {
+        if (_nativeNamesInstalled || TMP_Settings.instance == null) return;
+        _nativeNamesInstalled = true;
+        foreach (string name in new[] { "Names", "European" })
+        {
+            TMP_FontAsset? font = LoadUnicode(name);
+            if (font != null && !TMP_Settings.fallbackFontAssets.Contains(font))
+                TMP_Settings.fallbackFontAssets.Add(font);
+        }
+    }
+
+    internal static TMP_FontAsset? ForLanguage(TMP_FontAsset? primary, RoleGuideLanguage language)
+    {
+        if (primary != null && OriginalFonts.TryGetValue(primary.GetInstanceID(), out var original)) primary = original;
+        if (language == RoleGuideLanguage.English) return primary;
+        if (language == RoleGuideLanguage.Japanese) return ForPrimary(primary);
+        string resource = language switch
+        {
+            RoleGuideLanguage.Korean => "Korean",
+            RoleGuideLanguage.ChineseTraditional => "ChineseTraditional",
+            RoleGuideLanguage.ChineseSimplified => "ChineseSimplified",
+            _ => "European"
+        };
+        var fallback = LoadUnicode(resource);
+        if (fallback == null) return primary;
+        if (primary == null) return fallback;
+        var key = (primary.GetInstanceID(), language);
+        if (LocalizedFonts.TryGetValue(key, out var cached) && cached != null) return cached;
+        var mixed = UnityEngine.Object.Instantiate(primary);
+        mixed.name = $"{primary.name} + RoleShuffle {language}";
+        mixed.hideFlags = HideFlags.HideAndDontSave;
+        mixed.fallbackFontAssetTable = new List<TMP_FontAsset> { fallback };
+        if (primary.fallbackFontAssetTable != null) mixed.fallbackFontAssetTable.AddRange(primary.fallbackFontAssetTable);
+        OriginalFonts[mixed.GetInstanceID()] = primary;
+        return LocalizedFonts[key] = mixed;
+    }
+
+    private static TMP_FontAsset? LoadUnicode(string name)
+    {
+        if (UnicodeFonts.TryGetValue(name, out var cached)) return cached;
+        UnicodeFonts[name] = null;
+        try
+        {
+            string extension = name == "European" ? ".ttf" : ".otf";
+            using var stream = typeof(RoleGuideFont).Assembly.GetManifestResourceStream(
+                $"REPOJP.StageRoles.Assets.Fonts.{name}{extension}");
+            if (stream == null) throw new FileNotFoundException("Embedded font: " + name);
+            byte[] bytes = ReadAllBytes(stream);
+            using var sha = System.Security.Cryptography.SHA256.Create();
+            string hash = BitConverter.ToString(sha.ComputeHash(bytes)).Replace("-", "");
+            string directory = Path.Combine(BepInEx.Paths.CachePath, "RoleShuffle", "Fonts");
+            Directory.CreateDirectory(directory);
+            string path = Path.Combine(directory, name + "-" + hash + extension);
+            if (!File.Exists(path)) File.WriteAllBytes(path, bytes);
+            var source = new UnityEngine.Font(path) { hideFlags = HideFlags.HideAndDontSave };
+            var font = TMP_FontAsset.CreateFontAsset(source, 48, 5, GlyphRenderMode.SDFAA,
+                1024, 1024, AtlasPopulationMode.Dynamic, true);
+            if (font == null) throw new InvalidOperationException("TMP font creation failed: " + name);
+            font.name = "RoleShuffle " + name;
+            font.hideFlags = HideFlags.HideAndDontSave;
+            return UnicodeFonts[name] = font;
+        }
+        catch (Exception exception)
+        {
+            StageRolesPlugin.ModLogger.LogWarning($"Could not load {name} font: {exception.Message}");
+            return null;
+        }
+    }
 
     internal static TMP_FontAsset? Font
     {
@@ -61,6 +137,7 @@ internal static class RoleGuideFont
         fallbacks.Insert(0, japanese);
         mixed.fallbackFontAssetTable = fallbacks;
         MixedFonts[key] = mixed;
+        OriginalFonts[mixed.GetInstanceID()] = primary;
         return mixed;
     }
 

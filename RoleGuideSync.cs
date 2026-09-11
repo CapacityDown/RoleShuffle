@@ -21,6 +21,7 @@ internal static class RoleGuideSync
     private static string _cachedLegacyPayload = string.Empty;
     private static IReadOnlyDictionary<StageRole, string>? _cachedEnglish;
     private static IReadOnlyDictionary<StageRole, string>? _cachedJapanese;
+    private static readonly Dictionary<RoleGuideLanguage, IReadOnlyDictionary<StageRole, string>> TranslatedLocal = new();
     private static string? _remotePayload;
     private static string? _remoteLegacyPayload;
     private static RoleGuideLanguage _remoteLanguage;
@@ -36,6 +37,7 @@ internal static class RoleGuideSync
         _cachedLegacyPayload = string.Empty;
         _cachedEnglish = null;
         _cachedJapanese = null;
+        TranslatedLocal.Clear();
         _remotePayload = null;
         _remoteLegacyPayload = null;
         _remoteDescriptions = null;
@@ -49,6 +51,7 @@ internal static class RoleGuideSync
         {
             return;
         }
+        TranslatedLocal.Clear();
         _cachedEnglish = LocalDescriptions(config, RoleGuideLanguage.English);
         _cachedJapanese = LocalDescriptions(config, RoleGuideLanguage.Japanese);
         _cachedPayload = Serialize(config);
@@ -204,6 +207,12 @@ internal static class RoleGuideSync
         if (!SemiFunc.IsMultiplayer() || PhotonNetwork.IsMasterClient)
         {
             EnsureCached(config);
+            if (RoleLanguage.NeedsTranslation(language))
+            {
+                if (!TranslatedLocal.TryGetValue(language, out var translated))
+                    TranslatedLocal[language] = translated = Translate(_cachedEnglish!, language);
+                return translated;
+            }
             return language == RoleGuideLanguage.Japanese ? _cachedJapanese! : _cachedEnglish!;
         }
 
@@ -221,7 +230,8 @@ internal static class RoleGuideSync
         {
             return _remoteDescriptions;
         }
-        _remoteDescriptions = ReadRemote(language);
+        var remote = ReadRemote(language);
+        _remoteDescriptions = RoleLanguage.NeedsTranslation(language) ? Translate(remote, language) : remote;
         _remotePayload = currentPayload;
         _remoteLegacyPayload = currentLegacyPayload;
         _remoteLanguage = language;
@@ -243,7 +253,7 @@ internal static class RoleGuideSync
             return descriptions;
         }
 
-        if (language == RoleGuideLanguage.English &&
+        if (language != RoleGuideLanguage.Japanese &&
             PhotonNetwork.CurrentRoom != null &&
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(
                 LegacyPropertyKey,
@@ -257,6 +267,14 @@ internal static class RoleGuideSync
         }
 
         return GenericDescriptions(language);
+    }
+
+    private static IReadOnlyDictionary<StageRole, string> Translate(
+        IReadOnlyDictionary<StageRole, string> source, RoleGuideLanguage language)
+    {
+        Dictionary<StageRole, string> result = new();
+        foreach (var entry in source) result[entry.Key] = RoleText.Description(entry.Value, language);
+        return result;
     }
 
     private static Dictionary<StageRole, string> LocalDescriptions(

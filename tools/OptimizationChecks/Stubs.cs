@@ -50,7 +50,6 @@ public static class SemiFunc
 namespace REPOJP.StageRoles
 {
     internal enum StageRole { Tank = 1, Runner = 2, Imitator = 38, Superbot = 1001, Disaster = 1002 }
-    internal enum RoleGuideLanguage { English, Japanese }
     internal sealed class StageRolesConfig
     {
         internal const int MaximumSupportedPlayers = 30;

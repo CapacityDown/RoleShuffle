@@ -6,5 +6,8 @@
   <ItemGroup>
     <Compile Include="../../PlayerUtilitiesCore.cs" Link="PlayerUtilitiesCore.cs" />
     <Compile Include="../../PlayerUtilitiesRuntime.cs" Link="PlayerUtilitiesRuntime.cs" />
+    <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
+    <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
+    <EmbeddedResource Include="../../Assets/Localization/*.json" LogicalName="REPOJP.StageRoles.Localization.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

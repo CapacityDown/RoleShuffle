@@ -3,15 +3,12 @@ using System.Globalization;
 
 namespace REPOJP.StageRoles;
 
-internal enum RoleGuideLanguage
-{
-    English,
-    Japanese
-}
-
 internal static class RoleGuideCatalog
 {
     internal static string RevealedSecretDescription(StageRole role, RoleGuideLanguage language) =>
+        RoleText.Description(RevealedSecretText(role, language), language);
+
+    private static string RevealedSecretText(StageRole role, RoleGuideLanguage language) =>
         role == StageRole.Disaster
             ? language == RoleGuideLanguage.Japanese
                 ? "Bomber・Stinker・Tunaの能力と制約を併せ持ちます。移動した場所に起動済みグレネードとウランの雲を発生させ、一定時間動かないと継続ダメージを受けます。移動すると停止時間のカウントとダメージが止まりますが、失ったHPは戻りません。各能力は対応する役職の設定に従います。"
@@ -20,6 +17,9 @@ internal static class RoleGuideCatalog
 
     internal static string RevealedSuperbotDescription(
         RoleGuideLanguage language) =>
+        RoleText.Description(RevealedSuperbotText(language), language);
+
+    private static string RevealedSuperbotText(RoleGuideLanguage language) =>
         language == RoleGuideLanguage.Japanese
             ? "Bomber、Stinker、Werewolf、Jobless、Tuna、\nKing、Diver、Imitator、Sniper、Brawlerを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
             : "Combines role upgrades and abilities except Bomber, Stinker, Werewolf, Jobless, Tuna, King, Diver, Imitator, Sniper, and Brawler. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
@@ -29,7 +29,7 @@ internal static class RoleGuideCatalog
         RoleGuideLanguage language) =>
         language == RoleGuideLanguage.Japanese
             ? GenericDescriptionJapanese(role)
-            : GenericDescription(role);
+            : RoleText.Description(GenericDescription(role), language);
 
     internal static string GenericDescription(StageRole role) =>
         role switch
@@ -133,7 +133,7 @@ internal static class RoleGuideCatalog
         RoleGuideLanguage language) =>
         language == RoleGuideLanguage.Japanese
             ? DescriptionJapanese(role, config)
-            : Description(role, config);
+            : RoleText.Description(Description(role, config), language);
 
     internal static string Description(StageRole role, StageRolesConfig config) =>
         role switch

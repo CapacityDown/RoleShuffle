@@ -25,8 +25,8 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float AssignmentScrollSpeed = 3f;
     private const float GuideScrollMultiplier = 0.5f;
     private const float BaseUpgradeScrollMultiplier = 4f;
-    private const float JapaneseWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 406;
+    private const float LanguageWrapWidthMultiplier = 1f;
+    private const int RoleUiBuildNumber = 408;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -40,6 +40,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private static REPOButton? _toolsButton;
     private static string _utilityMessage = string.Empty;
     private static REPOButton? _languageButton;
+    private static REPOButton? _backButton;
     private static REPOLabel? _versionLabel;
     private static string _openSignature = string.Empty;
     private static string? _guideSignaturePayload;
@@ -120,7 +121,7 @@ internal sealed class RoleMenu : MonoBehaviour
         if (RoleHudEditor.IsOpen) return;
         RoleGuideLanguage savedLanguage = SavedLanguage;
         if (_guideLanguage != savedLanguage)
-        { _guideLanguage = savedLanguage; SwitchView(_openPage, _activeView); return; }
+        { _guideLanguage = savedLanguage; _utilityMessage = string.Empty; SwitchView(_openPage, _activeView); return; }
         if (_activeView is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
         {
             string utilitySignature = UtilitySignature();
@@ -243,7 +244,7 @@ internal sealed class RoleMenu : MonoBehaviour
 
         page.AddElement(parent =>
         {
-            MenuAPI.CreateREPOButton(
+            _backButton = MenuAPI.CreateREPOButton(
                 "Back",
                 () =>
                 {
@@ -335,55 +336,43 @@ internal sealed class RoleMenu : MonoBehaviour
             return;
         }
 
-        _guideLanguage = _guideLanguage == RoleGuideLanguage.English
-            ? RoleGuideLanguage.Japanese
-            : RoleGuideLanguage.English;
-        _config.GuideLanguage.Value = _guideLanguage.ToString();
+        _guideLanguage = RoleLanguage.Next(_guideLanguage);
+        _utilityMessage = string.Empty;
+        _config.GuideLanguage.Value = RoleLanguage.NativeName(_guideLanguage);
         StageRolesPlugin.Instance.SaveLocalSettings();
         SwitchView(page, _activeView);
     }
 
-    private static RoleGuideLanguage SavedLanguage => _config.GuideLanguage.Value == "Japanese"
-        ? RoleGuideLanguage.Japanese : RoleGuideLanguage.English;
-    private static bool Japanese => _guideLanguage == RoleGuideLanguage.Japanese;
-    private static string Localized(string english, string japanese) => Japanese ? japanese : english;
+    private static RoleGuideLanguage SavedLanguage => RoleLanguage.Parse(_config.GuideLanguage.Value);
+    private static bool UseLanguageFont => _guideLanguage != RoleGuideLanguage.English;
+    private static string Localized(string english, string? japanese = null) => RoleText.Get(english, _guideLanguage, japanese);
 
     private static void UpdateNavigationLabels()
     {
-        if (_assignmentsButton != null)
+        void Button(REPOButton? button, string key, bool active)
         {
-            _assignmentsButton.labelTMP.text =
-                _activeView == RoleMenuView.Assignments
-                    ? "> CURRENT ROLES"
-                    : "  CURRENT ROLES";
+            if (button == null) return;
+            button.labelTMP.text = (active ? "> " : "  ") + Localized(key);
+            button.labelTMP.font = RoleGuideFont.ForLanguage(button.labelTMP.font, _guideLanguage);
+            button.labelTMP.enableAutoSizing = true;
+            button.labelTMP.fontSizeMin = 12;
+            button.labelTMP.fontSizeMax = button == _languageButton ? 18 : 20;
         }
-        if (_guideButton != null)
-        {
-            _guideButton.labelTMP.text =
-                _activeView == RoleMenuView.Guide
-                    ? "> ROLE GUIDE"
-                    : "  ROLE GUIDE";
-        }
-        if (_baseUpgradesButton != null)
-        {
-            _baseUpgradesButton.labelTMP.text =
-                _activeView == RoleMenuView.BaseUpgrades
-                    ? "> BASE UPGRADES"
-                    : "  BASE UPGRADES";
-        }
+        Button(_assignmentsButton, "CURRENT ROLES", _activeView == RoleMenuView.Assignments);
+        Button(_guideButton, "ROLE GUIDE", _activeView == RoleMenuView.Guide);
+        Button(_baseUpgradesButton, "BASE UPGRADES", _activeView == RoleMenuView.BaseUpgrades);
+        Button(_historyButton, "DRAW HISTORY", _activeView == RoleMenuView.History);
+        Button(_toolsButton, "TOOLS", _activeView is RoleMenuView.Tools or RoleMenuView.Report);
+        Button(_backButton, "Back", false);
+        Button(_languageButton, "", false);
         if (_languageButton != null)
         {
-            _languageButton.labelTMP.text =
-                _guideLanguage == RoleGuideLanguage.English
-                    ? "LANGUAGE: ENGLISH"
-                    : "LANGUAGE: JAPANESE";
+            _languageButton.labelTMP.text = "LANG: " + RoleLanguage.NativeName(_guideLanguage);
             _languageButton.rectTransform.gameObject.SetActive(true);
         }
-        if (_historyButton != null) _historyButton.labelTMP.text = (_activeView == RoleMenuView.History ? "> " : "  ") + "DRAW HISTORY";
-        if (_toolsButton != null) _toolsButton.labelTMP.text = (_activeView is RoleMenuView.Tools or RoleMenuView.Report ? "> " : "  ") + "TOOLS";
         if (_openPage != null)
         {
-            _openPage.headerTMP.text = _activeView switch
+            _openPage.headerTMP.text = Localized(_activeView switch
             {
                 RoleMenuView.Assignments => "Current Roles",
                 RoleMenuView.Guide => "Role Guide",
@@ -391,7 +380,11 @@ internal sealed class RoleMenu : MonoBehaviour
                 RoleMenuView.Tools => "Tools",
                 RoleMenuView.Report => "Bug Report",
                 _ => "Base Upgrades"
-            };
+            });
+            _openPage.headerTMP.font = RoleGuideFont.ForLanguage(_openPage.headerTMP.font, _guideLanguage);
+            _openPage.headerTMP.enableAutoSizing = true;
+            _openPage.headerTMP.fontSizeMin = 18;
+            _openPage.headerTMP.fontSizeMax = 32;
         }
     }
 
@@ -405,7 +398,7 @@ internal sealed class RoleMenu : MonoBehaviour
         if (assignments.Count == 0)
         {
             entries.Add(new RoleMenuEntry(
-                "No roles are currently assigned.",
+                Localized("No roles are currently assigned."),
                 24f,
                 FontStyles.Bold,
                 AssignmentRowHeight,
@@ -418,7 +411,7 @@ internal sealed class RoleMenu : MonoBehaviour
             foreach (RoleSnapshot snapshot in assignments)
             {
                 string playerName = string.IsNullOrWhiteSpace(snapshot.PlayerName)
-                    ? $"Player {fallbackIndex}"
+                    ? $"{Localized("Player")} {fallbackIndex}"
                     : snapshot.PlayerName.Trim();
                 bool isLocal = !string.IsNullOrEmpty(localSteamId) &&
                                string.Equals(
@@ -436,7 +429,7 @@ internal sealed class RoleMenu : MonoBehaviour
                     (_config.SetRoleCommandEnabled.Value && snapshot.PlayerNumber > 0
                         ? $"[{snapshot.PlayerNumber}] " : string.Empty) +
                     (isLocal
-                        ? $"YOU - {RoleCatalog.AssignmentName(snapshot.Role, snapshot.EffectiveRole)}"
+                        ? $"{Localized("YOU")} - {RoleCatalog.AssignmentName(snapshot.Role, snapshot.EffectiveRole)}"
                         : $"{playerName} - {RoleCatalog.AssignmentName(snapshot.Role, snapshot.EffectiveRole)}"),
                     isLocal ? 24f : 21f,
                     isLocal ? FontStyles.Bold : FontStyles.Normal,
@@ -477,8 +470,8 @@ internal sealed class RoleMenu : MonoBehaviour
                             FontStyles.Normal,
                             GuideLineHeight,
                             wrap: false,
-                            useJapaneseFont:
-                                _guideLanguage == RoleGuideLanguage.Japanese));
+                            useLanguageFont:
+                                UseLanguageFont));
                     }
                     entries.Add(new RoleMenuEntry(
                         string.Empty,
@@ -577,8 +570,8 @@ internal sealed class RoleMenu : MonoBehaviour
                     FontStyles.Normal,
                     GuideLineHeight,
                     wrap: false,
-                    useJapaneseFont:
-                        _guideLanguage == RoleGuideLanguage.Japanese));
+                    useLanguageFont:
+                        UseLanguageFont));
             }
             if (roleIndex + 1 < visibleRoles.Count)
             {
@@ -627,7 +620,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private static string UtilitySignature() => _activeView switch
     {
         RoleMenuView.History => BaseUpgradeHistory.CurrentPayload ?? "unavailable",
-        RoleMenuView.Tools => RoleSyncStatus.Instance?.Describe(Japanese) ?? "",
+        RoleMenuView.Tools => RoleSyncStatus.Instance?.Describe(_guideLanguage) ?? "",
         _ => StageRolesPlugin.Instance.BugReport.LatestPath + _utilityMessage
     };
 
@@ -641,12 +634,12 @@ internal sealed class RoleMenu : MonoBehaviour
                 if (paragraph.Length == 0)
                 { entries.Add(new RoleMenuEntry("", 18, FontStyles.Normal, 10, false)); continue; }
                 foreach (string line in WrapGuideText(MeasurementText(page), paragraph, ContentWidth(page), _guideLanguage))
-                    entries.Add(new RoleMenuEntry(line, 18, FontStyles.Normal, 25, false, Japanese));
+                    entries.Add(new RoleMenuEntry(line, 18, FontStyles.Normal, 25, false, UseLanguageFont));
             }
         }
         void Button(string label, Action action)
         {
-            entries.Add(new RoleMenuEntry("> " + label, 18, FontStyles.Bold, 40, false, Japanese, () =>
+            entries.Add(new RoleMenuEntry("> " + label, 18, FontStyles.Bold, 40, false, UseLanguageFont, () =>
             {
                 try { action(); }
                 catch (Exception exception)
@@ -669,15 +662,15 @@ internal sealed class RoleMenu : MonoBehaviour
             else if (BaseUpgradeHistory.Read().Count == 0)
                 Text(Localized("No recorded draws in this run. Draws before this update cannot be recovered.", "このセーブに抽選履歴はありません。更新前の抽選結果は復元できません。"));
             foreach (UpgradeDrawRecord record in BaseUpgradeHistory.Read())
-            { Text("\n" + BaseUpgradeHistory.Describe(record, Japanese)); }
+            { Text("\n" + BaseUpgradeHistory.Describe(record, _guideLanguage)); }
         }
         else if (_activeView == RoleMenuView.Tools)
         {
-            Text(Localized("SYNC STATUS", "同期状態") + "\n" + (RoleSyncStatus.Instance?.Describe(Japanese) ?? ""));
+            Text(Localized("SYNC STATUS", "同期状態") + "\n" + (RoleSyncStatus.Instance?.Describe(_guideLanguage) ?? ""));
             Text(Localized("Checks the role list, guide, Base Upgrades and draw history. Unmodded guests can still play normally.",
                 "役職一覧・ガイド・Base Upgrade・抽選履歴の同期を確認します。MOD未導入の参加者も通常どおり遊べます。"));
             Button(Localized("REFRESH DISPLAY DATA", "表示データを再取得"), () => RoleSyncStatus.Instance?.RequestRefresh());
-            Button(Localized("HUD EDITOR", "HUD編集モード"), () => RoleHudEditor.Open(_config, page, _roleRows[0].DefaultFont, Japanese));
+            Button(Localized("HUD EDITOR", "HUD編集モード"), () => RoleHudEditor.Open(_config, page, _roleRows[0].DefaultFont, _guideLanguage));
             Text(Localized("Move and resize a sample HUD, then Save or Cancel.", "サンプルHUDの位置・文字・アイコン・倍率を調整し、保存または取消できます。"));
             Button(Localized("REPORT A PROBLEM", "不具合レポート"), () => SwitchView(page, RoleMenuView.Report));
         }
@@ -706,7 +699,7 @@ internal sealed class RoleMenu : MonoBehaviour
             }
         }
         if (_utilityMessage.Length > 0)
-            entries.Insert(0, new RoleMenuEntry(_utilityMessage, 18, FontStyles.Normal, 80, true, Japanese));
+            entries.Insert(0, new RoleMenuEntry(_utilityMessage, 18, FontStyles.Normal, 80, true, UseLanguageFont));
         ApplyEntries(page, entries);
         _openSignature = UtilitySignature();
     }
@@ -719,7 +712,7 @@ internal sealed class RoleMenu : MonoBehaviour
         if (upgrades.Count == 0)
         {
             entries.Add(new RoleMenuEntry(
-                "Base Upgrade data is not available yet.",
+                Localized("Base Upgrade data is not available yet."),
                 22f,
                 FontStyles.Bold,
                 42f,
@@ -730,9 +723,9 @@ internal sealed class RoleMenu : MonoBehaviour
             TMP_Text measurementText = MeasurementText(page);
             foreach (string line in WrapGuideText(
                          measurementText,
-                         "Shared targets used when a role does not replace an upgrade.",
+                         Localized("Shared targets used when a role does not replace an upgrade."),
                          ContentWidth(page),
-                         RoleGuideLanguage.English))
+                         _guideLanguage))
             {
                 entries.Add(new RoleMenuEntry(
                     line,
@@ -758,8 +751,8 @@ internal sealed class RoleMenu : MonoBehaviour
                     30f,
                     wrap: false));
                 entries.Add(new RoleMenuEntry(
-                    $"Configured: {upgrade.ConfiguredLevel}  " +
-                    $"Truck Draw: {SignedValue(upgrade.TruckDrawBonus)}",
+                    $"{Localized("Configured")}: {upgrade.ConfiguredLevel}  " +
+                    $"{Localized("Truck Draw")}: {SignedValue(upgrade.TruckDrawBonus)}",
                     18f,
                     FontStyles.Normal,
                     27f,
@@ -818,23 +811,25 @@ internal sealed class RoleMenu : MonoBehaviour
         float previousFontSize = measurementText.fontSize;
         FontStyles previousFontStyle = measurementText.fontStyle;
         bool previousWrapping = measurementText.enableWordWrapping;
+        bool previousAutoSizing = measurementText.enableAutoSizing;
         TMP_FontAsset previousFont = measurementText.font;
         float wrapWidth = contentWidth;
-        if (language == RoleGuideLanguage.Japanese)
+        if (language != RoleGuideLanguage.English)
         {
             TMP_FontAsset primaryFont = _roleRows.Count > 0
                 ? _roleRows[0].DefaultFont
                 : previousFont;
-            TMP_FontAsset? mixedFont = RoleGuideFont.ForPrimary(primaryFont);
+            TMP_FontAsset? mixedFont = RoleGuideFont.ForLanguage(primaryFont, language);
             if (mixedFont != null)
             {
                 measurementText.font = mixedFont;
             }
-            wrapWidth *= JapaneseWrapWidthMultiplier;
+            wrapWidth *= LanguageWrapWidthMultiplier;
         }
         measurementText.fontSize = GuideFontSize;
         measurementText.fontStyle = FontStyles.Normal;
         measurementText.enableWordWrapping = false;
+        measurementText.enableAutoSizing = false;
         StringBuilder line = new();
         foreach (string token in tokens)
         {
@@ -874,6 +869,7 @@ internal sealed class RoleMenu : MonoBehaviour
         measurementText.fontSize = previousFontSize;
         measurementText.fontStyle = previousFontStyle;
         measurementText.enableWordWrapping = previousWrapping;
+        measurementText.enableAutoSizing = previousAutoSizing;
         measurementText.font = previousFont;
         return lines;
     }
@@ -962,9 +958,12 @@ internal sealed class RoleMenu : MonoBehaviour
             labelText.fontSize = entry.FontSize;
             labelText.fontStyle = entry.FontStyle;
             labelText.enableWordWrapping = entry.Wrap;
+            labelText.enableAutoSizing = clickable;
+            labelText.fontSizeMin = 12f;
+            labelText.fontSizeMax = entry.FontSize;
             labelText.overflowMode = TextOverflowModes.Overflow;
-            labelText.font = entry.UseJapaneseFont
-                ? RoleGuideFont.ForPrimary(row.DefaultFont)
+            labelText.font = (UseLanguageFont || entry.UseLanguageFont)
+                ? RoleGuideFont.ForLanguage(row.DefaultFont, _guideLanguage)
                 : row.DefaultFont;
             row.Button.onClick = entry.OnClick;
             row.Button.menuButton.enabled = clickable;
@@ -1126,6 +1125,7 @@ internal sealed class RoleMenu : MonoBehaviour
         _historyButton = null;
         _toolsButton = null;
         _languageButton = null;
+        _backButton = null;
         _versionLabel = null;
         _roleRows.Clear();
         _openSignature = string.Empty;
@@ -1168,7 +1168,7 @@ internal sealed class RoleMenu : MonoBehaviour
         FontStyles fontStyle,
         float height,
         bool wrap,
-        bool useJapaneseFont = false,
+        bool useLanguageFont = false,
         Action? onClick = null,
         StageRole? emblemRole = null,
         bool unrevealedEmblem = false)
@@ -1178,7 +1178,7 @@ internal sealed class RoleMenu : MonoBehaviour
         internal FontStyles FontStyle { get; } = fontStyle;
         internal float Height { get; } = height;
         internal bool Wrap { get; } = wrap;
-        internal bool UseJapaneseFont { get; } = useJapaneseFont;
+        internal bool UseLanguageFont { get; } = useLanguageFont;
         internal Action? OnClick { get; } = onClick;
         internal StageRole? EmblemRole { get; } = emblemRole;
         internal bool UnrevealedEmblem { get; } = unrevealedEmblem;

@@ -2,7 +2,8 @@
 - Moved questions, bug reports, and feedback to GitHub Issues.
 - Added a HUD editor with draggable preview, text/icon sizing, display options, and Save/Cancel controls.
 - Added local bug-report creation, preview, copying, and an in-game link to GitHub Issues.
-- Remembered the selected menu language between sessions and added host synchronization status with display-data refresh.
+- Added 14 menu languages with bundled fonts, native language names, and a saved selection shared by the menu toggle and MOD settings. English is the default.
+- Added host synchronization status with display-data refresh.
 - Added the latest 50 Base Upgrade draw results, saved with the host's run and shared with installed participants.
 
 ## 4.4.5

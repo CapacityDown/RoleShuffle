@@ -43,6 +43,9 @@
     <Compile Include="RoleAssignmentPlanner.cs" />
     <Compile Include="RoleAssignmentSync.cs" />
     <Compile Include="RoleGuideCatalog.cs" />
+    <Compile Include="RoleLanguage.cs" />
+    <Compile Include="RoleLanguageValues.cs" />
+    <Compile Include="RoleText.cs" />
     <Compile Include="RoleGuideSync.cs" />
     <Compile Include="BaseUpgradeSync.cs" />
     <Compile Include="RoleGuideFont.cs" />
@@ -88,6 +91,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\role-emblems-semibot-v1\transparent\runtime\*.png"
                       LogicalName="REPOJP.StageRoles.Emblems.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\Localization\*.json" LogicalName="REPOJP.StageRoles.Localization.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\Fonts\Localization\*.otf" LogicalName="REPOJP.StageRoles.Assets.Fonts.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\Fonts\Localization\*.ttf" LogicalName="REPOJP.StageRoles.Assets.Fonts.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\Fonts\Localization\OFL*.txt" LogicalName="REPOJP.StageRoles.Assets.Fonts.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Assets\Fonts\CheckpointRevenge.bundle"
                       LogicalName="REPOJP.StageRoles.Assets.Fonts.CheckpointRevenge" />
   </ItemGroup>
