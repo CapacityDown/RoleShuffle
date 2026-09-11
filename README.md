@@ -4,6 +4,11 @@ R.E.P.O.向け役職MODのソース管理用リポジトリです。
 プレイヤー向けの仕様・設定は[配布用README](package/README.md)、
 バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
 
+## お問い合わせ
+
+ご質問、不具合報告、ご意見は[GitHub Issues](https://github.com/CapacityDown/RoleShuffle/issues)へお寄せください。
+GitHubアカウントでログインするとIssueを投稿できます。
+
 ## ビルド
 
 .NET SDK 9.0.xを使用します。`global.json`でSDKの範囲を指定しています。

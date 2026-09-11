@@ -42,7 +42,7 @@ Use valid UTF-8 JSON without comments or trailing commas. Keep the fields in thi
 {
   "name": "RoleShuffle",
   "version_number": "4.4.6",
-  "website_url": "https://thunderstore.io/c/repo/p/CapackMods/RoleShuffle/",
+  "website_url": "https://github.com/CapacityDown/RoleShuffle/issues",
   "description": "【HostOnlyMOD】Random roles shake up every stage with vanilla upgrades and effects—only the host needs the mod! ホスト導入だけで、ステージごとにランダムな役職とバニラの強化・効果を楽しめます！",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2305",
@@ -55,7 +55,7 @@ Rules:
 
 - `name` remains `RoleShuffle` unless the package is intentionally renamed.
 - `version_number` uses three numeric components: `major.minor.patch`.
-- `website_url` points to the canonical Thunderstore package page once it exists. An empty value is acceptable only before that URL is available.
+- `website_url` points to `https://github.com/CapacityDown/RoleShuffle/issues`. README contact links and generated catalog contact URLs use the same Issue page.
 - `description` follows the CapackMods format: `【HostOnlyMOD】` + concise English summary + concise Japanese summary.
 - Describe the player-facing result, not implementation details.
 - BepInEx and REPOConfig remain hard dependencies.

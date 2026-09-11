@@ -1,4 +1,5 @@
 ## 4.4.6
+- Moved questions, bug reports, and feedback to GitHub Issues.
 
 ## 4.4.5
 - Added role emblems to Current Roles and Role Guide, plus optional HUD icons with adjustable size and display modes. Unrevealed secret roles use a shared question-mark emblem.

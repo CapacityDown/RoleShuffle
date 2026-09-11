@@ -12,7 +12,7 @@ By default, upgrade items are removed from the shop pool so stage roles remain t
 
 ### Contact
 
-For questions, bug reports, or feedback, please use the [contact form](https://forms.gle/nYKsoqV3KKtX94t57).
+For questions, bug reports, or feedback, please use [GitHub Issues](https://github.com/CapacityDown/RoleShuffle/issues). A GitHub account is required to submit an issue.
 
 ### Requirements
 
@@ -413,7 +413,7 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 ### お問い合わせ
 
-ご質問、不具合報告、ご意見は[お問い合わせフォーム](https://forms.gle/nYKsoqV3KKtX94t57)からお送りください。
+ご質問、不具合報告、ご意見は[GitHub Issues](https://github.com/CapacityDown/RoleShuffle/issues)からお送りください。投稿にはGitHubアカウントが必要です。
 
 ### 必須MOD
 
