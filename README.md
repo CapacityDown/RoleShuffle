@@ -1,0 +1,52 @@
+# RoleShuffle
+
+R.E.P.O.向け役職MODのソース管理用リポジトリです。
+プレイヤー向けの仕様・設定は[配布用README](package/README.md)、
+バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
+
+## ビルド
+
+.NET SDK 9.0.xを使用します。`global.json`でSDKの範囲を指定しています。
+NuGet依存関係は`StageRoles.csproj`に定義し、MenuLibのビルド参照は
+`lib/MenuLib.dll`を同梱しています。
+
+ビルド前に`RoleMenu.cs`の`RoleUiBuildNumber`を1増やしてください。
+失敗したビルドもカウントします。
+
+```powershell
+dotnet restore StageRoles.csproj
+dotnet build StageRoles.csproj -c Release --no-restore
+```
+
+出力先は`bin/Release/netstandard2.1/RoleShuffle.dll`です。
+このプロジェクトのビルドではゲームへの自動配備を行いません。
+ゲームで使用する際は、`package/manifest.json`に記載された依存MODを別途導入してください。
+
+## 管理するファイル
+
+- C#ソース、プロジェクト設定、開発用スクリプト
+- 採用済みの役職画像原本、実行用画像、フォント素材
+- 配布用README、CHANGELOG、manifest、パッケージアイコン
+- 開発・リリース手順
+
+DLLのビルド出力、ZIP、生成PDF、一時ファイル、画像の旧案や比較画像は
+`.gitignore`で除外します。`lib/MenuLib.dll`はビルド参照として例外的に管理します。
+第三者ライブラリや素材の権利は各権利者に帰属します。
+
+役職画像の実行用PNGは既に登録されているため、通常のビルドで画像生成は不要です。
+画像を更新する場合は[透過画像の説明](Assets/role-emblems-semibot-v1/transparent/README.md)を参照し、
+Python・Pillow・NumPyで`tools/build_transparent_role_emblems.py`を実行します。
+
+## Gitでの変更管理
+
+リモートは`https://github.com/CapacityDown/RoleShuffle.git`、基準ブランチは`main`です。
+変更前に`git status`と`git pull --ff-only`で状態を確認し、作業内容ごとのブランチを使用します。
+差分を確認して関連するファイルだけをコミットし、GitHubへpushしてください。
+`main`への取り込み前にビルド結果と変更内容を確認します。
+
+バージョンはプロジェクト・プラグイン・manifest・CHANGELOGの先頭見出しを揃えます。
+CHANGELOGには前リリースからの最終的な変更点をまとめ、同バージョン内の修正経緯は記載しません。
+詳しくは[リリース文書のルール](RELEASE_DOCUMENT_GUIDE.md)を参照してください。
+
+既存のリリース履歴はCHANGELOGに保持しています。
+Gitの履歴はこのリポジトリへの初回登録から記録します。

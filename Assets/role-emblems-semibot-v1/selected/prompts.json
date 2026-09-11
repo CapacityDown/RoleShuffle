@@ -1,0 +1,480 @@
+{
+  "generationMode": "Built-in image_gen",
+  "count": 42,
+  "format": "Opaque PNG; near-black exterior; category-colored hexagonal interior",
+  "status": "42 role emblem drafts, not integrated into the game",
+  "references": {
+    "anatomy": "D:/Documents/R.E.P.O. MOD/StagePhysicsEvents/Assets/Semibot_reference.png",
+    "style": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
+    "wiki": "https://repo-2025horror.fandom.com/wiki/Semibot"
+  },
+  "categories": [
+    [
+      "Enhancement",
+      "#174665",
+      [
+        "Tank",
+        "Runner",
+        "Jumper",
+        "Lifter",
+        "Launcher",
+        "Climber",
+        "Flyer",
+        "Tracker",
+        "Ghost",
+        "Ninja",
+        "Berserker"
+      ]
+    ],
+    [
+      "Support",
+      "#24563E",
+      [
+        "Medic",
+        "Rescuer",
+        "Musician",
+        "Mechanic",
+        "Engineer",
+        "Electrician",
+        "Warden",
+        "Bodyguard"
+      ]
+    ],
+    [
+      "Combat",
+      "#80451F",
+      [
+        "Mage",
+        "Hunter",
+        "Executioner",
+        "Rider",
+        "Rammer",
+        "Sniper",
+        "Brawler"
+      ]
+    ],
+    [
+      "Special",
+      "#50356E",
+      [
+        "Phoenix",
+        "Vampire",
+        "King",
+        "Gambler",
+        "Trickster",
+        "Influencer",
+        "Diver",
+        "Imitator",
+        "Avenger"
+      ]
+    ],
+    [
+      "Danger",
+      "#762C37",
+      [
+        "Bomber",
+        "Stinker",
+        "Werewolf",
+        "Disaster"
+      ]
+    ],
+    [
+      "Hardship",
+      "#514E49",
+      [
+        "Jobless",
+        "Tuna"
+      ]
+    ],
+    [
+      "Secret",
+      "#756025",
+      [
+        "Superbot"
+      ]
+    ]
+  ],
+  "assets": [
+    {
+      "id": "01",
+      "role": "Tank",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is an existing RoleShuffle role emblem to revise; image 2 is an ACTUAL R.E.P.O. SEMIBOT ANATOMY REFERENCE. Preserve the emblem's illustration style, ivory character and orange ability motif, bold black contour, hexagonal ivory border and category-colored background.\nANATOMY CORRECTION, crucial: Match the real Semibot head in image 2. The mouth is the thin HORIZONTAL OPENING immediately beneath the eye-bearing dome, BETWEEN upper cranium and its shallow lower jaw. The lower jaw is a shallow cup/ring belonging to the HEAD, approximately one fifth the height of the dome, NOT a neck or collar. The cylindrical torso begins directly below that shallow jaw. No long neck, no thick stack of multiple collar rings, no second mouth on the chest. Keep the head opening closed or just a tiny black seam, and make other body seams finer than the mouth. Large protruding spherical eyes with tiny black pupils, rounded dome, body CLOSED and original cylinder shape, short smooth tapered cone arms. NO human hands, antennae, invented armor or decorative accessories.\nOutput one individual square emblem on opaque near-black exterior, no checkerboard, no text, labels or watermark.\nTANK SPECIFIC: Keep the big orange protective shield with ivory heart and BLUE interior background unchanged. Keep the already-approved short arms mostly concealed at the shield sides. Only correct the head/lower-jaw structure, without adding a neck.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "01-Tank.png"
+    },
+    {
+      "id": "02",
+      "role": "Runner",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-0f469a82-93f7-427a-9e0a-886d7ad66098.png",
+      "prompt": "Use case: precise-object-edit. Edit this approved Runner role emblem. Change ONLY the dark background INSIDE the ivory hexagonal border to a rich muted BLUE #174665 for the Enhancement category. Preserve the entire Semibot, eyes, short arms, pose, props, orange motifs, ivory rim and outline exactly. Outside the hexagon stays solid near-black #101216. No checkerboard, no text, no labels. One square finished emblem.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "02-Runner.png"
+    },
+    {
+      "id": "03",
+      "role": "Jumper",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-3a51eba9-e51f-473a-9d18-a09fbc87cc4f.png",
+      "prompt": "Use case: precise-object-edit. Edit this approved Jumper role emblem. Change ONLY the dark background INSIDE the ivory hexagonal border to a rich muted BLUE #174665 for the Enhancement category. Preserve the entire Semibot, eyes, short arms, pose, props, orange motifs, ivory rim and outline exactly. Outside the hexagon stays solid near-black #101216. No checkerboard, no text, no labels. One square finished emblem.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "03-Jumper.png"
+    },
+    {
+      "id": "04",
+      "role": "Lifter",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-151af674-7471-4688-b7c3-365742c09fc6.png",
+      "prompt": "Use case: precise-object-edit. Edit this approved Lifter role emblem. Change ONLY the dark background INSIDE the ivory hexagonal border to a rich muted BLUE #174665 for the Enhancement category. Preserve the entire Semibot, eyes, short arms, pose, props, orange motifs, ivory rim and outline exactly. Outside the hexagon stays solid near-black #101216. No checkerboard, no text, no labels. One square finished emblem.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "04-Lifter.png"
+    },
+    {
+      "id": "05",
+      "role": "Launcher",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-6cf0d280-1540-49b1-b427-f13f6982615d.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Launcher: A compacted tumbling Semibot, its stacked body telescoped into a round compact form, hurtling horizontally with a bold orange launch arrow and impact streak behind.\nINTERIOR BACKGROUND CATEGORY: Enhancement, solid rich #174665. Do not leave the hexagon interior black.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "05-Launcher.png"
+    },
+    {
+      "id": "06",
+      "role": "Climber",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-6fa19db6-5eaf-4091-9915-3ecb32480522.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Climber: A Semibot climbing a steep ledge, one short cone arm near the rim, orange upward arrow beside the wall. Not a human climber.\nINTERIOR BACKGROUND CATEGORY: Enhancement, solid rich #174665. Do not leave the hexagon interior black.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "06-Climber.png"
+    },
+    {
+      "id": "07",
+      "role": "Flyer",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-1d3fdf4f-7822-4a7f-a2fe-17e912f5eea7.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Flyer: A compact tumbling Semibot hovering between a broad symmetrical pair of simple orange Tumble Wings, clear flying silhouette.\nINTERIOR BACKGROUND CATEGORY: Enhancement, solid rich #174665. Do not leave the hexagon interior black.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "07-Flyer.png"
+    },
+    {
+      "id": "08",
+      "role": "Tracker",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-9377c3b0-b96a-47b1-acf6-615840d5d8f2.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Tracker: A Semibot dome head centered on a large orange radar dial, with one teammate-location blip and clean sweep arc. Map tracking.\nINTERIOR BACKGROUND CATEGORY: Enhancement, solid rich #174665. Do not leave the hexagon interior black.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "08-Tracker.png"
+    },
+    {
+      "id": "09",
+      "role": "Ghost",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-a2dcb0a8-64f8-429e-af45-e3549746528a.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Ghost: A detached original Semibot Death Head hovering, rounded dome, black inactive eyes, lower head ring, accompanied by a large orange battery cell. No human skull or sheet ghost.\nINTERIOR BACKGROUND CATEGORY: Enhancement, solid rich #174665. Do not leave the hexagon interior black.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "09-Ghost.png"
+    },
+    {
+      "id": "10",
+      "role": "Bomber",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-21d8c27f-d601-4cac-b9bc-19c336e2d1b4.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Bomber: A Semibot behind one large chunky grenade with ring pin and small orange fuse spark, short arms just visible at sides. One grenade dominates.\nINTERIOR BACKGROUND CATEGORY: Danger, solid rich #762C37. Do not leave the hexagon interior black.",
+      "category": "Danger",
+      "background": "#762C37",
+      "file": "10-Bomber.png"
+    },
+    {
+      "id": "11",
+      "role": "Medic",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-403c00c9-9bc5-454d-89d9-8b308ca39b24.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is an existing RoleShuffle role emblem to revise; image 2 is an ACTUAL R.E.P.O. SEMIBOT ANATOMY REFERENCE. Preserve the emblem's illustration style, ivory character and orange ability motif, bold black contour, hexagonal ivory border and category-colored background.\nANATOMY CORRECTION, crucial: Match the real Semibot head in image 2. The mouth is the thin HORIZONTAL OPENING immediately beneath the eye-bearing dome, BETWEEN upper cranium and its shallow lower jaw. The lower jaw is a shallow cup/ring belonging to the HEAD, approximately one fifth the height of the dome, NOT a neck or collar. The cylindrical torso begins directly below that shallow jaw. No long neck, no thick stack of multiple collar rings, no second mouth on the chest. Keep the head opening closed or just a tiny black seam, and make other body seams finer than the mouth. Large protruding spherical eyes with tiny black pupils, rounded dome, body CLOSED and original cylinder shape, short smooth tapered cone arms. NO human hands, antennae, invented armor or decorative accessories.\nOutput one individual square emblem on opaque near-black exterior, no checkerboard, no text, labels or watermark.\nMEDIC SPECIFIC CHANGE: Remove the medical cross/plus symbol COMPLETELY. In its place, show one large ORANGE HEART floating along a short orange healing ray toward the smaller LIVING teammate Semibot at lower right. It must clearly mean healing a teammate. Absolutely NO cross, plus or Red Cross-like shape anywhere, regardless of color. Both characters must have the corrected head and mouth anatomy above. Preserve GREEN hexagonal inner background and existing overall placement.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "11-Medic.png"
+    },
+    {
+      "id": "12",
+      "role": "Phoenix",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-233ab0bb-1bac-49d8-8afa-d898ed1b603c.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Phoenix: A Semibot emerging upward from a bold orange phoenix-wing flame around its lower body, self resurrection, no crown.\nINTERIOR BACKGROUND CATEGORY: Special, solid rich #50356E. Do not leave the hexagon interior black.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "12-Phoenix.png"
+    },
+    {
+      "id": "13",
+      "role": "Jobless",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-f75ad48d-8383-4364-81a7-34c2f186ce37.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Jobless: A worried Semibot beside an empty worker ID card crossed by an orange cancellation slash, with one small downward heart symbol. Blank ID, no letters.\nINTERIOR BACKGROUND CATEGORY: Hardship, solid rich #514E49. Do not leave the hexagon interior black.",
+      "category": "Hardship",
+      "background": "#514E49",
+      "file": "13-Jobless.png"
+    },
+    {
+      "id": "14",
+      "role": "Rescuer",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-e9967c78-aa99-428c-9c0c-bb92677bc095.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Rescuer: A living Semibot with a short tractor beam raising one smaller detached Death Head, a bold orange recovery arrow curving upward. Rescuing a teammate, not self rebirth.\nINTERIOR BACKGROUND CATEGORY: Support, solid rich #24563E. Do not leave the hexagon interior black.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "14-Rescuer.png"
+    },
+    {
+      "id": "15",
+      "role": "Vampire",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-7a687c49-111b-4d7a-9611-3dd1dbde57a6.png",
+      "prompt": "Use case: precise-object-edit. Fix the VAMPIRE RoleShuffle emblem in image 1. Image 2 is the original Semibot anatomy reference.\nThe current emblem has a WRONG pair of large fangs attached to the CHEST. REMOVE that entire chest fang graphic and its connecting horizontal line completely.\nPlace exactly TWO SMALL IVORY VAMPIRE FANGS INSIDE THE ACTUAL MOUTH, immediately under the dome bearing the eyes. The mouth is at the very bottom rim of the round eye-bearing head, not on the torso, not below a neck ring. Open this horizontal mouth just enough to show a dark slot beneath the eyes. The TWO SHORT TRIANGULAR FANGS hang DOWNWARD from the upper head rim INTO that black mouth slot. Fang length must be less than 12 percent of the dome head's height. No long tusks. The shallow lower jaw sits below that mouth slot and belongs to the head. Torso starts directly below the shallow lower jaw. Do not add a second mouth, collar stack or long neck.\nKeep the original protruding round eyes and tiny pupils, dome-shaped head, closed cylindrical torso, short tapered arms, large orange heart and small orange blood droplet on the torso. The heart and droplet remain abstract ability symbols; absolutely NO teeth or holes on the chest.\nPreserve the purple background INSIDE the hexagon, ivory border, solid near-black outside background, orange/ivory palette, bold outlines and same overall composition. No medical crosses, no text, no labels, no extra decorations. One square emblem.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "15-Vampire.png"
+    },
+    {
+      "id": "16",
+      "role": "King",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-3024aefd-0d2e-4d37-a718-7a6e8d01e9f9.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: King: A Semibot wearing only a simple bold three-point crown, plain ivory rim and orange fill, no fancy robes or gems.\nINTERIOR BACKGROUND CATEGORY: Special, solid rich #50356E. Do not leave the hexagon interior black.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "16-King.png"
+    },
+    {
+      "id": "17",
+      "role": "Tuna",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-686fc71f-d30f-44a0-8abd-4c2b801cccb8.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Tuna: A normal Semibot beside one large orange streamlined tuna fish and forward motion streaks. Fish and constant movement are prominent.\nINTERIOR BACKGROUND CATEGORY: Hardship, solid rich #514E49. Do not leave the hexagon interior black.",
+      "category": "Hardship",
+      "background": "#514E49",
+      "file": "17-Tuna.png"
+    },
+    {
+      "id": "18",
+      "role": "Musician",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-244a1b06-3082-4f40-a5d8-db2197e153a5.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Musician: A Semibot playing a simple valuable acoustic guitar using compact arms, one large orange musical note with a heart-shaped note head. No long human fingers.\nINTERIOR BACKGROUND CATEGORY: Support, solid rich #24563E. Do not leave the hexagon interior black.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "18-Musician.png"
+    },
+    {
+      "id": "19",
+      "role": "Mage",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-8116ad24-0b22-4d2d-a92c-78c8863d936d.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Mage: A Semibot using one large simple Star Wand diagonally, orange five-point star tip and one magical spark. No wizard hat, robe or staff collection.\nINTERIOR BACKGROUND CATEGORY: Combat, solid rich #80451F. Do not leave the hexagon interior black.",
+      "category": "Combat",
+      "background": "#80451F",
+      "file": "19-Mage.png"
+    },
+    {
+      "id": "20",
+      "role": "Gambler",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-c339fd58-be0f-40ec-a9fc-ec8e02dbbfa6.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Gambler: A Semibot behind one oversized tilted orange-and-ivory six-sided die, contrasting lucky and unlucky faces, one tiny crack and sparkle. No lettering, no cards.\nINTERIOR BACKGROUND CATEGORY: Special, solid rich #50356E. Do not leave the hexagon interior black.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "20-Gambler.png"
+    },
+    {
+      "id": "21",
+      "role": "Hunter",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-f4752e28-9e83-40c1-8d8c-ea4b96a75ec9.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Hunter: A Semibot looking over one large orange crosshair surrounding a reward orb, small battery glyph below. Enemy hunting and loot.\nINTERIOR BACKGROUND CATEGORY: Combat, solid rich #80451F. Do not leave the hexagon interior black.",
+      "category": "Combat",
+      "background": "#80451F",
+      "file": "21-Hunter.png"
+    },
+    {
+      "id": "22",
+      "role": "Stinker",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-8a49fcfb-52f7-42f2-9cd8-9017b718329c.png",
+      "prompt": "Use case: precise-object-edit. Edit only the broken object at the bottom of this Stinker emblem. It must be a THIN circular dinner plate/saucer with a delicate raised circular rim, broken into thin curved shards, inspired by R.E.P.O.'s uranium dinnerware. NOT a thick stone platform, NOT chunks of rock or floor tiles. Keep its dark charcoal face and orange radiation trefoil. Retain the original Semibot, actual mouth directly below eyes, short tapered limbs, two orange toxic vapor curls, rich crimson background, ivory hexagonal frame, all composition and art style. No text or new accessories.",
+      "category": "Danger",
+      "background": "#762C37",
+      "editSource": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-4dfd8f43-84d5-4dea-a21f-5711c16997cb.png",
+      "file": "22-Stinker.png"
+    },
+    {
+      "id": "23",
+      "role": "Engineer",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-7d2d49a9-84d7-453f-ae7d-9dfa54a0c0bc.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Engineer: A Semibot behind one large gear containing an orange pause symbol, suppressing hazardous valuable activation. No wrench; distinct from Mechanic.\nINTERIOR BACKGROUND CATEGORY: Support, solid rich #24563E. Do not leave the hexagon interior black.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "23-Engineer.png"
+    },
+    {
+      "id": "24",
+      "role": "Trickster",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-524d5f51-743e-46e2-90df-99e9260d1816.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Trickster: A normal Semibot presenting a smaller decoy Semibot head with an open horizontal mouth and large orange sound waves. No jester hat.\nINTERIOR BACKGROUND CATEGORY: Special, solid rich #50356E. Do not leave the hexagon interior black.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "24-Trickster.png"
+    },
+    {
+      "id": "25",
+      "role": "Mechanic",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-25476db7-82fa-42e4-be50-234fad0a1254.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Mechanic: A Semibot repairing one cracked valuable vase with a large orange wrench emblem beside it and one repair spark. Short arms, no human hands.\nINTERIOR BACKGROUND CATEGORY: Support, solid rich #24563E.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "25-Mechanic.png"
+    },
+    {
+      "id": "26",
+      "role": "Electrician",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-91bc17d8-efeb-4728-93d1-ade3b72b8051.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Electrician: A Semibot behind a large orange battery cell with bold ivory lightning bolt and one charging arrow. No added costume.\nINTERIOR BACKGROUND CATEGORY: Support, solid rich #24563E.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "26-Electrician.png"
+    },
+    {
+      "id": "27",
+      "role": "Warden",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-e905f85f-b775-4e75-bcbe-f817b4ea69c5.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Warden: A stern Semibot behind a large orange padlock and a single dizzy spiral with stun sparks, communicating immobilizing enemies. No prison uniform.\nINTERIOR BACKGROUND CATEGORY: Support, solid rich #24563E.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "27-Warden.png"
+    },
+    {
+      "id": "28",
+      "role": "Ninja",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-b68577b8-d685-4f15-b337-9b52c0d7a5a7.png",
+      "prompt": "Use case: precise-object-edit. Remove the knife and its handle entirely from this Ninja emblem. Replace the knife-gripping round hand with a SHORT pointed cone/fin arm matching the other arm, held compactly beside the torso. Ninja ability is stealth, not weapon combat. Keep the crouching original Semibot, eye expression, mouth immediately below eyes, large orange crossed-out sound waves icon, blue hexagonal interior, ivory frame, near-black exterior and drawing style exactly. No weapons, hands, extra clothing, masks or accessories.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "editSource": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-d657d745-2cfd-4d9e-b806-db0a354cbe5a.png",
+      "file": "28-Ninja.png"
+    },
+    {
+      "id": "29",
+      "role": "Executioner",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-b4fc0b5a-1cff-4f67-8719-5eeb95d523e9.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Executioner: A Semibot with a large angular orange execution axe and a stun-star burst at its striking edge. Original body, no gore, no executioner hood.\nINTERIOR BACKGROUND CATEGORY: Combat, solid rich #80451F.",
+      "category": "Combat",
+      "background": "#80451F",
+      "file": "29-Executioner.png"
+    },
+    {
+      "id": "30",
+      "role": "Rider",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-9a2c717e-9ccd-4e5d-aa42-e7121826af82.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Rider: A Semibot seated on a compact vanilla-game-style motorcycle with two large wheels, orange forward speed streak. Arms short, no humanoid motorcycle outfit.\nINTERIOR BACKGROUND CATEGORY: Combat, solid rich #80451F.",
+      "category": "Combat",
+      "background": "#80451F",
+      "file": "30-Rider.png"
+    },
+    {
+      "id": "31",
+      "role": "Influencer",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-43b2df7b-02c1-4ebf-a866-ea7713047dab.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Influencer: One central large Semibot with two smaller teammate heads clustered below and broad orange broadcast arcs above. Crowd-powered attention.\nINTERIOR BACKGROUND CATEGORY: Special, solid rich #50356E.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "31-Influencer.png"
+    },
+    {
+      "id": "32",
+      "role": "Werewolf",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-61ddfe99-5ac0-47b5-b3e9-c62d1f61bc60.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Werewolf: A Semibot behind a bold orange wolf-head silhouette emblem with a claw slash. Keep the Semibot's original anatomy, no furry robot transformation.\nINTERIOR BACKGROUND CATEGORY: Danger, solid rich #762C37.",
+      "category": "Danger",
+      "background": "#762C37",
+      "file": "32-Werewolf.png"
+    },
+    {
+      "id": "33",
+      "role": "Berserker",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-ce9c22a4-7db9-4de6-9d5a-890f6eb7d36b.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Berserker: An angry Semibot above a large cracked low-health orange heart with a rising power arrow/flame. Rage grows as health falls, no axe.\nINTERIOR BACKGROUND CATEGORY: Enhancement, solid rich #174665.",
+      "category": "Enhancement",
+      "background": "#174665",
+      "file": "33-Berserker.png"
+    },
+    {
+      "id": "34",
+      "role": "Bodyguard",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-7ccdaaaa-130a-4953-84e8-20c023cca476.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Bodyguard: A large Semibot behind a broad orange shield sheltering one smaller teammate head at the center, impact stopped at rim. No heart emblem; distinct from Tank.\nINTERIOR BACKGROUND CATEGORY: Support, solid rich #24563E.",
+      "category": "Support",
+      "background": "#24563E",
+      "file": "34-Bodyguard.png"
+    },
+    {
+      "id": "35",
+      "role": "Rammer",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-141de353-4569-4985-9c46-feb8d2260fe0.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Rammer: A compacted tumbling Semibot smashing a short fractured wall, bold orange impact burst. Clear body-charge attack, no weapon.\nINTERIOR BACKGROUND CATEGORY: Combat, solid rich #80451F.",
+      "category": "Combat",
+      "background": "#80451F",
+      "file": "35-Rammer.png"
+    },
+    {
+      "id": "36",
+      "role": "Diver",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-81ecaa32-f409-440f-9ab6-d07577cde376.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Diver: An original Semibot halfway below a bold horizontal floor cross-section, head visible beneath the floor, one orange downward path arrow. Passing beneath solid floors, no scuba gear.\nINTERIOR BACKGROUND CATEGORY: Special, solid rich #50356E.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "36-Diver.png"
+    },
+    {
+      "id": "37",
+      "role": "Sniper",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-df5231b0-1a2b-473b-a594-94ba697751b4.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Sniper: A Semibot beside one simple long rifle silhouette aiming toward a distant orange crosshair with an extended aiming line. Long-range precision, no wizard staff.\nINTERIOR BACKGROUND CATEGORY: Combat, solid rich #80451F.",
+      "category": "Combat",
+      "background": "#80451F",
+      "file": "37-Sniper.png"
+    },
+    {
+      "id": "38",
+      "role": "Imitator",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-9f82fab2-5d77-4722-b178-0960da50920c.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Imitator: Two identical original Semibot dome heads overlapping, with one bold orange curved copy arrow connecting them. No masks, no human faces.\nINTERIOR BACKGROUND CATEGORY: Special, solid rich #50356E.",
+      "category": "Special",
+      "background": "#50356E",
+      "file": "38-Imitator.png"
+    },
+    {
+      "id": "39",
+      "role": "Avenger",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-717b7315-7e3f-4a69-83f4-501e633b4546.png",
+      "prompt": "Use case: precise-object-edit. Correct only the bottom quarter of this Avenger role emblem. The living Semibot must NOT stomp on or stand on the fallen teammate. Give the living Semibot two normal pointed cone legs hanging straight down with their tips at equal height. Place a SMALL detached inactive Semibot Death Head BETWEEN AND IN FRONT OF the legs with clear gaps; the Death Head is only its dome with two dark inactive round eyes and shallow lower jaw, with NO body, neck, tail, limbs or X symbols. It represents a fallen FRIEND who is being avenged. Keep the living Semibot face and torso, orange vengeance flame, purple interior, ivory hexagonal frame, outside near-black background, palette and line style unchanged. No text, no extra accessories.",
+      "category": "Special",
+      "background": "#50356E",
+      "editSource": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-7f40a90f-c9e9-4f71-8c46-36eac3ef8ec5.png",
+      "file": "39-Avenger.png"
+    },
+    {
+      "id": "40",
+      "role": "Brawler",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-e45dc996-b1e3-489a-a824-b3d76e8af845.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Brawler: A Semibot wielding a large simple orange baseball bat, close-range impact burst, no rifle. Keep short tapered arm and orange tractor grip, not giant human fist.\nINTERIOR BACKGROUND CATEGORY: Combat, solid rich #80451F.",
+      "category": "Combat",
+      "background": "#80451F",
+      "file": "40-Brawler.png"
+    },
+    {
+      "id": "1001",
+      "role": "Superbot",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-f598efe4-dcb1-40fa-bc91-b9ec602a9cfc.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Superbot: A confident original Semibot with a broad orange upward power burst behind, one small heart and one wing-shaped energy accent below. Overwhelming combined power without crown, medals or outfit.\nINTERIOR BACKGROUND CATEGORY: Secret, solid rich #756025.",
+      "category": "Secret",
+      "background": "#756025",
+      "file": "1001-Superbot.png"
+    },
+    {
+      "id": "1002",
+      "role": "Disaster",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-a9c0386b-2d59-491a-babe-67fc755adcfc.png",
+      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the mouth-corrected approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, a thin horizontal mouth directly UNDER THE EYES at the bottom of the eye-bearing dome, a SHALLOW lower jaw immediately below it, and NO thick stack of collar rings, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nAbsolutely no medical crosses or plus signs; use hearts for healing. Keep the mouth within the head, never on the chest. ROLE AND MOTIF: Disaster: A wide-eyed original Semibot behind one large grenade bearing an orange radiation trefoil, with a simple fish tail silhouette and explosion rays. Combined bomb, uranium and constant movement disaster.\nINTERIOR BACKGROUND CATEGORY: Danger, solid rich #762C37.",
+      "category": "Danger",
+      "background": "#762C37",
+      "file": "1002-Disaster.png"
+    }
+  ]
+}

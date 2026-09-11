@@ -1,0 +1,868 @@
+{
+  "method": "Perimeter-connected near-black exterior to transparent alpha",
+  "generator": "Python / Pillow / NumPy",
+  "black_limit": 64,
+  "count": 43,
+  "assets": [
+    {
+      "name": "01-Tank",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\01-Tank.png",
+      "source_sha256": "c616bf69a84a9bc8d7c28cb121a7109ba819bf2151fc1523851fb3f7d0478b2c",
+      "master_sha256": "a51ce54442662b6238f07af9a87070f1593e31fa55dca4bf4a32df991e06ba18",
+      "runtime_sha256": "56ef50cf8b6f4dfb9f96fe1d67e46b796e6cf8ef6025628e5c74e25c660defe0",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.416302,
+      "outline_channel_closing": 31,
+      "runtime_edge_pixels": 2361,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "02-Runner",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\02-Runner.png",
+      "source_sha256": "b7a1908a12ae4fedeb742f6fd8be8fdf6d18229ec8284e30f203ac8d64e2bbb3",
+      "master_sha256": "c40aaa6e0949eac377b459f7b20f690d020c87faedb8629a04bd304d4c563dd2",
+      "runtime_sha256": "ca7e5449d6c4a4db5a8fa715e7590cd1d3e1c6ea36427e8a29d435e6b76055c0",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.374969,
+      "outline_channel_closing": 31,
+      "runtime_edge_pixels": 2260,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "03-Jumper",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\03-Jumper.png",
+      "source_sha256": "da8524c2430094e43ae4a7b333f9f9e9112038445af6bfe374fedab4c45690d5",
+      "master_sha256": "5ec685a0edb6bbfb6ff1d6f4a837832969f07c3c81e37d2006989a691ea033df",
+      "runtime_sha256": "6f21fac3252fdb858408afac2c9f1baba7b1769cd071706194c5e64a479aa66e",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.428934,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2159,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "04-Lifter",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\04-Lifter.png",
+      "source_sha256": "6c3999cef65a3d99d1d5b0133e17f035c5965deb70043d5b187cb26f9e56d995",
+      "master_sha256": "71ac749de2cd9e31a6daa2dc7941727b1cbfa10a4a3ab345310fd515869fcc4e",
+      "runtime_sha256": "c4f86e588ae3cddf6134efe1d6d416a9cb0a146d35cc0434f9c58d53387575a0",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.347217,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2313,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "05-Launcher",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\05-Launcher.png",
+      "source_sha256": "1406860c0a721964ddc8f55e3ac4766094ed694cd1fd45af84c5f43b4857b1ef",
+      "master_sha256": "e2080b59b6804621f7dd277104962bed019a7dc632873e0b2191c4de12ccb70c",
+      "runtime_sha256": "8485782bd122f1811497b283ba550cc31889f0bdc1a450ac4e8a070bb4b3fbab",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.417811,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2109,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "06-Climber",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\06-Climber.png",
+      "source_sha256": "f2993a0191a307f83d1e1789860c0a56d4785c45610f13a69d9d8458c19bd1ef",
+      "master_sha256": "8e0dfe05c8b54b9ace964558631401e0a200940c4dab52eaa53f8a5a394ccd8b",
+      "runtime_sha256": "7f043e77299d62987e1c9bd606b9309af974b1749e75ac8e5329db5e1b6e4496",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.432077,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2084,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "07-Flyer",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\07-Flyer.png",
+      "source_sha256": "672d51873251f2c7cca4b00cebf5aa1cdd7fbdc993dafd16b4e77f6cabf90ce7",
+      "master_sha256": "34ae57835208e5aabc688020a91f94582631e9172a9adb2deb4e002003c516a3",
+      "runtime_sha256": "439ea8c360a9d4e7de7827dcd6d5989da945092847d060c02b220e7209d6325a",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.429103,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 1989,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "08-Tracker",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\08-Tracker.png",
+      "source_sha256": "f1994adc382b030254bdb9ae98a740c4b17a324f69b290b3c0cbb935e5788d3d",
+      "master_sha256": "a987bd67ab7634240fb1bb60c8a4ef47f30ff8a2f059c2a285f8ad11de48b009",
+      "runtime_sha256": "1643eb7adaf6a1d3fb60e3a1c2c3a8aa892808e75ebb258d335300590b14b771",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.425114,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2129,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "09-Ghost",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\09-Ghost.png",
+      "source_sha256": "41bdbf020fc0911e59d8cdb06453c2dc1c3328353c1cda792b74c7a2f7784d34",
+      "master_sha256": "6c9a59ab9ef2a18e530a658ba5ec9eaeef826553dabcc3b8342bc39ea0f57a9e",
+      "runtime_sha256": "d2077026d315852eab768931dccbe9403c6f3ad77890c5a761a464fca8908046",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.427293,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2079,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "10-Bomber",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\10-Bomber.png",
+      "source_sha256": "4b1cf719c92f414bf076440d3cbbd14c838a2e7761a57ae7a02b18c371e6b193",
+      "master_sha256": "f817aec6532dd70da275a21dce9bf126f5ae8ce3e6c44b4983311834581a6bf8",
+      "runtime_sha256": "2b77901ac9609862e9b2e8d08fedb8320ed0c65862ddb04c53e2093f0b04f26c",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.42796,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2308,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "11-Medic",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\11-Medic.png",
+      "source_sha256": "2c15e25b3fd7b9fdb3af1e6c63c7fb04d022b35d871993cad53829802b804d77",
+      "master_sha256": "641e29ae32f0e58393e4660fb4f492c2a4eb91f1fb36ff61dc5caf53192b48a2",
+      "runtime_sha256": "91ef197b60968b8db3e107f378cb30b9af2dedbaa512c2ed30ebd0940ebca5f3",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.428699,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2076,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "12-Phoenix",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\12-Phoenix.png",
+      "source_sha256": "032cfdf6cd90a2996363d16a4b8162e7fd6cafd216705cdf3b53e9f1788011b7",
+      "master_sha256": "a524220c6def9b6e51e8983578c628224a5d255fa6fa90d750f268a38a61af7a",
+      "runtime_sha256": "f8da3a54e0c4f5d7a9ce730e8b6db954fdaea3506c1548b3da14bb04fdd563b3",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.428129,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2155,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "13-Jobless",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\13-Jobless.png",
+      "source_sha256": "8eebb196ef947a490e8f59e3a85f588b5277f40cedb75f20eaf11052c1133664",
+      "master_sha256": "852061952b05b40bef2e13ac61b16317e0d3b4003fac81445fa7f2af20ba120c",
+      "runtime_sha256": "f5a05bc9de5a99dfb35012c6eac4fcc997acf454dafdb38d480da0212dc4c0ef",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.4281,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 1998,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "14-Rescuer",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\14-Rescuer.png",
+      "source_sha256": "e01d0636b04afab8fe1a184651dd9b5aa72bb7b7e0bacc6f499ad98bdd082fe3",
+      "master_sha256": "0443b7b54c733119ebb240517e79da27733c5af3f5ad72defb93ebb848b4d4bd",
+      "runtime_sha256": "d85387bcdb49c1177cbf043597d1970e93d9ce101962fd7b7615b93e5f3789d0",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.408367,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2186,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "15-Vampire",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\15-Vampire.png",
+      "source_sha256": "c8ffb1167d4a930f8a86a67181372150941744b67e67085a11664717b0de5cd9",
+      "master_sha256": "22d8483af8667dec9fb95778699420db6829db8b382b73926df174c6641666a7",
+      "runtime_sha256": "3aae7cb52eea970c04d815ab8514b43cb10f1b064176b1f1062ab55567c4958b",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.42815,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2171,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "16-King",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\16-King.png",
+      "source_sha256": "7c5d419ff39c3421f702a7b43a1d0b6ab38620537fa9cd9ebb608dc2ef0f9adf",
+      "master_sha256": "2f20f80a98f11e21729831fc6773c56628edadcbfd19df85d7ba87f201995e1a",
+      "runtime_sha256": "fdf9013c0f2812e88ba3e07f9e15cedc207e7e1be3a91eb3d7f6474ebd6d05d9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.426643,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2191,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "17-Tuna",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\17-Tuna.png",
+      "source_sha256": "767a91ffe19cccb99849eb335a640b6262842e7cbd09ff1b3d5a4add8c0ed57f",
+      "master_sha256": "45aa965308aced1f49303139caad40094e61f349d239cad2f81015eeb408bd12",
+      "runtime_sha256": "e7cdbe98e4839f8a15df8f4bb1309ebe7b89c2f25139ce7eff9652b62b619389",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.399541,
+      "outline_channel_closing": 31,
+      "runtime_edge_pixels": 2368,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "18-Musician",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\18-Musician.png",
+      "source_sha256": "2ac3cb702c404db6844c7cfe1efc071ca5443de09e98cf0401b4b138d776cb1c",
+      "master_sha256": "32e9bb27744a62b2a7fd7f7b35074acaff7ecd10062997adf9d4a9a9326fb5cf",
+      "runtime_sha256": "63a6b1eb2cdeac7251bafda23426dfbfbf984831c50cea6419070b781727910b",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.432198,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2200,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "19-Mage",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\19-Mage.png",
+      "source_sha256": "2a9afe5e5085e85ca21f4205a30c509c9bd5d326d39bbad101c457c4e5473a9e",
+      "master_sha256": "85c4cbc8ac696393cbaa0966ee946836604315863f520267f542c4d3a1a3c6fe",
+      "runtime_sha256": "59620942294ec81a1e2e835224435db0dfb657de3ec51a60aea6fc6b1b477733",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.429229,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 1987,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "20-Gambler",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\20-Gambler.png",
+      "source_sha256": "f8e9c6f2bea0d8a8fbcd77da620b9bd04009026866888195d16b8854872bd73d",
+      "master_sha256": "f0320512a919296b6a390861ac882006520747cabdc5c2728642c9740f0bb5f7",
+      "runtime_sha256": "a48d29237432135f92f9d268b66ad8e67b1947a24fe9d910869a530babc2e9e2",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.426811,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2118,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "21-Hunter",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\21-Hunter.png",
+      "source_sha256": "c82696c64250c140b4e4e56deb16e258015b2739af5fba494c92e0ece221cd71",
+      "master_sha256": "6898fa2667e0217af52db5dd595287d05af21ebfa98b8664467b51d3c4f4c05b",
+      "runtime_sha256": "8728e79ac4c8c01fd29a880c71a329e09e7294cb5bcad69e4744e9716b27dd99",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.430896,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2086,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "22-Stinker",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\22-Stinker.png",
+      "source_sha256": "bbcf69192468cdaafaea2fb1484e041d5bb96f7d66a154eb87977380ee852dcf",
+      "master_sha256": "9132a0e7df0e44d4209c0200313d03e5696932268309874c5300564b11eb676a",
+      "runtime_sha256": "c2f5b6417f652f6d8ed1077f9f3bb58fdbe287ffc509fa972cd7b5582faf90b6",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.444886,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2062,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "23-Engineer",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\23-Engineer.png",
+      "source_sha256": "c07a4aff5fe179aeb231b2da48be26c9e041127e47996fe1dcb8745cb121fd6b",
+      "master_sha256": "8946824a5f93cdcd05148e3efa7d8f7deb230a0d59c70259b0042cdfe1f81c70",
+      "runtime_sha256": "9e759733a26e42c75f51052ea34167ab1b08ee07b9bfbe515654fd87d27f8cac",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.429819,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2204,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "24-Trickster",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\24-Trickster.png",
+      "source_sha256": "78f760ee6e27b445b9e966b4af2c6220ad6669de1329150e275206599a4e36ee",
+      "master_sha256": "186bcc64e5775517b680145b98fbb6a05fdeb18ced003d2361ea0ecd011229f3",
+      "runtime_sha256": "99e5bf2659b4bfcea3f790848a082b9f23314ce1a1ee8b77f2139671ff23f58e",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.437865,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2080,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "25-Mechanic",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\25-Mechanic.png",
+      "source_sha256": "5e3b8845835750c2ed31676e8e5675d5e421ba0b993759e42cc1489898d768b6",
+      "master_sha256": "f70558702a620601ecc009780be833932c0b1aeb8f1bd98d36a59860a89aed76",
+      "runtime_sha256": "52d39a229c454ab4b27934f684d379b7383b3598842910c6eaa136b9340d8aa9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.431357,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2086,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "26-Electrician",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\26-Electrician.png",
+      "source_sha256": "bd8432324c27159f4cdf57f292fc51008e54dd7c8ce5b2d14febf877980b26dc",
+      "master_sha256": "4a54becbf97ae1d300cc80f76350ef2c2d272ca1fa0e915064fb2f381b520a37",
+      "runtime_sha256": "789a144dbf77c01474e654745235a30c6ccffdd8d4349fe4e88c2247c0478962",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.442377,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2169,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "27-Warden",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\27-Warden.png",
+      "source_sha256": "e6819f7f6b5dd1cd620dcb0ab327a30d4541e7a67423e5b14041c241f4a25a85",
+      "master_sha256": "e5cdaff9d4ba0b2bcff8f0e2c2026c9aab6205ca17655ab72f13471fe46dc812",
+      "runtime_sha256": "c1bfacbc0531d6514634e2c93f6758ffcd86ab3e6f1a0f0ffb1b7282c3b9d8b6",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.439727,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2095,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "28-Ninja",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\28-Ninja.png",
+      "source_sha256": "3bf8419b9529b7c577a4241d598d25e25d629e02c125aa53610c86045c055a9f",
+      "master_sha256": "d34b599eb31d86a45bd1bfa8c47757af2c124e0af818c3eb16a793ba20e68b2e",
+      "runtime_sha256": "5e39de6eca4e98ba4ab05d01aa66342e450d7b84ad6cb8c89e2eb00775e9b6e9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.410164,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2339,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "29-Executioner",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\29-Executioner.png",
+      "source_sha256": "cb97aeedff2abd2aec9bc7dd87b517ec4c6665853680b5102d5cd89599682801",
+      "master_sha256": "6c96a940d65a4decc3bb43a44bee10b2b35396a5584f90d65cbfc57dfd406090",
+      "runtime_sha256": "1556f6659299865ae84acc3a4c501c78a41064f307b67dba1b0d091087f607c5",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.424817,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2097,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "30-Rider",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\30-Rider.png",
+      "source_sha256": "03c68ccfb20da3508e5afe00f4251b2575c8392488e821ecb1d2b0552e4582a6",
+      "master_sha256": "36063c0ed0895299657f72a4dba148e474701e95ae38a4a5d6e66b91cfd41078",
+      "runtime_sha256": "4d850d22d8e91c8c09e00544e1ad16ce099e3badb2a14ec372b5f1b96ec2286a",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.417784,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2227,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "31-Influencer",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\31-Influencer.png",
+      "source_sha256": "6dfe43d9efebbabd631d4740007950a93a17daace03636de58a8cf833eb271c8",
+      "master_sha256": "89b9b62ab30e1ed5f9025bcec1d5a36a9616db8b4eda39b25b36eb3a20e17732",
+      "runtime_sha256": "de38dc18ec00dfcdd18771b2fca1bb23417a8aa84ca7237e8c1865fe7b593311",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.43596,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2086,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "32-Werewolf",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\32-Werewolf.png",
+      "source_sha256": "8e0b9d25e4d0f61c31e9b807d9c5641512b628e2324ef3e12d7515e7216771d8",
+      "master_sha256": "44a54e5bb7419ebf2ded4f479e1d9b91f06cb11d181247ebc78b9dbb7dbac6db",
+      "runtime_sha256": "5b5c553caa42c52238c587b844df4dc671a37226aa1485edbb2e50213a176634",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.452552,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2063,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "33-Berserker",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\33-Berserker.png",
+      "source_sha256": "d7a4c451c528e6f2f24710bf1cf3f74173634ce3e6d443b51fcad5ec3c4e712f",
+      "master_sha256": "79ed17de0f1a549c7ea85b791f8384fe266d8aa9a4a12953fa378802dfe4f0c9",
+      "runtime_sha256": "37f76c37c3b67603c6407459c58ec29b89a40b0286a433fc5e173c1a6d3a9851",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.423212,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2108,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "34-Bodyguard",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\34-Bodyguard.png",
+      "source_sha256": "2964c0b81cbe3f6e650bc32900e7a528d3841fe806b4eb66987990f079b5ee6b",
+      "master_sha256": "46ab56add84fb238f6ac797898fba9b52d72d5d4785f63eea139d1a975b4cc88",
+      "runtime_sha256": "f68f7d406775f9a640ceb083c317737a013718c18883a3b7ab1d7108fea75708",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.428072,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2090,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "35-Rammer",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\35-Rammer.png",
+      "source_sha256": "07dbee8946e48458df8d1b3230539a86e227006bd0a958d0a83a752d639b09d3",
+      "master_sha256": "4659550e436f7d3c6fc91641400b77900ce5f6c30706bead07bd3bdf2054ffcb",
+      "runtime_sha256": "eb0d8f52126e9221c28d66470d24f0d702bad4b1e506b7a856aa99532d75f06c",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.428627,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2055,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "36-Diver",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\36-Diver.png",
+      "source_sha256": "a34a7bd0d21daa652248afc2134bcd67ec7a2c1ce7331955ee699729dcd04166",
+      "master_sha256": "b2c39f18219c2d00278c5dd68e3f34a348d1671512d8150dae8b375d32bb7c4e",
+      "runtime_sha256": "028c3ec9c578a60a70ec724f3654c2ed36b01b478f8685e30fa6a742fb558c16",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.437774,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2085,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "37-Sniper",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\37-Sniper.png",
+      "source_sha256": "beef825d60f95e610665bc25a401aacb675bb50e6b9b8c903dd94b43d5765e49",
+      "master_sha256": "b5aa29ee372f6c07fc0f2ce0c532f222ce4a57f8b7f08e2e0c2c12f385a4653a",
+      "runtime_sha256": "2d2dbd81d428abc6ed1d71f8e4da7281c143a1a05ac69cd2fa639c0e46f34e1f",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.433093,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2084,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "38-Imitator",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\38-Imitator.png",
+      "source_sha256": "529109262db6d02f87c1a5aeeb85d4253301aebd224cdf715be4c67d6172dc1d",
+      "master_sha256": "5e2a888a8ece98702d5eded4a7b53c5f4d2499c62f83d488e25249fbb71c0c7e",
+      "runtime_sha256": "79318cbd8d4ee5fbcd75b2b47b36bb1e409cf53abcea7e3ad1b6f60c21ff39ab",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.422763,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2154,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "39-Avenger",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\39-Avenger.png",
+      "source_sha256": "55a2f871edd86005968da110e49fc84ecc47e83d2628716553daea3377ba56f8",
+      "master_sha256": "ff482469b093cf1f15f75d3866822c078553819c61bb2b90ceec7719a3e886c7",
+      "runtime_sha256": "9bfb68e722840af4559240f35bbf182b1bcabc07f7e36b030d39d049f7d0344c",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.430214,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 1981,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "40-Brawler",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\40-Brawler.png",
+      "source_sha256": "23ac93282f2568d7c80c6cc8a28cc561d7f93e1b86cfe4d04773cf5e1a9e6eea",
+      "master_sha256": "f50407ac8b91670decae13507c3f43b686c91d44e0f6008d2b2159cef1f055d0",
+      "runtime_sha256": "bf11c80ea201394db652cde17e03a2d94af94eb1ca7c14fdec4e33837992f537",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.435524,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2080,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "1001-Superbot",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\1001-Superbot.png",
+      "source_sha256": "f81d8b2a484883abcf26b3fa98ba1b9fe55167024d72d22d72e90567189c33f3",
+      "master_sha256": "0fc1f2b45572d66a101fb0d2488f37235211cd64900ed164f969f14e6ddb315e",
+      "runtime_sha256": "f9b00fc30ccd094297010223be243094c2ef279c08f9f260988871c717454db2",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.442672,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2060,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "1002-Disaster",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\1002-Disaster.png",
+      "source_sha256": "32e41202e303e64df0c2e445bfbe17d2fb62241e9383c73f6ff801ccc3979544",
+      "master_sha256": "5d4804a7a37c17e5cb3eae865ea92dd4fa8ecd19f60e8e5123d629243f6884d9",
+      "runtime_sha256": "304cd673ab4bd5e0e3c626887cdc83db340a8393262561166c7d59fe09e43c25",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.429782,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2202,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    },
+    {
+      "name": "Unrevealed",
+      "source": "Assets\\role-emblems-semibot-v1\\unrevealed\\Unrevealed.png",
+      "source_sha256": "0cfeebffe247d6bfa275146950abc0fe2115e8177d8c73e284a219ff29cab403",
+      "master_sha256": "3a6f908c8eaf6f7ce8d20afe261bb273f5d4e819d74925106df84ee755053a4d",
+      "runtime_sha256": "b86bb833bbcb2d85302156a7f1b25184133d45200dadde4818fb17286b540052",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.439737,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 2067,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true
+    }
+  ]
+}
