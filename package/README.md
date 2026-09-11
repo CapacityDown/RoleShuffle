@@ -358,6 +358,18 @@ The default base is Health 1 from run level 1 and 0 for every other managed upgr
 
 Influencer and Berserker scaling accepts comma- or semicolon-separated `condition:level` pairs. Influencer applies the last target whose player-count condition has been reached. Berserker applies the target belonging to the lowest configured HP threshold currently reached. Default expressions omit pairs whose target level would be `0`; add a `condition:0` pair manually when an explicit zero override is needed. Levels are limited to `0`–`100`, except Map Player Count which is limited to `0`–`1`. Entries in the wrong format are ignored.
 
+### Player tools
+
+Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` or `DRAW HISTORY`.
+
+- **HUD editor:** `TOOLS` → `HUD EDITOR` opens a sample using the actual HUD layout. Drag it to move it; adjust the anchor, alignment, text size, icon size, overall scale, display mode, and HUD visibility. `SAVE` keeps the local settings. `CANCEL` or Escape discards them; `RESET` restores defaults in the preview. The editor uses mouse input and remains available in the lobby.
+- **Bug report:** `TOOLS` → `REPORT A PROBLEM` creates a Markdown file in `BepInEx/RoleShuffleReports`. It includes versions, installed mods, local RoleShuffle settings, recent draws, and recent RoleShuffle logs. Known player identifiers, paths, and common private data are masked. Preview, open, or copy the report, review it and add reproduction steps, then use `OPEN GITHUB ISSUES` to submit it yourself. Nothing is uploaded automatically.
+- **Language memory:** the selected English/Japanese language is saved locally as `UI.GuideLanguage` and restored when reopening the menu or restarting the game. It also applies to the utility pages.
+- **Sync status:** `TOOLS` shows whether the role list, guide, Base Upgrades, and history agree with the host's latest published data. It distinguishes waiting, synchronized, delayed updates, version differences, and unsupported hosts. `REFRESH DISPLAY DATA` requests a new display snapshot without changing roles or upgrades. This does not check every gameplay RPC or require vanilla guests to install the mod.
+- **Draw history:** `DRAW HISTORY` shows the latest 50 completed truck draws, newest first, including level, selected upgrade, rolled change, and actual before/after Base Upgrade targets. Zero changes and capped outcomes are retained. History is saved with the host's run and shared with installed participants. Cancelled draws and results from before this update are not recorded.
+
+`HUD.FontSize` defaults to `28` (range `16`–`48`). `UI.GuideLanguage` defaults to `English`. Both are local settings; the existing `NameOnly` HUD default is unchanged.
+
 ### Notifications and HUD
 
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
@@ -370,7 +382,7 @@ Influencer and Berserker scaling accepts comma- or semicolon-separated `conditio
 - Installed participants see a one-column `ROLES` HUD with names only at the bottom left by default. Their own role stays pinned while other players rotate every 5 seconds. `HUD.RoleDisplay` can enable role icons. Icon size is adjustable with `HUD.IconSize`; larger icons use wider row spacing and fewer players per page. Icons at the default size show up to four players per page, including the pinned player. Names only show up to eight; the actual count adjusts to the font height so names remain visible.
 - The Base Upgrade draw animation is shown to the host and participants who have RoleShuffle installed.
 - A `ROLES` button at the top-right of the Escape and lobby menus opens the Roles page. The Escape menu opens on `CURRENT ROLES`; the lobby menu opens on `ROLE GUIDE`, with `CURRENT ROLES` disabled. The left column switches between available views and `BASE UPGRADES`. Click a player in `CURRENT ROLES` to show or hide that role's description. `BASE UPGRADES` shows the current shared target, configured target, and accumulated truck-draw bonus for every supported upgrade. Installed participants see the host's current values.
-- `ROLE GUIDE` shows enabled role descriptions in English or Japanese; disabled roles are hidden. Use the language toggle inside the guide to switch immediately; English is selected whenever the Roles page is opened. Japanese descriptions use the Checkpoint Revenge font. In multiplayer, installed participants see descriptions and role visibility based on the host's settings. Until those settings are available, descriptions omit unconfirmed numeric values. Single-player uses the player's own settings.
+- `ROLE GUIDE` shows enabled role descriptions in English or Japanese; disabled roles are hidden. The language toggle switches immediately and remembers the selection on this computer. Japanese descriptions use the Checkpoint Revenge font. In multiplayer, installed participants see descriptions and role visibility based on the host's settings. Until those settings are available, descriptions omit unconfirmed numeric values. Single-player uses the player's own settings.
 
 ### Compatibility
 
@@ -759,6 +771,18 @@ Weightのデフォルト値はバニラのショップ最大出現数を反映�
 
 InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたはセミコロンで区切ります。Influencerは到達した人数条件のうち最後の目標値、Berserkerは現在到達している最も低いHP境界の目標値を適用します。目標値が`0`になる組はデフォルトの記述から省略し、明示的に0へ上書きしたい場合だけ`条件:0`を手動で追加します。レベルはMap Player Countだけ`0`～`1`、ほかは`0`～`100`です。形式が正しくない項目は無視されます。
 
+### プレイヤー向けツール
+
+Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW HISTORY`を選択します。
+
+- **HUD編集：** `TOOLS` → `HUD編集モード`で、実際のHUDと同じレイアウトのサンプルを表示します。ドラッグで移動し、基準位置・整列・文字サイズ・アイコンサイズ・全体倍率・表示形式・HUDの表示／非表示を調整できます。「保存」でローカル設定に反映し、「取消」またはEscで破棄します。「初期値」はプレビューを初期設定に戻します。マウスで操作でき、ロビーでも使用できます。
+- **不具合レポート：** `TOOLS` → `不具合レポート`から、バージョン・導入MOD・ローカルのRoleShuffle設定・最近の抽選・RoleShuffleログをMarkdownファイルにまとめ、`BepInEx/RoleShuffleReports`へ保存します。既知のプレイヤー情報・パスなどをマスクします。プレビュー・ファイルを開く・コピーに対応しています。内容を確認して再現手順を追記し、「GitHub Issuesを開く」から投稿してください。自動送信は行いません。
+- **言語の記憶：** 英語／日本語の選択をローカルの`UI.GuideLanguage`に保存し、メニューを開き直した場合も、ゲームを再起動した場合も復元します。ツール画面にも選択した言語を反映します。
+- **同期状態：** `TOOLS`で、役職一覧・ガイド・Base Upgrade・履歴がホストの最新配信データと一致しているかを確認できます。受信待ち・同期済み・更新遅延・バージョン差・ホスト未対応を表示します。「表示データを再取得」で再配信を要求できます。役職や強化値を変更する操作ではなく、すべてのゲーム内通信を検査するものでもありません。MOD未導入の参加者も従来どおり遊べます。
+- **抽選履歴：** `DRAW HISTORY`で、完了したトラック抽選の直近50回を新しい順に表示します。レベル・抽選対象・抽選値・実際のBase Upgrade目標値の前後を確認でき、変化なしや上限・下限に達した結果も記録します。ホストのセーブに保存し、MOD導入済み参加者にも共有します。中断した抽選と、この更新より前の結果は記録しません。
+
+`HUD.FontSize`の初期値は`28`（範囲`16`～`48`）、`UI.GuideLanguage`の初期値は`English`です。どちらもローカル設定で、HUDの初期表示形式は引き続き`NameOnly`です。
+
 ### 通知とHUD
 
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示できます。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
@@ -771,7 +795,7 @@ InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたは�
 - MOD導入済みの参加者には、1列の`ROLES` HUDがデフォルトで左下に名前のみで表示されます。自分の役職を固定し、ほかのプレイヤーを5秒ごとに切り替えます。`HUD.RoleDisplay`でアイコン表示を有効にできます。`HUD.IconSize`でアイコンを拡大すると、行間を広げて1ページの表示人数を自動調整します。標準サイズのアイコン表示では自分を含め最大4人、名前のみでは最大8人を表示します。文字が消えないよう、使用フォントの高さに合わせて実際の表示人数を調整します。
 - Base Upgradeの抽選演出は、ホストとRoleShuffleを導入している参加者に表示されます。
 - Escメニュー・ロビーの右上にある`ROLES`ボタンからRolesページを開けます。Escメニューからは`CURRENT ROLES`、ロビーからは`ROLE GUIDE`を最初に表示し、ロビーでは`CURRENT ROLES`を無効にします。左カラムから利用可能な表示や`BASE UPGRADES`へ切り替えられます。`CURRENT ROLES`のプレイヤーをクリックすると、その役職の説明を表示または非表示にできます。`BASE UPGRADES`では、各アップグレードの現在の共有目標値、設定上の目標値、トラック抽選で累積した追加値を確認できます。MOD導入済み参加者にはホストの現在値を表示します。
-- `ROLE GUIDE`では有効な役職の説明を英語または日本語で表示し、無効化された役職は非表示になります。ガイド内の言語トグルですぐに切り替えられ、Rolesページを開いた時点では毎回英語が選択されます。日本語の説明には「チェックポイント★リベンジ」を使用します。マルチプレイでは、MOD導入済み参加者にもホストの設定に従った説明と役職の表示・非表示を反映します。ホストの設定がまだ確認できない間は、未確認の数値を含まない説明を表示します。シングルプレイでは自分の設定を使用します。
+- `ROLE GUIDE`では有効な役職の説明を英語または日本語で表示し、無効化された役職は非表示になります。言語トグルですぐに切り替えられ、選択した言語をこのPCに記憶します。日本語の説明には「チェックポイント★リベンジ」を使用します。マルチプレイでは、MOD導入済み参加者にもホストの設定に従った説明と役職の表示・非表示を反映します。ホストの設定がまだ確認できない間は、未確認の数値を含まない説明を表示します。シングルプレイでは自分の設定を使用します。
 
 ### 互換性
 

@@ -495,7 +495,14 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
             yield break;
         }
 
+        bool recordDraw = _selected.Count > 0 && UpgradeService.Ready;
+        string drawnUpgrade = recordDraw ? _selected[0].CommandName : string.Empty;
+        int[]? beforeLevels = null;
+        try { if (recordDraw) beforeLevels = BaseUpgradeHistory.Levels(_config); }
+        catch (Exception exception) { StageRolesPlugin.ModLogger.LogWarning($"Could not prepare draw history: {exception.Message}"); }
         ApplyResults();
+        try { if (beforeLevels != null) BaseUpgradeHistory.Record(drawnUpgrade, _selectedDelta, beforeLevels, _config); }
+        catch (Exception exception) { StageRolesPlugin.ModLogger.LogWarning($"Could not record draw history: {exception.Message}"); }
         CompletePersistentDrawAndSave();
         SetUpgradeSlot(
             _selected.Count > 0

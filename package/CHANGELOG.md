@@ -1,5 +1,9 @@
 ## 4.4.6
 - Moved questions, bug reports, and feedback to GitHub Issues.
+- Added a HUD editor with draggable preview, text/icon sizing, display options, and Save/Cancel controls.
+- Added local bug-report creation, preview, copying, and an in-game link to GitHub Issues.
+- Remembered the selected menu language between sessions and added host synchronization status with display-data refresh.
+- Added the latest 50 Base Upgrade draw results, saved with the host's run and shared with installed participants.
 
 ## 4.4.5
 - Added role emblems to Current Roles and Role Guide, plus optional HUD icons with adjustable size and display modes. Unrevealed secret roles use a shared question-mark emblem.

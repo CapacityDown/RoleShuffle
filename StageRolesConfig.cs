@@ -55,6 +55,10 @@ internal sealed class StageRolesConfig
         AnnouncementDelaySeconds = BindFloat(config, "Notifications", "DelaySeconds", 2.5f, 0f, 30f, "Delay before role announcements.");
         StageFluxAnnouncementDelaySeconds = BindFloat(config, "Notifications", "StageFluxDelaySeconds", 5f, 0f, 30f, "Delay used when Stage Flux is installed.");
 
+        GuideLanguage = config.Bind("UI", "GuideLanguage", "English",
+            new ConfigDescription("Remembered language for the role guide and utility pages on this computer.",
+                new AcceptableValueList<string>("English", "Japanese")));
+        HudFontSize = BindInt(config, "HUD", "FontSize", 28, 16, 48, "HUD text size before overall scaling.");
         HudEnabled = BindBool(config, "HUD", "Enabled", true, "Shows every player's assigned role during a stage.");
         HudRoleDisplay = config.Bind("HUD", "RoleDisplay", "NameOnly",
             new ConfigDescription("Role display style. Player names remain visible in every mode.",
@@ -417,6 +421,8 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> AnnouncementsEnabled { get; }
     internal ConfigEntry<float> AnnouncementDelaySeconds { get; }
     internal ConfigEntry<float> StageFluxAnnouncementDelaySeconds { get; }
+    internal ConfigEntry<string> GuideLanguage { get; }
+    internal ConfigEntry<int> HudFontSize { get; }
     internal ConfigEntry<bool> HudEnabled { get; }
     internal ConfigEntry<string> HudRoleDisplay { get; }
     internal ConfigEntry<int> HudIconSize { get; }

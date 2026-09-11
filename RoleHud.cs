@@ -17,6 +17,8 @@ internal sealed class RoleHud : MonoBehaviour
     private const float RowGap = 8f;
     private const float IconTextGap = 12f;
     private static readonly Vector2 LayoutSize = new(620f, 340f);
+    private Vector2 CurrentLayoutSize => new(LayoutSize.x,
+        Mathf.Max(LayoutSize.y, _headingHeight + HeadingGap + 2f * RowHeight));
 
     private readonly List<TMP_Text> _fontTargets = new();
     private readonly List<RoleSnapshot> _assignments = new();
@@ -27,6 +29,21 @@ internal sealed class RoleHud : MonoBehaviour
     private float _headingHeight = MinimumHeadingHeight;
     private float _textRowHeight = MinimumRowHeight;
     private StageRolesConfig _config = null!;
+    internal HudLayoutSettings? PreviewSettings;
+    private Transform? _previewParent;
+    private TMP_FontAsset? _previewFont;
+    private int _lastFontSize;
+    private readonly HudLayoutSettings _liveLayout = new();
+    private HudLayoutSettings Layout => PreviewSettings ?? _liveLayout;
+    private static readonly IReadOnlyList<RoleSnapshot> PreviewPlayers = new[]
+    {
+        new RoleSnapshot("preview-local", "YOU", StageRole.Tank, StageRole.Tank),
+        new RoleSnapshot("preview-2", "Player 2", StageRole.Runner, StageRole.Runner),
+        new RoleSnapshot("preview-3", "Player 3", StageRole.Medic, StageRole.Medic),
+        new RoleSnapshot("preview-4", "Player 4", StageRole.Engineer, StageRole.Engineer),
+        new RoleSnapshot("preview-5", "Player 5", StageRole.Ninja, StageRole.Ninja),
+        new RoleSnapshot("preview-6", "Player 6", StageRole.Jumper, StageRole.Jumper)
+    };
     private GameObject? _root;
     private RectTransform? _canvasRect;
     private RectTransform? _contentRect;
@@ -48,26 +65,75 @@ internal sealed class RoleHud : MonoBehaviour
     internal void Initialize(StageRolesConfig config)
     {
         _config = config;
+        _liveLayout.Refresh(config);
+    }
+
+    internal void InitializePreview(StageRolesConfig config, HudLayoutSettings settings, Transform parent, TMP_FontAsset font)
+    {
+        _config = config; PreviewSettings = settings; _previewParent = parent; _previewFont = font;
+        EnsureCreated(); RefreshPreview();
+    }
+
+    internal void RefreshPreview()
+    {
+        _lastLayout = null; _assignmentState = default; _nextRefreshAt = 0;
+        ApplyFontSize(); RefreshAssignments(); ApplyLayout(); UpdateRows();
+    }
+
+    internal bool ContainsPreview(Vector2 pointer) => _contentRect != null &&
+        RectTransformUtility.RectangleContainsScreenPoint(_contentRect, pointer);
+
+    internal void MovePreview(Vector2 pixels, int startX, int startY)
+    {
+        if (PreviewSettings == null) return;
+        float scale = Screen.height / 540f;
+        PreviewSettings.X = startX + Mathf.RoundToInt(pixels.x / scale);
+        PreviewSettings.Y = startY + Mathf.RoundToInt(pixels.y / scale);
+        ClampPreview();
+    }
+
+    internal void ClampPreview()
+    {
+        if (PreviewSettings == null || _contentRect == null || _canvasRect == null) return;
+        ApplyLayout();
+        Vector2 anchor = ResolveAnchor(PreviewSettings.Anchor);
+        float scale = ResolveResolutionScale();
+        Vector2 size = CurrentLayoutSize * _contentRect.localScale.x;
+        PreviewSettings.X = HudLayoutMath.ClampOffset(PreviewSettings.X, anchor.x, _canvasRect.rect.width, size.x, scale, 3840);
+        PreviewSettings.Y = HudLayoutMath.ClampOffset(PreviewSettings.Y, anchor.y, _canvasRect.rect.height, size.y, scale, 2160);
+        ApplyLayout();
+    }
+
+    private void ApplyFontSize()
+    {
+        int size = Layout.FontSize;
+        if (_lastFontSize == size) return;
+        _lastFontSize = size;
+        foreach (TMP_Text label in _fontTargets) label.fontSize = size;
+        _assignmentState = default;
+        _nextRefreshAt = 0;
     }
 
     private void Update()
     {
+        _liveLayout.Refresh(_config);
         EnsureCreated();
         if (_root == null)
         {
             return;
         }
 
+        ApplyFontSize();
         if (Time.unscaledTime >= _nextRefreshAt)
         {
             _nextRefreshAt = Time.unscaledTime + RefreshIntervalSeconds;
             RefreshAssignments();
         }
 
-        bool visible = _config.HudEnabled.Value &&
+        bool visible = PreviewSettings != null || (!RoleHudEditor.IsOpen && _config.HudEnabled.Value &&
                        _config.Enabled.Value &&
                        _hasAssignments &&
-                       IsPlayableStageContext();
+                       IsPlayableStageContext());
         if (_root.activeSelf != visible)
         {
             _root.SetActive(visible);
@@ -90,9 +156,9 @@ internal sealed class RoleHud : MonoBehaviour
             return;
         }
 
-        Transform? layerParent = HealthUI.instance != null
+        Transform? layerParent = _previewParent ?? (HealthUI.instance != null
             ? HealthUI.instance.transform.parent
-            : HUDCanvas.instance?.transform;
+            : HUDCanvas.instance?.transform);
         if (layerParent == null)
         {
             return;
@@ -140,7 +206,8 @@ internal sealed class RoleHud : MonoBehaviour
         GameObject obj = new(name, typeof(RectTransform), typeof(TextMeshProUGUI));
         obj.transform.SetParent(parent, false);
         TextMeshProUGUI label = obj.GetComponent<TextMeshProUGUI>();
-        label.fontSize = 28f;
+        label.fontSize = Layout.FontSize;
+        if (_previewFont != null) label.font = _previewFont;
         label.color = new Color(0.9f, 0.91f, 0.87f, 1f);
         label.outlineColor = new Color(0f, 0f, 0f, 0.95f);
         label.outlineWidth = 0.15f;
@@ -156,11 +223,11 @@ internal sealed class RoleHud : MonoBehaviour
 
     private void RefreshAssignments()
     {
-        IReadOnlyList<RoleSnapshot> current = RoleAssignmentSync.Read();
+        IReadOnlyList<RoleSnapshot> current = PreviewSettings != null ? PreviewPlayers : RoleAssignmentSync.Read();
         _hasAssignments = current.Count > 0;
         var state = (current, _config.HudPlayersPerPage.Value,
             _config.HudPinLocalPlayer.Value, PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal()),
-            _config.HudRoleDisplay.Value, IconSize);
+            Layout.Display, IconSize);
         if (_assignmentState == state)
         {
             return;
@@ -262,7 +329,7 @@ internal sealed class RoleHud : MonoBehaviour
 
     private void UpdateDisplayedText()
     {
-        _lastDisplayMode = _config.HudRoleDisplay.Value;
+        _lastDisplayMode = Layout.Display;
         _rowsDirty = true;
         _displayedAssignments.Clear();
         if (_assignments.Count == 0)
@@ -328,9 +395,9 @@ internal sealed class RoleHud : MonoBehaviour
             : $"{playerName}: {RoleCatalog.AssignmentName(snapshot.Role, snapshot.EffectiveRole)}";
     }
 
-    private int IconSize => Mathf.Clamp(_config.HudIconSize.Value, 32, 128);
+    private int IconSize => Mathf.Clamp(Layout.IconSize, 32, 128);
 
-    private float RowHeight => _config.HudRoleDisplay.Value == "NameOnly"
+    private float RowHeight => Layout.Display == "NameOnly"
         ? _textRowHeight : Mathf.Max(_textRowHeight, IconSize + RowGap);
 
     private void UpdateTextMetrics()
@@ -356,12 +423,13 @@ internal sealed class RoleHud : MonoBehaviour
         // Measure all assignments, including fallback glyphs, so page capacity
         // stays consistent when switching pages or hiding the icons.
         _rowsDirty = true;
+        _lastLayout = null;
     }
 
     // Page before shrinking: detailed emblems must keep their requested size.
     private int EffectivePageSize => Mathf.Min(
         Mathf.Clamp(_config.HudPlayersPerPage.Value, 2, 20),
-        Mathf.Max(2, Mathf.FloorToInt((LayoutSize.y - _headingHeight - HeadingGap) / RowHeight)));
+        Mathf.Max(2, Mathf.FloorToInt((CurrentLayoutSize.y - _headingHeight - HeadingGap) / RowHeight)));
 
     private void UpdateRows()
     {
@@ -372,7 +440,7 @@ internal sealed class RoleHud : MonoBehaviour
         // Keep the heading and pinned player in place on a partially filled last page.
         int rowCount = Mathf.Min(_assignments.Count, EffectivePageSize);
         float height = _headingHeight + HeadingGap + rowCount * rowHeight;
-        float top = (LayoutSize.y - height) * 0.5f;
+        float top = (CurrentLayoutSize.y - height) * 0.5f;
         RectTransform headingRect = _heading.rectTransform;
         headingRect.anchorMin = headingRect.anchorMax = new Vector2(0f, 1f);
         headingRect.pivot = new Vector2(0f, 1f);
@@ -415,7 +483,7 @@ internal sealed class RoleHud : MonoBehaviour
             float iconSpace = hasIcon ? IconSize + IconTextGap : 0f;
             float textWidth = Mathf.Clamp(Mathf.Ceil(row.Label.preferredWidth) + 2f, 1f, LayoutSize.x - iconSpace);
             float groupWidth = iconSpace + textWidth;
-            float left = _config.HudAlignment.Value switch
+            float left = Layout.Alignment switch
             {
                 "Center" => (LayoutSize.x - groupWidth) * 0.5f,
                 "Right" => LayoutSize.x - groupWidth,
@@ -441,6 +509,7 @@ internal sealed class RoleHud : MonoBehaviour
 
     private RoleSnapshot? FindLocalSnapshot()
     {
+        if (PreviewSettings != null) return PreviewPlayers[0];
         if (!_config.HudPinLocalPlayer.Value)
         {
             return null;
@@ -498,9 +567,9 @@ internal sealed class RoleHud : MonoBehaviour
         int canvasHeight = _canvasRect != null
             ? Mathf.RoundToInt(_canvasRect.rect.height)
             : Screen.height;
-        var signature = (_config.HudAnchor.Value, _config.HudAlignment.Value,
-            _config.HudOffsetX.Value, _config.HudOffsetY.Value,
-            _config.HudScalePercent.Value, canvasWidth, canvasHeight, Screen.width, Screen.height);
+        HudLayoutSettings layout = Layout;
+        var signature = (layout.Anchor, layout.Alignment,
+            layout.X, layout.Y, layout.Scale, canvasWidth, canvasHeight, Screen.width, Screen.height);
         if (_lastLayout == signature)
         {
             return;
@@ -508,18 +577,19 @@ internal sealed class RoleHud : MonoBehaviour
         _lastLayout = signature;
         _rowsDirty = true;
 
-        Vector2 anchor = ResolveAnchor(_config.HudAnchor.Value);
+        Vector2 anchor = ResolveAnchor(layout.Anchor);
         float resolutionScale = ResolveResolutionScale();
-        float userScale = _config.HudScalePercent.Value / 100f;
-        float scale = CalculateResponsiveScale(LayoutSize, userScale, resolutionScale);
+        float userScale = layout.Scale / 100f;
+        float scale = CalculateResponsiveScale(CurrentLayoutSize, userScale, resolutionScale);
+        _contentRect.sizeDelta = CurrentLayoutSize;
         _contentRect.anchorMin = anchor;
         _contentRect.anchorMax = anchor;
         _contentRect.pivot = anchor;
         _contentRect.anchoredPosition = new Vector2(
-            _config.HudOffsetX.Value * resolutionScale,
-            _config.HudOffsetY.Value * resolutionScale);
+            layout.X * resolutionScale,
+            layout.Y * resolutionScale);
         _contentRect.localScale = Vector3.one * scale;
-        _heading.alignment = _config.HudAlignment.Value switch
+        _heading.alignment = layout.Alignment switch
         {
             "Center" => TextAlignmentOptions.Center,
             "Right" => TextAlignmentOptions.Right,
@@ -540,21 +610,8 @@ internal sealed class RoleHud : MonoBehaviour
         float userScale,
         float resolutionScale)
     {
-        float desiredScale = Mathf.Max(0.1f, resolutionScale * userScale);
-        if (_canvasRect == null ||
-            _canvasRect.rect.width <= 1f ||
-            _canvasRect.rect.height <= 1f)
-        {
-            return desiredScale;
-        }
-
-        float safeMargin = 8f * resolutionScale;
-        float availableWidth = Mathf.Max(1f, _canvasRect.rect.width - safeMargin * 2f);
-        float availableHeight = Mathf.Max(1f, _canvasRect.rect.height - safeMargin * 2f);
-        float fitScale = Mathf.Min(
-            availableWidth / layoutSize.x,
-            availableHeight / layoutSize.y);
-        return Mathf.Max(0.1f, Mathf.Min(desiredScale, fitScale));
+        return HudLayoutMath.Scale(_canvasRect?.rect.width ?? 0, _canvasRect?.rect.height ?? 0,
+            layoutSize.x, layoutSize.y, userScale, resolutionScale);
     }
 
     private void TryApplyRepoUiFont()

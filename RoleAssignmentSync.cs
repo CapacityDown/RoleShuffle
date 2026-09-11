@@ -41,6 +41,7 @@ internal static class RoleAssignmentSync
     private static IReadOnlyList<RoleSnapshot> _cachedSnapshots = Array.Empty<RoleSnapshot>();
 
     internal static int PreviewPlayerCount => _previewPlayerCount;
+    internal static string LocalPayload => _localRoleMap;
 
     internal static void SetPreviewPlayerCount(int count)
     {

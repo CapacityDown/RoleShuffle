@@ -26,7 +26,8 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float GuideScrollMultiplier = 0.5f;
     private const float BaseUpgradeScrollMultiplier = 4f;
     private const float JapaneseWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 402;
+    private const int RoleUiBuildNumber = 406;
+    internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
     private static readonly List<RoleMenuRow> _roleRows = new();
@@ -35,6 +36,9 @@ internal sealed class RoleMenu : MonoBehaviour
     private static REPOButton? _assignmentsButton;
     private static REPOButton? _guideButton;
     private static REPOButton? _baseUpgradesButton;
+    private static REPOButton? _historyButton;
+    private static REPOButton? _toolsButton;
+    private static string _utilityMessage = string.Empty;
     private static REPOButton? _languageButton;
     private static REPOLabel? _versionLabel;
     private static string _openSignature = string.Empty;
@@ -113,6 +117,16 @@ internal sealed class RoleMenu : MonoBehaviour
         }
 
         _nextRefreshAt = Time.unscaledTime + RefreshIntervalSeconds;
+        if (RoleHudEditor.IsOpen) return;
+        RoleGuideLanguage savedLanguage = SavedLanguage;
+        if (_guideLanguage != savedLanguage)
+        { _guideLanguage = savedLanguage; SwitchView(_openPage, _activeView); return; }
+        if (_activeView is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
+        {
+            string utilitySignature = UtilitySignature();
+            if (_openSignature != utilitySignature) RefreshUtilityRows(_openPage);
+            return;
+        }
         if (_activeView == RoleMenuView.Guide)
         {
             string guideSignature = BuildGuideSignature();
@@ -177,7 +191,8 @@ internal sealed class RoleMenu : MonoBehaviour
         _activeView = assignmentsEnabled
             ? RoleMenuView.Assignments
             : RoleMenuView.Guide;
-        _guideLanguage = RoleGuideLanguage.English;
+        _guideLanguage = SavedLanguage;
+        _utilityMessage = string.Empty;
         _openSignature = string.Empty;
         _selectedAssignmentKey = string.Empty;
 
@@ -187,23 +202,25 @@ internal sealed class RoleMenu : MonoBehaviour
                 "CURRENT ROLES",
                 () => SwitchView(page, RoleMenuView.Assignments),
                 parent,
-                new Vector2(108f, 248f));
+                new Vector2(108f, 272f));
             _guideButton = CreateNavigationButton(
                 "ROLE GUIDE",
                 () => SwitchView(page, RoleMenuView.Guide),
                 parent,
-                new Vector2(108f, 198f));
+                new Vector2(108f, 234f));
             _baseUpgradesButton = CreateNavigationButton(
                 "BASE UPGRADES",
                 () => SwitchView(page, RoleMenuView.BaseUpgrades),
                 parent,
-                new Vector2(108f, 148f));
+                new Vector2(108f, 196f));
             _baseUpgradesButton.labelTMP.fontSize = 20f;
+            _historyButton = CreateNavigationButton("DRAW HISTORY", () => SwitchView(page, RoleMenuView.History), parent, new Vector2(108f, 158f));
+            _toolsButton = CreateNavigationButton("TOOLS", () => SwitchView(page, RoleMenuView.Tools), parent, new Vector2(108f, 120f));
             _languageButton = CreateNavigationButton(
                 "LANGUAGE: ENGLISH",
                 () => ToggleLanguage(page),
                 parent,
-                new Vector2(108f, 98f));
+                new Vector2(108f, 82f));
             _languageButton.labelTMP.fontSize = 18f;
             _versionLabel = MenuAPI.CreateREPOLabel(
                 $"RoleShuffle v{StageRolesPlugin.PluginVersion}" +
@@ -238,6 +255,7 @@ internal sealed class RoleMenu : MonoBehaviour
         });
         page.onEscapePressed += () =>
         {
+            if (RoleHudEditor.IsOpen) { RoleHudEditor.Instance!.Close(false); return false; }
             ClearOpenPageTracking();
             return true;
         };
@@ -269,9 +287,9 @@ internal sealed class RoleMenu : MonoBehaviour
             onClick,
             parent,
             position);
-        button.overrideButtonSize = new Vector2(190f, 34f);
+        button.overrideButtonSize = new Vector2(190f, 32f);
         button.labelTMP.alignment = TextAlignmentOptions.Left;
-        button.labelTMP.fontSize = 22f;
+        button.labelTMP.fontSize = 20f;
         return button;
     }
 
@@ -287,9 +305,12 @@ internal sealed class RoleMenu : MonoBehaviour
         }
 
         _activeView = view;
+        _utilityMessage = string.Empty;
         page.scrollView.scrollSpeed = AssignmentScrollSpeed;
         UpdateNavigationLabels();
         page.scrollView.SetScrollPosition(0f);
+        if (view is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
+        { RefreshUtilityRows(page); return; }
         if (view == RoleMenuView.Assignments)
         {
             IReadOnlyList<RoleSnapshot> assignments = RoleAssignmentSync.Read();
@@ -309,9 +330,7 @@ internal sealed class RoleMenu : MonoBehaviour
 
     private static void ToggleLanguage(REPOPopupPage page)
     {
-        if (!ReferenceEquals(_openPage, page) ||
-            (_activeView == RoleMenuView.Assignments &&
-             string.IsNullOrEmpty(_selectedAssignmentKey)))
+        if (!ReferenceEquals(_openPage, page))
         {
             return;
         }
@@ -319,20 +338,15 @@ internal sealed class RoleMenu : MonoBehaviour
         _guideLanguage = _guideLanguage == RoleGuideLanguage.English
             ? RoleGuideLanguage.Japanese
             : RoleGuideLanguage.English;
-        UpdateNavigationLabels();
-        if (_activeView == RoleMenuView.Guide)
-        {
-            RefreshGuideRows(page);
-        }
-        else
-        {
-            IReadOnlyList<RoleSnapshot> assignments = RoleAssignmentSync.Read();
-            RefreshAssignmentRows(
-                page,
-                assignments,
-                BuildSignature(assignments));
-        }
+        _config.GuideLanguage.Value = _guideLanguage.ToString();
+        StageRolesPlugin.Instance.SaveLocalSettings();
+        SwitchView(page, _activeView);
     }
+
+    private static RoleGuideLanguage SavedLanguage => _config.GuideLanguage.Value == "Japanese"
+        ? RoleGuideLanguage.Japanese : RoleGuideLanguage.English;
+    private static bool Japanese => _guideLanguage == RoleGuideLanguage.Japanese;
+    private static string Localized(string english, string japanese) => Japanese ? japanese : english;
 
     private static void UpdateNavigationLabels()
     {
@@ -363,17 +377,19 @@ internal sealed class RoleMenu : MonoBehaviour
                 _guideLanguage == RoleGuideLanguage.English
                     ? "LANGUAGE: ENGLISH"
                     : "LANGUAGE: JAPANESE";
-            _languageButton.rectTransform.gameObject.SetActive(
-                _activeView == RoleMenuView.Guide ||
-                (_activeView == RoleMenuView.Assignments &&
-                 !string.IsNullOrEmpty(_selectedAssignmentKey)));
+            _languageButton.rectTransform.gameObject.SetActive(true);
         }
+        if (_historyButton != null) _historyButton.labelTMP.text = (_activeView == RoleMenuView.History ? "> " : "  ") + "DRAW HISTORY";
+        if (_toolsButton != null) _toolsButton.labelTMP.text = (_activeView is RoleMenuView.Tools or RoleMenuView.Report ? "> " : "  ") + "TOOLS";
         if (_openPage != null)
         {
             _openPage.headerTMP.text = _activeView switch
             {
                 RoleMenuView.Assignments => "Current Roles",
                 RoleMenuView.Guide => "Role Guide",
+                RoleMenuView.History => "Draw History",
+                RoleMenuView.Tools => "Tools",
+                RoleMenuView.Report => "Bug Report",
                 _ => "Base Upgrades"
             };
         }
@@ -606,6 +622,93 @@ internal sealed class RoleMenu : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private static string UtilitySignature() => _activeView switch
+    {
+        RoleMenuView.History => BaseUpgradeHistory.CurrentPayload ?? "unavailable",
+        RoleMenuView.Tools => RoleSyncStatus.Instance?.Describe(Japanese) ?? "",
+        _ => StageRolesPlugin.Instance.BugReport.LatestPath + _utilityMessage
+    };
+
+    private static void RefreshUtilityRows(REPOPopupPage page)
+    {
+        List<RoleMenuEntry> entries = new();
+        void Text(string text)
+        {
+            foreach (string paragraph in text.Replace("\r", "").Split('\n'))
+            {
+                if (paragraph.Length == 0)
+                { entries.Add(new RoleMenuEntry("", 18, FontStyles.Normal, 10, false)); continue; }
+                foreach (string line in WrapGuideText(MeasurementText(page), paragraph, ContentWidth(page), _guideLanguage))
+                    entries.Add(new RoleMenuEntry(line, 18, FontStyles.Normal, 25, false, Japanese));
+            }
+        }
+        void Button(string label, Action action)
+        {
+            entries.Add(new RoleMenuEntry("> " + label, 18, FontStyles.Bold, 40, false, Japanese, () =>
+            {
+                try { action(); }
+                catch (Exception exception)
+                {
+                    _utilityMessage = Localized("Operation failed. Check the RoleShuffle log.", "操作に失敗しました。RoleShuffleのログを確認してください。");
+                    StageRolesPlugin.ModLogger.LogError(exception);
+                }
+                if (_openPage == page && !RoleHudEditor.IsOpen) RefreshUtilityRows(page);
+            }));
+        }
+
+        if (_activeView == RoleMenuView.History)
+        {
+            Text(Localized("Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.",
+                "ホストのセーブに記録した直近50回の抽選を、新しい順に表示します。数値は共有のBase Upgrade目標値です。"));
+            if (BaseUpgradeHistory.CurrentPayload == null)
+                Text(Localized("History has not been received. Older hosts do not provide it.", "履歴を受信していません。旧バージョンのホストは履歴を配信しません。"));
+            else if (!DrawHistoryStore.TryParse(BaseUpgradeHistory.CurrentPayload, out _))
+                Text(Localized("History data is invalid or unsupported. Request a refresh from TOOLS.", "履歴データが不正、または未対応です。TOOLSから表示データを再取得してください。"));
+            else if (BaseUpgradeHistory.Read().Count == 0)
+                Text(Localized("No recorded draws in this run. Draws before this update cannot be recovered.", "このセーブに抽選履歴はありません。更新前の抽選結果は復元できません。"));
+            foreach (UpgradeDrawRecord record in BaseUpgradeHistory.Read())
+            { Text("\n" + BaseUpgradeHistory.Describe(record, Japanese)); }
+        }
+        else if (_activeView == RoleMenuView.Tools)
+        {
+            Text(Localized("SYNC STATUS", "同期状態") + "\n" + (RoleSyncStatus.Instance?.Describe(Japanese) ?? ""));
+            Text(Localized("Checks the role list, guide, Base Upgrades and draw history. Unmodded guests can still play normally.",
+                "役職一覧・ガイド・Base Upgrade・抽選履歴の同期を確認します。MOD未導入の参加者も通常どおり遊べます。"));
+            Button(Localized("REFRESH DISPLAY DATA", "表示データを再取得"), () => RoleSyncStatus.Instance?.RequestRefresh());
+            Button(Localized("HUD EDITOR", "HUD編集モード"), () => RoleHudEditor.Open(_config, page, _roleRows[0].DefaultFont, Japanese));
+            Text(Localized("Move and resize a sample HUD, then Save or Cancel.", "サンプルHUDの位置・文字・アイコン・倍率を調整し、保存または取消できます。"));
+            Button(Localized("REPORT A PROBLEM", "不具合レポート"), () => SwitchView(page, RoleMenuView.Report));
+        }
+        else
+        {
+            Text(Localized("Create a local report containing versions, installed mods, local settings, recent draws and RoleShuffle logs. Known player identifiers and common private data are masked. Review the file before sharing; nothing is uploaded automatically.",
+                "バージョン・導入MOD・ローカル設定・最近の抽選・RoleShuffleログをまとめます。既知のプレイヤー情報などをマスクします。共有前に内容を確認してください。自動送信はしません。"));
+            Button(Localized("CREATE / UPDATE REPORT", "レポートを作成 / 更新"), () =>
+            {
+                StageRolesPlugin.Instance.CreateBugReport();
+                _utilityMessage = Localized("Saved in BepInEx/RoleShuffleReports. Add reproduction steps before submitting.",
+                    "BepInEx/RoleShuffleReportsに保存しました。投稿前に再現手順を追記してください。");
+            });
+            RoleBugReport report = StageRolesPlugin.Instance.BugReport;
+            if (!string.IsNullOrEmpty(report.LatestPath))
+            {
+                Button(Localized("COPY REPORT", "レポートをコピー"), () =>
+                { GUIUtility.systemCopyBuffer = report.LatestText; _utilityMessage = Localized("Copied to clipboard.", "クリップボードにコピーしました。"); });
+                Button(Localized("OPEN SAVED REPORT", "保存したレポートを開く"), () => Application.OpenURL(new Uri(report.LatestPath).AbsoluteUri));
+            }
+            Button(Localized("OPEN GITHUB ISSUES", "GitHub Issuesを開く"), () => Application.OpenURL(RoleBugReport.IssuesUrl));
+            if (!string.IsNullOrEmpty(report.LatestText))
+            {
+                Text("\n" + Localized("PREVIEW (first 2,400 characters)", "プレビュー（先頭2,400文字）"));
+                Text(report.LatestText.Substring(0, Math.Min(2400, report.LatestText.Length)));
+            }
+        }
+        if (_utilityMessage.Length > 0)
+            entries.Insert(0, new RoleMenuEntry(_utilityMessage, 18, FontStyles.Normal, 80, true, Japanese));
+        ApplyEntries(page, entries);
+        _openSignature = UtilitySignature();
     }
 
     private static void RefreshBaseUpgradeRows(REPOPopupPage page)
@@ -851,6 +954,7 @@ internal sealed class RoleMenu : MonoBehaviour
             row.Label.rectTransform.gameObject.SetActive(true);
             row.Button.labelTMP.gameObject.SetActive(false);
             TMP_Text labelText = row.Label.labelTMP;
+            labelText.richText = false;
             labelText.text = entry.Text;
             labelText.alignment = entry.Wrap
                 ? TextAlignmentOptions.TopLeft
@@ -1008,6 +1112,7 @@ internal sealed class RoleMenu : MonoBehaviour
 
     private static void ClearOpenPageTracking()
     {
+        RoleHudEditor.Instance?.Close(false);
         _guideSignaturePayload = null;
         _guideSignature = string.Empty;
         _signatureAssignments = null;
@@ -1018,6 +1123,8 @@ internal sealed class RoleMenu : MonoBehaviour
         _assignmentsButton = null;
         _guideButton = null;
         _baseUpgradesButton = null;
+        _historyButton = null;
+        _toolsButton = null;
         _languageButton = null;
         _versionLabel = null;
         _roleRows.Clear();
@@ -1096,7 +1203,10 @@ internal sealed class RoleMenu : MonoBehaviour
     {
         Assignments,
         Guide,
-        BaseUpgrades
+        BaseUpgrades,
+        History,
+        Tools,
+        Report
     }
 }
 

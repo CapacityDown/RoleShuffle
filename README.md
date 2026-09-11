@@ -27,6 +27,15 @@ dotnet build StageRoles.csproj -c Release --no-restore
 このプロジェクトのビルドではゲームへの自動配備を行いません。
 ゲームで使用する際は、`package/manifest.json`に記載された依存MODを別途導入してください。
 
+## プレイヤー向けツールの検証
+
+```powershell
+dotnet run --project tools/UtilityChecks/UtilityChecks.csproj -c Release
+dotnet run --project tools/UtilityRuntimeChecks/UtilityRuntimeChecks.csproj -c Release
+```
+
+検証範囲と実機で確認する操作は[UtilityChecks](tools/UtilityChecks/README.md)を参照してください。
+
 ## 管理するファイル
 
 - C#ソース、プロジェクト設定、開発用スクリプト

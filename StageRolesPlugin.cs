@@ -29,6 +29,10 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     private float _nextBaseUpgradePublishAt;
     private bool _settingsPublishPending;
     private float _settingsPublishAt;
+    private float _nextPrivacyRefresh;
+    internal RoleBugReport BugReport { get; private set; } = null!;
+    internal void SaveLocalSettings() => Config.Save();
+    internal void CreateBugReport() => BugReport.Create(Config);
 
     internal static StageRolesPlugin Instance { get; private set; } = null!;
     internal static ManualLogSource ModLogger { get; private set; } = null!;
@@ -40,6 +44,8 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     {
         Instance = this;
         ModLogger = Logger;
+        BugReport = new RoleBugReport();
+        BepInEx.Logging.Logger.Listeners.Add(BugReport);
         Settings = new StageRolesConfig(Config);
         Config.SettingChanged += ConfigSettingChanged;
 
@@ -55,6 +61,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         hud.Initialize(Settings);
         RoleMenu roleMenu = gameObject.AddComponent<RoleMenu>();
         roleMenu.Initialize(Settings);
+        gameObject.AddComponent<RoleSyncStatus>().Initialize(Settings);
         BaseUpgradeDraw = gameObject.AddComponent<BaseUpgradeDrawRuntime>();
         BaseUpgradeDraw.Initialize(Settings);
         RoleTestCommandService testCommands =
@@ -96,11 +103,15 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
 
     private void ActiveSceneChanged(Scene previous, Scene current)
     {
+        RoleHudEditor.Instance?.Close(false);
         Controller?.StageEnding();
     }
 
     private void Update()
     {
+        if (Time.unscaledTime >= _nextPrivacyRefresh)
+        { _nextPrivacyRefresh = Time.unscaledTime + 1f; BugReport.RememberPlayers(); }
+        if (GameManager.instance == null) return;
         if (_settingsPublishPending && Time.unscaledTime >= _settingsPublishAt)
         {
             _settingsPublishPending = false;
@@ -145,6 +156,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
 
     private void ConfigSettingChanged(object sender, SettingChangedEventArgs args)
     {
+        if (args.ChangedSetting.Definition.Section is "HUD" or "UI") return;
         RoleGuideSync.Invalidate();
         _settingsPublishPending = true;
         _settingsPublishAt = Time.unscaledTime + 0.15f;
@@ -152,6 +164,9 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
 
     private void OnDestroy()
     {
+        RoleHudEditor.Instance?.Close(false);
+        BepInEx.Logging.Logger.Listeners.Remove(BugReport);
+        BugReport?.Dispose();
         Config.SettingChanged -= ConfigSettingChanged;
         SceneManager.activeSceneChanged -= ActiveSceneChanged;
         Controller?.Shutdown();
