@@ -1,3 +1,6 @@
+## 4.4.7
+- Fixed Mage and Trickster abilities activating when an expression ends, including when opening the Escape menu. The host's own menu expression restoration no longer activates abilities.
+
 ## 4.4.6
 - Moved questions, bug reports, and feedback to GitHub Issues.
 - Added a HUD editor with draggable preview, text/icon sizing, display options, and Save/Cancel controls.
@@ -5,7 +8,6 @@
 - Expanded menu language support to 14 languages by adding Korean, Simplified Chinese, Traditional Chinese, French, German, Spanish, Brazilian Portuguese, Italian, Russian, Polish, Turkish, and Ukrainian alongside English and Japanese. Includes bundled fonts, native language names, and a saved selection shared by the menu toggle and MOD settings. English is the default.
 - Added host synchronization status with display-data refresh.
 - Added the latest 50 Base Upgrade draw results, saved with the host's run and shared with installed participants.
-- Fixed Mage and Trickster abilities activating when an expression ends, including when opening the Escape menu. The host's own menu expression restoration no longer activates abilities.
 
 ## 4.4.5
 - Added role emblems to Current Roles and Role Guide, plus optional HUD icons with adjustable size and display modes. Unrevealed secret roles use a shared question-mark emblem.
