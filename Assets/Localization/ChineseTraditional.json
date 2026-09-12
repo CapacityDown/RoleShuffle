@@ -87,6 +87,7 @@
   "Player": "玩家",
   "YOU": "你",
   "Operation failed. Check the RoleShuffle log.": "操作失敗。請檢視RoleShuffle日誌。",
+  "TEST PREVIEW — sample draw history (local only).": "測試預覽 — 抽籤歷史範例（僅自己可見）。",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "顯示最近50次已完成的抽選，最新的在前。隨主機存檔儲存。顯示的等級為共享Base Upgrade目標值。",
   "History has not been received. Older hosts do not provide it.": "尚未收到歷史記錄。舊版主機不提供歷史記錄。",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "歷史資料無效或不受支援。請在工具中重新獲取。",

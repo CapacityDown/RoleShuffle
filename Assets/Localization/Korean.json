@@ -87,6 +87,7 @@
   "Player": "플레이어",
   "YOU": "나",
   "Operation failed. Check the RoleShuffle log.": "작업에 실패했습니다. RoleShuffle 로그를 확인하세요.",
+  "TEST PREVIEW — sample draw history (local only).": "테스트 미리보기 — 추첨 기록 샘플(나에게만 표시).",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "완료된 최근 추첨 50개를 최신순으로 표시합니다. 호스트의 세이브에 저장됩니다. 표시된 레벨은 공통 Base Upgrade 목표값입니다.",
   "History has not been received. Older hosts do not provide it.": "기록을 받지 못했습니다. 이전 버전 호스트는 제공하지 않습니다.",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "기록 데이터가 잘못되었거나 지원되지 않습니다. 도구에서 새로 고침을 요청하세요.",

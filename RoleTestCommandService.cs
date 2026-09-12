@@ -17,6 +17,8 @@ internal sealed class RoleTestCommandService : MonoBehaviour
     private const string BaseSlotShortCommand = "bs";
     private const string BaseUpgradeCommand = "baseupgrade";
     private const string BaseUpgradeShortCommand = "bu";
+    private const string DrawHistoryCommand = "drawhistory";
+    private const string DrawHistoryShortCommand = "dh";
     private static readonly FieldInfo? DebugConsoleInstanceField =
         AccessTools.Field(typeof(DebugConsoleUI), "instance");
     private static readonly FieldInfo? RegisteredCommandsField =
@@ -68,14 +70,51 @@ internal sealed class RoleTestCommandService : MonoBehaviour
         bool baseUpgradeShortRegistered = TryRegisterBaseUpgrade(
             handler,
             BaseUpgradeShortCommand);
+        bool drawHistoryRegistered = TryRegisterDrawHistory(handler, DrawHistoryCommand);
+        bool drawHistoryShortRegistered = TryRegisterDrawHistory(handler, DrawHistoryShortCommand);
         if (fullRegistered || shortRegistered || hudPlayersRegistered ||
             hudPlayersShortRegistered || baseSlotRegistered ||
             baseSlotShortRegistered || baseUpgradeRegistered ||
-            baseUpgradeShortRegistered)
+            baseUpgradeShortRegistered || drawHistoryRegistered || drawHistoryShortRegistered)
         {
             StageRolesPlugin.ModLogger.LogInfo(
                 "Role testing command registration completed.");
         }
+    }
+
+    private bool TryRegisterDrawHistory(DebugCommandHandler handler, string commandName)
+    {
+        try
+        {
+            return RegisterWithoutCommandNames(handler, new DebugCommandHandler.ChatCommand(
+                commandName,
+                "Previews sample draw history locally for display testing.",
+                ExecuteDrawHistory,
+                SuggestDrawHistory,
+                () => _config.SetRoleCommandEnabled.Value,
+                debugOnly: false));
+        }
+        catch (Exception exception)
+        {
+            StageRolesPlugin.ModLogger.LogWarning(
+                $"Role testing command registration failed ({exception.GetType().Name}).");
+            return false;
+        }
+    }
+
+    private static void ExecuteDrawHistory(bool isDebugConsole, string[] args)
+    {
+        bool success = BaseUpgradeHistory.TrySetDisplayPreview(args, out string response);
+        Respond(response, success);
+    }
+
+    private static List<string> SuggestDrawHistory(bool isDebugConsole, string partial, string[] args)
+    {
+        List<string> suggestions = new();
+        if (args.Length > 1) return suggestions;
+        foreach (string value in new[] { "0", "1", "10", "50", "reset" })
+            AddSuggestion(suggestions, value, partial ?? string.Empty);
+        return suggestions;
     }
 
     private bool TryRegisterBaseUpgrade(

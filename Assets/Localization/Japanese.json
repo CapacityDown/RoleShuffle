@@ -3,6 +3,7 @@
   "Player": "プレイヤー",
   "YOU": "自分",
   "Operation failed. Check the RoleShuffle log.": "操作に失敗しました。RoleShuffleのログを確認してください。",
+  "TEST PREVIEW — sample draw history (local only).": "テスト表示 — サンプルの抽選履歴（自分にだけ表示）。",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "ホストのセーブに記録した直近50回の抽選を、新しい順に表示します。数値は共有のBase Upgrade目標値です。",
   "History has not been received. Older hosts do not provide it.": "履歴を受信していません。旧バージョンのホストは履歴を配信しません。",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "履歴データが不正、または未対応です。TOOLSから表示データを再取得してください。",

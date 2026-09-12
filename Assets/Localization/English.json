@@ -87,6 +87,7 @@
   "Player": "Player",
   "YOU": "YOU",
   "Operation failed. Check the RoleShuffle log.": "Operation failed. Check the RoleShuffle log.",
+  "TEST PREVIEW — sample draw history (local only).": "TEST PREVIEW — sample draw history (local only).",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.",
   "History has not been received. Older hosts do not provide it.": "History has not been received. Older hosts do not provide it.",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "History data is invalid or unsupported. Request a refresh from TOOLS.",

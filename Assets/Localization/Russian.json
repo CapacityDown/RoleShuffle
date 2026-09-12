@@ -87,6 +87,7 @@
   "Player": "Игрок",
   "YOU": "ВЫ",
   "Operation failed. Check the RoleShuffle log.": "Операция не удалась. Проверьте журнал RoleShuffle.",
+  "TEST PREVIEW — sample draw history (local only).": "ТЕСТОВЫЙ ПРОСМОТР — примеры розыгрышей (видны только вам).",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "Последние 50 завершённых розыгрышей, начиная с новых. Сохраняются с прохождением хоста. Уровни показывают общие целевые значения Base Upgrade.",
   "History has not been received. Older hosts do not provide it.": "История не получена. Старые хосты её не передают.",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "История повреждена или не поддерживается. Запросите обновление в Инструментах.",

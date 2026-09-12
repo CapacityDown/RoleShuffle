@@ -104,6 +104,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     private void ActiveSceneChanged(Scene previous, Scene current)
     {
         RoleHudEditor.Instance?.Close(false);
+        BaseUpgradeHistory.ClearDisplayPreview();
         Controller?.StageEnding();
     }
 
@@ -157,6 +158,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
 
     private void ConfigSettingChanged(object sender, SettingChangedEventArgs args)
     {
+        if (!Settings.SetRoleCommandEnabled.Value) BaseUpgradeHistory.ClearDisplayPreview();
         if (args.ChangedSetting.Definition.Section is "HUD" or "UI") return;
         RoleGuideSync.Invalidate();
         _settingsPublishPending = true;
@@ -166,6 +168,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     private void OnDestroy()
     {
         RoleHudEditor.Instance?.Close(false);
+        BaseUpgradeHistory.ClearDisplayPreview();
         BepInEx.Logging.Logger.Listeners.Remove(BugReport);
         BugReport?.Dispose();
         Config.SettingChanged -= ConfigSettingChanged;

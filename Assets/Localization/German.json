@@ -87,6 +87,7 @@
   "Player": "Spieler",
   "YOU": "DU",
   "Operation failed. Check the RoleShuffle log.": "Vorgang fehlgeschlagen. Prüfe das RoleShuffle-Protokoll.",
+  "TEST PREVIEW — sample draw history (local only).": "TESTVORSCHAU — Beispielziehungen (nur lokal sichtbar).",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "Die letzten 50 abgeschlossenen Ziehungen, neueste zuerst. Im Spielstand des Hosts gespeichert. Angezeigte Stufen sind die gemeinsamen Base-Upgrade-Zielwerte.",
   "History has not been received. Older hosts do not provide it.": "Verlauf noch nicht empfangen. Ältere Hosts stellen ihn nicht bereit.",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "Verlaufsdaten ungültig oder nicht unterstützt. Fordere unter Werkzeuge eine Aktualisierung an.",

@@ -27,7 +27,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float UtilityScrollMultiplier = GuideScrollMultiplier * 60f;
     private const float BaseUpgradeScrollMultiplier = 4f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 414;
+    private const int RoleUiBuildNumber = 415;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -625,7 +625,7 @@ internal sealed class RoleMenu : MonoBehaviour
 
     private static string UtilitySignature() => _activeView switch
     {
-        RoleMenuView.History => BaseUpgradeHistory.CurrentPayload ?? "unavailable",
+        RoleMenuView.History => (BaseUpgradeHistory.IsDisplayPreview ? "preview:" : "") + (BaseUpgradeHistory.DisplayPayload ?? "unavailable"),
         RoleMenuView.Tools => RoleSyncStatus.Instance?.Describe(_guideLanguage) ?? "",
         _ => StageRolesPlugin.Instance.BugReport.LatestPath + _utilityMessage
     };
@@ -659,15 +659,17 @@ internal sealed class RoleMenu : MonoBehaviour
 
         if (_activeView == RoleMenuView.History)
         {
-            Text(Localized("Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.",
+            if (BaseUpgradeHistory.IsDisplayPreview)
+                Text(Localized("TEST PREVIEW — sample draw history (local only).", "テスト表示 — サンプルの抽選履歴（自分にだけ表示）。"));
+            else Text(Localized("Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.",
                 "ホストのセーブに記録した直近50回の抽選を、新しい順に表示します。数値は共有のBase Upgrade目標値です。"));
-            if (BaseUpgradeHistory.CurrentPayload == null)
+            if (BaseUpgradeHistory.DisplayPayload == null)
                 Text(Localized("History has not been received. Older hosts do not provide it.", "履歴を受信していません。旧バージョンのホストは履歴を配信しません。"));
-            else if (!DrawHistoryStore.TryParse(BaseUpgradeHistory.CurrentPayload, out _))
+            else if (!DrawHistoryStore.TryParse(BaseUpgradeHistory.DisplayPayload, out _))
                 Text(Localized("History data is invalid or unsupported. Request a refresh from TOOLS.", "履歴データが不正、または未対応です。TOOLSから表示データを再取得してください。"));
-            else if (BaseUpgradeHistory.Read().Count == 0)
+            else if (BaseUpgradeHistory.ReadForDisplay().Count == 0)
                 Text(Localized("No recorded draws in this run. Draws before this update cannot be recovered.", "このセーブに抽選履歴はありません。更新前の抽選結果は復元できません。"));
-            foreach (UpgradeDrawRecord record in BaseUpgradeHistory.Read())
+            foreach (UpgradeDrawRecord record in BaseUpgradeHistory.ReadForDisplay())
             { Text("\n" + BaseUpgradeHistory.Describe(record, _guideLanguage)); }
         }
         else if (_activeView == RoleMenuView.Tools)

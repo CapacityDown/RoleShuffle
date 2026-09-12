@@ -87,6 +87,7 @@
   "Player": "Giocatore",
   "YOU": "TU",
   "Operation failed. Check the RoleShuffle log.": "Operazione non riuscita. Controlla il registro RoleShuffle.",
+  "TEST PREVIEW — sample draw history (local only).": "ANTEPRIMA DI TEST — cronologia di estrazioni di esempio (solo locale).",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "Le ultime 50 estrazioni completate, dalla più recente. Salvate nella partita dell'host. I livelli mostrati sono gli obiettivi comuni dei Base Upgrade.",
   "History has not been received. Older hosts do not provide it.": "Cronologia non ricevuta. Gli host precedenti non la forniscono.",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "Cronologia non valida o non supportata. Richiedi un aggiornamento da Strumenti.",

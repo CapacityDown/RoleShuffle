@@ -87,6 +87,7 @@
   "Player": "Oyuncu",
   "YOU": "SİZ",
   "Operation failed. Check the RoleShuffle log.": "İşlem başarısız. RoleShuffle günlüğünü kontrol edin.",
+  "TEST PREVIEW — sample draw history (local only).": "TEST ÖNİZLEMESİ — örnek çekiliş geçmişi (yalnızca yerel).",
   "Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.": "Son tamamlanan 50 çekiliş, en yeniden başlayarak gösterilir. Sunucunun kaydıyla saklanır. Seviyeler ortak Base Upgrade hedefleridir.",
   "History has not been received. Older hosts do not provide it.": "Geçmiş alınmadı. Eski sunucular bu veriyi sağlamaz.",
   "History data is invalid or unsupported. Request a refresh from TOOLS.": "Geçmiş geçersiz veya desteklenmiyor. Araçlar'dan yenileme isteyin.",
