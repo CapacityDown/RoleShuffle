@@ -4,52 +4,6 @@ using UnityEngine;
 
 namespace REPOJP.StageRoles;
 
-internal enum StageRole
-{
-    Tank,
-    Runner,
-    Jumper,
-    Lifter,
-    Launcher,
-    Climber,
-    Flyer,
-    Tracker,
-    Ghost,
-    Bomber,
-    Medic,
-    Phoenix,
-    Jobless,
-    Rescuer,
-    Vampire,
-    King,
-    Tuna,
-    Musician,
-    Mage,
-    Gambler,
-    Hunter,
-    Stinker,
-    Engineer,
-    Trickster,
-    Mechanic,
-    Electrician,
-    Warden,
-    Ninja,
-    Executioner,
-    Rider,
-    Influencer,
-    Werewolf,
-    Berserker,
-    Bodyguard,
-    Rammer,
-    Diver,
-    Sniper,
-    Imitator,
-    Avenger,
-    Brawler,
-    Superbot = 1001,
-    Disaster = 1002
-}
-
 internal sealed class RoleAssignment
 {
     internal RoleAssignment(string steamId, PlayerAvatar player, StageRole role)

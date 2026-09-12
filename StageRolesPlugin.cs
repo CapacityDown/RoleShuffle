@@ -37,6 +37,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     internal static StageRolesPlugin Instance { get; private set; } = null!;
     internal static ManualLogSource ModLogger { get; private set; } = null!;
     internal StageRolesConfig Settings { get; private set; } = null!;
+    internal RoleSelectionSettings RoleSettings { get; private set; } = null!;
     internal StageRoleController Controller { get; private set; } = null!;
     internal BaseUpgradeDrawRuntime BaseUpgradeDraw { get; private set; } = null!;
 
@@ -47,6 +48,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         BugReport = new RoleBugReport();
         BepInEx.Logging.Logger.Listeners.Add(BugReport);
         Settings = new StageRolesConfig(Config);
+        RoleSettings = new RoleSelectionSettings(Settings, Config);
         Config.SettingChanged += ConfigSettingChanged;
 
         gameObject.hideFlags = HideFlags.HideAndDontSave;

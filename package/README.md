@@ -32,6 +32,22 @@ Install with a compatible mod manager, or place `RoleShuffle.dll` in the profile
 - Mage and Trickster do not activate abilities when an expression is cleared. The host's own menu expression restoration is also ignored; other players' expressions restored after closing a menu can still activate an ability.
 - Single-player uses the same role system, but `Tracker`, `Ghost`, `Medic`, `Jobless`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are excluded from random assignment when only one player is present.
 
+### Role selection and presets
+
+Open `ROLES` in the lobby or Escape menu, then `ROLE SETTINGS`. The host can click any role to toggle it ON/OFF, including disabled roles and the two secret roles. Changes save to the same `Enabled` entries as MOD settings and apply to future role assignments, including new arrivals; players keep their currently assigned roles. Participants can view the host's switches but cannot change them. Older hosts that do not provide this information show an unavailable message.
+
+Choose `PRESETS` and apply a play style to replace the role switches. Presets preserve role weights, abilities, balance rules, Base Upgrades and HUD settings. A role with weight `0` still cannot be selected even when ON. Manual combinations appear as `Custom`. Existing installations keep their selection until a preset is explicitly applied.
+
+| Preset | Enabled roles | Play style |
+| --- | --- | --- |
+| Standard | 42 | Every role, including both secret roles; restores the default ON/OFF selection. |
+| Beginner | 19 | Basic upgrades, recovery and protection without passive hazard or hardship roles. |
+| Cooperative | 16 | Team support, healing, repairs and shared survival. |
+| Chaos | 14 | Explosions, magic, gambles and unpredictable effects. |
+| Challenge | 14 | Risky and specialized roles without dedicated healing or revival roles. |
+
+Party-size, context and balance restrictions still apply. The screen identifies a disabled global assignment setting and an empty candidate pool; selecting a preset does not override either `General.Enabled` or zero weights.
+
 ### Role command
 
 - Enter `/roles` in the in-game chat to check your own assigned role.
@@ -445,6 +461,22 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 - MOD導入済みの参加者には全員の役職を確認できるHUDと、Escメニュー内のスクロール可能な`Roles`ページが表示されます。HUDの配置は各プレイヤーが個別に変更できます。
 - MageとTricksterは表情の解除では能力を発動しません。ホスト自身のメニュー終了時の表情復帰も除外しますが、参加者のメニュー終了時に復帰した表情では能力が発動する場合があります。
 - シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Jobless`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`がランダム抽選から除外されます。
+
+### ロール選択とプリセット
+
+ロビーまたはEscメニューの`ROLES`から`ロール設定`を開くと、ホストが各ロールのON/OFFを切り替えられます。無効なロールや2種類のシークレットも一覧に残ります。変更はMOD設定と同じ`Enabled`へ保存され、途中参加者を含む次のロール抽選から反映されます。割当済みのロールは維持されます。参加者はホストの設定を閲覧できますが、変更はできません。情報を提供しない旧ホストでは未受信と表示します。
+
+`プリセット`から遊び方を選んで適用すると、全ロールのON/OFFを置き換えます。抽選重み・能力値・バランスルール・Base Upgrade・HUD設定は保持します。重み`0`のロールはONでも抽選されません。個別に変更した組み合わせは`カスタム`と表示されます。既存の設定はプリセットを適用するまで変更されません。
+
+| プリセット | 有効なロール数 | 遊び方 |
+| --- | --- | --- |
+| 標準 | 42 | シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。 |
+| 初心者向け | 19 | 基本強化・回復・防御が中心。自動で危害を加える役やハンデ役を除外します。 |
+| 協力重視 | 16 | チーム支援・回復・修理を中心に協力して生き残ります。 |
+| カオス | 14 | 爆発・魔法・ギャンブルなど、予測しづらい展開を楽しみます。 |
+| 高難度 | 14 | 専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。 |
+
+人数・状況・バランスによる抽選制限は引き続き適用されます。全体の抽選が無効の場合や候補がない場合は画面に表示します。プリセットを適用しても`General.Enabled`や重み`0`は変更しません。
 
 ### 役職確認コマンド
 

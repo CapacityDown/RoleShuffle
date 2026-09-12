@@ -25,10 +25,18 @@ def catalog():
             return placeholder
         value = re.sub(r'\{[^{}]+\}', parameter, value)
         result[value] = value
-    for filename in ['RoleMenu.cs', 'RoleHudEditor.cs', 'PlayerUtilitiesRuntime.cs']:
+    for filename in ['RoleMenu.cs', 'RoleMenuSettings.cs', 'RoleHudEditor.cs', 'PlayerUtilitiesRuntime.cs']:
         source = (ROOT / filename).read_text(encoding='utf-8-sig')
         for match in re.finditer(r'(?:Localized|Pick)\(\s*' + TOKEN, source):
             value = decode(match[1])
+            result[value] = value
+        if filename == 'RoleMenuSettings.cs':
+            for match in re.finditer(r'RoleText\.Format\(\s*' + TOKEN, source):
+                value = decode(match[1])
+                result[value] = value
+    source = (ROOT / 'RolePresets.cs').read_text(encoding='utf-8-sig')
+    for match in re.finditer(r'new RolePresetDefinition\(RolePreset\.\w+,\s*' + TOKEN + r',\s*' + TOKEN, source):
+        for value in (decode(match[1]), decode(match[2])):
             result[value] = value
     for value in [
         'CURRENT ROLES', 'ROLE GUIDE', 'BASE UPGRADES', 'DRAW HISTORY', 'TOOLS', 'Back',
@@ -40,6 +48,7 @@ def catalog():
         'TopLeft', 'TopCenter', 'TopRight', 'MiddleLeft', 'MiddleCenter', 'MiddleRight',
         'BottomLeft', 'BottomCenter', 'BottomRight', 'ON', 'OFF',
         'Host v{0} / Local v{1}',
+        'ROLE SETTINGS', 'Role Settings', 'Role Presets', 'Custom', 'Weight 0',
     ]:
         result[value] = value
     return result

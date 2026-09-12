@@ -36,6 +36,9 @@
     </Reference>
     <Compile Include="StageRolesPlugin.cs" />
     <Compile Include="StageRolesConfig.cs" />
+    <Compile Include="StageRole.cs" />
+    <Compile Include="RolePresets.cs" />
+    <Compile Include="RoleSelectionSettings.cs" />
     <Compile Include="RoleUpgradeScaling.cs" />
     <Compile Include="RoleConfigMigration.cs" />
     <Compile Include="RoleModels.cs" />
@@ -54,6 +57,7 @@
     <Compile Include="PlayerUtilitiesCore.cs" />
     <Compile Include="PlayerUtilitiesRuntime.cs" />
     <Compile Include="RoleMenu.cs" />
+    <Compile Include="RoleMenuSettings.cs" />
     <Compile Include="RoleMenuScroll.cs" />
     <Compile Include="RoleEmblems.cs" />
     <Compile Include="RoleTestCommandService.cs" />

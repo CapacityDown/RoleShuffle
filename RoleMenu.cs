@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace REPOJP.StageRoles;
 
-internal sealed class RoleMenu : MonoBehaviour
+internal sealed partial class RoleMenu : MonoBehaviour
 {
     private const float RefreshIntervalSeconds = 0.25f;
     private const float MinimumContentWidth = 260f;
@@ -25,7 +25,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 423;
+    private const int RoleUiBuildNumber = 425;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -36,6 +36,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private static int _issuesDialogDismissedFrame = -1;
     private static REPOButton? _assignmentsButton;
     private static REPOButton? _guideButton;
+    private static REPOButton? _settingsButton;
     private static REPOButton? _baseUpgradesButton;
     private static REPOButton? _historyButton;
     private static REPOButton? _toolsButton;
@@ -123,6 +124,11 @@ internal sealed class RoleMenu : MonoBehaviour
         RoleGuideLanguage savedLanguage = SavedLanguage;
         if (_guideLanguage != savedLanguage)
         { _guideLanguage = savedLanguage; _utilityMessage = string.Empty; SwitchView(_openPage, _activeView); return; }
+        if (_activeView is RoleMenuView.Settings or RoleMenuView.Presets)
+        {
+            if (_openSignature != RoleSettingsSignature()) RefreshRoleSettingsRows(_openPage);
+            return;
+        }
         if (_activeView is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
         {
             string utilitySignature = UtilitySignature();
@@ -208,20 +214,21 @@ internal sealed class RoleMenu : MonoBehaviour
                 "ROLE GUIDE",
                 () => SwitchView(page, RoleMenuView.Guide),
                 parent,
-                new Vector2(108f, 234f));
+                new Vector2(108f, 240f));
+            _settingsButton = CreateNavigationButton("ROLE SETTINGS", () => SwitchView(page, RoleMenuView.Settings), parent, new Vector2(108f, 208f));
             _baseUpgradesButton = CreateNavigationButton(
                 "BASE UPGRADES",
                 () => SwitchView(page, RoleMenuView.BaseUpgrades),
                 parent,
-                new Vector2(108f, 196f));
+                new Vector2(108f, 176f));
             _baseUpgradesButton.labelTMP.fontSize = 20f;
-            _historyButton = CreateNavigationButton("DRAW HISTORY", () => SwitchView(page, RoleMenuView.History), parent, new Vector2(108f, 158f));
-            _toolsButton = CreateNavigationButton("TOOLS", () => SwitchView(page, RoleMenuView.Tools), parent, new Vector2(108f, 120f));
+            _historyButton = CreateNavigationButton("DRAW HISTORY", () => SwitchView(page, RoleMenuView.History), parent, new Vector2(108f, 144f));
+            _toolsButton = CreateNavigationButton("TOOLS", () => SwitchView(page, RoleMenuView.Tools), parent, new Vector2(108f, 112f));
             _languageButton = CreateNavigationButton(
                 "LANGUAGE: ENGLISH",
                 () => ToggleLanguage(page),
                 parent,
-                new Vector2(108f, 82f));
+                new Vector2(108f, 80f));
             _languageButton.labelTMP.fontSize = 18f;
             _versionLabel = MenuAPI.CreateREPOLabel(
                 $"RoleShuffle v{StageRolesPlugin.PluginVersion}" +
@@ -312,6 +319,8 @@ internal sealed class RoleMenu : MonoBehaviour
         _utilityMessage = string.Empty;
         UpdateNavigationLabels();
         page.scrollView.SetScrollPosition(0f);
+        if (view is RoleMenuView.Settings or RoleMenuView.Presets)
+        { RefreshRoleSettingsRows(page); return; }
         if (view is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
         { RefreshUtilityRows(page); return; }
         if (view == RoleMenuView.Assignments)
@@ -362,6 +371,7 @@ internal sealed class RoleMenu : MonoBehaviour
         }
         Button(_assignmentsButton, "CURRENT ROLES", _activeView == RoleMenuView.Assignments);
         Button(_guideButton, "ROLE GUIDE", _activeView == RoleMenuView.Guide);
+        Button(_settingsButton, "ROLE SETTINGS", _activeView is RoleMenuView.Settings or RoleMenuView.Presets);
         Button(_baseUpgradesButton, "BASE UPGRADES", _activeView == RoleMenuView.BaseUpgrades);
         Button(_historyButton, "DRAW HISTORY", _activeView == RoleMenuView.History);
         Button(_toolsButton, "TOOLS", _activeView is RoleMenuView.Tools or RoleMenuView.Report);
@@ -378,6 +388,8 @@ internal sealed class RoleMenu : MonoBehaviour
             {
                 RoleMenuView.Assignments => "Current Roles",
                 RoleMenuView.Guide => "Role Guide",
+                RoleMenuView.Settings => "Role Settings",
+                RoleMenuView.Presets => "Role Presets",
                 RoleMenuView.History => "Draw History",
                 RoleMenuView.Tools => "Tools",
                 RoleMenuView.Report => "Bug Report",
@@ -1159,6 +1171,7 @@ internal sealed class RoleMenu : MonoBehaviour
         _openPage = null;
         _assignmentsButton = null;
         _guideButton = null;
+        _settingsButton = null;
         _baseUpgradesButton = null;
         _historyButton = null;
         _toolsButton = null;
@@ -1232,6 +1245,8 @@ internal sealed class RoleMenu : MonoBehaviour
         BaseUpgrades,
         History,
         Tools,
-        Report
+        Report,
+        Settings,
+        Presets
     }
 }
