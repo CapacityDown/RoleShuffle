@@ -2,7 +2,7 @@
 - Moved questions, bug reports, and feedback to GitHub Issues.
 - Added a HUD editor with draggable preview, text/icon sizing, display options, and Save/Cancel controls.
 - Added fresh local bug reports on copy/open with up to 500 recent RoleShuffle log entries, and confirmation before opening GitHub Issues in a browser.
-- Added 14 menu languages with bundled fonts, native language names, and a saved selection shared by the menu toggle and MOD settings. English is the default.
+- Expanded menu language support to 14 languages by adding Korean, Simplified Chinese, Traditional Chinese, French, German, Spanish, Brazilian Portuguese, Italian, Russian, Polish, Turkish, and Ukrainian alongside English and Japanese. Includes bundled fonts, native language names, and a saved selection shared by the menu toggle and MOD settings. English is the default.
 - Added host synchronization status with display-data refresh.
 - Added the latest 50 Base Upgrade draw results, saved with the host's run and shared with installed participants.
 
