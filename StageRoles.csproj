@@ -54,6 +54,7 @@
     <Compile Include="PlayerUtilitiesCore.cs" />
     <Compile Include="PlayerUtilitiesRuntime.cs" />
     <Compile Include="RoleMenu.cs" />
+    <Compile Include="RoleMenuScroll.cs" />
     <Compile Include="RoleEmblems.cs" />
     <Compile Include="RoleTestCommandService.cs" />
     <Compile Include="PlayerState.cs" />

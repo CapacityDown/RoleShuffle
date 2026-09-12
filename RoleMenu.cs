@@ -27,7 +27,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float UtilityScrollMultiplier = GuideScrollMultiplier * 60f;
     private const float BaseUpgradeScrollMultiplier = 4f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 415;
+    private const int RoleUiBuildNumber = 417;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -1177,10 +1177,12 @@ internal sealed class RoleMenu : MonoBehaviour
         _assignmentsEnabled = true;
     }
 
-    internal static bool TryGetScrollMultiplier(
+    internal static bool TryGetScrollSettings(
         MenuScrollBox scrollBox,
+        out REPOScrollView scrollView,
         out float multiplier)
     {
+        scrollView = null!;
         multiplier = 1f;
         if (!IsOpen ||
             _openPage == null ||
@@ -1196,14 +1198,9 @@ internal sealed class RoleMenu : MonoBehaviour
             RoleMenuView.BaseUpgrades => BaseUpgradeScrollMultiplier,
             _ => 1f
         };
-        return !Mathf.Approximately(multiplier, 1f);
+        scrollView = _openPage.scrollView;
+        return true;
     }
-
-    internal static float ScaleScrollDelta(
-        float before,
-        float after,
-        float multiplier) =>
-        before + (after - before) * multiplier;
 
     private readonly struct RoleMenuEntry(
         string text,
@@ -1250,54 +1247,5 @@ internal sealed class RoleMenu : MonoBehaviour
         History,
         Tools,
         Report
-    }
-}
-
-[HarmonyPatch(typeof(MenuScrollBox), "Update")]
-internal static class RoleGuideScrollPatch
-{
-    [HarmonyPrefix]
-    private static void Prefix(
-        MenuScrollBox __instance,
-        ref float ___scrollHandleTargetPosition,
-        out float __state)
-    {
-        __state = float.NaN;
-        if (!RoleMenu.TryGetScrollMultiplier(
-                __instance,
-                out _) ||
-            Mathf.Approximately(SemiFunc.InputScrollY(), 0f))
-        {
-            return;
-        }
-
-        __state = ___scrollHandleTargetPosition;
-    }
-
-    [HarmonyPostfix]
-    private static void Postfix(
-        MenuScrollBox __instance,
-        ref float ___scrollHandleTargetPosition,
-        float __state)
-    {
-        if (float.IsNaN(__state) ||
-            !RoleMenu.TryGetScrollMultiplier(
-                __instance,
-                out float multiplier))
-        {
-            return;
-        }
-
-        float scaled = RoleMenu.ScaleScrollDelta(
-            __state,
-            ___scrollHandleTargetPosition,
-            multiplier);
-        float halfHandleHeight = __instance.scrollHandle.sizeDelta.y / 2f;
-        float maximum =
-            __instance.scrollBarBackground.rect.height - halfHandleHeight;
-        ___scrollHandleTargetPosition = Mathf.Clamp(
-            scaled,
-            halfHandleHeight,
-            maximum);
     }
 }
