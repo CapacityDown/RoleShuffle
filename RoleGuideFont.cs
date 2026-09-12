@@ -12,7 +12,7 @@ internal static class RoleGuideFont
 {
     private const string ResourceName =
         "REPOJP.StageRoles.Assets.Fonts.CheckpointRevenge";
-    private const float JapaneseGlyphScale = 0.72f;
+    private const float FallbackGlyphScale = 0.72f;
 
     private static bool _loadAttempted;
     private static TMP_FontAsset? _font;
@@ -85,6 +85,11 @@ internal static class RoleGuideFont
             if (font == null) throw new InvalidOperationException("TMP font creation failed: " + name);
             font.name = "RoleShuffle " + name;
             font.hideFlags = HideFlags.HideAndDontSave;
+            // Match fallback glyphs to the game's Latin text, including the
+            // shared fonts used by REPOConfig's native language names.
+            var faceInfo = font.faceInfo;
+            faceInfo.scale *= FallbackGlyphScale;
+            font.faceInfo = faceInfo;
             return UnicodeFonts[name] = font;
         }
         catch (Exception exception)
@@ -158,7 +163,7 @@ internal static class RoleGuideFont
         _scaledJapaneseFont.name = $"{source.name} Role Guide Scaled";
         _scaledJapaneseFont.hideFlags = HideFlags.HideAndDontSave;
         var faceInfo = _scaledJapaneseFont.faceInfo;
-        faceInfo.scale *= JapaneseGlyphScale;
+        faceInfo.scale *= FallbackGlyphScale;
         _scaledJapaneseFont.faceInfo = faceInfo;
         return _scaledJapaneseFont;
     }

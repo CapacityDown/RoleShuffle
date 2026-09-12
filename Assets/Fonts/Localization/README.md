@@ -6,6 +6,9 @@ also embedded in the DLL and included under the package's `LICENSES` directory.
 The subset families are renamed to `RoleShuffle Names`, `RoleShuffle European`,
 `RoleShuffle Korean`, `RoleShuffle ChineseSimplified`, and `RoleShuffle ChineseTraditional`.
 Japanese role text continues to use the existing Checkpoint Revenge font.
+At runtime, all fallback font faces use the same 0.72 scale correction as Japanese
+to match the game's Latin glyph size. This also covers native language names in
+REPOConfig; the primary game font keeps its original scale.
 
 Sources:
 - https://github.com/notofonts/noto-cjk (revision in `source-commit.txt`)
