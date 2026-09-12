@@ -22,12 +22,10 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float GuideTitleHeight = 30f;
     private const float GuideLineHeight = 25f;
     private const float GuideRoleSpacing = 10f;
-    private const float AssignmentScrollSpeed = 3f;
-    private const float GuideScrollMultiplier = 0.5f;
-    private const float UtilityScrollMultiplier = GuideScrollMultiplier * 60f;
-    private const float BaseUpgradeScrollMultiplier = 4f;
+    private const float RowPadding = 3f;
+    private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 418;
+    private const int RoleUiBuildNumber = 420;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -182,8 +180,7 @@ internal sealed class RoleMenu : MonoBehaviour
             REPOPopupPage.PresetSide.Right,
             shouldCachePage: false,
             pageDimmerVisibility: true,
-            spacing: 1.5f);
-        page.scrollView.scrollSpeed = AssignmentScrollSpeed;
+            spacing: RowSpacing);
         Padding padding = page.maskPadding;
         padding.top = 24f;
         padding.bottom = 0f;
@@ -313,7 +310,6 @@ internal sealed class RoleMenu : MonoBehaviour
 
         _activeView = view;
         _utilityMessage = string.Empty;
-        page.scrollView.scrollSpeed = AssignmentScrollSpeed;
         UpdateNavigationLabels();
         page.scrollView.SetScrollPosition(0f);
         if (view is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
@@ -640,7 +636,7 @@ internal sealed class RoleMenu : MonoBehaviour
                 if (paragraph.Length == 0)
                 { entries.Add(new RoleMenuEntry("", 18, FontStyles.Normal, 10, false)); continue; }
                 foreach (string line in WrapGuideText(MeasurementText(page), paragraph, ContentWidth(page), _guideLanguage))
-                    entries.Add(new RoleMenuEntry(line, 18, FontStyles.Normal, 25, false, UseLanguageFont));
+                    entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
             }
         }
         void Button(string label, Action action)
@@ -1049,7 +1045,7 @@ internal sealed class RoleMenu : MonoBehaviour
     {
         REPOButton? createdButton = null;
         REPOLabel? createdLabel = null;
-        float topPadding = _roleRows.Count == 0 ? 20f : 3f;
+        float topPadding = _roleRows.Count == 0 ? 20f : RowPadding;
         page.AddElementToScrollView(
             parent =>
             {
@@ -1065,7 +1061,7 @@ internal sealed class RoleMenu : MonoBehaviour
                 return createdButton.rectTransform;
             },
             topPadding: topPadding,
-            bottomPadding: 3f);
+            bottomPadding: RowPadding);
 
         if (createdButton == null || createdLabel == null)
         {
@@ -1179,11 +1175,9 @@ internal sealed class RoleMenu : MonoBehaviour
 
     internal static bool TryGetScrollSettings(
         MenuScrollBox scrollBox,
-        out REPOScrollView scrollView,
-        out float multiplier)
+        out float lineHeight)
     {
-        scrollView = null!;
-        multiplier = 1f;
+        lineHeight = GuideLineHeight + RowPadding * 2f + RowSpacing;
         if (!IsOpen ||
             _openPage == null ||
             !ReferenceEquals(_openPage.menuScrollBox, scrollBox))
@@ -1191,14 +1185,6 @@ internal sealed class RoleMenu : MonoBehaviour
             return false;
         }
 
-        multiplier = _activeView switch
-        {
-            RoleMenuView.Guide => GuideScrollMultiplier,
-            RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report => UtilityScrollMultiplier,
-            RoleMenuView.BaseUpgrades => BaseUpgradeScrollMultiplier,
-            _ => 1f
-        };
-        scrollView = _openPage.scrollView;
         return true;
     }
 

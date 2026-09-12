@@ -35,7 +35,7 @@ dotnet run --project tools/UtilityRuntimeChecks/UtilityRuntimeChecks.csproj -c R
 ```
 
 検証範囲と実機で確認する操作は[UtilityChecks](tools/UtilityChecks/README.md)を参照してください。
-スクロールの入力元の不一致・基準移動量・倍率の復元は[ScrollChecks](tools/ScrollChecks/README.md)で検証します。
+スクロール処理のゲーム本体への適合・ページごとの移動量は[ScrollChecks](tools/ScrollChecks/README.md)で検証します。
 
 多言語の設定保存・翻訳・ホスト値保持は[LocalizationChecks](tools/LocalizationChecks/README.md)で検証します。
 翻訳の編集方法は[Localization](Assets/Localization/README.md)、同梱フォントの生成方法とライセンスは[Fonts](Assets/Fonts/Localization/README.md)を参照してください。

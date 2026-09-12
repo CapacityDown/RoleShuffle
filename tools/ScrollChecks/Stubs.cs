@@ -1,12 +1,3 @@
-namespace HarmonyLib
-{
-    [AttributeUsage(AttributeTargets.Class)] public sealed class HarmonyPatch : Attribute
-    {
-        public HarmonyPatch(Type type, string method) { }
-    }
-    [AttributeUsage(AttributeTargets.Method)] public sealed class HarmonyPrefix : Attribute { }
-    [AttributeUsage(AttributeTargets.Method)] public sealed class HarmonyFinalizer : Attribute { }
-}
 namespace UnityEngine
 {
     public struct Vector2 { public float y; }
@@ -15,16 +6,16 @@ namespace UnityEngine
     public static class Input { public static Vector2 mouseScrollDelta; }
     public static class Mathf
     {
+        public static float Abs(float value) => Math.Abs(value);
         public static bool Approximately(float a, float b) => Math.Abs(a - b) < 0.00001f;
         public static float Clamp(float value, float min, float max) => Math.Clamp(value, min, max);
     }
 }
-namespace MenuLib.MonoBehaviors
-{
-    public class REPOScrollView { public float? scrollSpeed = 3; }
-}
 public class MenuScrollBox
 {
+    public float scrollHeight = 1000;
+    public float scrollerStartPosition = 1000;
+    public float scrollerEndPosition = 0;
     public UnityEngine.RectTransform scrollHandle = new() { sizeDelta = new() { y = 40 } };
     public UnityEngine.RectTransform scrollBarBackground = new() { rect = new() { height = 1000 } };
 }
@@ -38,12 +29,11 @@ namespace REPOJP.StageRoles
     internal static class RoleMenu
     {
         internal static MenuScrollBox Box = new();
-        internal static MenuLib.MonoBehaviors.REPOScrollView View = new();
-        internal static float Multiplier = 30;
+        internal static float LineHeight = 32.5f;
         internal static bool Open = true;
-        internal static bool TryGetScrollSettings(MenuScrollBox box, out MenuLib.MonoBehaviors.REPOScrollView view, out float multiplier)
+        internal static bool TryGetScrollSettings(MenuScrollBox box, out float lineHeight)
         {
-            view = View; multiplier = Multiplier;
+            lineHeight = LineHeight;
             return Open && ReferenceEquals(Box, box);
         }
     }

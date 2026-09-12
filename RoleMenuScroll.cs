@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using HarmonyLib;
-using MenuLib.MonoBehaviors;
 using UnityEngine;
 
 namespace REPOJP.StageRoles;
@@ -8,46 +9,59 @@ namespace REPOJP.StageRoles;
 [HarmonyPatch(typeof(MenuScrollBox), "Update")]
 internal static class RoleGuideScrollPatch
 {
-    internal readonly struct ScrollState(REPOScrollView view, float? speed)
-    {
-        internal REPOScrollView? View { get; } = view;
-        internal float? Speed { get; } = speed;
-    }
+    // The game's Windows Input System reports 120 units per wheel detent.
+    private const float WheelUnitsPerNotch = 120f;
 
-    [HarmonyPrefix]
-    internal static void Prefix(MenuScrollBox __instance, out ScrollState __state)
+    [HarmonyTranspiler]
+    internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        __state = default;
-        if (!RoleMenu.TryGetScrollSettings(__instance, out REPOScrollView view, out float multiplier)) return;
-        float wheel = SemiFunc.InputScrollY();
-        if (wheel == 0f || float.IsNaN(wheel) || float.IsInfinity(wheel)) return;
-
-        __state = new ScrollState(view, view.scrollSpeed);
-        // Use the same input source and direction-based step as MenuLib. The
-        // legacy mouseScrollDelta can be fractional or zero while the game's
-        // Input System reports a wheel event; multiplying by it shrinks or drops
-        // valid input. Keep the established lobby step regardless of raw units.
-        view.scrollSpeed = (view.scrollSpeed ?? 3f) * multiplier;
-    }
-
-    [HarmonyFinalizer]
-    internal static Exception? Finalizer(
-        MenuScrollBox __instance,
-        ref float ___scrollHandleTargetPosition,
-        ScrollState __state,
-        Exception? __exception)
-    {
-        ScrollState state = __state;
-        if (state.View == null) return __exception;
-        // Also restore after an exception: keyboard-only navigation and later
-        // frames must never inherit a wheel-specific speed (or compound it).
-        state.View.scrollSpeed = state.Speed;
-        if (__exception == null)
+        List<CodeInstruction> code = new(instructions);
+        var input = AccessTools.Method(typeof(SemiFunc), nameof(SemiFunc.InputScrollY));
+        var height = AccessTools.Field(typeof(MenuScrollBox), "scrollHeight");
+        int matches = 0;
+        for (int i = 0; i + 5 < code.Count; i++)
         {
-            float halfHandleHeight = __instance.scrollHandle.sizeDelta.y / 2f;
-            float maximum = __instance.scrollBarBackground.rect.height - halfHandleHeight;
-            ___scrollHandleTargetPosition = Mathf.Clamp(___scrollHandleTargetPosition, halfHandleHeight, maximum);
+            // Replace only the wheel delta after the native hover/input gates.
+            // MenuLib 2.5.4 retains an old scrollSpeed IL hook but does not
+            // register it. Changing REPOScrollView.scrollSpeed has no effect.
+            if (!code[i].Calls(input) || code[i + 1].opcode != OpCodes.Ldarg_0 ||
+                !code[i + 2].LoadsField(height) || code[i + 3].opcode != OpCodes.Ldc_R4 ||
+                !Equals(code[i + 3].operand, 0.01f) || code[i + 4].opcode != OpCodes.Mul ||
+                code[i + 5].opcode != OpCodes.Div) continue;
+
+            code.InsertRange(i + 6, new[]
+            {
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(MenuScrollBox), "scrollerStartPosition")),
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(MenuScrollBox), "scrollerEndPosition")),
+                CodeInstruction.Call(typeof(RoleGuideScrollPatch), nameof(WheelStep))
+            });
+            matches++;
+            i += 11;
         }
-        return __exception;
+        if (matches != 1)
+            throw new InvalidOperationException($"Expected one MenuScrollBox wheel calculation, found {matches}.");
+        return code;
     }
+
+    internal static float WheelStep(float nativeStep, MenuScrollBox box, float start, float end)
+    {
+        if (!RoleMenu.TryGetScrollSettings(box, out float lineHeight)) return nativeStep;
+        float wheel = SemiFunc.InputScrollY();
+        float contentTravel = Mathf.Abs(start - end);
+        float handleTravel = box.scrollBarBackground.rect.height - box.scrollHandle.sizeDelta.y;
+        if (!IsFinite(wheel) || wheel == 0f || !IsFinite(contentTravel) || contentTravel <= 0f ||
+            !IsFinite(handleTravel) || handleTravel <= 0f) return 0f;
+
+        // Convert a fixed content distance to handle distance using the current
+        // layout. Native scrollHeight can still describe the previous page.
+        // Keep native clamping, animation, keyboard input and dragging intact.
+        // Preserve magnitude: multiple detents can arrive in one input frame,
+        // especially at lower FPS. Fractional input moves a fraction of a line.
+        return wheel / WheelUnitsPerNotch * lineHeight * handleTravel / contentTravel;
+    }
+
+    private static bool IsFinite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
 }
