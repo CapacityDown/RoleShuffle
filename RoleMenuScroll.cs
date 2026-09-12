@@ -18,20 +18,17 @@ internal static class RoleGuideScrollPatch
     internal static void Prefix(MenuScrollBox __instance, out ScrollState __state)
     {
         __state = default;
-        if (!RoleMenu.TryGetScrollSettings(__instance, out REPOScrollView view, out float multiplier) ||
-            Mathf.Approximately(SemiFunc.InputScrollY(), 0f)) return;
+        if (!RoleMenu.TryGetScrollSettings(__instance, out REPOScrollView view, out float multiplier)) return;
+        float wheel = SemiFunc.InputScrollY();
+        if (wheel == 0f || float.IsNaN(wheel) || float.IsInfinity(wheel)) return;
 
         __state = new ScrollState(view, view.scrollSpeed);
-        // MenuLib uses Sign(InputScrollY), losing extra wheel detents batched
-        // into one frame on a busy stage. Legacy mouseScrollDelta is already in
-        // wheel units, so one detent keeps the existing lobby distance while
-        // batched/fractional input preserves its full amount at any frame rate.
-        // Apply this before MenuLib updates the handle and content, not afterward.
-        view.scrollSpeed = WheelSpeed(view.scrollSpeed ?? 3f, multiplier, Input.mouseScrollDelta.y);
+        // Use the same input source and direction-based step as MenuLib. The
+        // legacy mouseScrollDelta can be fractional or zero while the game's
+        // Input System reports a wheel event; multiplying by it shrinks or drops
+        // valid input. Keep the established lobby step regardless of raw units.
+        view.scrollSpeed = (view.scrollSpeed ?? 3f) * multiplier;
     }
-
-    internal static float WheelSpeed(float baseSpeed, float multiplier, float wheelDelta) =>
-        float.IsNaN(wheelDelta) || float.IsInfinity(wheelDelta) ? 0f : baseSpeed * multiplier * Math.Abs(wheelDelta);
 
     [HarmonyFinalizer]
     internal static Exception? Finalizer(

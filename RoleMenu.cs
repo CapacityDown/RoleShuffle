@@ -27,7 +27,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float UtilityScrollMultiplier = GuideScrollMultiplier * 60f;
     private const float BaseUpgradeScrollMultiplier = 4f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 417;
+    private const int RoleUiBuildNumber = 418;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
