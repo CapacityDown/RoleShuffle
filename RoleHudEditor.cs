@@ -44,6 +44,7 @@ internal sealed class RoleHudEditor : MonoBehaviour
     private GameObject _overlay = null!;
     private RectTransform _canvas = null!;
     private RectTransform _toolbar = null!;
+    private RectTransform _pointer = null!;
     private RoleHud _preview = null!;
     private HudLayoutSettings _draft = null!;
     private TMP_FontAsset _font = null!;
@@ -125,8 +126,21 @@ internal sealed class RoleHudEditor : MonoBehaviour
         Add(872, 80, 68, () => Pick("RESET", "初期値"), () =>
         { _draft = new HudLayoutSettings(); _preview.PreviewSettings = _draft; Changed(); });
         _status = Label(_toolbar, "", new Vector2(16, -119), new Vector2(914, 28), 16);
+        // The game's cursor is a mesh rendered behind ScreenSpaceOverlay.
+        // Draw a pointer on our canvas instead of changing global cursor state.
+        GameObject pointer = new("Editor Pointer", typeof(RectTransform), typeof(HudEditorPointer), typeof(Outline));
+        pointer.transform.SetParent(_canvas, false);
+        _pointer = (RectTransform)pointer.transform;
+        _pointer.anchorMin = _pointer.anchorMax = new Vector2(0.5f, 0.5f);
+        _pointer.pivot = new Vector2(0, 1);
+        _pointer.sizeDelta = new Vector2(20, 28);
+        pointer.GetComponent<HudEditorPointer>().raycastTarget = false;
+        pointer.GetComponent<HudEditorPointer>().color = new Color(1f, 0.65f, 0f);
+        pointer.GetComponent<Outline>().effectColor = new Color(0.02f, 0.02f, 0.02f, 1f);
+        pointer.GetComponent<Outline>().effectDistance = new Vector2(1, -1);
         Canvas.ForceUpdateCanvases();
         Changed();
+        UpdatePointer();
     }
 
     private string Pick(string english, string? japanese = null) => RoleText.Get(english, _language, japanese);
@@ -169,6 +183,8 @@ internal sealed class RoleHudEditor : MonoBehaviour
     {
         if (_closed) return;
         if (_page == null || !RoleMenu.IsOpen) { Close(false); return; }
+        if (!Application.isFocused) { _dragging = false; return; }
+        SemiFunc.CursorUnlock(0.1f);
         if (Time.frameCount <= _openedFrame) return;
         Vector2 pointer = Input.mousePosition;
         foreach (var button in _buttons)
@@ -188,6 +204,21 @@ internal sealed class RoleHudEditor : MonoBehaviour
         }
         _status.text = $"X: {_draft.X}   Y: {_draft.Y}   " + Pick("Preview uses sample players. Esc = cancel. If covered, RESET restores the HUD.",
             "サンプルを表示中。Escで取消。見失った場合は「初期値」で戻せます。");
+    }
+    private void LateUpdate()
+    {
+        if (!_closed) UpdatePointer();
+    }
+    private void UpdatePointer()
+    {
+        if (_pointer == null) return;
+        Vector2 position = Input.mousePosition;
+        bool visible = Application.isFocused && position.x >= 0 && position.x < Screen.width && position.y >= 0 && position.y < Screen.height;
+        _pointer.gameObject.SetActive(visible);
+        if (!visible) return;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvas, position, null, out Vector2 local);
+        _pointer.anchoredPosition = local;
+        _pointer.SetAsLastSibling();
     }
     internal void Close(bool save)
     {
@@ -216,4 +247,25 @@ internal sealed class RoleHudEditor : MonoBehaviour
         _pageGroup = null;
     }
     private void OnDestroy() { RestorePage(); if (Instance == this) Instance = null; }
+}
+
+// A small outlined arrow whose tip coincides with the editor's mouse hit tests.
+internal sealed class HudEditorPointer : MaskableGraphic
+{
+    protected override void OnPopulateMesh(VertexHelper mesh)
+    {
+        mesh.Clear();
+        mesh.AddVert(new Vector3(0, 0), color, Vector2.zero);
+        mesh.AddVert(new Vector3(0, -24), color, Vector2.zero);
+        mesh.AddVert(new Vector3(6, -18), color, Vector2.zero);
+        mesh.AddVert(new Vector3(11, -28), color, Vector2.zero);
+        mesh.AddVert(new Vector3(15, -26), color, Vector2.zero);
+        mesh.AddVert(new Vector3(10, -16), color, Vector2.zero);
+        mesh.AddVert(new Vector3(20, -16), color, Vector2.zero);
+        mesh.AddTriangle(0, 1, 2);
+        mesh.AddTriangle(0, 2, 5);
+        mesh.AddTriangle(0, 5, 6);
+        mesh.AddTriangle(2, 3, 4);
+        mesh.AddTriangle(2, 4, 5);
+    }
 }

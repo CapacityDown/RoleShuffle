@@ -26,13 +26,15 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float GuideScrollMultiplier = 0.5f;
     private const float BaseUpgradeScrollMultiplier = 4f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 410;
+    private const int RoleUiBuildNumber = 411;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
     private static readonly List<RoleMenuRow> _roleRows = new();
     private static StageRolesConfig _config = null!;
     private static REPOPopupPage? _openPage;
+    private static MenuPage? _issuesDialog;
+    private static int _issuesDialogDismissedFrame = -1;
     private static REPOButton? _assignmentsButton;
     private static REPOButton? _guideButton;
     private static REPOButton? _baseUpgradesButton;
@@ -118,7 +120,7 @@ internal sealed class RoleMenu : MonoBehaviour
         }
 
         _nextRefreshAt = Time.unscaledTime + RefreshIntervalSeconds;
-        if (RoleHudEditor.IsOpen) return;
+        if (RoleHudEditor.IsOpen || _issuesDialog != null) return;
         RoleGuideLanguage savedLanguage = SavedLanguage;
         if (_guideLanguage != savedLanguage)
         { _guideLanguage = savedLanguage; _utilityMessage = string.Empty; SwitchView(_openPage, _activeView); return; }
@@ -256,6 +258,9 @@ internal sealed class RoleMenu : MonoBehaviour
         });
         page.onEscapePressed += () =>
         {
+            // MenuLib also sends Escape to inactive pages. Consume it in the
+            // confirmation dialog without closing the Roles page underneath.
+            if (_issuesDialog != null || _issuesDialogDismissedFrame == Time.frameCount) return false;
             if (RoleHudEditor.IsOpen) { RoleHudEditor.Instance!.Close(false); return false; }
             ClearOpenPageTracking();
             return true;
@@ -647,7 +652,7 @@ internal sealed class RoleMenu : MonoBehaviour
                     _utilityMessage = Localized("Operation failed. Check the RoleShuffle log.", "操作に失敗しました。RoleShuffleのログを確認してください。");
                     StageRolesPlugin.ModLogger.LogError(exception);
                 }
-                if (_openPage == page && !RoleHudEditor.IsOpen) RefreshUtilityRows(page);
+                if (_openPage == page && !RoleHudEditor.IsOpen && _issuesDialog == null) RefreshUtilityRows(page);
             }));
         }
 
@@ -676,32 +681,64 @@ internal sealed class RoleMenu : MonoBehaviour
         }
         else
         {
-            Text(Localized("Create a local report containing versions, installed mods, local settings, recent draws and RoleShuffle logs. Known player identifiers and common private data are masked. Review the file before sharing; nothing is uploaded automatically.",
-                "バージョン・導入MOD・ローカル設定・最近の抽選・RoleShuffleログをまとめます。既知のプレイヤー情報などをマスクします。共有前に内容を確認してください。自動送信はしません。"));
-            Button(Localized("CREATE / UPDATE REPORT", "レポートを作成 / 更新"), () =>
+            Text(Localized("Copy or open a report to generate a fresh local file with versions, installed mods, settings, recent draws and RoleShuffle logs. Known player identifiers and common private data are masked. Review it before sharing; nothing is uploaded automatically.",
+                "コピーまたはファイルを開く操作で、バージョン・導入MOD・設定・最近の抽選・RoleShuffleログを含むレポートを毎回作成します。既知のプレイヤー情報などをマスクします。共有前に内容を確認してください。自動送信はしません。"));
+            Button(Localized("COPY REPORT", "レポートをコピー"), () =>
             {
                 StageRolesPlugin.Instance.CreateBugReport();
+                GUIUtility.systemCopyBuffer = StageRolesPlugin.Instance.BugReport.LatestText;
+                _utilityMessage = Localized("Copied to clipboard.", "クリップボードにコピーしました。");
+            });
+            Button(Localized("OPEN SAVED REPORT", "保存したレポートを開く"), () =>
+            {
+                StageRolesPlugin.Instance.CreateBugReport();
+                Application.OpenURL(new Uri(StageRolesPlugin.Instance.BugReport.LatestPath).AbsoluteUri);
                 _utilityMessage = Localized("Saved in BepInEx/RoleShuffleReports. Add reproduction steps before submitting.",
                     "BepInEx/RoleShuffleReportsに保存しました。投稿前に再現手順を追記してください。");
             });
-            RoleBugReport report = StageRolesPlugin.Instance.BugReport;
-            if (!string.IsNullOrEmpty(report.LatestPath))
-            {
-                Button(Localized("COPY REPORT", "レポートをコピー"), () =>
-                { GUIUtility.systemCopyBuffer = report.LatestText; _utilityMessage = Localized("Copied to clipboard.", "クリップボードにコピーしました。"); });
-                Button(Localized("OPEN SAVED REPORT", "保存したレポートを開く"), () => Application.OpenURL(new Uri(report.LatestPath).AbsoluteUri));
-            }
-            Button(Localized("OPEN GITHUB ISSUES", "GitHub Issuesを開く"), () => Application.OpenURL(RoleBugReport.IssuesUrl));
-            if (!string.IsNullOrEmpty(report.LatestText))
-            {
-                Text("\n" + Localized("PREVIEW (first 2,400 characters)", "プレビュー（先頭2,400文字）"));
-                Text(report.LatestText.Substring(0, Math.Min(2400, report.LatestText.Length)));
-            }
+            Button(Localized("OPEN GITHUB ISSUES", "GitHub Issuesを開く"), () => ConfirmOpenIssues(page));
         }
         if (_utilityMessage.Length > 0)
             entries.Insert(0, new RoleMenuEntry(_utilityMessage, 18, FontStyles.Normal, 80, true, UseLanguageFont));
         ApplyEntries(page, entries);
         _openSignature = UtilitySignature();
+    }
+
+    private static void ConfirmOpenIssues(REPOPopupPage page)
+    {
+        if (_issuesDialog != null) return;
+        bool decided = false;
+        void Decide(bool open)
+        {
+            if (decided) return;
+            decided = true;
+            _issuesDialogDismissedFrame = Time.frameCount;
+            if (!open || _openPage != page) return;
+            try { Application.OpenURL(RoleBugReport.IssuesUrl); }
+            catch (Exception exception)
+            {
+                _utilityMessage = Localized("Operation failed. Check the RoleShuffle log.", "操作に失敗しました。RoleShuffleのログを確認してください。");
+                StageRolesPlugin.ModLogger.LogError(exception);
+            }
+        }
+        MenuAPI.OpenPopup(Localized("OPEN EXTERNAL SITE", "外部サイトを開く"), new Color(1f, 0.65f, 0f),
+            Localized("This opens GitHub Issues in your browser. Continue? No report will be sent automatically.",
+                "ブラウザーで外部サイトのGitHub Issuesを開きます。続けますか？ レポートは自動送信されません。") + "\n\n" + RoleBugReport.IssuesUrl,
+            () => Decide(true), () => Decide(false));
+        // OpenPopup creates the stock two-option dialog synchronously; its
+        // singleton is only assigned in Start, so read the newly current page.
+        _issuesDialog = AccessTools.Field(typeof(MenuManager), "currentMenuPage").GetValue(MenuManager.instance) as MenuPage;
+        if (_issuesDialog == null) return;
+        var dialog = _issuesDialog.GetComponent<MenuPageTwoOptions>();
+        if (dialog == null) { _issuesDialog = null; return; }
+        foreach (TextMeshProUGUI label in _issuesDialog.GetComponentsInChildren<TextMeshProUGUI>(true))
+            label.font = RoleGuideFont.ForLanguage(label.font, _guideLanguage) ?? label.font;
+        dialog.option1Button.buttonTextString = Localized("OPEN IN BROWSER", "ブラウザーで開く");
+        dialog.option2Button.buttonTextString = Localized("CANCEL", "取消");
+        dialog.bodyTextMesh.enableWordWrapping = true;
+        dialog.bodyTextMesh.enableAutoSizing = true;
+        dialog.bodyTextMesh.fontSizeMin = 12;
+        dialog.bodyTextMesh.fontSizeMax = 18;
     }
 
     private static void RefreshBaseUpgradeRows(REPOPopupPage page)
@@ -1112,6 +1149,8 @@ internal sealed class RoleMenu : MonoBehaviour
     private static void ClearOpenPageTracking()
     {
         RoleHudEditor.Instance?.Close(false);
+        if (_issuesDialog != null) _issuesDialog.PageStateSet(MenuPage.PageState.Closing);
+        _issuesDialog = null;
         _guideSignaturePayload = null;
         _guideSignature = string.Empty;
         _signatureAssignments = null;

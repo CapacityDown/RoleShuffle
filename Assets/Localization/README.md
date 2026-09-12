@@ -1,8 +1,8 @@
 # Localization
 
 The UTF-8 JSON catalogs map English UI phrases and role-description templates to
-translations. The 12 added locales contain all 168 catalog entries. Japanese role
-descriptions remain in `RoleGuideCatalog.cs`; its UI catalog contains 84 entries.
+translations. The 12 added locales contain all 169 catalog entries. Japanese role
+descriptions remain in `RoleGuideCatalog.cs`; its UI catalog contains 85 entries.
 Role names, upgrade identifiers, chat commands and diagnostic reports stay in English.
 The English catalog is regenerated with `python tools/collect_localization_strings.py`.
 Edit the target JSON directly when revising a translation.

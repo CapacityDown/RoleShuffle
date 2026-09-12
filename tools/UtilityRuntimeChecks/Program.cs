@@ -89,6 +89,14 @@ foreach (string secret in new[] { "Secret Guest", "Private Player", "private-acc
     Check(!report.LatestText.Contains(secret), "Report omits private values and unrelated logs");
 Check(!report.LatestText.Contains("Log entry 0\n") && report.LatestText.Contains("Log entry 119"), "Log ring retains recent entries only");
 Check(report.LatestText.Contains("HUD.RoleDisplay = NameOnly") && report.LatestText.Contains("[TRUNCATED]"), "Settings remain useful with oversized values bounded");
+string firstText = report.LatestText, firstPath = report.LatestPath;
+settings[new("HUD", "RoleDisplay")] = new("IconAndName");
+report.LogEvent(report, new LogEventArgs { Data = "New diagnostics after the first report" });
+report.Create(settings);
+Check(report.LatestPath != firstPath && File.Exists(report.LatestPath), "Each request generates a separate report file");
+Check(report.LatestText.Contains("HUD.RoleDisplay = IconAndName") && report.LatestText.Contains("New diagnostics after the first report"), "Repeated requests capture current settings and logs");
+Check(File.ReadAllText(firstPath) == firstText, "Regeneration preserves the previously opened report file");
+Check(File.ReadAllText(report.LatestPath) == report.LatestText, "Latest clipboard source matches the newly saved report");
 string savedText = report.LatestText, savedPath = report.LatestPath;
 Paths.BepInExRootPath = savedPath;
 bool failed = false;
