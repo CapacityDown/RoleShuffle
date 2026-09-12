@@ -36,7 +36,7 @@ dotnet run --project tools/UtilityRuntimeChecks/UtilityRuntimeChecks.csproj -c R
 
 検証範囲と実機で確認する操作は[UtilityChecks](tools/UtilityChecks/README.md)を参照してください。
 スクロール処理のゲーム本体への適合・ページごとの移動量は[ScrollChecks](tools/ScrollChecks/README.md)で検証します。
-[build 420の実操作動画・比較表](docs/verification/scroll-build420/README.md)では、ロビーとステージの移動量をリモートで確認できます。
+現在の設定は1目盛りで本文3行分です。[build 420の実操作動画・比較表](docs/verification/scroll-build420/README.md)は、旧設定（1行分）の検証記録です。
 
 多言語の設定保存・翻訳・ホスト値保持は[LocalizationChecks](tools/LocalizationChecks/README.md)で検証します。
 翻訳の編集方法は[Localization](Assets/Localization/README.md)、同梱フォントの生成方法とライセンスは[Fonts](Assets/Fonts/Localization/README.md)を参照してください。

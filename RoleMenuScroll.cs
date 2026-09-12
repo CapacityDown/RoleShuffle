@@ -11,6 +11,7 @@ internal static class RoleGuideScrollPatch
 {
     // The game's Windows Input System reports 120 units per wheel detent.
     private const float WheelUnitsPerNotch = 120f;
+    private const float BodyLinesPerNotch = 3f;
 
     [HarmonyTranspiler]
     internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -59,8 +60,8 @@ internal static class RoleGuideScrollPatch
         // layout. Native scrollHeight can still describe the previous page.
         // Keep native clamping, animation, keyboard input and dragging intact.
         // Preserve magnitude: multiple detents can arrive in one input frame,
-        // especially at lower FPS. Fractional input moves a fraction of a line.
-        return wheel / WheelUnitsPerNotch * lineHeight * handleTravel / contentTravel;
+        // especially at lower FPS. Fractional input keeps its proportional distance.
+        return wheel / WheelUnitsPerNotch * BodyLinesPerNotch * lineHeight * handleTravel / contentTravel;
     }
 
     private static bool IsFinite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);

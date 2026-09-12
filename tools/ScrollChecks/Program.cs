@@ -66,7 +66,7 @@ foreach (float staleHeight in new[] { 200f, 4000f, 100000f })
     box.scrollBarBackground.rect = new UnityEngine.Rect { height = geometry.Item1 };
     float delta = wheelStep(box);
     float contentDistance = delta * geometry.Item2 / (geometry.Item1 - box.scrollHandle.sizeDelta.y);
-    Check(Close(contentDistance, wheel / 120f * 32.5f), "Actual patched expression gives one body line per detent despite stale native height or page geometry");
+    Check(Close(contentDistance, wheel / 120f * 97.5f), "Actual patched expression gives three body lines per detent despite stale native height or page geometry");
 }
 
 SemiFunc.Scroll = 120;
