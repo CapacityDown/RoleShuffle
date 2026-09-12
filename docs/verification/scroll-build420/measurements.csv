@@ -1,0 +1,15 @@
+clip,scene,page,history_entries,direction,notches,measured_ui_units,measured_lines,expected_ui_units
+lobby-guide,lobby,ROLE GUIDE,,down,1,32.497,1.000,32.500
+lobby-base,lobby,BASE UPGRADES,,down,1,32.500,1.000,32.500
+lobby-tools,lobby,TOOLS,,down,1,32.500,1.000,32.500
+lobby-report,lobby,REPORT A PROBLEM,,down,1,32.500,1.000,32.500
+lobby-history10,lobby,DRAW HISTORY,10,down,1,32.499,1.000,32.500
+lobby-history50,lobby,DRAW HISTORY,50,down,1,32.499,1.000,32.500
+stage-guide,stage,ROLE GUIDE,,down,1,32.499,1.000,32.500
+stage-base,stage,BASE UPGRADES,,down,1,32.500,1.000,32.500
+stage-tools,stage,TOOLS,,down,1,32.500,1.000,32.500
+stage-report,stage,REPORT A PROBLEM,,down,1,32.500,1.000,32.500
+stage-history10,stage,DRAW HISTORY,10,down,1,32.499,1.000,32.500
+stage-history50,stage,DRAW HISTORY,50,down,1,32.499,1.000,32.500
+stage-history50-up,stage,DRAW HISTORY,50,up,1,-32.498,-1.000,-32.500
+stage-history50-five,stage,DRAW HISTORY,50,down,5,162.498,5.000,162.500

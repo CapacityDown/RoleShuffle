@@ -10,17 +10,17 @@ The Windows game reports 120 Input System units per wheel detent (observed in th
 
 ## In-game validation
 
-Build 420 was checked with R.E.P.O. 0.4.4.3 and MenuLib 2.5.4 on Windows at 2560 × 1440, using the English UI. Wheel events were sent to the actual game window; the values below are settled content movement in UI units, where one body line is 32.5 units. A temporary local probe supplied history preview data and observed positions without modifying scroll input or calculations.
+Build 420 was checked with R.E.P.O. 0.4.4.3 and MenuLib 2.5.4 on Windows at 2560 × 1440, using the English UI. Wheel events were sent to the actual game window; the values below are settled content movement in UI units, where one body line is 32.5 units. A temporary local probe supplied history preview data and observed positions without modifying scroll input or calculations. See the [recorded operation videos, comparison table and CSV](../../docs/verification/scroll-build420/README.md) for all 14 recorded cases and the measurement method.
 
 | Page | Lobby: one notch | Stage: one notch |
 | --- | --- | --- |
-| ROLE GUIDE | — | 32.498 |
-| BASE UPGRADES | 32.499 | — |
-| TOOLS | One line, visually verified | 32.500 |
-| REPORT A PROBLEM | One line, visually verified | 32.500 |
+| ROLE GUIDE | 32.497 | 32.499 |
+| BASE UPGRADES | 32.500 | 32.500 |
+| TOOLS | 32.500 | 32.500 |
+| REPORT A PROBLEM | 32.500 | 32.500 |
 | DRAW HISTORY, 10 entries | 32.499 | 32.499 |
 | DRAW HISTORY, 50 entries | 32.499 | 32.499 |
 
-With 50 history entries, reversing one notch moved −32.496 units; five notches in one event moved 162.498 units. Dragging the scrollbar into the middle of the history worked, and the next wheel notch still moved 32.499 units. TOOLS stopped at the bottom boundary. The preview was reset and the temporary probe removed after validation.
+In the recorded session with 50 history entries, reversing one notch moved −32.498 units; five notches in one event moved 162.498 units. TOOLS stopped at the bottom boundary. Earlier build 420 validation also checked dragging the scrollbar into the middle of the history: the next wheel notch still moved 32.499 units (not included in these videos). The preview was reset and the temporary probe removed after validation.
 
 Keyboard navigation and unrelated menus were not manually exercised; the automated checks verify retention of their native instructions. The single-player CURRENT ROLES page had no overflow to scroll.
