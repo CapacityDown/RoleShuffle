@@ -209,7 +209,7 @@ internal static class RoleGuideCatalog
                 "Prevents supported effect valuables from activating while the Engineer holds them. Camera, Propane Tank, Snowmobile, Flashlight, Clown Doll, and Love Potion are not affected.",
             StageRole.Trickster => (
                 $"Type decoy in chat to place a fixed Scream Doll that attracts enemies within {Number(config.TricksterInvestigateRadius.Value)} m for {Number(config.TricksterActiveSeconds.Value)} seconds. " +
-                $"Selecting or clearing the configured {config.TricksterExpression.Value} facial expression performs the same action. " +
+                $"Selecting the configured {config.TricksterExpression.Value} facial expression performs the same action. " +
                 $"Another decoy cannot be placed while one is active. After it ends, the cooldown is {Number(config.TricksterCooldownSeconds.Value)} seconds, or {Number(config.TricksterNoTargetCooldownSeconds.Value)} seconds if it attracted no enemies. " +
                 "The decoy cannot be grabbed, damaged, or delivered."),
             StageRole.Mechanic => (
@@ -330,7 +330,6 @@ internal static class RoleGuideCatalog
                 $"\n{config.MageStarExpression.Value}=star、{config.MageRollExpression.Value}=roll、" +
                 $"\n{config.MageGravityExpression.Value}=gravity、{config.MageVoidExpression.Value}=void、" +
                 $"\n{config.MageLaserExpression.Value}=laserです。" +
-                "\n同じ表情を解除して標準へ戻す操作も発動として扱います。" +
                 "\n保持した杖で発動する魔法の効果時間は1.3倍になります。チャット・表情での魔法には適用しません。" +
                 (config.MageAutoRecoveryEnabled.Value
                     ? $"{Number(config.MageAutoRecoveryDelaySeconds.Value)}秒間ダメージを受けなければ、{Number(config.MageAutoRecoveryIntervalSeconds.Value)}秒ごとに{config.MageAutoRecoveryAmount.Value}HP回復します。自動回復は1ステージの累計{config.MageAutoRecoveryTotalHealingLimit.Value}HPまでです。"
@@ -348,7 +347,7 @@ internal static class RoleGuideCatalog
                 "対応する効果付きValuableを持っている間、その効果の発動を防ぎます。Camera、Propane Tank、Snowmobile、Flashlight、Clown Doll、Love Potionには効果がありません。",
             StageRole.Trickster =>
                 $"チャットでdecoyと入力すると、半径{Number(config.TricksterInvestigateRadius.Value)}m以内の敵を{Number(config.TricksterActiveSeconds.Value)}秒間引きつける固定式Scream Dollを設置します。" +
-                $"設定した{config.TricksterExpression.Value}の表情を選択するか、その表情を解除して標準へ戻す操作でも発動します。" +
+                $"設定した{config.TricksterExpression.Value}の表情を選択する操作でも発動します。" +
                 $"デコイが有効な間は新しいデコイを設置できません。終了後のクールダウンは{Number(config.TricksterCooldownSeconds.Value)}秒で、敵を一体も引きつけなかった場合は{Number(config.TricksterNoTargetCooldownSeconds.Value)}秒です。" +
                 "デコイはつかむ、破壊する、納品することができません。",
             StageRole.Mechanic =>

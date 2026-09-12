@@ -443,42 +443,6 @@ internal static class LifecyclePatches
             _message);
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerAvatar), nameof(PlayerAvatar.PlayerExpressionSetRPC))]
-    private static void PlayerAvatarPlayerExpressionSetRpcPostfix(
-        PlayerAvatar __instance,
-        int _expressionIndex,
-        float _percent,
-        PhotonMessageInfo _info)
-    {
-        if (_percent <= 0f ||
-            !SemiFunc.OwnerOnlyRPC(_info, __instance.photonView))
-        {
-            return;
-        }
-
-        StageRolesPlugin.Instance?.Controller?.TryHandleRoleExpression(
-            __instance,
-            _expressionIndex);
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerAvatar), nameof(PlayerAvatar.PlayerExpressionStopRPC))]
-    private static void PlayerAvatarPlayerExpressionStopRpcPostfix(
-        PlayerAvatar __instance,
-        int _expressionIndex,
-        PhotonMessageInfo _info)
-    {
-        if (!SemiFunc.OwnerOnlyRPC(_info, __instance.photonView))
-        {
-            return;
-        }
-
-        StageRolesPlugin.Instance?.Controller?.TryHandleRoleExpression(
-            __instance,
-            _expressionIndex);
-    }
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PhysGrabObject), "GrabStartedRPC")]
     private static bool PhysGrabObjectGrabStartedRpcPrefix(

@@ -86,6 +86,7 @@
     <Compile Include="NotificationEnemyReactionPatches.cs" />
     <Compile Include="StageRoleController.cs" />
     <Compile Include="LifecyclePatches.cs" />
+    <Compile Include="RoleExpressionPatches.cs" />
     <Compile Include="ShopPatches.cs" />
   </ItemGroup>
 

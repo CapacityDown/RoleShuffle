@@ -25,7 +25,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 421;
+    private const int RoleUiBuildNumber = 422;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
