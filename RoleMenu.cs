@@ -26,7 +26,7 @@ internal sealed class RoleMenu : MonoBehaviour
     private const float GuideScrollMultiplier = 0.5f;
     private const float BaseUpgradeScrollMultiplier = 4f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 411;
+    private const int RoleUiBuildNumber = 412;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -1188,7 +1188,7 @@ internal sealed class RoleMenu : MonoBehaviour
 
         multiplier = _activeView switch
         {
-            RoleMenuView.Guide => GuideScrollMultiplier,
+            RoleMenuView.Guide or RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report => GuideScrollMultiplier,
             RoleMenuView.BaseUpgrades => BaseUpgradeScrollMultiplier,
             _ => 1f
         };
