@@ -18,6 +18,12 @@ internal sealed class StageRolesConfig
         Enabled = BindBool(config, "General", "Enabled", true, "Enables stage role assignment.");
         UniqueRoles = BindBool(config, "General", "UniqueRoles", true, "Avoids duplicate roles until every enabled role has been assigned once.");
         ShopUpgradeItemCount = BindInt(config, "General", "ShopUpgradeItemCount", 0, 0, 30, "Number of upgrade items requested for each shop.");
+
+        // REPOConfig displays sections in registration order.
+        GuideLanguage = config.Bind("UI", "GuideLanguage", "English",
+            new ConfigDescription("Local language for the role guide and utility pages. Default: English. Language names are shown in their native spelling. Also changes the in-menu language toggle; both controls save the same setting.",
+                new RoleLanguageValues()));
+
         EnhancedEnemyRewardsEnabled = BindBool(
             config,
             "Compatibility",
@@ -55,9 +61,6 @@ internal sealed class StageRolesConfig
         AnnouncementDelaySeconds = BindFloat(config, "Notifications", "DelaySeconds", 2.5f, 0f, 30f, "Delay before role announcements.");
         StageFluxAnnouncementDelaySeconds = BindFloat(config, "Notifications", "StageFluxDelaySeconds", 5f, 0f, 30f, "Delay used when Stage Flux is installed.");
 
-        GuideLanguage = config.Bind("UI", "GuideLanguage", "English",
-            new ConfigDescription("Local language for the role guide and utility pages. Default: English. Language names are shown in their native spelling. Also changes the in-menu language toggle; both controls save the same setting.",
-                new RoleLanguageValues()));
         HudFontSize = BindInt(config, "HUD", "FontSize", 28, 16, 48, "HUD text size before overall scaling.");
         HudEnabled = BindBool(config, "HUD", "Enabled", true, "Shows every player's assigned role during a stage.");
         HudRoleDisplay = config.Bind("HUD", "RoleDisplay", "NameOnly",
