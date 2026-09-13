@@ -1,0 +1,2941 @@
+{
+  "source_revision": "8eb599065a19d882fc1f122eccc4bb1b45251e50",
+  "source_files": {
+    "StageRolesConfig.cs": "4d4801ffe6cd376d51214c9ed0f503dfb59e49e96bd37e8ac843e6e15b82ecf2",
+    "RoleConfigMigration.cs": "a88e47a3a9a5ada8bdfbc876a787f9dc580077c1dbac8f12b4624c75b3bb674a",
+    "RoleLanguage.cs": "0d3ca91b2d680a1212b0ddc0bfe850871f6575f857f594d9b2c425dd8f347e70",
+    "RoleLanguageValues.cs": "002f77e6d7c9822514a3d6465df2328e978a06fc825969a8abb596bdce549465",
+    "RoleUpgradeScaling.cs": "3846652f3d85a8574f1d0693a049af8fd8c235d3903937303120308f49b92c96",
+    "TruckDrawWeight.cs": "aa425ab4313bea5df6336bb987ef2967b6711944ee396398649dc58d7f0ce28d"
+  },
+  "entries": [
+    {
+      "section": "General",
+      "key": "Enabled",
+      "name": "General.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Enables stage role assignment."
+    },
+    {
+      "section": "General",
+      "key": "UniqueRoles",
+      "name": "General.UniqueRoles",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Avoids duplicate roles until every enabled role has been assigned once."
+    },
+    {
+      "section": "General",
+      "key": "ShopUpgradeItemCount",
+      "name": "General.ShopUpgradeItemCount",
+      "value": "0",
+      "range": "0 - 30",
+      "choices": [],
+      "description": "Number of upgrade items requested for each shop."
+    },
+    {
+      "section": "UI",
+      "key": "GuideLanguage",
+      "name": "UI.GuideLanguage",
+      "value": "English",
+      "range": "",
+      "choices": [
+        "English",
+        "日本語",
+        "한국어",
+        "简体中文",
+        "繁體中文",
+        "Français",
+        "Deutsch",
+        "Español",
+        "Português (Brasil)",
+        "Italiano",
+        "Русский",
+        "Polski",
+        "Türkçe",
+        "Українська"
+      ],
+      "description": "Local language for the role guide and utility pages. Default: English. Language names are shown in their native spelling. Also changes the in-menu language toggle; both controls save the same setting."
+    },
+    {
+      "section": "Compatibility",
+      "key": "EnhancedEnemyRewardsEnabled",
+      "name": "Compatibility.EnhancedEnemyRewardsEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Treats Elite Enemy Variants Enhanced enemies as one tier higher for Vampire healing and Hunter bonus-orb quality."
+    },
+    {
+      "section": "Role Balance - Guarantees",
+      "key": "ShowcaseEnabled",
+      "name": "Role Balance - Guarantees.ShowcaseEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Guarantees event-focused roles according to the configured party-size tiers."
+    },
+    {
+      "section": "Role Balance - Guarantees",
+      "key": "ShowcaseMinimums",
+      "name": "Role Balance - Guarantees.ShowcaseMinimums",
+      "value": "3:1,7:2,14:3,24:4",
+      "range": "",
+      "choices": [],
+      "description": "Minimum Showcase roles by party size. Use comma-separated party size:limit pairs."
+    },
+    {
+      "section": "Role Balance - Guarantees",
+      "key": "SupportEnabled",
+      "name": "Role Balance - Guarantees.SupportEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Guarantees teamwork-focused roles according to the configured party-size tiers."
+    },
+    {
+      "section": "Role Balance - Guarantees",
+      "key": "SupportMinimums",
+      "name": "Role Balance - Guarantees.SupportMinimums",
+      "value": "4:1,8:2,14:3,24:4",
+      "range": "",
+      "choices": [],
+      "description": "Minimum Support roles by party size. Use comma-separated party size:limit pairs."
+    },
+    {
+      "section": "Role Balance - Limits",
+      "key": "Enabled",
+      "name": "Role Balance - Limits.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Limits simultaneous Danger and Hardship roles during normal assignment."
+    },
+    {
+      "section": "Role Balance - Limits",
+      "key": "DangerMaximums",
+      "name": "Role Balance - Limits.DangerMaximums",
+      "value": "1:1,8:2,16:3",
+      "range": "",
+      "choices": [],
+      "description": "Maximum simultaneous Bomber, Stinker, and Werewolf roles by party size. Use comma-separated party size:limit pairs."
+    },
+    {
+      "section": "Role Balance - Limits",
+      "key": "HardshipMaximums",
+      "name": "Role Balance - Limits.HardshipMaximums",
+      "value": "1:1,12:2",
+      "range": "",
+      "choices": [],
+      "description": "Maximum simultaneous Jobless and Tuna roles by party size. Use comma-separated party size:limit pairs."
+    },
+    {
+      "section": "Role Balance - Limits",
+      "key": "SmallPartyMaximumPlayers",
+      "name": "Role Balance - Limits.SmallPartyMaximumPlayers",
+      "value": "4",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Largest party size that uses the combined Danger and Hardship limit."
+    },
+    {
+      "section": "Role Balance - Limits",
+      "key": "SmallPartyCombinedMaximum",
+      "name": "Role Balance - Limits.SmallPartyCombinedMaximum",
+      "value": "1",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Maximum combined Danger and Hardship roles in a small party."
+    },
+    {
+      "section": "Role Balance - Variety",
+      "key": "PreventSameRole",
+      "name": "Role Balance - Variety.PreventSameRole",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Prevents a player from receiving the same role in consecutive stages when another role is available."
+    },
+    {
+      "section": "Role Balance - Variety",
+      "key": "HardshipCooldownStages",
+      "name": "Role Balance - Variety.HardshipCooldownStages",
+      "value": "2",
+      "range": "0 - 10",
+      "choices": [],
+      "description": "Stages after Jobless or Tuna during which that player cannot normally receive either Hardship role."
+    },
+    {
+      "section": "Role Balance - Variety",
+      "key": "ExcludeUnavailableRoles",
+      "name": "Role Balance - Variety.ExcludeUnavailableRoles",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Excludes context-dependent roles when their required player, enemy, weapon, or vanilla object is not available."
+    },
+    {
+      "section": "Notifications",
+      "key": "Enabled",
+      "name": "Notifications.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Enables role-name and role-effect chat and TTS notifications."
+    },
+    {
+      "section": "Notifications",
+      "key": "DelaySeconds",
+      "name": "Notifications.DelaySeconds",
+      "value": "2.5",
+      "range": "0 - 30",
+      "choices": [],
+      "description": "Delay before role announcements."
+    },
+    {
+      "section": "Notifications",
+      "key": "StageFluxDelaySeconds",
+      "name": "Notifications.StageFluxDelaySeconds",
+      "value": "5",
+      "range": "0 - 30",
+      "choices": [],
+      "description": "Delay used when Stage Flux is installed."
+    },
+    {
+      "section": "HUD",
+      "key": "FontSize",
+      "name": "HUD.FontSize",
+      "value": "28",
+      "range": "16 - 48",
+      "choices": [],
+      "description": "HUD text size before overall scaling."
+    },
+    {
+      "section": "HUD",
+      "key": "Enabled",
+      "name": "HUD.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Shows every player's assigned role during a stage."
+    },
+    {
+      "section": "HUD",
+      "key": "RoleDisplay",
+      "name": "HUD.RoleDisplay",
+      "value": "NameOnly",
+      "range": "",
+      "choices": [
+        "IconAndName",
+        "NameOnly",
+        "IconOnly"
+      ],
+      "description": "Role display style. Player names remain visible in every mode."
+    },
+    {
+      "section": "HUD",
+      "key": "IconSize",
+      "name": "HUD.IconSize",
+      "value": "64",
+      "range": "32 - 128",
+      "choices": [],
+      "description": "Role icon size before HUD scaling. Rows and page capacity adjust to keep icons from overlapping."
+    },
+    {
+      "section": "HUD",
+      "key": "Anchor",
+      "name": "HUD.Anchor",
+      "value": "BottomLeft",
+      "range": "",
+      "choices": [
+        "TopLeft",
+        "TopCenter",
+        "TopRight",
+        "MiddleLeft",
+        "MiddleCenter",
+        "MiddleRight",
+        "BottomLeft",
+        "BottomCenter",
+        "BottomRight"
+      ],
+      "description": "Anchor point used to position the role HUD."
+    },
+    {
+      "section": "HUD",
+      "key": "Alignment",
+      "name": "HUD.Alignment",
+      "value": "Left",
+      "range": "",
+      "choices": [
+        "Left",
+        "Center",
+        "Right"
+      ],
+      "description": "Horizontal alignment of the role HUD text."
+    },
+    {
+      "section": "HUD",
+      "key": "OffsetX",
+      "name": "HUD.OffsetX",
+      "value": "0",
+      "range": "-3840 - 3840",
+      "choices": [],
+      "description": "Horizontal offset from the anchor in pixels."
+    },
+    {
+      "section": "HUD",
+      "key": "OffsetY",
+      "name": "HUD.OffsetY",
+      "value": "80",
+      "range": "-2160 - 2160",
+      "choices": [],
+      "description": "Vertical offset from the anchor in pixels."
+    },
+    {
+      "section": "HUD",
+      "key": "ScalePercent",
+      "name": "HUD.ScalePercent",
+      "value": "70",
+      "range": "50 - 200",
+      "choices": [],
+      "description": "Role HUD scale percentage."
+    },
+    {
+      "section": "HUD",
+      "key": "PlayersPerPage",
+      "name": "HUD.PlayersPerPage",
+      "value": "8",
+      "range": "2 - 20",
+      "choices": [],
+      "description": "Maximum players shown at once, including the pinned local player. The HUD reserves room for six players when this is at least 6, including taller fallback fonts and icons."
+    },
+    {
+      "section": "HUD",
+      "key": "PageIntervalSeconds",
+      "name": "HUD.PageIntervalSeconds",
+      "value": "5",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Seconds each role page remains visible."
+    },
+    {
+      "section": "HUD",
+      "key": "TransitionDurationSeconds",
+      "name": "HUD.TransitionDurationSeconds",
+      "value": "0.2",
+      "range": "0 - 1",
+      "choices": [],
+      "description": "Duration of the fade between role pages."
+    },
+    {
+      "section": "HUD",
+      "key": "PinLocalPlayer",
+      "name": "HUD.PinLocalPlayer",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Keeps the local player's role visible on every page."
+    },
+    {
+      "section": "Testing",
+      "key": "Enabled",
+      "name": "Testing.Enabled",
+      "value": "false",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Enables the testing commands."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "ManualAdjustmentEnabled",
+      "name": "Base Upgrades.ManualAdjustmentEnabled",
+      "value": "false",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Allows the host to use the minus/plus buttons on BASE UPGRADES. Default: off. Adjustments are available in the lobby, truck, or shop, not during stages. Turning this off hides the buttons and excludes saved manual adjustments from base targets. Saved amounts are kept and apply again when enabled. Configured base levels and truck draws are unaffected."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "HealthUpgradeLevels",
+      "name": "Base Upgrades.HealthUpgradeLevels",
+      "value": "1:1",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "StaminaUpgradeLevels",
+      "name": "Base Upgrades.StaminaUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "ExtraJumpUpgradeLevels",
+      "name": "Base Upgrades.ExtraJumpUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "SpeedUpgradeLevels",
+      "name": "Base Upgrades.SpeedUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "StrengthUpgradeLevels",
+      "name": "Base Upgrades.StrengthUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "RangeUpgradeLevels",
+      "name": "Base Upgrades.RangeUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "LaunchUpgradeLevels",
+      "name": "Base Upgrades.LaunchUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "TumbleClimbUpgradeLevels",
+      "name": "Base Upgrades.TumbleClimbUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "TumbleWingsUpgradeLevels",
+      "name": "Base Upgrades.TumbleWingsUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "CrouchRestUpgradeLevels",
+      "name": "Base Upgrades.CrouchRestUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "MapPlayerCountUpgradeLevels",
+      "name": "Base Upgrades.MapPlayerCountUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-1; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrades",
+      "key": "DeathHeadBatteryUpgradeLevels",
+      "name": "Base Upgrades.DeathHeadBatteryUpgradeLevels",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated level:value pairs. The last entry at or below the current run level sets the base vanilla upgrade target. Run level range: 1-999999. Value range: 0-200; out-of-range numeric values are clamped. Blank and levels not yet reached use target level 0."
+    },
+    {
+      "section": "Base Upgrade Draw",
+      "key": "Enabled",
+      "name": "Base Upgrade Draw.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "After leaving the shop, runs a weighted shared Base Upgrade draw during the truck preparation phase."
+    },
+    {
+      "section": "Base Upgrade Draw",
+      "key": "MaximumLevel",
+      "name": "Base Upgrade Draw.MaximumLevel",
+      "value": "200",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Maximum Base Upgrade target reachable through positive truck draws. Map Player Count remains limited to 1."
+    },
+    {
+      "section": "Base Upgrade Draw",
+      "key": "CappedUpgradeWeightMultiplier",
+      "name": "Base Upgrade Draw.CappedUpgradeWeightMultiplier",
+      "value": "0.25",
+      "range": "0 - 1",
+      "choices": [],
+      "description": "Minimum selection weight multiplier reached at the truck draw maximum, including configured levels and truck bonuses. Weight decreases gradually toward this value. 0 excludes capped upgrades; 1 disables the decrease. Does not allow increases beyond the maximum or change All Upgrades weight."
+    },
+    {
+      "section": "Base Upgrade Draw",
+      "key": "WeightFalloffExponent",
+      "name": "Base Upgrade Draw.WeightFalloffExponent",
+      "value": "2",
+      "range": "0.1 - 10",
+      "choices": [],
+      "description": "Controls how upgrade selection weight decreases toward the draw maximum. 1 decreases evenly; larger values preserve more weight until near the maximum. All Upgrades weight is unchanged."
+    },
+    {
+      "section": "Base Upgrade Draw",
+      "key": "ChangeAmountWeights",
+      "name": "Base Upgrade Draw.ChangeAmountWeights",
+      "value": "-1:10,0:15,1:60,2:15",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated delta:weight pairs used by the truck Base Upgrade draw. Delta range: -200 to 200. Weight range: 0 to 1000. Out-of-range numeric values are clamped, malformed pairs are ignored, and duplicate deltas use the last value."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "Health",
+      "name": "Base Upgrade Draw Selection.Health",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "Health",
+      "name": "Base Upgrade Draw Weights.Health",
+      "value": "20",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for Health in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "Stamina",
+      "name": "Base Upgrade Draw Selection.Stamina",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "Stamina",
+      "name": "Base Upgrade Draw Weights.Stamina",
+      "value": "40",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for Stamina in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "ExtraJump",
+      "name": "Base Upgrade Draw Selection.ExtraJump",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "ExtraJump",
+      "name": "Base Upgrade Draw Weights.ExtraJump",
+      "value": "10",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for ExtraJump in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "Speed",
+      "name": "Base Upgrade Draw Selection.Speed",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "Speed",
+      "name": "Base Upgrade Draw Weights.Speed",
+      "value": "30",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for Speed in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "Strength",
+      "name": "Base Upgrade Draw Selection.Strength",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "Strength",
+      "name": "Base Upgrade Draw Weights.Strength",
+      "value": "20",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for Strength in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "Range",
+      "name": "Base Upgrade Draw Selection.Range",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "Range",
+      "name": "Base Upgrade Draw Weights.Range",
+      "value": "30",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for Range in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "Launch",
+      "name": "Base Upgrade Draw Selection.Launch",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "Launch",
+      "name": "Base Upgrade Draw Weights.Launch",
+      "value": "10",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for Launch in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "TumbleClimb",
+      "name": "Base Upgrade Draw Selection.TumbleClimb",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "TumbleClimb",
+      "name": "Base Upgrade Draw Weights.TumbleClimb",
+      "value": "10",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for TumbleClimb in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "TumbleWings",
+      "name": "Base Upgrade Draw Selection.TumbleWings",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "TumbleWings",
+      "name": "Base Upgrade Draw Weights.TumbleWings",
+      "value": "10",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for TumbleWings in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "CrouchRest",
+      "name": "Base Upgrade Draw Selection.CrouchRest",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "CrouchRest",
+      "name": "Base Upgrade Draw Weights.CrouchRest",
+      "value": "30",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for CrouchRest in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "MapPlayerCount",
+      "name": "Base Upgrade Draw Selection.MapPlayerCount",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "MapPlayerCount",
+      "name": "Base Upgrade Draw Weights.MapPlayerCount",
+      "value": "10",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for MapPlayerCount in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "DeathHeadBattery",
+      "name": "Base Upgrade Draw Selection.DeathHeadBattery",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "DeathHeadBattery",
+      "name": "Base Upgrade Draw Weights.DeathHeadBattery",
+      "value": "10",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for DeathHeadBattery in the truck Base Upgrade draw. Weight gradually decreases toward CappedUpgradeWeightMultiplier as the upgrade approaches its draw maximum. Defaults reflect vanilla shop stock. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Base Upgrade Draw Selection",
+      "key": "AllUpgrades",
+      "name": "Base Upgrade Draw Selection.AllUpgrades",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply."
+    },
+    {
+      "section": "Base Upgrade Draw Weights",
+      "key": "AllUpgrades",
+      "name": "Base Upgrade Draw Weights.AllUpgrades",
+      "value": "1",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative selection weight for AllUpgrades in the truck Base Upgrade draw. All Upgrades uses this weight directly. Zero excludes it from direct selection."
+    },
+    {
+      "section": "Tank",
+      "key": "Enabled",
+      "name": "Tank.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Tank",
+      "key": "Weight",
+      "name": "Tank.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Tank",
+      "key": "HealthUpgradeLevels",
+      "name": "Tank.HealthUpgradeLevels",
+      "value": "21",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Runner",
+      "key": "Enabled",
+      "name": "Runner.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Runner",
+      "key": "Weight",
+      "name": "Runner.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Runner",
+      "key": "SpeedUpgradeLevels",
+      "name": "Runner.SpeedUpgradeLevels",
+      "value": "6",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Runner",
+      "key": "StaminaUpgradeLevels",
+      "name": "Runner.StaminaUpgradeLevels",
+      "value": "46",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Jumper",
+      "key": "Enabled",
+      "name": "Jumper.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Jumper",
+      "key": "Weight",
+      "name": "Jumper.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Jumper",
+      "key": "ExtraJumpUpgradeLevels",
+      "name": "Jumper.ExtraJumpUpgradeLevels",
+      "value": "10",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Lifter",
+      "key": "Enabled",
+      "name": "Lifter.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Lifter",
+      "key": "Weight",
+      "name": "Lifter.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Lifter",
+      "key": "StrengthUpgradeLevels",
+      "name": "Lifter.StrengthUpgradeLevels",
+      "value": "25",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Launcher",
+      "key": "Enabled",
+      "name": "Launcher.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Launcher",
+      "key": "Weight",
+      "name": "Launcher.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Launcher",
+      "key": "LaunchUpgradeLevels",
+      "name": "Launcher.LaunchUpgradeLevels",
+      "value": "10",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Climber",
+      "key": "Enabled",
+      "name": "Climber.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Climber",
+      "key": "Weight",
+      "name": "Climber.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Climber",
+      "key": "ClimbUpgradeLevels",
+      "name": "Climber.ClimbUpgradeLevels",
+      "value": "50",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Climber",
+      "key": "RangeUpgradeLevels",
+      "name": "Climber.RangeUpgradeLevels",
+      "value": "20",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Flyer",
+      "key": "Enabled",
+      "name": "Flyer.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Flyer",
+      "key": "Weight",
+      "name": "Flyer.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Flyer",
+      "key": "WingsUpgradeLevels",
+      "name": "Flyer.WingsUpgradeLevels",
+      "value": "10",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Tracker",
+      "key": "Enabled",
+      "name": "Tracker.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Tracker",
+      "key": "Weight",
+      "name": "Tracker.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Tracker",
+      "key": "HealthUpgradeLevels",
+      "name": "Tracker.HealthUpgradeLevels",
+      "value": "3",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Ghost",
+      "key": "Enabled",
+      "name": "Ghost.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Ghost",
+      "key": "Weight",
+      "name": "Ghost.Weight",
+      "value": "80",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Ghost",
+      "key": "DeathHeadBatteryUpgradeLevels",
+      "name": "Ghost.DeathHeadBatteryUpgradeLevels",
+      "value": "50",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Bomber",
+      "key": "Enabled",
+      "name": "Bomber.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Bomber",
+      "key": "Weight",
+      "name": "Bomber.Weight",
+      "value": "80",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Bomber",
+      "key": "DistancePerGrenade",
+      "name": "Bomber.DistancePerGrenade",
+      "value": "8",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Travel distance required per grenade."
+    },
+    {
+      "section": "Bomber",
+      "key": "MaximumActiveGrenades",
+      "name": "Bomber.MaximumActiveGrenades",
+      "value": "30",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Maximum retained generated grenades per Bomber. Placing another removes the oldest grenade."
+    },
+    {
+      "section": "Bomber",
+      "key": "AllowTruckSpawns",
+      "name": "Bomber.AllowTruckSpawns",
+      "value": "false",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Allows grenade placement inside the truck."
+    },
+    {
+      "section": "Bomber",
+      "key": "ExplosiveGrenadesEnabled",
+      "name": "Bomber.ExplosiveGrenadesEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes the vanilla explosive grenade."
+    },
+    {
+      "section": "Bomber",
+      "key": "StunGrenadesEnabled",
+      "name": "Bomber.StunGrenadesEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes the vanilla stun grenade."
+    },
+    {
+      "section": "Bomber",
+      "key": "ShockwaveGrenadesEnabled",
+      "name": "Bomber.ShockwaveGrenadesEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes the vanilla shockwave grenade."
+    },
+    {
+      "section": "Bomber",
+      "key": "DuctTapedGrenadesEnabled",
+      "name": "Bomber.DuctTapedGrenadesEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes the vanilla duct-taped grenade."
+    },
+    {
+      "section": "Medic",
+      "key": "Enabled",
+      "name": "Medic.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Medic",
+      "key": "Weight",
+      "name": "Medic.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Medic",
+      "key": "HealAmount",
+      "name": "Medic.HealAmount",
+      "value": "5",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Health restored to each nearby player per tick."
+    },
+    {
+      "section": "Medic",
+      "key": "HealIntervalSeconds",
+      "name": "Medic.HealIntervalSeconds",
+      "value": "2",
+      "range": "0.1 - 30",
+      "choices": [],
+      "description": "Seconds between Medic healing ticks."
+    },
+    {
+      "section": "Medic",
+      "key": "HealRadius",
+      "name": "Medic.HealRadius",
+      "value": "5",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Maximum distance from the Medic for healing."
+    },
+    {
+      "section": "Medic",
+      "key": "TotalHealingLimit",
+      "name": "Medic.TotalHealingLimit",
+      "value": "150",
+      "range": "1 - 10000",
+      "choices": [],
+      "description": "Maximum total health restored by each Medic per stage."
+    },
+    {
+      "section": "Phoenix",
+      "key": "Enabled",
+      "name": "Phoenix.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Phoenix",
+      "key": "Weight",
+      "name": "Phoenix.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Phoenix",
+      "key": "RevivalHealth",
+      "name": "Phoenix.RevivalHealth",
+      "value": "25",
+      "range": "1 - 1000",
+      "choices": [],
+      "description": "Health restored after Phoenix revival, capped at the player's maximum health."
+    },
+    {
+      "section": "Phoenix",
+      "key": "ReviveDelaySeconds",
+      "name": "Phoenix.ReviveDelaySeconds",
+      "value": "2",
+      "range": "2 - 10",
+      "choices": [],
+      "description": "Delay before revival. Phoenix always waits at least two seconds."
+    },
+    {
+      "section": "Phoenix",
+      "key": "FailureGraceSeconds",
+      "name": "Phoenix.FailureGraceSeconds",
+      "value": "5",
+      "range": "1 - 15",
+      "choices": [],
+      "description": "Maximum time to hold a failed-stage transition while revival initializes."
+    },
+    {
+      "section": "Jobless",
+      "key": "Enabled",
+      "name": "Jobless.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Jobless",
+      "key": "Weight",
+      "name": "Jobless.Weight",
+      "value": "20",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Jobless",
+      "key": "Damage",
+      "name": "Jobless.Damage",
+      "value": "1",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Damage applied per tick outside the truck."
+    },
+    {
+      "section": "Jobless",
+      "key": "DamageIntervalSeconds",
+      "name": "Jobless.DamageIntervalSeconds",
+      "value": "0.1",
+      "range": "0.05 - 10",
+      "choices": [],
+      "description": "Seconds between damage ticks outside the truck."
+    },
+    {
+      "section": "Rescuer",
+      "key": "Enabled",
+      "name": "Rescuer.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Rescuer",
+      "key": "Weight",
+      "name": "Rescuer.Weight",
+      "value": "80",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Rescuer",
+      "key": "RevivalHealth",
+      "name": "Rescuer.RevivalHealth",
+      "value": "25",
+      "range": "1 - 1000",
+      "choices": [],
+      "description": "Health restored to a player revived by Rescuer, capped at the player's maximum health."
+    },
+    {
+      "section": "Rescuer",
+      "key": "ReviveDelaySeconds",
+      "name": "Rescuer.ReviveDelaySeconds",
+      "value": "2",
+      "range": "0 - 10",
+      "choices": [],
+      "description": "Delay before reviving another player."
+    },
+    {
+      "section": "Rescuer",
+      "key": "Radius",
+      "name": "Rescuer.Radius",
+      "value": "3",
+      "range": "1 - 50",
+      "choices": [],
+      "description": "Maximum distance to a dead player."
+    },
+    {
+      "section": "Rescuer",
+      "key": "MaximumRevives",
+      "name": "Rescuer.MaximumRevives",
+      "value": "2",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Maximum revivals per stage."
+    },
+    {
+      "section": "Vampire",
+      "key": "Enabled",
+      "name": "Vampire.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Vampire",
+      "key": "Weight",
+      "name": "Vampire.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Vampire",
+      "key": "Tier1HealAmount",
+      "name": "Vampire.Tier1HealAmount",
+      "value": "5",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Health restored by a nearby Tier 1 enemy death."
+    },
+    {
+      "section": "Vampire",
+      "key": "Tier2HealAmount",
+      "name": "Vampire.Tier2HealAmount",
+      "value": "10",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Health restored by a nearby Tier 2 enemy death."
+    },
+    {
+      "section": "Vampire",
+      "key": "Tier3HealAmount",
+      "name": "Vampire.Tier3HealAmount",
+      "value": "50",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Health restored by a nearby Tier 3 enemy death."
+    },
+    {
+      "section": "Vampire",
+      "key": "Radius",
+      "name": "Vampire.Radius",
+      "value": "10",
+      "range": "1 - 50",
+      "choices": [],
+      "description": "Maximum distance from a dying enemy."
+    },
+    {
+      "section": "King",
+      "key": "Enabled",
+      "name": "King.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "King",
+      "key": "Weight",
+      "name": "King.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Tuna",
+      "key": "Enabled",
+      "name": "Tuna.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Tuna",
+      "key": "Weight",
+      "name": "Tuna.Weight",
+      "value": "50",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Tuna",
+      "key": "StationaryDelaySeconds",
+      "name": "Tuna.StationaryDelaySeconds",
+      "value": "3",
+      "range": "0.1 - 30",
+      "choices": [],
+      "description": "Seconds without movement before damage starts."
+    },
+    {
+      "section": "Tuna",
+      "key": "Damage",
+      "name": "Tuna.Damage",
+      "value": "1",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Damage applied per stationary tick."
+    },
+    {
+      "section": "Tuna",
+      "key": "DamageIntervalSeconds",
+      "name": "Tuna.DamageIntervalSeconds",
+      "value": "0.1",
+      "range": "0.05 - 10",
+      "choices": [],
+      "description": "Seconds between stationary damage ticks."
+    },
+    {
+      "section": "Musician",
+      "key": "Enabled",
+      "name": "Musician.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Musician",
+      "key": "Weight",
+      "name": "Musician.Weight",
+      "value": "60",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Musician",
+      "key": "HealAmount",
+      "name": "Musician.HealAmount",
+      "value": "5",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Health restored to the Musician and each nearby player when an instrument note is played."
+    },
+    {
+      "section": "Musician",
+      "key": "HealRadius",
+      "name": "Musician.HealRadius",
+      "value": "10",
+      "range": "1 - 50",
+      "choices": [],
+      "description": "Maximum healing distance from the Musician when an instrument note is played."
+    },
+    {
+      "section": "Mage",
+      "key": "Enabled",
+      "name": "Mage.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Mage",
+      "key": "Weight",
+      "name": "Mage.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Mage",
+      "key": "CastIntervalSeconds",
+      "name": "Mage.CastIntervalSeconds",
+      "value": "3",
+      "range": "0.1 - 30",
+      "choices": [],
+      "description": "Minimum seconds between spell activations."
+    },
+    {
+      "section": "Mage",
+      "key": "StarExpression",
+      "name": "Mage.StarExpression",
+      "value": "Angry",
+      "range": "",
+      "choices": [
+        "Disabled",
+        "Angry",
+        "Sad",
+        "Suspicious",
+        "EyesClosed",
+        "Scared",
+        "Happy"
+      ],
+      "description": "Facial expression that triggers Star Wand."
+    },
+    {
+      "section": "Mage",
+      "key": "RollExpression",
+      "name": "Mage.RollExpression",
+      "value": "Sad",
+      "range": "",
+      "choices": [
+        "Disabled",
+        "Angry",
+        "Sad",
+        "Suspicious",
+        "EyesClosed",
+        "Scared",
+        "Happy"
+      ],
+      "description": "Facial expression that triggers Roll Staff."
+    },
+    {
+      "section": "Mage",
+      "key": "GravityExpression",
+      "name": "Mage.GravityExpression",
+      "value": "Suspicious",
+      "range": "",
+      "choices": [
+        "Disabled",
+        "Angry",
+        "Sad",
+        "Suspicious",
+        "EyesClosed",
+        "Scared",
+        "Happy"
+      ],
+      "description": "Facial expression that triggers Zero Gravity Staff."
+    },
+    {
+      "section": "Mage",
+      "key": "VoidExpression",
+      "name": "Mage.VoidExpression",
+      "value": "EyesClosed",
+      "range": "",
+      "choices": [
+        "Disabled",
+        "Angry",
+        "Sad",
+        "Suspicious",
+        "EyesClosed",
+        "Scared",
+        "Happy"
+      ],
+      "description": "Facial expression that triggers Void Staff."
+    },
+    {
+      "section": "Mage",
+      "key": "LaserExpression",
+      "name": "Mage.LaserExpression",
+      "value": "Scared",
+      "range": "",
+      "choices": [
+        "Disabled",
+        "Angry",
+        "Sad",
+        "Suspicious",
+        "EyesClosed",
+        "Scared",
+        "Happy"
+      ],
+      "description": "Facial expression that triggers Wizard Staff beam."
+    },
+    {
+      "section": "Mage",
+      "key": "AutoRecoveryEnabled",
+      "name": "Mage.AutoRecoveryEnabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Enables Mage health recovery after avoiding damage."
+    },
+    {
+      "section": "Mage",
+      "key": "AutoRecoveryDelaySeconds",
+      "name": "Mage.AutoRecoveryDelaySeconds",
+      "value": "10",
+      "range": "0 - 300",
+      "choices": [],
+      "description": "Seconds without taking damage before automatic health recovery starts."
+    },
+    {
+      "section": "Mage",
+      "key": "AutoRecoveryIntervalSeconds",
+      "name": "Mage.AutoRecoveryIntervalSeconds",
+      "value": "2",
+      "range": "0.1 - 60",
+      "choices": [],
+      "description": "Seconds between automatic Mage health recovery ticks."
+    },
+    {
+      "section": "Mage",
+      "key": "AutoRecoveryAmount",
+      "name": "Mage.AutoRecoveryAmount",
+      "value": "1",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Health restored by each automatic Mage recovery tick."
+    },
+    {
+      "section": "Mage",
+      "key": "AutoRecoveryTotalHealingLimit",
+      "name": "Mage.AutoRecoveryTotalHealingLimit",
+      "value": "120",
+      "range": "1 - 10000",
+      "choices": [],
+      "description": "Maximum total health restored by each player's Mage automatic recovery per stage. Other healing is not counted."
+    },
+    {
+      "section": "Mage",
+      "key": "StarHealthCost",
+      "name": "Mage.StarHealthCost",
+      "value": "10",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Health consumed after a successful Star Wand cast."
+    },
+    {
+      "section": "Mage",
+      "key": "GravityHealthCost",
+      "name": "Mage.GravityHealthCost",
+      "value": "10",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Health consumed after a successful Zero Gravity Staff cast."
+    },
+    {
+      "section": "Mage",
+      "key": "RollHealthCost",
+      "name": "Mage.RollHealthCost",
+      "value": "15",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Health consumed after a successful Roll Staff cast."
+    },
+    {
+      "section": "Mage",
+      "key": "VoidHealthCost",
+      "name": "Mage.VoidHealthCost",
+      "value": "30",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Health consumed after a successful Void Staff cast."
+    },
+    {
+      "section": "Mage",
+      "key": "LaserHealthCost",
+      "name": "Mage.LaserHealthCost",
+      "value": "50",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Health consumed after a successful Wizard Staff beam cast."
+    },
+    {
+      "section": "Gambler",
+      "key": "Enabled",
+      "name": "Gambler.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Gambler",
+      "key": "Weight",
+      "name": "Gambler.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Gambler",
+      "key": "WinChancePercent",
+      "name": "Gambler.WinChancePercent",
+      "value": "50",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Chance for a wagered valuable to use the win multiplier."
+    },
+    {
+      "section": "Gambler",
+      "key": "WinValueMultiplier",
+      "name": "Gambler.WinValueMultiplier",
+      "value": "2",
+      "range": "0 - 10",
+      "choices": [],
+      "description": "Value multiplier applied when a wager wins."
+    },
+    {
+      "section": "Gambler",
+      "key": "GambitGreenHealAmount",
+      "name": "Gambler.GambitGreenHealAmount",
+      "value": "50",
+      "range": "25 - 1000",
+      "choices": [],
+      "description": "Total health restored when Gambit lands on green for a Gambler."
+    },
+    {
+      "section": "Gambler",
+      "key": "GambitRedDamage",
+      "name": "Gambler.GambitRedDamage",
+      "value": "100",
+      "range": "50 - 1000",
+      "choices": [],
+      "description": "Total damage dealt when Gambit lands on red for a Gambler."
+    },
+    {
+      "section": "Gambler",
+      "key": "GambitWhiteHealthUpgradeLevels",
+      "name": "Gambler.GambitWhiteHealthUpgradeLevels",
+      "value": "5",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Temporary Health upgrade levels added when Gambit lands on white for a Gambler."
+    },
+    {
+      "section": "Hunter",
+      "key": "Enabled",
+      "name": "Hunter.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Hunter",
+      "key": "Weight",
+      "name": "Hunter.Weight",
+      "value": "80",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Hunter",
+      "key": "WeaponBatteryConsumptionPercent",
+      "name": "Hunter.WeaponBatteryConsumptionPercent",
+      "value": "75",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Percentage of normal weapon battery consumption used by Hunter."
+    },
+    {
+      "section": "Hunter",
+      "key": "DoubleOrbChancePercent",
+      "name": "Hunter.DoubleOrbChancePercent",
+      "value": "10",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Chance for an enemy defeated by Hunter to drop twice its normal orb count."
+    },
+    {
+      "section": "Hunter",
+      "key": "JackpotOrbChancePercent",
+      "name": "Hunter.JackpotOrbChancePercent",
+      "value": "0.5",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Chance for an enemy defeated by Hunter to drop the configured jackpot orb count."
+    },
+    {
+      "section": "Hunter",
+      "key": "JackpotOrbCount",
+      "name": "Hunter.JackpotOrbCount",
+      "value": "10",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Orb count used when Hunter's jackpot roll succeeds."
+    },
+    {
+      "section": "Stinker",
+      "key": "Enabled",
+      "name": "Stinker.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Stinker",
+      "key": "Weight",
+      "name": "Stinker.Weight",
+      "value": "80",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Stinker",
+      "key": "DistancePerCloud",
+      "name": "Stinker.DistancePerCloud",
+      "value": "2",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Travel distance required per uranium cloud."
+    },
+    {
+      "section": "Stinker",
+      "key": "MinimumSafetyDistance",
+      "name": "Stinker.MinimumSafetyDistance",
+      "value": "2",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Minimum distance from the newest pending cloud when it is created."
+    },
+    {
+      "section": "Stinker",
+      "key": "AllowTruckSpawns",
+      "name": "Stinker.AllowTruckSpawns",
+      "value": "false",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Allows uranium cloud creation inside the truck."
+    },
+    {
+      "section": "Engineer",
+      "key": "Enabled",
+      "name": "Engineer.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Engineer",
+      "key": "Weight",
+      "name": "Engineer.Weight",
+      "value": "70",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Trickster",
+      "key": "Enabled",
+      "name": "Trickster.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Trickster",
+      "key": "Weight",
+      "name": "Trickster.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Trickster",
+      "key": "DecoyExpression",
+      "name": "Trickster.DecoyExpression",
+      "value": "Happy",
+      "range": "",
+      "choices": [
+        "Disabled",
+        "Angry",
+        "Sad",
+        "Suspicious",
+        "EyesClosed",
+        "Scared",
+        "Happy"
+      ],
+      "description": "Facial expression that triggers decoy placement."
+    },
+    {
+      "section": "Trickster",
+      "key": "ActiveSeconds",
+      "name": "Trickster.ActiveSeconds",
+      "value": "25",
+      "range": "1 - 120",
+      "choices": [],
+      "description": "Seconds before the active decoy is removed."
+    },
+    {
+      "section": "Trickster",
+      "key": "CooldownSeconds",
+      "name": "Trickster.CooldownSeconds",
+      "value": "45",
+      "range": "1 - 300",
+      "choices": [],
+      "description": "Seconds after an effective decoy ends before another can be placed."
+    },
+    {
+      "section": "Trickster",
+      "key": "NoTargetCooldownSeconds",
+      "name": "Trickster.NoTargetCooldownSeconds",
+      "value": "10",
+      "range": "0 - 300",
+      "choices": [],
+      "description": "Seconds after a decoy that attracted no enemies ends before another can be placed."
+    },
+    {
+      "section": "Trickster",
+      "key": "InvestigateRadius",
+      "name": "Trickster.InvestigateRadius",
+      "value": "40",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Enemy investigation radius around the decoy."
+    },
+    {
+      "section": "Trickster",
+      "key": "PulseIntervalSeconds",
+      "name": "Trickster.PulseIntervalSeconds",
+      "value": "1",
+      "range": "0.25 - 10",
+      "choices": [],
+      "description": "Seconds between enemy investigation pulses."
+    },
+    {
+      "section": "Trickster",
+      "key": "PlacementDistance",
+      "name": "Trickster.PlacementDistance",
+      "value": "2",
+      "range": "0.5 - 10",
+      "choices": [],
+      "description": "Distance in front of Trickster used for decoy placement."
+    },
+    {
+      "section": "Mechanic",
+      "key": "Enabled",
+      "name": "Mechanic.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Mechanic",
+      "key": "Weight",
+      "name": "Mechanic.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Mechanic",
+      "key": "RepairPercentPerSecond",
+      "name": "Mechanic.RepairPercentPerSecond",
+      "value": "2",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Percentage of a held valuable's original value repaired per second."
+    },
+    {
+      "section": "Mechanic",
+      "key": "MaximumRepairPercentPerStage",
+      "name": "Mechanic.MaximumRepairPercentPerStage",
+      "value": "50",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Maximum cumulative original-value percentage repaired by each Mechanic per stage."
+    },
+    {
+      "section": "Electrician",
+      "key": "Enabled",
+      "name": "Electrician.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Electrician",
+      "key": "Weight",
+      "name": "Electrician.Weight",
+      "value": "80",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Electrician",
+      "key": "ChargePercentPerSecond",
+      "name": "Electrician.ChargePercentPerSecond",
+      "value": "10",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Battery percentage restored per second to held inactive rechargeable items."
+    },
+    {
+      "section": "Electrician",
+      "key": "MaximumChargePercentPerStage",
+      "name": "Electrician.MaximumChargePercentPerStage",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Maximum cumulative battery percentage restored by each Electrician per stage."
+    },
+    {
+      "section": "Warden",
+      "key": "Enabled",
+      "name": "Warden.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Warden",
+      "key": "Weight",
+      "name": "Warden.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Warden",
+      "key": "AdditionalStunSeconds",
+      "name": "Warden.AdditionalStunSeconds",
+      "value": "3",
+      "range": "0 - 30",
+      "choices": [],
+      "description": "Seconds added to enemy stuns caused by Warden."
+    },
+    {
+      "section": "Ninja",
+      "key": "Enabled",
+      "name": "Ninja.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Ninja",
+      "key": "Weight",
+      "name": "Ninja.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Ninja",
+      "key": "VisionRecognitionMultiplier",
+      "name": "Ninja.VisionRecognitionMultiplier",
+      "value": "2",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Multiplier applied to the time enemies need to visually recognize Ninja. Player-generated investigation sounds remain suppressed."
+    },
+    {
+      "section": "Executioner",
+      "key": "Enabled",
+      "name": "Executioner.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Executioner",
+      "key": "Weight",
+      "name": "Executioner.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Executioner",
+      "key": "StunnedDamageMultiplier",
+      "name": "Executioner.StunnedDamageMultiplier",
+      "value": "2",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Damage multiplier for direct attacks by Executioner against enemies that were already stunned."
+    },
+    {
+      "section": "Rider",
+      "key": "Enabled",
+      "name": "Rider.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Rider",
+      "key": "Weight",
+      "name": "Rider.Weight",
+      "value": "60",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Rider",
+      "key": "EnemyDamageMultiplier",
+      "name": "Rider.EnemyDamageMultiplier",
+      "value": "3",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Multiplier for vanilla vehicle impact damage against enemies while Rider is driving."
+    },
+    {
+      "section": "Rider",
+      "key": "PlayerKnockbackMultiplier",
+      "name": "Rider.PlayerKnockbackMultiplier",
+      "value": "2",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Multiplier for existing vanilla vehicle Tumble knockback against players while Rider is driving."
+    },
+    {
+      "section": "Influencer",
+      "key": "Enabled",
+      "name": "Influencer.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Influencer",
+      "key": "Weight",
+      "name": "Influencer.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Influencer",
+      "key": "PlayerRadius",
+      "name": "Influencer.PlayerRadius",
+      "value": "20",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Radius used to count nearby living players."
+    },
+    {
+      "section": "Influencer",
+      "key": "PlayerCheckIntervalSeconds",
+      "name": "Influencer.PlayerCheckIntervalSeconds",
+      "value": "0.5",
+      "range": "0.1 - 10",
+      "choices": [],
+      "description": "Seconds between nearby-player and upgrade checks."
+    },
+    {
+      "section": "Influencer",
+      "key": "NoiseRadiusMultiplier",
+      "name": "Influencer.NoiseRadiusMultiplier",
+      "value": "2",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Multiplier applied to vanilla footstep, landing, voice, and chat TTS investigation radii."
+    },
+    {
+      "section": "Influencer",
+      "key": "TTSInvestigateRadius",
+      "name": "Influencer.TTSInvestigateRadius",
+      "value": "20",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Enemy investigation radius produced by periodic Influencer TTS."
+    },
+    {
+      "section": "Influencer",
+      "key": "MinimumTTSIntervalSeconds",
+      "name": "Influencer.MinimumTTSIntervalSeconds",
+      "value": "20",
+      "range": "1 - 300",
+      "choices": [],
+      "description": "Minimum randomly selected interval between periodic TTS messages."
+    },
+    {
+      "section": "Influencer",
+      "key": "MaximumTTSIntervalSeconds",
+      "name": "Influencer.MaximumTTSIntervalSeconds",
+      "value": "40",
+      "range": "1 - 300",
+      "choices": [],
+      "description": "Maximum randomly selected interval between periodic TTS messages."
+    },
+    {
+      "section": "Influencer",
+      "key": "TTSQuietPeriodSeconds",
+      "name": "Influencer.TTSQuietPeriodSeconds",
+      "value": "1.5",
+      "range": "0 - 10",
+      "choices": [],
+      "description": "Required quiet period after any TTS before Influencer may speak."
+    },
+    {
+      "section": "Influencer",
+      "key": "HealthUpgradeScaling",
+      "name": "Influencer.HealthUpgradeScaling",
+      "value": "4:6,5:11",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "StaminaUpgradeScaling",
+      "name": "Influencer.StaminaUpgradeScaling",
+      "value": "1:3,2:6,3:10,4:12,5:15",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "ExtraJumpUpgradeScaling",
+      "name": "Influencer.ExtraJumpUpgradeScaling",
+      "value": "2:1,3:2,4:4,5:5",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "SpeedUpgradeScaling",
+      "name": "Influencer.SpeedUpgradeScaling",
+      "value": "1:1,2:2,3:3,4:3,5:3",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "StrengthUpgradeScaling",
+      "name": "Influencer.StrengthUpgradeScaling",
+      "value": "1:1,2:4,3:9,4:13,5:20",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "RangeUpgradeScaling",
+      "name": "Influencer.RangeUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "LaunchUpgradeScaling",
+      "name": "Influencer.LaunchUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "TumbleClimbUpgradeScaling",
+      "name": "Influencer.TumbleClimbUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "TumbleWingsUpgradeScaling",
+      "name": "Influencer.TumbleWingsUpgradeScaling",
+      "value": "1:1,2:2,3:3,4:4,5:5",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "CrouchRestUpgradeScaling",
+      "name": "Influencer.CrouchRestUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "MapPlayerCountUpgradeScaling",
+      "name": "Influencer.MapPlayerCountUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-1. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Influencer",
+      "key": "DeathHeadBatteryUpgradeScaling",
+      "name": "Influencer.DeathHeadBatteryUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (nearby-player count at or above which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Werewolf",
+      "key": "Enabled",
+      "name": "Werewolf.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Werewolf",
+      "key": "Weight",
+      "name": "Werewolf.Weight",
+      "value": "40",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Werewolf",
+      "key": "PlayerDamageMultiplier",
+      "name": "Werewolf.PlayerDamageMultiplier",
+      "value": "2",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Multiplier for identifiable player-origin damage dealt by Werewolf to another player."
+    },
+    {
+      "section": "Berserker",
+      "key": "Enabled",
+      "name": "Berserker.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Berserker",
+      "key": "Weight",
+      "name": "Berserker.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Berserker",
+      "key": "StaminaUpgradeScaling",
+      "name": "Berserker.StaminaUpgradeScaling",
+      "value": "80:3,60:6,40:10,20:12,10:20",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "ExtraJumpUpgradeScaling",
+      "name": "Berserker.ExtraJumpUpgradeScaling",
+      "value": "60:1,40:2,20:4,10:5",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "SpeedUpgradeScaling",
+      "name": "Berserker.SpeedUpgradeScaling",
+      "value": "80:1,60:2,40:3,20:3,10:4",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "StrengthUpgradeScaling",
+      "name": "Berserker.StrengthUpgradeScaling",
+      "value": "80:1,60:4,40:9,20:13,10:20",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "RangeUpgradeScaling",
+      "name": "Berserker.RangeUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "LaunchUpgradeScaling",
+      "name": "Berserker.LaunchUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "TumbleClimbUpgradeScaling",
+      "name": "Berserker.TumbleClimbUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "TumbleWingsUpgradeScaling",
+      "name": "Berserker.TumbleWingsUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "CrouchRestUpgradeScaling",
+      "name": "Berserker.CrouchRestUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "MapPlayerCountUpgradeScaling",
+      "name": "Berserker.MapPlayerCountUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-1. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Berserker",
+      "key": "DeathHeadBatteryUpgradeScaling",
+      "name": "Berserker.DeathHeadBatteryUpgradeScaling",
+      "value": "",
+      "range": "",
+      "choices": [],
+      "description": "Comma-separated condition:level pairs (remaining HP percent at or below which the value applies). Level range: 0-200. Blank and conditions not yet reached use target level 0."
+    },
+    {
+      "section": "Bodyguard",
+      "key": "Enabled",
+      "name": "Bodyguard.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Bodyguard",
+      "key": "Weight",
+      "name": "Bodyguard.Weight",
+      "value": "80",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Bodyguard",
+      "key": "HealthUpgradeLevels",
+      "name": "Bodyguard.HealthUpgradeLevels",
+      "value": "11",
+      "range": "0 - 200",
+      "choices": [],
+      "description": "Vanilla upgrade target level while this role is assigned."
+    },
+    {
+      "section": "Bodyguard",
+      "key": "ProtectionRadius",
+      "name": "Bodyguard.ProtectionRadius",
+      "value": "15",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Maximum distance from a player for Bodyguard to absorb enemy damage."
+    },
+    {
+      "section": "Bodyguard",
+      "key": "DamageSharePercent",
+      "name": "Bodyguard.DamageSharePercent",
+      "value": "50",
+      "range": "0 - 100",
+      "choices": [],
+      "description": "Percentage of enemy damage transferred to Bodyguard, without reducing Bodyguard below 1 HP."
+    },
+    {
+      "section": "Rammer",
+      "key": "Enabled",
+      "name": "Rammer.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Rammer",
+      "key": "Weight",
+      "name": "Rammer.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Rammer",
+      "key": "TumbleAttackDamage",
+      "name": "Rammer.TumbleAttackDamage",
+      "value": "100",
+      "range": "0 - 100000",
+      "choices": [],
+      "description": "Enemy damage dealt by Rammer's Tumble Attack."
+    },
+    {
+      "section": "Rammer",
+      "key": "SelfDamage",
+      "name": "Rammer.SelfDamage",
+      "value": "15",
+      "range": "0 - 100000",
+      "choices": [],
+      "description": "Damage Rammer takes after its Tumble Attack hits an enemy."
+    },
+    {
+      "section": "Diver",
+      "key": "Enabled",
+      "name": "Diver.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Diver",
+      "key": "Weight",
+      "name": "Diver.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Diver",
+      "key": "UnderfloorDurationSeconds",
+      "name": "Diver.UnderfloorDurationSeconds",
+      "value": "10",
+      "range": "1 - 120",
+      "choices": [],
+      "description": "Maximum seconds Diver can remain below a floor before dying."
+    },
+    {
+      "section": "Diver",
+      "key": "MovementForce",
+      "name": "Diver.MovementForce",
+      "value": "8",
+      "range": "1 - 30",
+      "choices": [],
+      "description": "Force used for free movement while Diver is below a floor."
+    },
+    {
+      "section": "Sniper",
+      "key": "Enabled",
+      "name": "Sniper.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Sniper",
+      "key": "Weight",
+      "name": "Sniper.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Sniper",
+      "key": "ReferenceDistance",
+      "name": "Sniper.ReferenceDistance",
+      "value": "8",
+      "range": "1 - 50",
+      "choices": [],
+      "description": "Distance in meters where Sniper deals normal damage."
+    },
+    {
+      "section": "Sniper",
+      "key": "MinimumDamageMultiplier",
+      "name": "Sniper.MinimumDamageMultiplier",
+      "value": "0.5",
+      "range": "0 - 1",
+      "choices": [],
+      "description": "Damage multiplier at zero distance."
+    },
+    {
+      "section": "Sniper",
+      "key": "MaximumDamageMultiplier",
+      "name": "Sniper.MaximumDamageMultiplier",
+      "value": "2",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Maximum long-range damage multiplier."
+    },
+    {
+      "section": "Sniper",
+      "key": "MaximumMultiplierDistance",
+      "name": "Sniper.MaximumMultiplierDistance",
+      "value": "24",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Distance in meters where Sniper reaches the maximum damage multiplier."
+    },
+    {
+      "section": "Imitator",
+      "key": "Enabled",
+      "name": "Imitator.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Imitator",
+      "key": "Weight",
+      "name": "Imitator.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Avenger",
+      "key": "Enabled",
+      "name": "Avenger.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Avenger",
+      "key": "Weight",
+      "name": "Avenger.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Avenger",
+      "key": "DamageMultiplier",
+      "name": "Avenger.DamageMultiplier",
+      "value": "1.5",
+      "range": "1 - 10",
+      "choices": [],
+      "description": "Enemy damage multiplier after another player dies."
+    },
+    {
+      "section": "Avenger",
+      "key": "DurationSeconds",
+      "name": "Avenger.DurationSeconds",
+      "value": "20",
+      "range": "1 - 120",
+      "choices": [],
+      "description": "Duration of Avenger's enemy damage bonus after another player dies."
+    },
+    {
+      "section": "Avenger",
+      "key": "TriggerRadius",
+      "name": "Avenger.TriggerRadius",
+      "value": "30",
+      "range": "1 - 100",
+      "choices": [],
+      "description": "Maximum distance in meters from a dying player that activates Avenger."
+    },
+    {
+      "section": "Brawler",
+      "key": "Enabled",
+      "name": "Brawler.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "Includes this role in stage assignment."
+    },
+    {
+      "section": "Brawler",
+      "key": "Weight",
+      "name": "Brawler.Weight",
+      "value": "100",
+      "range": "0 - 1000",
+      "choices": [],
+      "description": "Relative assignment weight."
+    },
+    {
+      "section": "Brawler",
+      "key": "MeleeDamageMultiplier",
+      "name": "Brawler.MeleeDamageMultiplier",
+      "value": "1.25",
+      "range": "0 - 10",
+      "choices": [],
+      "description": "Damage multiplier for identifiable melee weapon attacks."
+    },
+    {
+      "section": "Brawler",
+      "key": "RangedDamageMultiplier",
+      "name": "Brawler.RangedDamageMultiplier",
+      "value": "0.75",
+      "range": "0 - 10",
+      "choices": [],
+      "description": "Damage multiplier for identifiable ranged weapon attacks."
+    },
+    {
+      "section": "???1",
+      "key": "Enabled",
+      "name": "???1.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "???"
+    },
+    {
+      "section": "???2",
+      "key": "Enabled",
+      "name": "???2.Enabled",
+      "value": "true",
+      "range": "",
+      "choices": [
+        "true",
+        "false"
+      ],
+      "description": "???"
+    }
+  ]
+}
