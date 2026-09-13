@@ -134,5 +134,6 @@
   "Stamina, strength, range and launch for moving valuables.": "スタミナ・持ち上げる力・射程・投げる力で貴重品を運びます。",
   "Health, stamina, carrying and team tracking for cooperation.": "体力・スタミナ・運搬・仲間の追跡で協力を支えます。",
   "Base Upgrade Settings": "基本アップグレード設定",
-  "Base Upgrade Presets": "基本アップグレードプリセット"
+  "Base Upgrade Presets": "基本アップグレードプリセット",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "＋／−ボタンで、現在のランレベルから次の設定区間までの基礎設定値を変更します。トラック抽選の増減分は保持します。"
 }

@@ -35,16 +35,16 @@ internal sealed class RoleSelectionSettings(StageRolesConfig settings, ConfigFil
         SaveEntries(file, entries);
     }
 
-    internal static void SaveEntries(ConfigFile file, IReadOnlyDictionary<ConfigEntry<bool>, bool> values)
+    internal static void SaveEntries<T>(ConfigFile file, IReadOnlyDictionary<ConfigEntry<T>, T> values)
     {
         bool autoSave = file.SaveOnConfigSet;
-        Dictionary<ConfigEntry<bool>, bool> previous = new();
+        Dictionary<ConfigEntry<T>, T> previous = new();
         file.SaveOnConfigSet = false;
         try
         {
             foreach (var pair in values)
             {
-                ConfigEntry<bool> entry = pair.Key;
+                ConfigEntry<T> entry = pair.Key;
                 previous[entry] = entry.Value;
                 entry.Value = pair.Value;
             }

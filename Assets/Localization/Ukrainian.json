@@ -218,5 +218,6 @@
   "Stamina, strength, range and launch for moving valuables.": "Витривалість, сила, дальність і кидок для перевезення цінностей.",
   "Health, stamina, carrying and team tracking for cooperation.": "Здоров'я, витривалість, перевезення й відстеження команди для співпраці.",
   "Base Upgrade Settings": "Налаштування базових поліпшень",
-  "Base Upgrade Presets": "Набори базових поліпшень"
+  "Base Upgrade Presets": "Набори базових поліпшень",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "Кнопки +/− змінюють заданий базовий рівень від поточного рівня забігу до наступного правила рівня. Бонуси розіграшу у вантажівці зберігаються."
 }

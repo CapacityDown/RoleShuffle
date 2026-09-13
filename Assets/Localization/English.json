@@ -218,5 +218,6 @@
   "Role Presets": "Role Presets",
   "Custom": "Custom",
   "Base Upgrade Settings": "Base Upgrade Settings",
-  "Base Upgrade Presets": "Base Upgrade Presets"
+  "Base Upgrade Presets": "Base Upgrade Presets",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept."
 }

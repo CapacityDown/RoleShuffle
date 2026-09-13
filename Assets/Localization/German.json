@@ -218,5 +218,6 @@
   "Stamina, strength, range and launch for moving valuables.": "Ausdauer, Stärke, Reichweite und Wurfkraft für den Transport von Wertsachen.",
   "Health, stamina, carrying and team tracking for cooperation.": "Gesundheit, Ausdauer, Transport und Teamortung für die Zusammenarbeit.",
   "Base Upgrade Settings": "Basis-Upgrade-Einstellungen",
-  "Base Upgrade Presets": "Basis-Upgrade-Vorlagen"
+  "Base Upgrade Presets": "Basis-Upgrade-Vorlagen",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "Die +/−-Tasten ändern den eingestellten Basiswert ab dem aktuellen Durchlauflevel bis zur nächsten Levelregel. Die Boni der Lkw-Ziehung bleiben erhalten."
 }

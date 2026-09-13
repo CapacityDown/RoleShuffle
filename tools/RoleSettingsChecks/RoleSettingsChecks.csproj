@@ -20,6 +20,7 @@
     <Compile Include="../../BaseUpgradeSettingsSync.cs" Link="BaseUpgradeSettingsSync.cs" />
     <Compile Include="../../BaseUpgradeSync.cs" Link="BaseUpgradeSync.cs" />
     <Compile Include="../../RoleMenuBaseUpgradeSettings.cs" Link="RoleMenuBaseUpgradeSettings.cs" />
+    <Compile Include="../../RoleMenuBaseUpgradeLevels.cs" Link="RoleMenuBaseUpgradeLevels.cs" />
     <EmbeddedResource Include="../../Assets/Localization/*.json" LogicalName="REPOJP.StageRoles.Localization.%(Filename)%(Extension)" />
     <PackageReference Include="BepInEx.BaseLib" Version="5.4.20" />
   </ItemGroup>

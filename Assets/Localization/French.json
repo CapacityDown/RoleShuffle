@@ -218,5 +218,6 @@
   "Stamina, strength, range and launch for moving valuables.": "Endurance, force, portée et lancer pour déplacer les objets de valeur.",
   "Health, stamina, carrying and team tracking for cooperation.": "Santé, endurance, transport et suivi des équipiers pour coopérer.",
   "Base Upgrade Settings": "Réglages des améliorations de base",
-  "Base Upgrade Presets": "Préréglages des améliorations de base"
+  "Base Upgrade Presets": "Préréglages des améliorations de base",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "Les boutons +/− modifient le niveau de base configuré à partir du niveau actuel de la partie, jusqu’à la prochaine règle de niveau. Les bonus du tirage du camion sont conservés."
 }

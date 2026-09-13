@@ -210,3 +210,87 @@ foreach (var language in Enum.GetValues<RoleGuideLanguage>())
     Check(RoleMenu.Entries.Count(e => e.OnClick != null) == 6, "Localized presets retain buttons");
 }
 Console.WriteLine($"Base Upgrade settings checks passed: {checks - baseStart}");
+
+int levelStart = checks;
+SemiFunc.Multiplayer = false;
+RunManager.instance = new() { levelsCompleted = 2 };
+foreach (var definition in RoleUpgradeScaling.Definitions)
+{
+    var levelEntry = config.BaseUpgradeLevelsEntry(definition.Name)!;
+    Check(levelEntry.Definition.Section == "Base Upgrades" && levelEntry.Definition.Key == definition.Name + "UpgradeLevels",
+        "Each stepper maps to its existing REPOConfig string entry");
+    levelEntry.Value = definition.MaximumLevel == 1 ? "1:0,5:1" : "1:2,5:7";
+    var before = file.ToDictionary(p => p.Key, p => p.Value.BoxedValue);
+    Check(baseService.TryAdjustLevel(definition.Name, 1, 3), "Each upgrade can increase by one");
+    string expected = definition.MaximumLevel == 1 ? "1:0,3:1,5:1" : "1:2,3:3,5:7";
+    Check(levelEntry.Value == expected, "Only the current interval changes; earlier/later rules retained");
+    Check(before.All(p => p.Key == levelEntry.Definition || Equals(file[p.Key].BoxedValue, p.Value)), "Other settings and bonuses untouched");
+    var reload = new StageRolesConfig(new ConfigFile(path, false) { SaveOnConfigSet = false });
+    Check(reload.BaseUpgradeLevelsEntry(definition.Name)!.Value == expected, "Level change persisted to shared config");
+    Check(baseService.TryAdjustLevel(definition.Name, -1, 3), "Each upgrade can decrease by one");
+}
+Check(!baseService.TryAdjustLevel("AllUpgrades", 1, 3) && !baseService.TryAdjustLevel("Unknown", 1, 3), "No invented base target for All Upgrades or unknown names");
+foreach (int delta in new[] { 0, 2, -2, int.MaxValue, int.MinValue })
+    Check(!baseService.TryAdjustLevel("Health", delta, 3), "Only one-level steps accepted");
+config.BaseHealthLevels.Value = "1:200";
+Check(!baseService.CanAdjustLevel("Health", 1, 3) && !baseService.TryAdjustLevel("Health", 1, 3), "Upper limit enforced");
+config.BaseHealthLevels.Value = "";
+Check(!baseService.CanAdjustLevel("Health", -1, 3) && baseService.TryAdjustLevel("Health", 1, 3) && config.BaseHealthLevels.Value == "3:1", "Blank starts at zero without changing earlier levels");
+config.BaseMapPlayerCountLevels.Value = "1:1";
+Check(!baseService.TryAdjustLevel("MapPlayerCount", 1, 3), "Map limit stays one");
+config.BaseHealthLevels.Value = "1:3,broken,5:7";
+saved = File.ReadAllText(path);
+Check(!baseService.TryAdjustLevel("Health", 1, 3) && File.ReadAllText(path) == saved, "Malformed user rules preserved without saving");
+config.BaseHealthLevels.Value = "0:250,1000000:1";
+Check(baseService.TryAdjustLevel("Health", -1, 3) && config.BaseHealthLevels.Value == "1:200,3:199,999999:1", "Clamped numeric rules match game semantics");
+config.BaseHealthLevels.Value = "1:2;3:4;3:5;9:8";
+Check(baseService.TryAdjustLevel("Health", -1, 3) && config.BaseHealthLevels.Value == "1:2,3:4,9:8", "Duplicate last value and semicolon syntax respected");
+file.SaveOnConfigSet = false;
+Check(baseService.TryAdjustLevel("Health", 1, 3) && !file.SaveOnConfigSet, "Preserves disabled autosave");
+file.SaveOnConfigSet = true;
+string beforeLevelFailure = config.BaseHealthLevels.Value;
+failedSave = false;
+using (var locked = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
+{ try { baseService.TryAdjustLevel("Health", 1, 3); } catch (IOException) { failedSave = true; } }
+Check(failedSave && config.BaseHealthLevels.Value == beforeLevelFailure && file.SaveOnConfigSet, "Failed level save rolls back value and autosave");
+config.BaseHealthLevels.BoxedValue = "1:0,5:7";
+RoleMenu.ShowLevels(config);
+var adjustments = RoleMenu.Entries.Where(e => e.Adjustment != null).ToArray();
+Check(adjustments.Length == 12, "Each upgrade gets one row containing both controls");
+Check(adjustments[0].Text == "Configured: 0" && adjustments[0].Adjustment!.Decrease == null && adjustments[0].Adjustment!.Increase != null,
+    "Lower-bound button disabled; increase remains actionable");
+adjustments[0].Adjustment!.Increase!();
+Check(config.BaseHealthLevels.Value == "1:0,3:1,5:7" && RoleMenu.Entries.Any(e => e.Adjustment != null && e.Text == "Configured: 1"), "Mouse callback saves and refreshes configured level");
+config.BaseHealthLevels.BoxedValue = "1:200";
+RoleMenu.RefreshLevelsIfChanged();
+var healthControls = RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment!;
+Check(healthControls.Increase == null && healthControls.Decrease != null, "REPOConfig edit refreshes button bounds");
+Action oldRunClick = healthControls.Decrease!;
+RunManager.instance.levelsCompleted = 3;
+saved = File.ReadAllText(path);
+oldRunClick();
+Check(File.ReadAllText(path) == saved, "Stale callback cannot change another run level");
+RoleMenu.ShowLevels(config);
+Action oldLevelHostClick = RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment!.Decrease!;
+SemiFunc.Multiplayer = true;
+PhotonNetwork.IsMasterClient = true;
+BaseUpgradeSync.Publish(config);
+PhotonNetwork.IsMasterClient = false;
+oldLevelHostClick();
+Check(File.ReadAllText(path) == saved && !baseService.TryAdjustLevel("Health", -1, 4), "Host authority rechecked at invocation");
+config.BaseHealthLevels.Value = "1:3";
+RoleMenu.ShowLevels(config);
+Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Decrease == null && e.Adjustment.Increase == null), "Guests cannot use either control");
+Check(RoleMenu.Entries.First(e => e.Adjustment != null).Text == "Configured: 200", "Guests see host configured level instead of local value");
+PhotonNetwork.CurrentRoom!.CustomProperties.Remove("RS.BaseUpgrades");
+RoleMenu.ShowLevels(config);
+Check(RoleMenu.Entries.All(e => e.Adjustment == null), "Missing host values do not create editable guesses");
+PhotonNetwork.IsMasterClient = true;
+GameManager.instance = null;
+Check(!baseService.TryAdjustLevel("Health", 1, 4), "No active game cannot edit levels");
+GameManager.instance = new();
+RunManager.instance = null;
+Check(BaseUpgradeSelectionSettings.CurrentRunLevel == 1, "Lobby without RunManager uses first level");
+RunManager.instance = new() { levelsCompleted = int.MaxValue };
+Check(BaseUpgradeSelectionSettings.CurrentRunLevel == 999999, "Run level arithmetic cannot overflow");
+Console.WriteLine($"Base Upgrade level checks passed: {checks - levelStart}");

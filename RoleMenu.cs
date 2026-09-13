@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 429;
+    private const int RoleUiBuildNumber = 430;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -155,7 +155,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         if (_activeView == RoleMenuView.BaseUpgrades)
         {
             string baseUpgradeSignature =
-                BaseUpgradeSync.CurrentSignature(_config);
+                BaseUpgradePageSignature();
             if (!string.Equals(
                     baseUpgradeSignature,
                     _openSignature,
@@ -761,76 +761,6 @@ internal sealed partial class RoleMenu : MonoBehaviour
         dialog.bodyTextMesh.fontSizeMax = 18;
     }
 
-    private static void RefreshBaseUpgradeRows(REPOPopupPage page)
-    {
-        IReadOnlyList<BaseUpgradeSnapshot> upgrades =
-            BaseUpgradeSync.Read(_config);
-        List<RoleMenuEntry> entries = new(upgrades.Count * 3 + 2);
-        entries.Add(new RoleMenuEntry(Localized("BASE UPGRADE SETTINGS"), 20, FontStyles.Bold, 40, false, UseLanguageFont,
-            () => { if (_openPage == page && _activeView == RoleMenuView.BaseUpgrades) SwitchView(page, RoleMenuView.BaseUpgradeSettings); }));
-        if (upgrades.Count == 0)
-        {
-            entries.Add(new RoleMenuEntry(
-                Localized("Base Upgrade data is not available yet."),
-                22f,
-                FontStyles.Bold,
-                42f,
-                wrap: false));
-        }
-        else
-        {
-            TMP_Text measurementText = MeasurementText(page);
-            foreach (string line in WrapGuideText(
-                         measurementText,
-                         Localized("Shared targets used when a role does not replace an upgrade."),
-                         ContentWidth(page),
-                         _guideLanguage))
-            {
-                entries.Add(new RoleMenuEntry(
-                    line,
-                    18f,
-                    FontStyles.Normal,
-                    25f,
-                    wrap: false));
-            }
-            entries.Add(new RoleMenuEntry(
-                string.Empty,
-                18f,
-                FontStyles.Normal,
-                7f,
-                wrap: false));
-            for (int index = 0; index < upgrades.Count; index++)
-            {
-                BaseUpgradeSnapshot upgrade = upgrades[index];
-                entries.Add(new RoleMenuEntry(
-                    $"{DisplayUpgradeName(upgrade.Name)}: " +
-                    upgrade.CurrentLevel.ToString(CultureInfo.InvariantCulture),
-                    21f,
-                    FontStyles.Bold,
-                    30f,
-                    wrap: false));
-                entries.Add(new RoleMenuEntry(
-                    $"{Localized("Configured")}: {upgrade.ConfiguredLevel}  " +
-                    $"{Localized("Truck Draw")}: {SignedValue(upgrade.TruckDrawBonus)}",
-                    18f,
-                    FontStyles.Normal,
-                    27f,
-                    wrap: false));
-                if (index + 1 < upgrades.Count)
-                {
-                    entries.Add(new RoleMenuEntry(
-                        string.Empty,
-                        18f,
-                        FontStyles.Normal,
-                        5f,
-                        wrap: false));
-                }
-            }
-        }
-        ApplyEntries(page, entries);
-        _openSignature = BaseUpgradeSync.CurrentSignature(_config);
-    }
-
     private static string DisplayUpgradeName(string name) => name switch
     {
         "ExtraJump" => "Extra Jump",
@@ -1001,6 +931,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             if (!visible)
             {
                 row.Emblem.gameObject.SetActive(false);
+                row.Stepper?.Hide();
                 continue;
             }
 
@@ -1018,7 +949,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             labelText.fontSize = entry.FontSize;
             labelText.fontStyle = entry.FontStyle;
             labelText.enableWordWrapping = entry.Wrap;
-            labelText.enableAutoSizing = control;
+            labelText.enableAutoSizing = control || entry.Adjustment != null;
             labelText.fontSizeMin = 12f;
             labelText.fontSizeMax = entry.FontSize;
             labelText.overflowMode = TextOverflowModes.Overflow;
@@ -1043,7 +974,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
             row.Button.overrideButtonSize = size;
             row.Button.rectTransform.sizeDelta = size;
             row.Label.rectTransform.anchoredPosition = new Vector2(textInset, 0f);
-            Vector2 textSize = new(contentWidth - textInset - padding, entry.Height);
+            float adjustmentWidth = entry.Adjustment != null ? RoleMenuStepper.ReservedWidth : 0f;
+            Vector2 textSize = new(contentWidth - textInset - padding - adjustmentWidth, entry.Height);
             row.Label.rectTransform.sizeDelta = textSize;
             labelText.rectTransform.sizeDelta = textSize;
             if (emblem != null) labelText.overflowMode = TextOverflowModes.Ellipsis;
@@ -1052,6 +984,12 @@ internal sealed partial class RoleMenu : MonoBehaviour
             row.FocusRect.anchoredPosition = new Vector2(
                 0f,
                 (entry.Height - focusHeight) * 0.5f);
+            if (entry.Adjustment != null)
+            {
+                row.Stepper ??= new RoleMenuStepper(row.Button.rectTransform, row.DefaultFont);
+                row.Stepper.Configure(entry.Adjustment, contentWidth, entry.Height);
+            }
+            else row.Stepper?.Hide();
         }
         page.scrollView.UpdateElements();
     }
@@ -1229,7 +1167,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         StageRole? emblemRole = null,
         bool unrevealedEmblem = false,
         bool isControl = false,
-        bool emblemGrayedOut = false)
+        bool emblemGrayedOut = false,
+        RoleMenuAdjustment? adjustment = null)
     {
         internal string Text { get; } = text;
         internal float FontSize { get; } = fontSize;
@@ -1242,6 +1181,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         internal bool UnrevealedEmblem { get; } = unrevealedEmblem;
         internal bool IsControl { get; } = isControl;
         internal bool EmblemGrayedOut { get; } = emblemGrayedOut;
+        internal RoleMenuAdjustment? Adjustment { get; } = adjustment;
     }
 
     private sealed class RoleMenuRow(
@@ -1258,6 +1198,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         internal RectTransform FocusRect { get; } = focusRect;
         internal Image Emblem { get; } = emblem;
         internal RoleMenuButtonVisual Visual { get; } = visual;
+        internal RoleMenuStepper? Stepper { get; set; }
         internal TMP_FontAsset DefaultFont { get; } = label.labelTMP.font;
     }
 

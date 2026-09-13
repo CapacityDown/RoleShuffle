@@ -218,5 +218,6 @@
   "Stamina, strength, range and launch for moving valuables.": "Değerli eşyaları taşımak için dayanıklılık, güç, menzil ve fırlatma.",
   "Health, stamina, carrying and team tracking for cooperation.": "İş birliği için sağlık, dayanıklılık, taşıma ve takım takibi.",
   "Base Upgrade Settings": "Temel Yükseltme Ayarları",
-  "Base Upgrade Presets": "Temel Yükseltme Ön Ayarları"
+  "Base Upgrade Presets": "Temel Yükseltme Ön Ayarları",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "+/− düğmeleri, mevcut oyun seviyesinden sonraki seviye kuralına kadar ayarlanan temel seviyeyi değiştirir. Kamyon çekilişi bonusları korunur."
 }

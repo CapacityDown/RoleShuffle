@@ -218,5 +218,6 @@
   "Stamina, strength, range and launch for moving valuables.": "通过体力、力量、距离和投掷辅助搬运贵重物品。",
   "Health, stamina, carrying and team tracking for cooperation.": "通过生命、体力、搬运和队友追踪辅助合作。",
   "Base Upgrade Settings": "基础升级设置",
-  "Base Upgrade Presets": "基础升级预设"
+  "Base Upgrade Presets": "基础升级预设",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "＋／−按钮可调整从当前流程等级到下一条等级规则生效前的基础设定值。卡车抽奖加成保持不变。"
 }

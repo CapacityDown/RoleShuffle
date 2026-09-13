@@ -10,6 +10,7 @@ namespace UnityEngine
     }
 }
 public sealed class GameManager { public static GameManager? instance = new(); }
+public sealed class RunManager { public static RunManager? instance = new(); public int levelsCompleted; }
 public static class SemiFunc { public static bool Multiplayer; public static bool IsMultiplayer() => Multiplayer; }
 namespace ExitGames.Client.Photon { public sealed class Hashtable : Dictionary<string, object> { } }
 namespace Photon.Pun
@@ -44,8 +45,16 @@ namespace REPOJP.StageRoles
     }
     internal static class RoleCatalog
     {
-        internal static IReadOnlyList<UpgradeGrant> ConfiguredBaseUpgrades(StageRolesConfig config) => new[] { new UpgradeGrant("Health", "Health", 1) };
-        internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(StageRolesConfig config) => new[] { new UpgradeGrant("Health", "Health", 4) };
+        internal static IReadOnlyList<UpgradeGrant> ConfiguredBaseUpgrades(StageRolesConfig config) => RoleUpgradeScaling.Definitions.Select(definition =>
+        {
+            RoleUpgradeScaling.TryParse(config.BaseUpgradeLevelsEntry(definition.Name)!.Value, 1, 999999,
+                definition.MaximumLevel, true, out var rules, out _);
+            int level = rules.Where(r => r.Condition <= BaseUpgradeSelectionSettings.CurrentRunLevel).Select(r => r.Level).LastOrDefault();
+            return new UpgradeGrant(definition.Name, definition.DictionaryName, level);
+        }).ToArray();
+        internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(StageRolesConfig config) => ConfiguredBaseUpgrades(config)
+            .Select(g => new UpgradeGrant(g.CommandName, g.DictionaryName,
+                Math.Min(g.CommandName == "MapPlayerCount" ? 1 : 200, g.Level + BaseUpgradeBonusStore.Get(g.DictionaryName)))).ToArray();
         internal static IReadOnlyList<StageRole> AllRoles = Enum.GetValues<StageRole>();
         internal static bool IsSecretRole(StageRole role) => role is StageRole.Superbot or StageRole.Disaster;
         internal static string DisplayName(StageRole role) => role switch
@@ -77,11 +86,13 @@ namespace REPOJP.StageRoles
         private static string[] WrapGuideText(object measurement, string value, float width, RoleGuideLanguage language) => new[] { value };
         private static string Localized(string text) => RoleText.Get(text, _guideLanguage);
         private static void SwitchView(MenuLib.MonoBehaviors.REPOPopupPage page, RoleMenuView view)
-        { _activeView = view; if (view is RoleMenuView.BaseUpgradeSettings or RoleMenuView.BaseUpgradePresets) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
+        { _activeView = view; if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view is RoleMenuView.BaseUpgradeSettings or RoleMenuView.BaseUpgradePresets) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
         private static string DisplayUpgradeName(string name) => name;
+        private static string SignedValue(int value) => value.ToString("+0;-0;0", System.Globalization.CultureInfo.InvariantCulture);
         internal record RoleMenuEntry(string Text, float Size, TMPro.FontStyles Style, float Height, bool Wrap,
-            bool Language, Action? OnClick = null, StageRole? Role = null, bool Secret = false, bool isControl = false,
-            bool emblemGrayedOut = false);
+            bool Language = false, Action? OnClick = null, StageRole? Role = null, bool Secret = false, bool isControl = false,
+            bool emblemGrayedOut = false, RoleMenuAdjustment? adjustment = null)
+        { internal RoleMenuAdjustment? Adjustment => adjustment; }
         internal static IReadOnlyList<RoleMenuEntry> Entries = Array.Empty<RoleMenuEntry>();
         private static void ApplyEntries(object page, IReadOnlyList<RoleMenuEntry> entries) => Entries = entries;
         internal static void Show(StageRolesConfig config, bool presets = false, RoleGuideLanguage language = RoleGuideLanguage.English)
@@ -90,5 +101,9 @@ namespace REPOJP.StageRoles
         { _config = config; _guideLanguage = language; _activeView = presets ? RoleMenuView.BaseUpgradePresets : RoleMenuView.BaseUpgradeSettings; RefreshBaseUpgradeSettingsRows(_openPage); }
         internal static void RefreshBaseIfChanged()
         { if (_openSignature != BaseUpgradeSettingsSignature()) RefreshBaseUpgradeSettingsRows(_openPage); }
+        internal static void ShowLevels(StageRolesConfig config)
+        { _config = config; _guideLanguage = RoleGuideLanguage.English; _activeView = RoleMenuView.BaseUpgrades; RefreshBaseUpgradeRows(_openPage); }
+        internal static void RefreshLevelsIfChanged()
+        { if (_openSignature != BaseUpgradePageSignature()) RefreshBaseUpgradeRows(_openPage); }
     }
 }

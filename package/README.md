@@ -174,7 +174,9 @@ These host settings define the upgrade target used whenever a role does not over
 
 Open `ROLES` → `BASE UPGRADES` → `BASE UPGRADE SETTINGS` to switch the truck draw and its 13 selection entries (12 upgrade types plus `All Upgrades`) ON/OFF. These are the same saved values shown in REPOConfig: `Base Upgrade Draw.Enabled` and `Base Upgrade Draw Selection.<Upgrade>`. Changes in either menu are reflected when viewing the other. Hosts can edit them; participants with RoleShuffle can view the host's switches. Existing settings keep their weights and all new selection switches default to ON.
 
-In REPOConfig, apply pending edits before leaving the settings page. Roles UI saves each switch or preset immediately.
+Each upgrade on `BASE UPGRADES` has `−` and `+` buttons beside `Configured`. Each click changes that base setting by one, starting at the current run level and lasting until the next configured level rule. Earlier and later rules are retained. For example, at run level 3, `1:1,5:3` becomes `1:1,3:2,5:3` after `+`. The range is 0–200, or 0–1 for Map Player Count. Limits and guest permissions disable the corresponding buttons. Malformed level rules must be corrected in REPOConfig before using the buttons. These edits save directly to `Base Upgrades.<Upgrade>UpgradeLevels`; draw bonuses, selection switches and weights are preserved. Gameplay uses the same application timing as REPOConfig edits.
+
+In REPOConfig, apply pending edits before leaving the settings page. Roles UI saves each switch, level adjustment or preset immediately.
 
 OFF excludes a type from both individual and `All Upgrades` results in future draws. It does not remove acquired bonuses or disable configured base levels. An in-progress draw keeps the selection it started with. Weight `0` excludes direct selection only; an enabled type can still receive an `All Upgrades` result. Turning OFF `All Upgrades` disables only the combined result. All-off selections produce no draw result.
 
@@ -632,6 +634,8 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 役職が置き換えない場合に使用するアップグレード目標値です。カンマ区切りの`ランレベル:設定値`で記述し、現在のランレベル以下にある最後の設定値を使用します。ランレベルは1～999999に対応します。たとえば`1:1,5:3,10:6`なら、レベル1～4は1、レベル5～9は3、レベル10以降は6です。空欄および最初の指定レベルへ到達する前は0になります。設定範囲外の数値は最も近い上限または下限へ補正し、書式が不正な組だけを無視します。ホスト設定として動作し、基礎値はステージ外でも維持します。任意のトラック抽選を有効にすると、ショップを出た後のトラック準備フェーズに抽選を行います。1回の抽選で、個別に設定した相対Weightを使って対象アップグレードを1種類選びます。増減数はカンマ区切りの`増減値:重み`で設定し、デフォルトは-1（10）、変化なし（15）、+1（60）、+2（15）です。現在の上限または下限を越えずに適用できる対象が一つもない増減値は候補から外し、残った重みで抽選します。正の結果では`ALL UPGRADES`が選ばれることがあり、ONになっているBase Upgradeのうち、上限まで余地がある種類を強化します。変更はそのラン中維持され、結果はホストが発言します。Throwは対象外で、RoleShuffleから変更しません。
 
 `ROLES` → `基本アップグレード` → `基本アップグレード設定`から、トラック抽選全体と13項目（強化12種類＋`All Upgrades`）のON/OFFを変更できます。REPOConfigの`Base Upgrade Draw.Enabled`および`Base Upgrade Draw Selection.<Upgrade>`と同じ設定値を保存し、どちらで変更してももう一方の表示に反映されます。変更できるのはホストで、RoleShuffleを導入した参加者はホストのON/OFFを閲覧できます。既存の重みは保持し、新しい選択スイッチはすべてONが初期値です。
+
+`基本アップグレード`画面では、各種類の「設定値」の横にある`−`・`+`で基礎設定値を1ずつ変更できます。現在のランレベルから次の設定区間までに適用し、前後の設定は保持します。例えばランレベル3で`1:1,5:3`に`+`を押すと、`1:1,3:2,5:3`として保存します。範囲は0～200、Map Player Countは0～1です。上限・下限に達した方向のボタンや参加者のボタンは使用不可になります。書式が不正な設定はREPOConfigで修正してから操作してください。`Base Upgrades.<Upgrade>UpgradeLevels`を直接保存し、抽選の増減分・ON/OFF・重みは保持します。ゲーム内能力への適用タイミングもREPOConfigでの変更と同じです。
 
 REPOConfigでは変更を適用してから設定画面を閉じてください。Roles UIのスイッチ変更とプリセット適用は、その場で保存されます。
 

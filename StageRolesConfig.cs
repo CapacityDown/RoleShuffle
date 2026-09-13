@@ -17,6 +17,23 @@ internal sealed class StageRolesConfig
         _baseUpgradeDrawEnabled.TryGetValue(name, out var entry) ? entry : null;
     internal bool BaseUpgradeDrawIsEnabled(string name) => BaseUpgradeDrawEnabledEntry(name)?.Value ?? false;
 
+    internal ConfigEntry<string>? BaseUpgradeLevelsEntry(string name) => name switch
+    {
+        "Health" => BaseHealthLevels,
+        "Stamina" => BaseStaminaLevels,
+        "ExtraJump" => BaseExtraJumpLevels,
+        "Speed" => BaseSpeedLevels,
+        "Strength" => BaseStrengthLevels,
+        "Range" => BaseRangeLevels,
+        "Launch" => BaseLaunchLevels,
+        "TumbleClimb" => BaseTumbleClimbLevels,
+        "TumbleWings" => BaseTumbleWingsLevels,
+        "CrouchRest" => BaseCrouchRestLevels,
+        "MapPlayerCount" => BaseMapPlayerCountLevels,
+        "DeathHeadBattery" => BaseDeathHeadBatteryLevels,
+        _ => null
+    };
+
     internal StageRolesConfig(ConfigFile config)
     {
         RoleConfigMigration.Apply(config);

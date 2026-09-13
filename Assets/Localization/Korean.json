@@ -218,5 +218,6 @@
   "Stamina, strength, range and launch for moving valuables.": "스태미나, 힘, 범위, 투척으로 귀중품 운반을 돕습니다.",
   "Health, stamina, carrying and team tracking for cooperation.": "체력, 스태미나, 운반, 팀원 추적으로 협력을 돕습니다.",
   "Base Upgrade Settings": "기본 업그레이드 설정",
-  "Base Upgrade Presets": "기본 업그레이드 프리셋"
+  "Base Upgrade Presets": "기본 업그레이드 프리셋",
+  "The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept.": "＋／− 버튼으로 현재 진행 레벨부터 다음 레벨 규칙이 적용되기 전까지의 기본 설정값을 변경합니다. 트럭 추첨 보너스는 유지됩니다."
 }
