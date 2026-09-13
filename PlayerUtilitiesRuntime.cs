@@ -128,7 +128,7 @@ internal static class BaseUpgradeHistory
 
     internal static string Describe(UpgradeDrawRecord record, RoleGuideLanguage language)
     {
-        string target = record.Upgrade < 0 ? RoleText.Get("All Upgrades", language, "全アップグレード")
+        string target = record.Upgrade < 0 ? RoleText.Get("All Upgrades", language)
             : DrawHistoryStore.UpgradeNames[record.Upgrade];
         StringBuilder text = new($"#{record.Number}  {RoleText.Get("Level", language, "ステージ")} {record.Level}  {target}  {record.Delta:+0;-0;0}\n");
         bool changed = false;
