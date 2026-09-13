@@ -106,7 +106,7 @@ internal sealed class RoleHudEditor : MonoBehaviour
         _toolbar = Box("Toolbar", _canvas, new Color(0.06f, 0.09f, 0.13f, 0.97f));
         _toolbar.anchorMin = new Vector2(0, 1); _toolbar.anchorMax = Vector2.one;
         _toolbar.pivot = new Vector2(0.5f, 1); _toolbar.sizeDelta = new Vector2(0, 154);
-        Label(_toolbar, Pick("HUD EDITOR — drag the preview; changes apply only after Save", "HUD編集 — プレビューをドラッグ / 保存するまで設定は変わりません"),
+        Label(_toolbar, Pick("HUD EDITOR — drag to move; Save to apply", "HUD編集 — ドラッグで移動／保存で反映"),
             new Vector2(16, -7), new Vector2(900, 34), 18);
         Add(16, 44, 244, () => Pick("Display: ", "表示: ") + Pick(_draft.Display),
             () => { _draft.Display = Next(_draft.Display, "NameOnly", "IconAndName", "IconOnly"); Changed(); });
@@ -202,8 +202,7 @@ internal sealed class RoleHudEditor : MonoBehaviour
         {
             _preview.MovePreview(pointer - _lastPointer, _dragX, _dragY);
         }
-        _status.text = $"X: {_draft.X}   Y: {_draft.Y}   " + Pick("Preview uses sample players. Esc = cancel. If covered, RESET restores the HUD.",
-            "サンプルを表示中。Escで取消。見失った場合は「初期値」で戻せます。");
+        _status.text = $"X: {_draft.X}   Y: {_draft.Y}   " + Pick("Sample HUD. Esc: cancel. RESET: defaults.", "サンプルHUD。Esc: 取消／初期値: リセット。");
     }
     private void LateUpdate()
     {

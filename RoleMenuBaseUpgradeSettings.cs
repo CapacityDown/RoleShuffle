@@ -44,13 +44,13 @@ internal sealed partial class RoleMenu
             entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, 40, false, UseLanguageFont, click, isControl: true, isOff: off));
         }
 
-        Text(Localized("Changes apply to future truck draws. Existing levels and configured base targets are kept."));
+        Text(Localized("ON/OFF applies to future draws."));
         if (!editable) Text(Localized("Only the host can change Base Upgrade settings."));
         if (_utilityMessage.Length > 0) Text(_utilityMessage);
         if (view == RoleMenuView.BaseUpgradePresets)
         {
             Button(Localized("BACK TO BASE UPGRADE SETTINGS"), () => SwitchView(page, RoleMenuView.BaseUpgradeSettings));
-            Text(Localized("Presets replace all draw selection switches. Draw activation, weights, change amounts and level limits are kept."));
+            Text(Localized("Presets change draw selections only."));
             foreach (var preset in BaseUpgradePresets.All)
             {
                 Button(RoleText.Format("Apply: {0}", _guideLanguage, Localized(preset.Name)), () =>
@@ -85,8 +85,8 @@ internal sealed partial class RoleMenu
                         (state.IsEnabled("AllUpgrades") && _config.TruckUpgradeDrawWeight("AllUpgrades") > 0))) hasCandidate = true;
                 }
                 Text(RoleText.Format("Enabled draw entries: {0}/{1}", _guideLanguage, count, BaseUpgradePresets.UpgradeNames.Count));
-                Text(Localized("OFF excludes an upgrade from individual and All Upgrades draws. All Upgrades affects enabled types only."));
-                Text(Localized("Weight 0 excludes direct selection only; enabled types can still receive All Upgrades."));
+                Text(Localized("OFF excludes a type from all draws."));
+                Text(Localized("Weight 0: ON types can receive All Upgrades only."));
                 if (!state.ModEnabled) Text(Localized("RoleShuffle is disabled in MOD settings."));
                 if (!state.DrawEnabled) Text(Localized("Truck draws are disabled."));
                 if (editable && !hasCandidate) Text(Localized("No enabled upgrade types can enter the draw with these weights."));

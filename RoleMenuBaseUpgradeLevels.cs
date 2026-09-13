@@ -43,8 +43,7 @@ internal sealed partial class RoleMenu
         if (upgrades.Count == 0) Text(Localized("Base Upgrade data is not available yet."));
         else
         {
-            Text(Localized("Shared targets used when a role does not replace an upgrade."));
-            Text(Localized("The +/- buttons change the configured base level from this run level until the next level rule. Truck draw bonuses are kept."));
+            Text(Localized("Use +/- to adjust base levels from this run level until the next rule."));
             if (!RoleSelectionSettings.CanEdit) Text(Localized("Only the host can change Base Upgrade settings."));
             if (_utilityMessage.Length > 0) Text(_utilityMessage);
             int runLevel = BaseUpgradeSelectionSettings.CurrentRunLevel;

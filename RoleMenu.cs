@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 433;
+    private const int RoleUiBuildNumber = 434;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -678,8 +678,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         {
             if (BaseUpgradeHistory.IsDisplayPreview)
                 Text(Localized("TEST PREVIEW — sample draw history (local only).", "テスト表示 — サンプルの抽選履歴（自分にだけ表示）。"));
-            else Text(Localized("Latest 50 completed draws, newest first. Saved with the host's run. Levels shown are the shared Base Upgrade targets.",
-                "ホストのセーブに記録した直近50回の抽選を、新しい順に表示します。数値は共有のBase Upgrade目標値です。"));
+            else Text(Localized("This run's latest 50 draws, newest first. Values are shared levels.", "このセーブの直近50回を新しい順に表示。数値は共有レベルです。"));
             if (BaseUpgradeHistory.DisplayPayload == null)
                 Text(Localized("History has not been received. Older hosts do not provide it.", "履歴を受信していません。旧バージョンのホストは履歴を配信しません。"));
             else if (!DrawHistoryStore.TryParse(BaseUpgradeHistory.DisplayPayload, out _))
@@ -692,17 +691,15 @@ internal sealed partial class RoleMenu : MonoBehaviour
         else if (_activeView == RoleMenuView.Tools)
         {
             Text(Localized("SYNC STATUS", "同期状態") + "\n" + (RoleSyncStatus.Instance?.Describe(_guideLanguage) ?? ""));
-            Text(Localized("Checks the role list, guide, Base Upgrades and draw history. Unmodded guests can still play normally.",
-                "役職一覧・ガイド・Base Upgrade・抽選履歴の同期を確認します。MOD未導入の参加者も通常どおり遊べます。"));
+            Text(Localized("Display-data sync status.", "表示データの同期状態です。"));
             Button(Localized("REFRESH DISPLAY DATA", "表示データを再取得"), () => RoleSyncStatus.Instance?.RequestRefresh());
             Button(Localized("HUD EDITOR", "HUD編集モード"), () => RoleHudEditor.Open(_config, page, _roleRows[0].DefaultFont, _guideLanguage));
-            Text(Localized("Move and resize a sample HUD, then Save or Cancel.", "サンプルHUDの位置・文字・アイコン・倍率を調整し、保存または取消できます。"));
+            Text(Localized("Adjust HUD position and size.", "HUDの位置とサイズを調整します。"));
             Button(Localized("REPORT A PROBLEM", "不具合レポート"), () => SwitchView(page, RoleMenuView.Report));
         }
         else
         {
-            Text(Localized("Copy or open a report to generate a fresh local file with versions, installed mods, settings, recent draws and RoleShuffle logs. Known player identifiers and common private data are masked. Review it before sharing; nothing is uploaded automatically.",
-                "コピーまたはファイルを開く操作で、バージョン・導入MOD・設定・最近の抽選・RoleShuffleログを含むレポートを毎回作成します。既知のプレイヤー情報などをマスクします。共有前に内容を確認してください。自動送信はしません。"));
+            Text(Localized("Copy or open to create a report. Personal data is partly masked. Review before sharing; no automatic upload.", "コピー・開く操作でレポートを作成。個人情報は一部マスクされます。共有前に確認してください。自動送信はしません。"));
             Button(Localized("COPY REPORT", "レポートをコピー"), () =>
             {
                 StageRolesPlugin.Instance.CreateBugReport();
@@ -713,8 +710,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             {
                 StageRolesPlugin.Instance.CreateBugReport();
                 Application.OpenURL(new Uri(StageRolesPlugin.Instance.BugReport.LatestPath).AbsoluteUri);
-                _utilityMessage = Localized("Saved in BepInEx/RoleShuffleReports. Add reproduction steps before submitting.",
-                    "BepInEx/RoleShuffleReportsに保存しました。投稿前に再現手順を追記してください。");
+                _utilityMessage = Localized("Saved to BepInEx/RoleShuffleReports. Add steps before sharing.", "BepInEx/RoleShuffleReportsに保存。共有前に再現手順を追記してください。");
             });
             Button(Localized("OPEN GITHUB ISSUES", "GitHub Issuesを開く"), () => ConfirmOpenIssues(page));
         }
@@ -742,8 +738,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             }
         }
         MenuAPI.OpenPopup(Localized("OPEN EXTERNAL SITE", "外部サイトを開く"), new Color(1f, 0.65f, 0f),
-            Localized("This opens GitHub Issues in your browser. Continue? No report will be sent automatically.",
-                "ブラウザーで外部サイトのGitHub Issuesを開きます。続けますか？ レポートは自動送信されません。") + "\n\n" + RoleBugReport.IssuesUrl,
+            Localized("Open GitHub Issues in your browser? Nothing is sent automatically.", "ブラウザーでGitHub Issuesを開きます。自動送信はしません。") + "\n\n" + RoleBugReport.IssuesUrl,
             () => Decide(true), () => Decide(false));
         // OpenPopup creates the stock two-option dialog synchronously; its
         // singleton is only assigned in Start, so read the newly current page.

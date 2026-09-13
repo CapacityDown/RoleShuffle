@@ -26,18 +26,18 @@ internal static class BaseUpgradePresets
     internal static readonly IReadOnlyList<BaseUpgradePresetDefinition> All = Array.AsReadOnly(new[]
     {
         new BaseUpgradePresetDefinition(BaseUpgradePreset.Standard, "Standard",
-            "All upgrade types and All Upgrades are enabled.", new List<string>(UpgradeNames).ToArray()),
+            "All draw entries enabled.", new List<string>(UpgradeNames).ToArray()),
         new BaseUpgradePresetDefinition(BaseUpgradePreset.Survival, "Survival",
-            "Health, stamina, resting and death-head battery for survival.",
+            "Health and stamina support.",
             "Health", "Stamina", "CrouchRest", "DeathHeadBattery"),
         new BaseUpgradePresetDefinition(BaseUpgradePreset.Exploration, "Exploration",
-            "Stamina, movement and the player map for exploring.",
+            "Movement and map support.",
             "Stamina", "ExtraJump", "Speed", "TumbleClimb", "TumbleWings", "MapPlayerCount"),
         new BaseUpgradePresetDefinition(BaseUpgradePreset.Hauling, "Hauling",
-            "Stamina, strength, range and launch for moving valuables.",
+            "Carry valuables more easily.",
             "Stamina", "Strength", "Range", "Launch"),
         new BaseUpgradePresetDefinition(BaseUpgradePreset.Cooperative, "Cooperative",
-            "Health, stamina, carrying and team tracking for cooperation.",
+            "Support for carrying and survival.",
             "Health", "Stamina", "Strength", "Range", "MapPlayerCount", "DeathHeadBattery")
     });
 

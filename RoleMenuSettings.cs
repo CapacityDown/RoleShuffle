@@ -52,14 +52,14 @@ internal sealed partial class RoleMenu
         }
         bool Enabled(StageRole role) => editable ? _config.RoleIsEnabled(role) : RoleGuideSync.IsVisible(role, _config);
 
-        Text(Localized("Changes are saved for the next role assignment. Existing roles stay active."));
+        Text(Localized("ON/OFF applies from the next role assignment."));
         if (!editable) Text(Localized("Only the host can change roles or apply presets."));
         if (_utilityMessage.Length > 0) Text(_utilityMessage);
 
         if (view == RoleMenuView.Presets)
         {
             Button(Localized("BACK TO ROLE SETTINGS"), () => SwitchView(page, RoleMenuView.Settings));
-            Text(Localized("Presets replace all role ON/OFF settings. Weights, abilities and balance settings are kept."));
+            Text(Localized("Presets change role ON/OFF only."));
             foreach (RolePresetDefinition preset in RolePresets.All)
             {
                 Button(RoleText.Format("Apply: {0}", _guideLanguage, Localized(preset.Name)), () =>
