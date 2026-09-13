@@ -10,6 +10,12 @@ internal sealed class StageRolesConfig
     internal const int MaximumSupportedPlayers = 30;
     private readonly Dictionary<string, ConfigEntry<int>>
         _truckUpgradeDrawWeights = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, ConfigEntry<bool>>
+        _baseUpgradeDrawEnabled = new(StringComparer.Ordinal);
+
+    internal ConfigEntry<bool>? BaseUpgradeDrawEnabledEntry(string name) =>
+        _baseUpgradeDrawEnabled.TryGetValue(name, out var entry) ? entry : null;
+    internal bool BaseUpgradeDrawIsEnabled(string name) => BaseUpgradeDrawEnabledEntry(name)?.Value ?? false;
 
     internal StageRolesConfig(ConfigFile config)
     {
@@ -911,6 +917,9 @@ internal sealed class StageRolesConfig
         ConfigFile config,
         string upgradeName)
     {
+        _baseUpgradeDrawEnabled[upgradeName] = BindBool(config, "Base Upgrade Draw Selection", upgradeName, true,
+            "Includes this upgrade in future truck draws, including All Upgrades results. Existing levels and configured base targets are kept. " +
+            "For AllUpgrades, controls the combined draw result only; individual upgrade switches still apply.");
         _truckUpgradeDrawWeights[upgradeName] = BindInt(
             config,
             "Base Upgrade Draw Weights",

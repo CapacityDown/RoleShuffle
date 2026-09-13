@@ -96,6 +96,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         "ALL UPGRADES"
     };
     private readonly List<UpgradeGrant> _allBaseUpgrades = new();
+    private readonly HashSet<string> _enabledDrawNames = new(StringComparer.Ordinal);
+    private bool _allUpgradesEnabledForDraw;
     private readonly List<UpgradeGrant> _individualCandidates = new();
     private readonly List<UpgradeGrant> _displayCandidates = new();
     private readonly List<WeightedDelta> _deltaRules = new();
@@ -585,10 +587,14 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
     private void BuildEligibleList()
     {
         _allBaseUpgrades.Clear();
+        _enabledDrawNames.Clear();
+        _allUpgradesEnabledForDraw = _config.BaseUpgradeDrawIsEnabled(AllUpgrades.CommandName);
         _individualCandidates.Clear();
         _displayCandidates.Clear();
         foreach (UpgradeGrant upgrade in RoleCatalog.BaseUpgrades(_config))
         {
+            if (!_config.BaseUpgradeDrawIsEnabled(upgrade.CommandName)) continue;
+            _enabledDrawNames.Add(upgrade.CommandName);
             _allBaseUpgrades.Add(upgrade);
             if (EffectiveUpgradeWeight(upgrade) <= 0f)
             {
@@ -597,7 +603,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
             _individualCandidates.Add(upgrade);
             _displayCandidates.Add(upgrade);
         }
-        if (_config.TruckUpgradeDrawWeight(AllUpgrades.CommandName) > 0)
+        if (_allUpgradesEnabledForDraw && _allBaseUpgrades.Count > 0 &&
+            _config.TruckUpgradeDrawWeight(AllUpgrades.CommandName) > 0)
         {
             _displayCandidates.Add(AllUpgrades);
         }
@@ -662,7 +669,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
                 pool.Add(upgrade);
             }
         }
-        if (delta > 0 &&
+        if (delta > 0 && _allUpgradesEnabledForDraw &&
             _config.TruckUpgradeDrawWeight(AllUpgrades.CommandName) > 0)
         {
             foreach (UpgradeGrant upgrade in _allBaseUpgrades)
@@ -785,6 +792,9 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         List<AppliedUpgrade> applied = new(targets.Count);
         foreach (UpgradeGrant upgrade in targets)
         {
+            // Use the selection captured when this draw started. Changing the
+            // menu during the animation affects the next draw only.
+            if (applyAll && !_enabledDrawNames.Contains(upgrade.CommandName)) continue;
             int absoluteMaximum = AbsoluteMaximumLevel(upgrade.DictionaryName);
             int resultMaximum = _selectedDelta > 0
                 ? DrawMaximumLevel(upgrade.DictionaryName)

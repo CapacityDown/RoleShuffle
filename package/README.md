@@ -170,7 +170,23 @@ Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, 
 
 #### Base upgrades
 
-These host settings define the upgrade target used whenever a role does not override that upgrade. Enter comma-separated `run level:value` pairs; the last entry at or below the current run level is used. Run levels accept 1–999999. For example, `1:1,5:3,10:6` uses value 1 on levels 1–4, value 3 on levels 5–9, and value 6 from level 10 onward. Blank settings and levels before the first entry use 0. Numeric values outside the allowed range are adjusted to the nearest limit; malformed pairs are ignored. Base levels remain active outside stages. When the optional truck draw is enabled, leaving the shop starts a draw in the following truck preparation phase. Each draw selects one upgrade type using its configured relative weight. Change amounts use comma-separated `change amount:weight` pairs; the defaults are -1 (10), no change (15), +1 (60), and +2 (15). A change amount is excluded when no selectable target can receive it without crossing the current limit, and the remaining weights are used. Positive results may select `ALL UPGRADES`, which strengthens every supported Base Upgrade that has room below its limit. Changes remain for the rest of that run, and the host announces the result. Throw is excluded and is never changed by RoleShuffle.
+These host settings define the upgrade target used whenever a role does not override that upgrade. Enter comma-separated `run level:value` pairs; the last entry at or below the current run level is used. Run levels accept 1–999999. For example, `1:1,5:3,10:6` uses value 1 on levels 1–4, value 3 on levels 5–9, and value 6 from level 10 onward. Blank settings and levels before the first entry use 0. Numeric values outside the allowed range are adjusted to the nearest limit; malformed pairs are ignored. Base levels remain active outside stages. When the optional truck draw is enabled, leaving the shop starts a draw in the following truck preparation phase. Each draw selects one upgrade type using its configured relative weight. Change amounts use comma-separated `change amount:weight` pairs; the defaults are -1 (10), no change (15), +1 (60), and +2 (15). A change amount is excluded when no selectable target can receive it without crossing the current limit, and the remaining weights are used. Positive results may select `ALL UPGRADES`, which strengthens enabled Base Upgrade types that have room below their limits. Changes remain for the rest of that run, and the host announces the result. Throw is excluded and is never changed by RoleShuffle.
+
+Open `ROLES` → `BASE UPGRADES` → `BASE UPGRADE SETTINGS` to switch the truck draw and its 13 selection entries (12 upgrade types plus `All Upgrades`) ON/OFF. These are the same saved values shown in REPOConfig: `Base Upgrade Draw.Enabled` and `Base Upgrade Draw Selection.<Upgrade>`. Changes in either menu are reflected when viewing the other. Hosts can edit them; participants with RoleShuffle can view the host's switches. Existing settings keep their weights and all new selection switches default to ON.
+
+In REPOConfig, apply pending edits before leaving the settings page. Roles UI saves each switch or preset immediately.
+
+OFF excludes a type from both individual and `All Upgrades` results in future draws. It does not remove acquired bonuses or disable configured base levels. An in-progress draw keeps the selection it started with. Weight `0` excludes direct selection only; an enabled type can still receive an `All Upgrades` result. Turning OFF `All Upgrades` disables only the combined result. All-off selections produce no draw result.
+
+`PRESETS` replaces the 13 selection switches only. Draw activation, weights, change amounts, limits, base-level schedules, roles and acquired bonuses stay unchanged. Nonstandard presets turn OFF `All Upgrades`; it can be enabled separately to affect only the selected types. Manual combinations appear as `Custom`.
+
+| Preset | Enabled entries |
+|---|---|
+| Standard | All 12 upgrade types and All Upgrades |
+| Survival | Health, Stamina, Crouch Rest, Death Head Battery |
+| Exploration | Stamina, Extra Jump, Speed, Tumble Climb, Tumble Wings, Map Player Count |
+| Hauling | Stamina, Strength, Range, Launch |
+| Cooperative | Health, Stamina, Strength, Range, Map Player Count, Death Head Battery |
 
 | Key | Default | Range / values | Effect | Control |
 |---|---:|---|---|---|
@@ -191,6 +207,19 @@ These host settings define the upgrade target used whenever a role does not over
 | `Base Upgrade Draw.CappedUpgradeWeightMultiplier` | `0.25` | `0`–`1` | Upgrade weights decrease as their combined configured and truck levels approach the draw maximum, reaching this multiplier at the maximum. `0` excludes capped upgrades; `1` disables the decrease. All Upgrades is unaffected. | Host |
 | `Base Upgrade Draw.WeightFalloffExponent` | `2` | `0.1`–`10` | Controls the weight decrease curve. `1` decreases evenly; larger values preserve more weight until near the maximum. | Host |
 | `Base Upgrade Draw.ChangeAmountWeights` | `-1:10,0:15,1:60,2:15` | `change amount:weight` pairs; amount `-200`–`200`, weight `0`–`1000` | Relative weights for the possible change amounts. | Host |
+| `Base Upgrade Draw Selection.Health` | `true` | `true`, `false` | Includes Health in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.Stamina` | `true` | `true`, `false` | Includes Stamina in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.ExtraJump` | `true` | `true`, `false` | Includes ExtraJump in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.Speed` | `true` | `true`, `false` | Includes Speed in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.Strength` | `true` | `true`, `false` | Includes Strength in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.Range` | `true` | `true`, `false` | Includes Range in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.Launch` | `true` | `true`, `false` | Includes Launch in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.TumbleClimb` | `true` | `true`, `false` | Includes TumbleClimb in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.TumbleWings` | `true` | `true`, `false` | Includes TumbleWings in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.CrouchRest` | `true` | `true`, `false` | Includes CrouchRest in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.MapPlayerCount` | `true` | `true`, `false` | Includes MapPlayerCount in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.DeathHeadBattery` | `true` | `true`, `false` | Includes DeathHeadBattery in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
+| `Base Upgrade Draw Selection.AllUpgrades` | `true` | `true`, `false` | Enables the combined positive result for enabled types only. | Host |
 | `Base Upgrade Draw Weights.Health` | `20` | `0`–`1000` | Relative Health selection weight. | Host |
 | `Base Upgrade Draw Weights.Stamina` | `40` | `0`–`1000` | Relative Stamina selection weight. | Host |
 | `Base Upgrade Draw Weights.ExtraJump` | `10` | `0`–`1000` | Relative Extra Jump selection weight. | Host |
@@ -600,7 +629,23 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 
 #### 基礎アップグレード
 
-役職が置き換えない場合に使用するアップグレード目標値です。カンマ区切りの`ランレベル:設定値`で記述し、現在のランレベル以下にある最後の設定値を使用します。ランレベルは1～999999に対応します。たとえば`1:1,5:3,10:6`なら、レベル1～4は1、レベル5～9は3、レベル10以降は6です。空欄および最初の指定レベルへ到達する前は0になります。設定範囲外の数値は最も近い上限または下限へ補正し、書式が不正な組だけを無視します。ホスト設定として動作し、基礎値はステージ外でも維持します。任意のトラック抽選を有効にすると、ショップを出た後のトラック準備フェーズに抽選を行います。1回の抽選で、個別に設定した相対Weightを使って対象アップグレードを1種類選びます。増減数はカンマ区切りの`増減値:重み`で設定し、デフォルトは-1（10）、変化なし（15）、+1（60）、+2（15）です。現在の上限または下限を越えずに適用できる対象が一つもない増減値は候補から外し、残った重みで抽選します。正の結果では`ALL UPGRADES`が選ばれることがあり、上限まで余地がある全Base Upgradeを強化します。変更はそのラン中維持され、結果はホストが発言します。Throwは対象外で、RoleShuffleから変更しません。
+役職が置き換えない場合に使用するアップグレード目標値です。カンマ区切りの`ランレベル:設定値`で記述し、現在のランレベル以下にある最後の設定値を使用します。ランレベルは1～999999に対応します。たとえば`1:1,5:3,10:6`なら、レベル1～4は1、レベル5～9は3、レベル10以降は6です。空欄および最初の指定レベルへ到達する前は0になります。設定範囲外の数値は最も近い上限または下限へ補正し、書式が不正な組だけを無視します。ホスト設定として動作し、基礎値はステージ外でも維持します。任意のトラック抽選を有効にすると、ショップを出た後のトラック準備フェーズに抽選を行います。1回の抽選で、個別に設定した相対Weightを使って対象アップグレードを1種類選びます。増減数はカンマ区切りの`増減値:重み`で設定し、デフォルトは-1（10）、変化なし（15）、+1（60）、+2（15）です。現在の上限または下限を越えずに適用できる対象が一つもない増減値は候補から外し、残った重みで抽選します。正の結果では`ALL UPGRADES`が選ばれることがあり、ONになっているBase Upgradeのうち、上限まで余地がある種類を強化します。変更はそのラン中維持され、結果はホストが発言します。Throwは対象外で、RoleShuffleから変更しません。
+
+`ROLES` → `基本アップグレード` → `基本アップグレード設定`から、トラック抽選全体と13項目（強化12種類＋`All Upgrades`）のON/OFFを変更できます。REPOConfigの`Base Upgrade Draw.Enabled`および`Base Upgrade Draw Selection.<Upgrade>`と同じ設定値を保存し、どちらで変更してももう一方の表示に反映されます。変更できるのはホストで、RoleShuffleを導入した参加者はホストのON/OFFを閲覧できます。既存の重みは保持し、新しい選択スイッチはすべてONが初期値です。
+
+REPOConfigでは変更を適用してから設定画面を閉じてください。Roles UIのスイッチ変更とプリセット適用は、その場で保存されます。
+
+OFFの種類は、次回以降の個別抽選と`All Upgrades`の両方から除外します。獲得済みのボーナスや設定済みの基礎レベルは維持します。抽選アニメーション中に変更した場合、その抽選は開始時の選択内容を使用します。重み`0`は個別抽選のみを除外し、ONの種類は`All Upgrades`で強化される場合があります。`All Upgrades`のOFFは一括抽選だけを無効にします。すべてOFFの場合、抽選結果は発生しません。
+
+`プリセット`は13項目のON/OFFだけを置き換えます。抽選全体の有効・無効、重み、増減量、上限、基礎レベル設定、ロール、獲得済みボーナスは変更しません。標準以外では`All Upgrades`はOFFで、必要に応じて有効にすると選択中の種類だけを一括強化します。手動で組み合わせた設定は`カスタム`と表示します。
+
+| プリセット | ONになる項目 |
+|---|---|
+| 標準 | 強化12種類すべて＋All Upgrades |
+| 生存重視 | Health、Stamina、Crouch Rest、Death Head Battery |
+| 探索重視 | Stamina、Extra Jump、Speed、Tumble Climb、Tumble Wings、Map Player Count |
+| 運搬重視 | Stamina、Strength、Range、Launch |
+| 協力重視 | Health、Stamina、Strength、Range、Map Player Count、Death Head Battery |
 
 | キー | デフォルト | 範囲・値 | 内容 | 管理 |
 |---|---:|---|---|---|
@@ -621,6 +666,19 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 | `Base Upgrade Draw.CappedUpgradeWeightMultiplier` | `0.25` | `0`～`1` | アップグレードが抽選上限に近づくほどWeightが低下し、上限でこの倍率になります。設定分とトラック抽選分の合計を使用します。`0`では上限到達後に対象外となり、`1`では低下しません。All Upgradesは対象外です。 | ホスト |
 | `Base Upgrade Draw.WeightFalloffExponent` | `2` | `0.1`～`10` | 抽選Weightの低下カーブです。`1`は一定のペースで低下し、大きい値ほど上限付近まで重みを維持します。 | ホスト |
 | `Base Upgrade Draw.ChangeAmountWeights` | `-1:10,0:15,1:60,2:15` | `増減値:重み`の組、増減値`-200`～`200`、重み`0`～`1000` | 抽選される増減値の相対Weightです。 | ホスト |
+| `Base Upgrade Draw Selection.Health` | `true` | `true`, `false` | Healthを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.Stamina` | `true` | `true`, `false` | Staminaを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.ExtraJump` | `true` | `true`, `false` | ExtraJumpを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.Speed` | `true` | `true`, `false` | Speedを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.Strength` | `true` | `true`, `false` | Strengthを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.Range` | `true` | `true`, `false` | Rangeを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.Launch` | `true` | `true`, `false` | Launchを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.TumbleClimb` | `true` | `true`, `false` | TumbleClimbを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.TumbleWings` | `true` | `true`, `false` | TumbleWingsを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.CrouchRest` | `true` | `true`, `false` | CrouchRestを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.MapPlayerCount` | `true` | `true`, `false` | MapPlayerCountを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.DeathHeadBattery` | `true` | `true`, `false` | DeathHeadBatteryを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
+| `Base Upgrade Draw Selection.AllUpgrades` | `true` | `true`, `false` | ONの種類だけを対象に、正の一括抽選を有効にします。 | ホスト |
 | `Base Upgrade Draw Weights.Health` | `20` | `0`～`1000` | Healthの相対Weightです。 | ホスト |
 | `Base Upgrade Draw Weights.Stamina` | `40` | `0`～`1000` | Staminaの相対Weightです。 | ホスト |
 | `Base Upgrade Draw Weights.ExtraJump` | `10` | `0`～`1000` | Extra Jumpの相対Weightです。 | ホスト |

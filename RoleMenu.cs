@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 425;
+    private const int RoleUiBuildNumber = 426;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -127,6 +127,11 @@ internal sealed partial class RoleMenu : MonoBehaviour
         if (_activeView is RoleMenuView.Settings or RoleMenuView.Presets)
         {
             if (_openSignature != RoleSettingsSignature()) RefreshRoleSettingsRows(_openPage);
+            return;
+        }
+        if (_activeView is RoleMenuView.BaseUpgradeSettings or RoleMenuView.BaseUpgradePresets)
+        {
+            if (_openSignature != BaseUpgradeSettingsSignature()) RefreshBaseUpgradeSettingsRows(_openPage);
             return;
         }
         if (_activeView is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
@@ -321,6 +326,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         page.scrollView.SetScrollPosition(0f);
         if (view is RoleMenuView.Settings or RoleMenuView.Presets)
         { RefreshRoleSettingsRows(page); return; }
+        if (view is RoleMenuView.BaseUpgradeSettings or RoleMenuView.BaseUpgradePresets)
+        { RefreshBaseUpgradeSettingsRows(page); return; }
         if (view is RoleMenuView.History or RoleMenuView.Tools or RoleMenuView.Report)
         { RefreshUtilityRows(page); return; }
         if (view == RoleMenuView.Assignments)
@@ -372,7 +379,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Button(_assignmentsButton, "CURRENT ROLES", _activeView == RoleMenuView.Assignments);
         Button(_guideButton, "ROLE GUIDE", _activeView == RoleMenuView.Guide);
         Button(_settingsButton, "ROLE SETTINGS", _activeView is RoleMenuView.Settings or RoleMenuView.Presets);
-        Button(_baseUpgradesButton, "BASE UPGRADES", _activeView == RoleMenuView.BaseUpgrades);
+        Button(_baseUpgradesButton, "BASE UPGRADES", _activeView is RoleMenuView.BaseUpgrades or RoleMenuView.BaseUpgradeSettings or RoleMenuView.BaseUpgradePresets);
         Button(_historyButton, "DRAW HISTORY", _activeView == RoleMenuView.History);
         Button(_toolsButton, "TOOLS", _activeView is RoleMenuView.Tools or RoleMenuView.Report);
         Button(_backButton, "Back", false);
@@ -390,6 +397,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 RoleMenuView.Guide => "Role Guide",
                 RoleMenuView.Settings => "Role Settings",
                 RoleMenuView.Presets => "Role Presets",
+                RoleMenuView.BaseUpgradeSettings => "Base Upgrade Settings",
+                RoleMenuView.BaseUpgradePresets => "Base Upgrade Presets",
                 RoleMenuView.History => "Draw History",
                 RoleMenuView.Tools => "Tools",
                 RoleMenuView.Report => "Bug Report",
@@ -757,6 +766,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         IReadOnlyList<BaseUpgradeSnapshot> upgrades =
             BaseUpgradeSync.Read(_config);
         List<RoleMenuEntry> entries = new(upgrades.Count * 3 + 2);
+        entries.Add(new RoleMenuEntry(Localized("BASE UPGRADE SETTINGS"), 20, FontStyles.Bold, 40, false, UseLanguageFont,
+            () => { if (_openPage == page && _activeView == RoleMenuView.BaseUpgrades) SwitchView(page, RoleMenuView.BaseUpgradeSettings); }));
         if (upgrades.Count == 0)
         {
             entries.Add(new RoleMenuEntry(
@@ -1247,6 +1258,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Tools,
         Report,
         Settings,
-        Presets
+        Presets,
+        BaseUpgradeSettings,
+        BaseUpgradePresets
     }
 }

@@ -2,15 +2,22 @@
 
 ```powershell
 dotnet run --project tools/RoleSettingsChecks/RoleSettingsChecks.csproj -c Release
+pwsh -NoProfile -File tools/Test-BaseUpgradeDrawSelection.ps1
 ```
 
 Compiles the production role identifiers, configuration bindings, migration, preset definitions, settings service and role-settings page callbacks. Uses real BepInEx configuration files in ignored build output and lightweight stand-ins for Unity, Photon and menu layout.
 
 Checks all 42 role-to-setting mappings, five complete presets, the default selection, beginner/cooperative exclusions, preservation of weights and other settings, persistence after reload, and restoration of either autosave mode. UI callbacks verify enabling/disabling, keeping OFF roles visible, zero-weight warnings, Custom selection, preset navigation, guest read-only state, host-state display, missing host data, and losing host authority after a button was rendered. All-off configurations and disabled global assignment remain visible.
 
-These checks do not render the game or simulate Photon transport. Remaining multiplayer checks require a second game client: as a participant, verify the host's selection updates and no role or preset can be changed; check the next assignment and late joins after a settings change.
+Base Upgrade checks compile the production configuration entries, presets, settings service, menu callbacks and room-property publication. They exercise all 13 switches and five presets, actual BepInEx persistence/reload, UI-to-config and config-to-UI changes, preservation of all other settings and base-level payloads, save failure rollback, read-only guests, malformed or missing host data, authority changes, selection-only publication and 14 localized catalogs. The draw script extracts the production candidate and result-application methods and checks all 8,192 switch combinations, weight-zero versus OFF behavior, frozen draw selections, disabled bonuses, positive/negative boundaries and the Map cap. Unity player updates and bonus persistence are stand-ins.
+
+These checks do not render the game or simulate Photon transport. Remaining multiplayer checks require a second game client: as a participant, verify the host's selection updates and no role, upgrade or preset can be changed; check the next assignment/draw and late joins after a settings change.
 
 ## Verification on 2026-09-13
+
+- Base Upgrade build 426 (v4.4.7): no warnings or errors. RoleSettingsChecks: 241 role and 156 Base Upgrade checks; draw selection/application: 131,084 checks; LocalizationChecks: 10,555; OptimizationChecks: 87; UtilityRuntimeChecks: 69; ScrollChecks: 71, all passing.
+- Inspected the installed REPOConfig 1.2.6 DLL: a mod page is rebuilt on opening, bool controls read `ConfigEntryBase.BoxedValue`, and pending edits are committed to those same entries by its apply action. The checks use this same boxed-value path. Roles UI saves directly to those shared entries, with no separate settings file or cached preset selection.
+- Default profile startup logged `RoleShuffle 4.4.7 loaded.` and registered its commands without RoleShuffle warnings/errors. Live menu verification could not proceed: the computer-use helper returned `foreground window did not report a process id` twice when capturing/activating the game. The test game was stopped and the original Default configuration restored. Build 426 menu rendering, real mouse callbacks, and multiplayer transport remain unverified.
 
 - Production build 425 (v4.4.7): no warnings or errors. RoleSettingsChecks: 241 passing checks, including all 14 localized preset labels and a locked-file save failure with rollback.
 - Regression checks: LocalizationChecks 9,691; OptimizationChecks 87; UtilityRuntimeChecks 69; ScrollChecks 71, all passing.

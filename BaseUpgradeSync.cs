@@ -41,12 +41,16 @@ internal static class BaseUpgradeSync
         }
         PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable
         {
-            [PropertyKey] = LocalSignature(config)
+            [PropertyKey] = LocalSignature(config),
+            [BaseUpgradeSettingsSync.PropertyKey] = BaseUpgradeSettingsSync.LocalSignature(config)
         });
     }
 
     internal static string LocalSignature(StageRolesConfig config) =>
         Serialize(BuildLocal(config));
+
+    internal static string LocalPublishSignature(StageRolesConfig config) =>
+        LocalSignature(config) + "|" + BaseUpgradeSettingsSync.LocalSignature(config);
 
     internal static string CurrentSignature(StageRolesConfig config)
     {

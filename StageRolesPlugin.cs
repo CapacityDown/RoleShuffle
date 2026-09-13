@@ -38,6 +38,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     internal static ManualLogSource ModLogger { get; private set; } = null!;
     internal StageRolesConfig Settings { get; private set; } = null!;
     internal RoleSelectionSettings RoleSettings { get; private set; } = null!;
+    internal BaseUpgradeSelectionSettings BaseUpgradeSettings { get; private set; } = null!;
     internal StageRoleController Controller { get; private set; } = null!;
     internal BaseUpgradeDrawRuntime BaseUpgradeDraw { get; private set; } = null!;
 
@@ -49,6 +50,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         BepInEx.Logging.Logger.Listeners.Add(BugReport);
         Settings = new StageRolesConfig(Config);
         RoleSettings = new RoleSelectionSettings(Settings, Config);
+        BaseUpgradeSettings = new BaseUpgradeSelectionSettings(Settings, Config);
         Config.SettingChanged += ConfigSettingChanged;
 
         gameObject.hideFlags = HideFlags.HideAndDontSave;
@@ -122,7 +124,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             _settingsPublishPending = false;
             RoleGuideSync.Publish(Settings);
             BaseUpgradeSync.Publish(Settings);
-            _publishedBaseUpgradeSignature = BaseUpgradeSync.LocalSignature(Settings);
+            _publishedBaseUpgradeSignature = BaseUpgradeSync.LocalPublishSignature(Settings);
         }
         object? currentRoom = PhotonNetwork.CurrentRoom;
         if (!SemiFunc.IsMultiplayer() || !PhotonNetwork.IsMasterClient ||
@@ -138,7 +140,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             BaseUpgradeSync.Publish(Settings);
             _guidePublishedRoom = currentRoom;
             _publishedBaseUpgradeSignature =
-                BaseUpgradeSync.LocalSignature(Settings);
+                BaseUpgradeSync.LocalPublishSignature(Settings);
             _nextBaseUpgradePublishAt = Time.unscaledTime + 0.5f;
         }
 
@@ -147,7 +149,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             return;
         }
         _nextBaseUpgradePublishAt = Time.unscaledTime + 0.5f;
-        string currentSignature = BaseUpgradeSync.LocalSignature(Settings);
+        string currentSignature = BaseUpgradeSync.LocalPublishSignature(Settings);
         if (string.Equals(
                 currentSignature,
                 _publishedBaseUpgradeSignature,

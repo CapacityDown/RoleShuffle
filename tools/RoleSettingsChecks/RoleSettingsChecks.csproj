@@ -15,6 +15,11 @@
     <Compile Include="../../RolePresets.cs" Link="RolePresets.cs" />
     <Compile Include="../../RoleSelectionSettings.cs" Link="RoleSelectionSettings.cs" />
     <Compile Include="../../RoleMenuSettings.cs" Link="RoleMenuSettings.cs" />
+    <Compile Include="../../BaseUpgradePresets.cs" Link="BaseUpgradePresets.cs" />
+    <Compile Include="../../BaseUpgradeSelectionSettings.cs" Link="BaseUpgradeSelectionSettings.cs" />
+    <Compile Include="../../BaseUpgradeSettingsSync.cs" Link="BaseUpgradeSettingsSync.cs" />
+    <Compile Include="../../BaseUpgradeSync.cs" Link="BaseUpgradeSync.cs" />
+    <Compile Include="../../RoleMenuBaseUpgradeSettings.cs" Link="RoleMenuBaseUpgradeSettings.cs" />
     <EmbeddedResource Include="../../Assets/Localization/*.json" LogicalName="REPOJP.StageRoles.Localization.%(Filename)%(Extension)" />
     <PackageReference Include="BepInEx.BaseLib" Version="5.4.20" />
   </ItemGroup>
