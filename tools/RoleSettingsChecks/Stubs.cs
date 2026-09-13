@@ -134,7 +134,7 @@ namespace REPOJP.StageRoles
         private static string SignedValue(int value) => value.ToString("+0;-0;0", System.Globalization.CultureInfo.InvariantCulture);
         internal record RoleMenuEntry(string Text, float Size, TMPro.FontStyles Style, float Height, bool Wrap,
             bool Language = false, Action? OnClick = null, StageRole? Role = null, bool Secret = false, bool isControl = false,
-            bool emblemGrayedOut = false, RoleMenuAdjustment? adjustment = null, bool isOff = false)
+            bool emblemGrayedOut = false, RoleMenuAdjustment? adjustment = null, bool isOff = false, bool separatorBefore = false)
         { internal RoleMenuAdjustment? Adjustment => adjustment; }
         internal static IReadOnlyList<RoleMenuEntry> Entries = Array.Empty<RoleMenuEntry>();
         private static void ApplyEntries(object page, IReadOnlyList<RoleMenuEntry> entries) => Entries = entries;

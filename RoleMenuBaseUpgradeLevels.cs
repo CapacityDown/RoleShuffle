@@ -7,8 +7,9 @@ using TMPro;
 
 namespace REPOJP.StageRoles;
 
-internal sealed class RoleMenuAdjustment(Action? decrease, Action? increase)
+internal sealed class RoleMenuAdjustment(int currentLevel, Action? decrease, Action? increase)
 {
+    internal int CurrentLevel { get; } = currentLevel;
     internal Action? Decrease { get; } = decrease;
     internal Action? Increase { get; } = increase;
 }
@@ -68,18 +69,13 @@ internal sealed partial class RoleMenu
                     };
                 }
                 entries.Add(new RoleMenuEntry(
-                    $"{DisplayUpgradeName(upgrade.Name)}: {upgrade.CurrentLevel.ToString(CultureInfo.InvariantCulture)}",
-                    21, FontStyles.Bold, 30, false, UseLanguageFont));
+                    DisplayUpgradeName(upgrade.Name),
+                    21, FontStyles.Bold, 30, false, UseLanguageFont,
+                    adjustment: new RoleMenuAdjustment(upgrade.CurrentLevel, Adjust(-1), Adjust(1))));
                 entries.Add(new RoleMenuEntry(
-                    $"{Localized("Configured")}: {upgrade.ConfiguredLevel}  {Localized("Truck Draw")}: {SignedValue(upgrade.TruckDrawBonus)}",
+                    string.Format(CultureInfo.InvariantCulture, Localized("Config {0}  Manual {1}  Draw {2}"),
+                        upgrade.ConfiguredLevel, SignedValue(upgrade.ManualAdjustment), SignedValue(upgrade.TruckDrawBonus)),
                     18, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
-                entries.Add(new RoleMenuEntry(
-                    $"{Localized("Manual adjustment")}: {SignedValue(upgrade.ManualAdjustment)}",
-                    18, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
-                entries.Add(new RoleMenuEntry(string.Empty,
-                    18, FontStyles.Normal, 28, false, UseLanguageFont,
-                    adjustment: new RoleMenuAdjustment(Adjust(-1), Adjust(1))));
-                entries.Add(new RoleMenuEntry(string.Empty, 18, FontStyles.Normal, 5, false));
             }
         }
         ApplyEntries(page, entries);

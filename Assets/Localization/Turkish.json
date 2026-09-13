@@ -111,6 +111,7 @@
   "Base Upgrade data is not available yet.": "Base Upgrade verisi henüz yok.",
   "Shared targets used when a role does not replace an upgrade.": "Rol bir geliştirmeyi değiştirmediğinde kullanılan ortak hedefler.",
   "Configured": "Ayarlanan",
+  "Config {0}  Manual {1}  Draw {2}": "Ayar {0}  Elle {1}  Çekiliş {2}",
   "Truck Draw": "Kamyon çekilişi",
   "HUD EDITOR — drag to move; Save to apply": "HUD DÜZENLEYİCİ — taşımak için sürükle; uygulamak için kaydet",
   "Display: ": "Görünüm: ",

@@ -101,11 +101,13 @@ internal static class SaveAdjustmentChecks
         config.BaseHealthLevels.Value = "";
         RoleMenu.ShowLevels(config);
         var controls = RoleMenu.Entries.Where(e => e.Adjustment != null).ToArray();
-        Check(controls.Length == 12 && controls[0].Text == "", "12 separate compact button rows");
+        Check(controls.Length == 12 && controls[0].Text == "Health" && controls[0].Adjustment!.CurrentLevel == 0,
+            "Each upgrade heading includes the displayed total and its controls");
         Check(controls[0].Adjustment!.Decrease == null && controls[0].Adjustment!.Increase != null, "Lower-bound appearance follows effective total");
         controls[0].Adjustment!.Increase!();
-        Check(config.BaseHealthLevels.Value == "" && Total() == 1 && RoleMenu.Entries.Any(e => e.Text == "Manual adjustment: +1") &&
-            RoleMenu.Entries.Any(e => e.Text == "Configured: 0  Truck Draw: 0"), "Callback persists and displays separate configured, manual and truck values");
+        Check(config.BaseHealthLevels.Value == "" && Total() == 1 &&
+            RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 1) &&
+            RoleMenu.Entries.Any(e => e.Text == "Config 0  Manual +1  Draw 0"), "Callback persists and displays separate configured, manual and truck values");
         Action oldSaveClick = RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment!.Increase!;
         StatsManager.instance.Load("ui-other.json");
         oldSaveClick();
@@ -130,8 +132,8 @@ internal static class SaveAdjustmentChecks
         config.BaseHealthLevels.Value = "1:3";
         StatsManager.instance.runStats.Clear();
         RoleMenu.ShowLevels(config);
-        Check(RoleMenu.Entries.Any(e => e.Text == "Health: 199") && RoleMenu.Entries.Any(e => e.Text == "Manual adjustment: -1") &&
-            RoleMenu.Entries.Any(e => e.Text == "Configured: 200  Truck Draw: 0"), "Guest sees host breakdown instead of local data");
+        Check(RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 199) &&
+            RoleMenu.Entries.Any(e => e.Text == "Config 200  Manual -1  Draw 0"), "Guest sees host breakdown instead of local data");
         Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Increase == null && e.Adjustment.Decrease == null), "All guest controls disabled");
         PhotonNetwork.CurrentRoom.CustomProperties.Remove("RS.BaseUpgrades.Detail");
         Check(BaseUpgradeSync.Read(config)[0].ManualAdjustment == 0 && BaseUpgradeSync.Read(config)[0].CurrentLevel == 199, "Older hosts remain readable");

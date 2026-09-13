@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 439;
+    private const int RoleUiBuildNumber = 440;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -658,14 +658,18 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private static void RefreshUtilityRows(REPOPopupPage page)
     {
         List<RoleMenuEntry> entries = new();
-        void Text(string text)
+        void Text(string text, bool separatorBefore = false)
         {
             foreach (string paragraph in text.Replace("\r", "").Split('\n'))
             {
                 if (paragraph.Length == 0)
                 { entries.Add(new RoleMenuEntry("", 18, FontStyles.Normal, 10, false)); continue; }
                 foreach (string line in WrapGuideText(MeasurementText(page), paragraph, ContentWidth(page), _guideLanguage))
-                    entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
+                {
+                    entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont,
+                        separatorBefore: separatorBefore));
+                    separatorBefore = false;
+                }
             }
         }
         void Button(string label, Action action)
@@ -694,7 +698,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             else if (BaseUpgradeHistory.ReadForDisplay().Count == 0)
                 Text(Localized("No recorded draws in this run. Draws before this update cannot be recovered.", "このセーブに抽選履歴はありません。更新前の抽選結果は復元できません。"));
             foreach (UpgradeDrawRecord record in BaseUpgradeHistory.ReadForDisplay())
-            { Text("\n" + BaseUpgradeHistory.Describe(record, _guideLanguage)); }
+            { Text("\n" + BaseUpgradeHistory.Describe(record, _guideLanguage), separatorBefore: true); }
         }
         else if (_activeView == RoleMenuView.Tools)
         {
@@ -934,6 +938,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             if (!visible)
             {
                 row.Emblem.gameObject.SetActive(false);
+                row.Separator.gameObject.SetActive(false);
                 row.Stepper?.Hide();
                 continue;
             }
@@ -941,6 +946,13 @@ internal sealed partial class RoleMenu : MonoBehaviour
             RoleMenuEntry entry = entries[index];
             bool clickable = entry.OnClick != null;
             bool control = clickable || entry.IsControl;
+            // A divider belongs to an item or feature, never to every wrapped
+            // body line. Keep it inside the existing padding so wheel distance
+            // and row heights are unaffected on all Roles pages.
+            bool separate = entry.SeparatorBefore || control || entry.EmblemRole.HasValue || entry.Adjustment != null;
+            row.Separator.gameObject.SetActive(index > 0 && separate);
+            row.Separator.rectTransform.sizeDelta = new Vector2(contentWidth, 1f);
+            row.Separator.rectTransform.anchoredPosition = new Vector2(0f, entry.Height + 2f);
             row.Label.rectTransform.gameObject.SetActive(true);
             row.Button.labelTMP.gameObject.SetActive(false);
             TMP_Text labelText = row.Label.labelTMP;
@@ -977,10 +989,12 @@ internal sealed partial class RoleMenu : MonoBehaviour
             row.Button.overrideButtonSize = size;
             row.Button.rectTransform.sizeDelta = size;
             row.Label.rectTransform.anchoredPosition = new Vector2(textInset, 0f);
-            Vector2 textSize = new(contentWidth - textInset - padding, entry.Height);
+            float reservedWidth = entry.Adjustment != null ? RoleMenuStepper.ReservedWidth : 0f;
+            Vector2 textSize = new(contentWidth - textInset - padding - reservedWidth, entry.Height);
             row.Label.rectTransform.sizeDelta = textSize;
             labelText.rectTransform.sizeDelta = textSize;
-            if (emblem != null) labelText.overflowMode = TextOverflowModes.Ellipsis;
+            if (emblem != null || entry.Adjustment != null || _activeView == RoleMenuView.BaseUpgrades)
+                labelText.overflowMode = TextOverflowModes.Ellipsis;
             float focusHeight = control ? entry.Height : Mathf.Max(12f, entry.Height * 0.5f);
             row.FocusRect.sizeDelta = new Vector2(contentWidth, focusHeight);
             row.FocusRect.anchoredPosition = new Vector2(
@@ -989,7 +1003,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             if (entry.Adjustment != null)
             {
                 row.Stepper ??= new RoleMenuStepper(row.Button.rectTransform, page.menuScrollBox.scroller, row.DefaultFont);
-                row.Stepper.Configure(entry.Adjustment, entry.Height);
+                row.Stepper.Configure(entry.Adjustment, contentWidth, entry.Height);
             }
             else row.Stepper?.Hide();
         }
@@ -1068,6 +1082,13 @@ internal sealed partial class RoleMenu : MonoBehaviour
         emblem.rectTransform.anchorMax = Vector2.zero;
         emblem.rectTransform.pivot = Vector2.zero;
         emblemObject.SetActive(false);
+        GameObject separatorObject = new("Section Divider", typeof(RectTransform), typeof(Image));
+        separatorObject.transform.SetParent(createdButton.rectTransform, false);
+        Image separator = separatorObject.GetComponent<Image>();
+        separator.raycastTarget = false;
+        separator.color = new Color(0.65f, 0.4f, 0.16f, 0.6f);
+        separator.rectTransform.anchorMin = separator.rectTransform.anchorMax = separator.rectTransform.pivot = Vector2.zero;
+        separatorObject.SetActive(false);
         RoleMenuButtonVisual visual = createdButton.gameObject.AddComponent<RoleMenuButtonVisual>();
         visual.Initialize(createdButton, createdLabel.labelTMP);
         return new RoleMenuRow(
@@ -1076,6 +1097,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             element,
             focusRect,
             emblem,
+            separator,
             visual);
     }
 
@@ -1171,7 +1193,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         bool isControl = false,
         bool emblemGrayedOut = false,
         RoleMenuAdjustment? adjustment = null,
-        bool isOff = false)
+        bool isOff = false,
+        bool separatorBefore = false)
     {
         internal string Text { get; } = text;
         internal float FontSize { get; } = fontSize;
@@ -1186,6 +1209,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         internal bool EmblemGrayedOut { get; } = emblemGrayedOut;
         internal RoleMenuAdjustment? Adjustment { get; } = adjustment;
         internal bool IsOff { get; } = isOff;
+        internal bool SeparatorBefore { get; } = separatorBefore;
     }
 
     private sealed class RoleMenuRow(
@@ -1194,6 +1218,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         REPOScrollViewElement element,
         RectTransform focusRect,
         Image emblem,
+        Image separator,
         RoleMenuButtonVisual visual)
     {
         internal REPOButton Button { get; } = button;
@@ -1201,6 +1226,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         internal REPOScrollViewElement Element { get; } = element;
         internal RectTransform FocusRect { get; } = focusRect;
         internal Image Emblem { get; } = emblem;
+        internal Image Separator { get; } = separator;
         internal RoleMenuButtonVisual Visual { get; } = visual;
         internal RoleMenuStepper? Stepper { get; set; }
         internal TMP_FontAsset DefaultFont { get; } = label.labelTMP.font;

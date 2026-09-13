@@ -111,6 +111,7 @@
   "Base Upgrade data is not available yet.": "Les données Base Upgrade ne sont pas encore disponibles.",
   "Shared targets used when a role does not replace an upgrade.": "Cibles communes utilisées lorsqu'un rôle ne remplace pas une amélioration.",
   "Configured": "Configuré",
+  "Config {0}  Manual {1}  Draw {2}": "Config {0}  Manuel {1}  Tirage {2}",
   "Truck Draw": "Tirage camion",
   "HUD EDITOR — drag to move; Save to apply": "ÉDITEUR HUD — glisser pour déplacer ; enregistrer pour appliquer",
   "Display: ": "Affichage : ",

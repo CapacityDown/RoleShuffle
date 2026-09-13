@@ -139,6 +139,7 @@
   "+/- adjustments are saved with this game data.": "+/- adjustments are saved with this game data.",
   "Load a saved game to use +/- adjustments.": "Load a saved game to use +/- adjustments.",
   "Configured": "Configured",
+  "Config {0}  Manual {1}  Draw {2}": "Config {0}  Manual {1}  Draw {2}",
   "Truck Draw": "Truck Draw",
   "Manual adjustment": "Manual adjustment",
   "HUD EDITOR — drag to move; Save to apply": "HUD EDITOR — drag to move; Save to apply",

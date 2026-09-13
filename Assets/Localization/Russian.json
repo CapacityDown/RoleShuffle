@@ -111,6 +111,7 @@
   "Base Upgrade data is not available yet.": "Данные Base Upgrade пока недоступны.",
   "Shared targets used when a role does not replace an upgrade.": "Общие значения для улучшений, которые не заменяются ролью.",
   "Configured": "Настройка",
+  "Config {0}  Manual {1}  Draw {2}": "Настр. {0}  Вручн. {1}  Розыгрыш {2}",
   "Truck Draw": "Розыгрыш в грузовике",
   "HUD EDITOR — drag to move; Save to apply": "РЕДАКТОР HUD — перетащите; сохраните для применения",
   "Display: ": "Вид: ",
