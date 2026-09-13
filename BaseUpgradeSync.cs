@@ -12,23 +12,27 @@ internal readonly struct BaseUpgradeSnapshot
         string name,
         int currentLevel,
         int configuredLevel,
-        int truckDrawBonus)
+        int truckDrawBonus,
+        int manualAdjustment = 0)
     {
         Name = name;
         CurrentLevel = currentLevel;
         ConfiguredLevel = configuredLevel;
         TruckDrawBonus = truckDrawBonus;
+        ManualAdjustment = manualAdjustment;
     }
 
     internal string Name { get; }
     internal int CurrentLevel { get; }
     internal int ConfiguredLevel { get; }
     internal int TruckDrawBonus { get; }
+    internal int ManualAdjustment { get; }
 }
 
 internal static class BaseUpgradeSync
 {
     private const string PropertyKey = "RS.BaseUpgrades";
+    private const string DetailPropertyKey = "RS.BaseUpgrades.Detail";
     private const char EntrySeparator = ';';
     private const char FieldSeparator = ',';
 
@@ -39,28 +43,36 @@ internal static class BaseUpgradeSync
         {
             return;
         }
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable
+        Hashtable properties = new()
         {
             [PropertyKey] = LocalSignature(config),
             [BaseUpgradeSettingsSync.PropertyKey] = BaseUpgradeSettingsSync.LocalSignature(config)
-        });
+        };
+        AddDetails(properties, config);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+    }
+
+    // Keep the four-field payload (and existing sync stamp) readable by older
+    // clients. The extension is accepted only for the same host and base data.
+    internal static void AddDetails(Hashtable properties, StageRolesConfig config)
+    {
+        string detail = (PhotonNetwork.LocalPlayer?.ActorNumber ?? 0) + "|" + Serialize(BuildLocal(config), true);
+        if (PhotonNetwork.CurrentRoom == null ||
+            !PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(DetailPropertyKey, out object old) ||
+            !string.Equals(old as string, detail, StringComparison.Ordinal))
+            properties[DetailPropertyKey] = detail;
     }
 
     internal static string LocalSignature(StageRolesConfig config) =>
         Serialize(BuildLocal(config));
 
     internal static string LocalPublishSignature(StageRolesConfig config) =>
-        LocalSignature(config) + "|" + BaseUpgradeSettingsSync.LocalSignature(config);
+        CurrentSignature(config) + "|" + BaseUpgradeSettingsSync.LocalSignature(config);
 
     internal static string CurrentSignature(StageRolesConfig config)
     {
-        if (!SemiFunc.IsMultiplayer() || PhotonNetwork.IsMasterClient)
-        {
-            return LocalSignature(config);
-        }
-        return TryReadRemotePayload(out string payload)
-            ? payload
-            : "unavailable";
+        var upgrades = Read(config);
+        return upgrades.Count == 0 ? "unavailable" : Serialize(upgrades, true);
     }
 
     internal static IReadOnlyList<BaseUpgradeSnapshot> Read(
@@ -73,6 +85,16 @@ internal static class BaseUpgradeSync
         if (TryReadRemotePayload(out string payload) &&
             TryParse(payload, out List<BaseUpgradeSnapshot> upgrades))
         {
+            if (PhotonNetwork.CurrentRoom!.CustomProperties.TryGetValue(DetailPropertyKey, out object raw) &&
+                raw is string detail)
+            {
+                int separator = detail.IndexOf('|');
+                if (separator > 0 && int.TryParse(detail.Substring(0, separator), out int actor) &&
+                    actor == (PhotonNetwork.MasterClient?.ActorNumber ?? 0) &&
+                    TryParse(detail.Substring(separator + 1), out var detailed, true) &&
+                    Serialize(detailed) == payload)
+                    return detailed;
+            }
             return upgrades;
         }
         return Array.Empty<BaseUpgradeSnapshot>();
@@ -103,13 +125,14 @@ internal static class BaseUpgradeSync
                 upgrade.CommandName,
                 upgrade.Level,
                 configuredLevel,
-                BaseUpgradeBonusStore.Get(upgrade.DictionaryName)));
+                BaseUpgradeBonusStore.Get(upgrade.DictionaryName),
+                BaseUpgradeManualStore.Get(upgrade.DictionaryName)));
         }
         return result;
     }
 
     private static string Serialize(
-        IReadOnlyList<BaseUpgradeSnapshot> upgrades)
+        IReadOnlyList<BaseUpgradeSnapshot> upgrades, bool includeManual = false)
     {
         StringBuilder payload = new();
         foreach (BaseUpgradeSnapshot upgrade in upgrades)
@@ -125,6 +148,7 @@ internal static class BaseUpgradeSync
                 .Append(upgrade.ConfiguredLevel)
                 .Append(FieldSeparator)
                 .Append(upgrade.TruckDrawBonus);
+            if (includeManual) payload.Append(FieldSeparator).Append(upgrade.ManualAdjustment);
         }
         return payload.ToString();
     }
@@ -142,7 +166,7 @@ internal static class BaseUpgradeSync
 
     private static bool TryParse(
         string payload,
-        out List<BaseUpgradeSnapshot> upgrades)
+        out List<BaseUpgradeSnapshot> upgrades, bool includeManual = false)
     {
         upgrades = new List<BaseUpgradeSnapshot>();
         try
@@ -150,19 +174,22 @@ internal static class BaseUpgradeSync
             foreach (string entry in payload.Split(EntrySeparator))
             {
                 string[] fields = entry.Split(FieldSeparator);
-                if (fields.Length != 4 ||
+                if (fields.Length != (includeManual ? 5 : 4) ||
                     string.IsNullOrWhiteSpace(fields[0]) ||
                     !int.TryParse(fields[1], out int current) ||
                     !int.TryParse(fields[2], out int configured) ||
                     !int.TryParse(fields[3], out int bonus))
                 {
+                    if (includeManual) return false;
                     continue;
                 }
+                int manual = 0;
+                if (includeManual && !int.TryParse(fields[4], out manual)) return false;
                 upgrades.Add(new BaseUpgradeSnapshot(
                     fields[0],
                     Math.Max(0, current),
                     Math.Max(0, configured),
-                    bonus));
+                    bonus, manual));
             }
         }
         catch (Exception exception)

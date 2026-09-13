@@ -93,6 +93,10 @@ namespace REPOJP.StageRoles
         internal static string VisibilitySignature(StageRolesConfig config) => "visible";
         internal static void Invalidate() { }
     }
-    internal static class BaseUpgradeSync { internal static string LocalSignature(StageRolesConfig config) => "base"; }
+    internal static class BaseUpgradeSync
+    {
+        internal static string LocalSignature(StageRolesConfig config) => "base";
+        internal static void AddDetails(ExitGames.Client.Photon.Hashtable properties, StageRolesConfig config) { }
+    }
     internal static class RoleAssignmentSync { internal const string LocalPayload = ""; internal static void ResetCache() { } }
 }

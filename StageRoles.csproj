@@ -41,6 +41,7 @@
     <Compile Include="RoleSelectionSettings.cs" />
     <Compile Include="BaseUpgradePresets.cs" />
     <Compile Include="BaseUpgradeSelectionSettings.cs" />
+    <Compile Include="BaseUpgradeSaveAdjustments.cs" />
     <Compile Include="BaseUpgradeSettingsSync.cs" />
     <Compile Include="RoleUpgradeScaling.cs" />
     <Compile Include="RoleConfigMigration.cs" />

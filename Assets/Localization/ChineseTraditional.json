@@ -219,5 +219,7 @@
   "Support for carrying and survival.": "支援搬運與生存。",
   "Base Upgrade Settings": "基礎升級設定",
   "Base Upgrade Presets": "基礎升級預設",
-  "Use +/- to adjust base levels from this run level until the next rule.": "用+/-調整基礎等級，從目前關卡持續到下一條規則。"
+  "+/- adjustments are saved with this game data.": "+/- 調整會儲存在目前存檔中。",
+  "Manual adjustment": "手動調整",
+  "Load a saved game to use +/- adjustments.": "請載入存檔以使用 +/- 調整。"
 }

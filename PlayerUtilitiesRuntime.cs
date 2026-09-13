@@ -205,6 +205,7 @@ internal sealed class RoleSyncStatus : MonoBehaviour
         Hashtable props = new();
         for (int i = 0; i < Keys.Length; i++)
             if (_force || Property(Keys[i]) != payloads[i]) props[Keys[i]] = payloads[i];
+        BaseUpgradeSync.AddDetails(props, _config);
         props[StampKey] = SyncStamp.Create(PhotonNetwork.LocalPlayer.ActorNumber,
             StageRolesPlugin.PluginVersion, PhotonNetwork.ServerTimestamp, payloads);
         PhotonNetwork.CurrentRoom.SetCustomProperties(props);

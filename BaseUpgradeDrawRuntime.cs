@@ -8,49 +8,6 @@ using UnityEngine.UI;
 
 namespace REPOJP.StageRoles;
 
-internal static class BaseUpgradeBonusStore
-{
-    private const string KeyPrefix = "RoleShuffle.BaseUpgradeBonus.";
-
-    internal static int Get(string dictionaryName)
-    {
-        if (StatsManager.instance == null ||
-            string.IsNullOrEmpty(dictionaryName))
-        {
-            return 0;
-        }
-        return StatsManager.instance.runStats.GetValueOrDefault(
-            KeyPrefix + dictionaryName,
-            0);
-    }
-
-    internal static bool ApplyEffectiveDelta(
-        string dictionaryName,
-        int currentLevel,
-        int configuredLevel,
-        int delta,
-        int maximumLevel)
-    {
-        if (StatsManager.instance == null ||
-            string.IsNullOrEmpty(dictionaryName) ||
-            delta == 0)
-        {
-            return false;
-        }
-
-        int desiredLevel = Math.Max(
-            0,
-            Math.Min(maximumLevel, currentLevel + delta));
-        if (desiredLevel == currentLevel)
-        {
-            return false;
-        }
-        string key = KeyPrefix + dictionaryName;
-        StatsManager.instance.runStats[key] = desiredLevel - configuredLevel;
-        return true;
-    }
-}
-
 internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
 {
     private const string DrawVersionKey = "RS.BUD.Version";
@@ -786,19 +743,21 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
             configuredLevels[configured.DictionaryName] = configured.Level;
         }
         bool applyAll = IsAllUpgrades(_selected[0]);
-        IReadOnlyList<UpgradeGrant> targets = applyAll
-            ? RoleCatalog.BaseUpgrades(_config)
-            : _selected;
+        // Capture the selected names, but use live levels: manual adjustments
+        // or configuration edits may have occurred while the draw animated.
+        IReadOnlyList<UpgradeGrant> targets = RoleCatalog.BaseUpgrades(_config);
         List<AppliedUpgrade> applied = new(targets.Count);
         foreach (UpgradeGrant upgrade in targets)
         {
             // Use the selection captured when this draw started. Changing the
             // menu during the animation affects the next draw only.
             if (applyAll && !_enabledDrawNames.Contains(upgrade.CommandName)) continue;
+            if (!applyAll && !_selected.Exists(selected => selected.DictionaryName == upgrade.DictionaryName)) continue;
             int absoluteMaximum = AbsoluteMaximumLevel(upgrade.DictionaryName);
             int resultMaximum = _selectedDelta > 0
                 ? DrawMaximumLevel(upgrade.DictionaryName)
                 : absoluteMaximum;
+            if (_selectedDelta > 0 && upgrade.Level >= resultMaximum) continue;
             int desiredLevel = Math.Max(
                 0,
                 Math.Min(resultMaximum, upgrade.Level + _selectedDelta));

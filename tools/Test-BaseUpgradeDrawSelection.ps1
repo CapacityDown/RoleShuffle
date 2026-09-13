@@ -112,6 +112,15 @@ __METHODS__
         c.Enabled["Stamina"] = false;
         BaseUpgradeBonusStore.Calls.Clear(); draw.ApplyResults();
         Check(BaseUpgradeBonusStore.Calls.Count == 1, "Frozen individual result");
+        var previous = c.Bases;
+        c.Bases = new[] { previous[0], new UpgradeGrant("Stamina", "playerUpgradeStamina", 5) };
+        BaseUpgradeBonusStore.Calls.Clear(); draw.ApplyResults();
+        Check(BaseUpgradeBonusStore.Calls.Single().Level == 5, "Individual draw uses the level after an in-flight manual adjustment");
+        c.TruckUpgradeDrawMaximumLevel.Value = 4;
+        BaseUpgradeBonusStore.Calls.Clear(); draw.ApplyResults();
+        Check(BaseUpgradeBonusStore.Calls.Count == 0, "A positive result never lowers a manually increased level above the draw cap");
+        c.Bases = previous;
+        draw._selected.Clear(); draw._selected.Add(previous[1]);
         c.Enabled["Stamina"] = true;
         c.TruckUpgradeDrawMaximumLevel.Value = 2;
         draw.BuildEligibleList();

@@ -347,14 +347,10 @@ internal static class RoleCatalog
         new(
             commandName,
             dictionaryName,
-            Math.Max(
-                0,
-                Math.Min(
-                    maximumLevel,
-                    ResolveBaseLevel(commandName, source, maximumLevel) +
-                    (includeTruckDrawBonus
-                        ? BaseUpgradeBonusStore.Get(dictionaryName)
-                        : 0))));
+            includeTruckDrawBonus
+                ? BaseUpgradeManualStore.EffectiveLevel(dictionaryName,
+                    ResolveBaseLevel(commandName, source, maximumLevel), maximumLevel)
+                : ResolveBaseLevel(commandName, source, maximumLevel));
 
     private static int ResolveBaseLevel(
         string upgradeName,
@@ -384,11 +380,8 @@ internal static class RoleCatalog
             }
         }
 
-        int runLevel = Math.Max(
-            1,
-            RunManager.instance != null
-                ? RunManager.instance.levelsCompleted + 1
-                : 1);
+        int runLevel = (int)Math.Max(1L, Math.Min(MaximumScalingRunLevel,
+            RunManager.instance != null ? (long)RunManager.instance.levelsCompleted + 1 : 1));
         int target = 0;
         foreach (UpgradeScalingRule rule in cache.Rules)
         {

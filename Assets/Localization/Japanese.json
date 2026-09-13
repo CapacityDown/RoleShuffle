@@ -135,5 +135,7 @@
   "Support for carrying and survival.": "運搬・生存を支援。",
   "Base Upgrade Settings": "基本アップグレード設定",
   "Base Upgrade Presets": "基本アップグレードプリセット",
-  "Use +/- to adjust base levels from this run level until the next rule.": "+/-で基礎値を変更。現在から次の設定区間まで反映します。"
+  "+/- adjustments are saved with this game data.": "+/-の調整はこのセーブデータに保存されます。",
+  "Manual adjustment": "手動調整",
+  "Load a saved game to use +/- adjustments.": "+/-の調整にはセーブデータを読み込んでください。"
 }

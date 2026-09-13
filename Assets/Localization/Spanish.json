@@ -219,5 +219,7 @@
   "Support for carrying and survival.": "Apoyo al transporte y la supervivencia.",
   "Base Upgrade Settings": "Ajustes de mejoras base",
   "Base Upgrade Presets": "Preajustes de mejoras base",
-  "Use +/- to adjust base levels from this run level until the next rule.": "Usa +/- para ajustar niveles base desde el nivel actual hasta la siguiente regla."
+  "+/- adjustments are saved with this game data.": "Los ajustes +/- se guardan en esta partida.",
+  "Manual adjustment": "Ajuste manual",
+  "Load a saved game to use +/- adjustments.": "Carga una partida guardada para usar +/-."
 }

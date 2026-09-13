@@ -23,6 +23,7 @@ internal sealed partial class RoleMenu
         if (editable)
         {
             signature.Append('|').Append(BaseUpgradeSelectionSettings.CurrentRunLevel);
+            signature.Append('|').Append(BaseUpgradeManualStore.SaveIdentity);
             foreach (var definition in RoleUpgradeScaling.Definitions)
                 signature.Append('|').Append(_config.BaseUpgradeLevelsEntry(definition.Name)!.Value);
         }
@@ -43,19 +44,21 @@ internal sealed partial class RoleMenu
         if (upgrades.Count == 0) Text(Localized("Base Upgrade data is not available yet."));
         else
         {
-            Text(Localized("Use +/- to adjust base levels from this run level until the next rule."));
+            Text(Localized("+/- adjustments are saved with this game data."));
             if (!RoleSelectionSettings.CanEdit) Text(Localized("Only the host can change Base Upgrade settings."));
+            else if (BaseUpgradeManualStore.SaveIdentity.Length == 0)
+                Text(Localized("Load a saved game to use +/- adjustments."));
             if (_utilityMessage.Length > 0) Text(_utilityMessage);
-            int runLevel = BaseUpgradeSelectionSettings.CurrentRunLevel;
+            string saveIdentity = BaseUpgradeManualStore.SaveIdentity;
             foreach (BaseUpgradeSnapshot upgrade in upgrades)
             {
                 Action? Adjust(int delta)
                 {
-                    if (!StageRolesPlugin.Instance.BaseUpgradeSettings.CanAdjustLevel(upgrade.Name, delta, runLevel)) return null;
+                    if (!StageRolesPlugin.Instance.BaseUpgradeSettings.CanAdjustLevel(upgrade.Name, delta, saveIdentity)) return null;
                     return () =>
                     {
                         if (_openPage != page || _activeView != RoleMenuView.BaseUpgrades) return;
-                        try { StageRolesPlugin.Instance.BaseUpgradeSettings.TryAdjustLevel(upgrade.Name, delta, runLevel); }
+                        try { StageRolesPlugin.Instance.BaseUpgradeSettings.TryAdjustLevel(upgrade.Name, delta, saveIdentity); }
                         catch (Exception exception)
                         {
                             _utilityMessage = Localized("Operation failed. Check the RoleShuffle log.");
@@ -69,6 +72,9 @@ internal sealed partial class RoleMenu
                     21, FontStyles.Bold, 30, false, UseLanguageFont));
                 entries.Add(new RoleMenuEntry(
                     $"{Localized("Configured")}: {upgrade.ConfiguredLevel}  {Localized("Truck Draw")}: {SignedValue(upgrade.TruckDrawBonus)}",
+                    18, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
+                entries.Add(new RoleMenuEntry(
+                    $"{Localized("Manual adjustment")}: {SignedValue(upgrade.ManualAdjustment)}",
                     18, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
                 entries.Add(new RoleMenuEntry(string.Empty,
                     18, FontStyles.Normal, 28, false, UseLanguageFont,

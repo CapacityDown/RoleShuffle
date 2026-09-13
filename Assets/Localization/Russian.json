@@ -219,5 +219,7 @@
   "Support for carrying and survival.": "Поддержка переноски и выживания.",
   "Base Upgrade Settings": "Настройки базовых улучшений",
   "Base Upgrade Presets": "Наборы базовых улучшений",
-  "Use +/- to adjust base levels from this run level until the next rule.": "Кнопки +/- меняют базовые уровни с текущего этапа до следующего правила."
+  "+/- adjustments are saved with this game data.": "Изменения +/- сохраняются в этом сохранении.",
+  "Manual adjustment": "Ручная поправка",
+  "Load a saved game to use +/- adjustments.": "Загрузите сохранение, чтобы использовать +/-."
 }

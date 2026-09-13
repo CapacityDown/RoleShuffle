@@ -1,7 +1,7 @@
 ## 4.4.7
 - Fixed Mage and Trickster abilities activating when an expression ends, including when opening the Escape menu. The host's own menu expression restoration no longer activates abilities.
 - Added host-controlled role ON/OFF switches in Roles UI and Standard, Beginner, Cooperative, Chaos, and Challenge presets. Framed controls distinguish actions from descriptions: ON roles use orange, editable OFF roles use blue with grayscale icons, and unavailable controls use gray without hover feedback. Selections are saved to MOD settings for future assignments; existing roles, weights, and ability settings are preserved.
-- Added host-controlled Base Upgrade draw switches in Roles UI and REPOConfig, with Standard, Survival, Exploration, Hauling, and Cooperative presets. Disabled types are excluded from future individual and All Upgrades draws. Per-upgrade minus/plus buttons adjust configured base levels by one for the current run-level interval, saving to the same REPOConfig entries and respecting level limits; other level intervals, draw bonuses and weights are preserved.
+- Added host-controlled Base Upgrade draw switches in Roles UI and REPOConfig, with Standard, Survival, Exploration, Hauling, and Cooperative presets. Disabled types are excluded from future individual and All Upgrades draws. Per-upgrade minus/plus buttons adjust the total by one and save a separate manual adjustment with the current game data, preserving it across run levels and reloads. Configured values, manual adjustments and truck draw results are displayed separately; REPOConfig rules, draw bonuses and weights are preserved.
 
 ## 4.4.6
 - Moved questions, bug reports, and feedback to GitHub Issues.

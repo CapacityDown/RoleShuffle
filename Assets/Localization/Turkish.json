@@ -219,5 +219,7 @@
   "Support for carrying and survival.": "Taşıma ve hayatta kalma desteği.",
   "Base Upgrade Settings": "Temel Yükseltme Ayarları",
   "Base Upgrade Presets": "Temel Yükseltme Ön Ayarları",
-  "Use +/- to adjust base levels from this run level until the next rule.": "+/- ile temel seviyeleri mevcut aşamadan sonraki kurala kadar ayarlayın."
+  "+/- adjustments are saved with this game data.": "+/- değişiklikleri bu oyun kaydına kaydedilir.",
+  "Manual adjustment": "Manuel ayar",
+  "Load a saved game to use +/- adjustments.": "+/- kullanmak için kayıtlı bir oyun yükleyin."
 }

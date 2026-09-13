@@ -9,13 +9,55 @@ namespace UnityEngine
         public static int Max(int a, int b) => Math.Max(a, b);
     }
 }
-public sealed class GameManager { public static GameManager? instance = new(); }
+public sealed class GameManager
+{
+    public enum LobbyTypes { Private, Public }
+    public static GameManager? instance = new();
+    public LobbyTypes lobbyType = LobbyTypes.Private;
+}
+public sealed class GameDirector { public static GameDirector? instance = new(); }
+public sealed class StatsManager
+{
+    public static StatsManager? instance = new();
+    public Dictionary<string, int> runStats = new();
+    public List<GameManager.LobbyTypes> savedLobbyTypes = new() { GameManager.LobbyTypes.Private };
+    public string saveFileCurrent = "save-a.json";
+    public bool saveFileReady = true;
+    public static string DirectoryPath = "";
+    public bool FailSave;
+    public int Saves;
+    public void SaveFileSave()
+    {
+        if (FailSave) throw new IOException("Simulated disk failure");
+        if (savedLobbyTypes.Contains(GameManager.instance!.lobbyType))
+            File.WriteAllText(Path.Combine(DirectoryPath, saveFileCurrent), System.Text.Json.JsonSerializer.Serialize(runStats));
+        Saves++;
+    }
+    public void Load(string name)
+    {
+        saveFileReady = false;
+        runStats.Clear();
+        saveFileCurrent = name;
+        string path = Path.Combine(DirectoryPath, name);
+        if (File.Exists(path))
+            foreach (var pair in System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(File.ReadAllText(path))!)
+                runStats[pair.Key] = pair.Value;
+        saveFileReady = true;
+    }
+}
 public sealed class RunManager { public static RunManager? instance = new(); public int levelsCompleted; }
 public static class SemiFunc { public static bool Multiplayer; public static bool IsMultiplayer() => Multiplayer; }
 namespace ExitGames.Client.Photon { public sealed class Hashtable : Dictionary<string, object> { } }
 namespace Photon.Pun
 {
-    public static class PhotonNetwork { public static bool IsMasterClient; public static TestRoom? CurrentRoom; }
+    public static class PhotonNetwork
+    {
+        public static bool IsMasterClient;
+        public static TestRoom? CurrentRoom;
+        public static TestPlayer LocalPlayer = new();
+        public static TestPlayer MasterClient = LocalPlayer;
+    }
+    public sealed class TestPlayer { public int ActorNumber = 1; }
     public sealed class TestRoom
     {
         public Properties CustomProperties = new();
@@ -54,14 +96,13 @@ namespace REPOJP.StageRoles
         }).ToArray();
         internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(StageRolesConfig config) => ConfiguredBaseUpgrades(config)
             .Select(g => new UpgradeGrant(g.CommandName, g.DictionaryName,
-                Math.Min(g.CommandName == "MapPlayerCount" ? 1 : 200, g.Level + BaseUpgradeBonusStore.Get(g.DictionaryName)))).ToArray();
+                BaseUpgradeManualStore.EffectiveLevel(g.DictionaryName, g.Level, g.CommandName == "MapPlayerCount" ? 1 : 200))).ToArray();
         internal static IReadOnlyList<StageRole> AllRoles = Enum.GetValues<StageRole>();
         internal static bool IsSecretRole(StageRole role) => role is StageRole.Superbot or StageRole.Disaster;
         internal static string DisplayName(StageRole role) => role switch
         { StageRole.Superbot => "???1", StageRole.Disaster => "???2", _ => role.ToString() };
     }
     internal readonly record struct UpgradeGrant(string CommandName, string DictionaryName, int Level);
-    internal static class BaseUpgradeBonusStore { internal static int Get(string name) => 3; }
     internal static class RoleGuideSync
     {
         internal static HashSet<StageRole> Remote = new();
