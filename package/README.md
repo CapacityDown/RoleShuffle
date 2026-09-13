@@ -151,247 +151,253 @@ When an older configuration is detected, RoleShuffle keeps compatible customized
 
 #### Role balance
 
+All entries in this table are host-controlled.
+
 Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, and `Bodyguard`. Danger roles are `Bomber`, `Stinker`, and `Werewolf`; Hardship roles are `Jobless` and `Tuna`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
 
-| Key | Default | Range / values | Effect | Control |
-|---|---:|---|---|---|
-| `Role Balance - Guarantees.ShowcaseEnabled` | `true` | `true`, `false` | Enables party-size-based minimum Showcase assignments. | Host |
-| `Role Balance - Guarantees.ShowcaseMinimums` | `3:1,7:2,14:3,24:4` | `party size:minimum` pairs | Minimum Showcase assignments by party size. | Host |
-| `Role Balance - Guarantees.SupportEnabled` | `true` | `true`, `false` | Enables party-size-based minimum Support assignments. | Host |
-| `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `party size:minimum` pairs | Minimum Support assignments by party size. | Host |
-| `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Enables Danger, Hardship, and small-party combined limits. | Host |
-| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `party size:limit` pairs | Maximum simultaneous `Bomber`, `Stinker`, and `Werewolf` roles by party size. | Host |
-| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `party size:limit` pairs | Maximum simultaneous `Jobless` and `Tuna` roles by party size. | Host |
-| `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`–`30` | Largest party size using the combined Danger and Hardship limit. | Host |
-| `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`–`30` | Maximum combined Danger and Hardship roles in a small party. | Host |
-| `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | Prevents the same player receiving the same role in consecutive stages when alternatives exist. | Host |
-| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`–`10` | Stages after `Jobless` or `Tuna` during which that player is normally excluded from both roles. | Host |
-| `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | Excludes context-dependent roles when their required enemy, weapon, or usable object is absent. | Host |
+| Key | Default | Range / values | Effect |
+| --- | ---: | --- | --- |
+| `Role Balance - Guarantees.ShowcaseEnabled` | `true` | `true`, `false` | Enables party-size-based minimum Showcase assignments. |
+| `Role Balance - Guarantees.ShowcaseMinimums` | `3:1,7:2,14:3,24:4` | `party size:minimum` pairs | Minimum Showcase assignments by party size. |
+| `Role Balance - Guarantees.SupportEnabled` | `true` | `true`, `false` | Enables party-size-based minimum Support assignments. |
+| `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `party size:minimum` pairs | Minimum Support assignments by party size. |
+| `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Enables Danger, Hardship, and small-party combined limits. |
+| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `party size:limit` pairs | Maximum simultaneous `Bomber`, `Stinker`, and `Werewolf` roles by party size. |
+| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `party size:limit` pairs | Maximum simultaneous `Jobless` and `Tuna` roles by party size. |
+| `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`–`30` | Largest party size using the combined Danger and Hardship limit. |
+| `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`–`30` | Maximum combined Danger and Hardship roles in a small party. |
+| `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | Prevents the same player receiving the same role in consecutive stages when alternatives exist. |
+| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`–`10` | Stages after `Jobless` or `Tuna` during which that player is normally excluded from both roles. |
+| `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | Excludes context-dependent roles when their required enemy, weapon, or usable object is absent. |
 
 #### Base upgrades
 
-These host settings define the upgrade target used whenever a role does not override that upgrade. Enter comma-separated `run level:value` pairs; the last entry at or below the current run level is used. Run levels accept 1–999999. For example, `1:1,5:3,10:6` uses value 1 on levels 1–4, value 3 on levels 5–9, and value 6 from level 10 onward. Blank settings and levels before the first entry use 0. Numeric values outside the allowed range are adjusted to the nearest limit; malformed pairs are ignored. Base levels remain active outside stages. When the optional truck draw is enabled, leaving the shop starts a draw in the following truck preparation phase. Each draw selects one upgrade type using its configured relative weight. Change amounts use comma-separated `change amount:weight` pairs; the defaults are -1 (10), no change (15), +1 (60), and +2 (15). A change amount is excluded when no selectable target can receive it without crossing the current limit, and the remaining weights are used. Positive results may select `ALL UPGRADES`, which strengthens enabled Base Upgrade types that have room below their limits. Changes remain for the rest of that run, and the host announces the result. Throw is excluded and is never changed by RoleShuffle.
+All entries in this table are host-controlled.
 
-Open `ROLES` → `BASE UPGRADES` → `BASE UPGRADE SETTINGS` to switch the truck draw and its 13 selection entries (12 upgrade types plus `All Upgrades`) ON/OFF. These are the same saved values shown in REPOConfig: `Base Upgrade Draw.Enabled` and `Base Upgrade Draw Selection.<Upgrade>`. Changes in either menu are reflected when viewing the other. Hosts can edit them; participants with RoleShuffle can view the host's switches. Existing settings keep their weights and all new selection switches default to ON.
+Base targets stay active between stages and apply to upgrades not overridden by the current role. Use comma-separated `run level:value` pairs: `1:1,5:3,10:6` means 1 on levels 1–4, 3 on levels 5–9, and 6 from level 10. Run levels accept 1–999999. Blank settings and levels before the first entry use 0. Values are clamped to the allowed range; malformed pairs are ignored. Throw is never changed.
 
-Each upgrade on `BASE UPGRADES` uses two lines: its name, current total and compact `−` / `+` buttons above a `Config` / `Manual` / `Draw` breakdown. Dividers separate menu groups outside Role Guide; consecutive buttons stay together. Manual adjustments are off by default and are available only in the lobby, truck and shop. Enable `Base Upgrades.ManualAdjustmentEnabled` in REPOConfig to use the buttons. Turning it off hides the buttons, the Manual breakdown and all manual-adjustment guidance, showing only Config and Draw, and excludes saved manual amounts from base targets. Saved amounts are kept and apply again when re-enabled. Each click changes the total by one and saves the manual adjustment with the current game data. It survives later run levels and reloading that save; other saves start with their own adjustments. The total is the configured value + enabled manual adjustment + truck draw result, limited to 0–200 (Map Player Count: 0–1). When manual adjustments are off, only configured and truck values contribute. For example, a manual +1 remains +1 when `1:1,5:3` advances to level 5: the total becomes 4 before truck draws. REPOConfig level rules, selection switches, and weights remain unchanged. At a clipped limit, a click recalculates the manual adjustment so the visible total still changes by one. After game over, the first adjustment in the restart lobby prepares a new save; the defeated run's adjustments are cleared by the game. Guests and lobby types without native saving cannot use these controls. Malformed level rules must be corrected in REPOConfig first. Gameplay uses the same application timing as REPOConfig base-level edits, retaining role-specific overrides.
+Truck draws occur after leaving the shop, during truck preparation. They select an upgrade and change amount using relative weights. Amounts that no eligible target can receive within its limits are excluded. Positive results can select `All Upgrades`, affecting enabled types with room below their limits. Results persist for the run and are announced by the host.
 
-In REPOConfig, apply pending edits before leaving the settings page. Roles UI saves each switch or manual adjustment immediately.
+Open `ROLES` → `BASE UPGRADES` → `BASE UPGRADE SETTINGS` to toggle the draw and its 13 entries (12 types plus `All Upgrades`). These switches share the saved REPOConfig values. Hosts edit; installed participants view the host's settings. Apply pending REPOConfig edits before leaving its page; Roles UI saves immediately.
 
-OFF excludes a type from both individual and `All Upgrades` results in future draws. It does not remove acquired bonuses or disable configured base levels. An in-progress draw keeps the selection it started with. `No individual draw` means the type cannot be selected on its own; when ON, it can still receive an `All Upgrades` result. `No draw` on `All Upgrades` means that combined result cannot be selected. These labels indicate a configured draw weight of `0`. Turning OFF `All Upgrades` disables only the combined result. All-off selections produce no draw result.
+OFF excludes a type from future individual and `All Upgrades` draws without removing its base levels or acquired bonuses. An active draw keeps its starting selection. `No individual draw` means weight `0`; an ON type can still receive `All Upgrades`. `No draw` on `All Upgrades` means its weight is `0`. Disabling that entry affects only combined results. All-off selections produce no result.
 
-| Key | Default | Range / values | Effect | Control |
-|---|---:|---|---|---|
-| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`, `false` | Enables manual adjustments and the minus/plus buttons in the lobby, truck and shop. Off hides the buttons, the Manual breakdown and related guidance, and excludes saved manual amounts from base targets; re-enabling restores them. Base rules and truck draws are unaffected. | Host |
-| `Base Upgrades.HealthUpgradeLevels` | `1:1` | `level:value` pairs; value `0`–`200` | Base Health target by run level. | Host |
-| `Base Upgrades.StaminaUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Stamina target by run level. | Host |
-| `Base Upgrades.ExtraJumpUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Extra Jump target by run level. | Host |
-| `Base Upgrades.SpeedUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Speed target by run level. | Host |
-| `Base Upgrades.StrengthUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Strength target by run level. | Host |
-| `Base Upgrades.RangeUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Range target by run level. | Host |
-| `Base Upgrades.LaunchUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Launch target by run level. | Host |
-| `Base Upgrades.TumbleClimbUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Tumble Climb target by run level. | Host |
-| `Base Upgrades.TumbleWingsUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Tumble Wings target by run level. | Host |
-| `Base Upgrades.CrouchRestUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Crouch Rest target by run level. | Host |
-| `Base Upgrades.MapPlayerCountUpgradeLevels` | Blank | `level:value` pairs; value `0`–`1` | Base Map Player Count target by run level. | Host |
-| `Base Upgrades.DeathHeadBatteryUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Death Head Battery target by run level. | Host |
-| `Base Upgrade Draw.Enabled` | `true` | `true`, `false` | Enables the shared Base Upgrade draw after leaving the shop. | Host |
-| `Base Upgrade Draw.MaximumLevel` | `200` | `0`–`200` | Maximum target that positive truck draws can reach. Map Player Count remains limited to 1. | Host |
-| `Base Upgrade Draw.CappedUpgradeWeightMultiplier` | `0.25` | `0`–`1` | Upgrade weights decrease as their combined configured and truck levels approach the draw maximum, reaching this multiplier at the maximum. `0` excludes capped upgrades; `1` disables the decrease. All Upgrades is unaffected. | Host |
-| `Base Upgrade Draw.WeightFalloffExponent` | `2` | `0.1`–`10` | Controls the weight decrease curve. `1` decreases evenly; larger values preserve more weight until near the maximum. | Host |
-| `Base Upgrade Draw.ChangeAmountWeights` | `-1:10,0:15,1:60,2:15` | `change amount:weight` pairs; amount `-200`–`200`, weight `0`–`1000` | Relative weights for the possible change amounts. | Host |
-| `Base Upgrade Draw Selection.Health` | `true` | `true`, `false` | Includes Health in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.Stamina` | `true` | `true`, `false` | Includes Stamina in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.ExtraJump` | `true` | `true`, `false` | Includes ExtraJump in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.Speed` | `true` | `true`, `false` | Includes Speed in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.Strength` | `true` | `true`, `false` | Includes Strength in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.Range` | `true` | `true`, `false` | Includes Range in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.Launch` | `true` | `true`, `false` | Includes Launch in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.TumbleClimb` | `true` | `true`, `false` | Includes TumbleClimb in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.TumbleWings` | `true` | `true`, `false` | Includes TumbleWings in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.CrouchRest` | `true` | `true`, `false` | Includes CrouchRest in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.MapPlayerCount` | `true` | `true`, `false` | Includes MapPlayerCount in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.DeathHeadBattery` | `true` | `true`, `false` | Includes DeathHeadBattery in future individual and All Upgrades draws. Existing base levels and bonuses are kept. | Host |
-| `Base Upgrade Draw Selection.AllUpgrades` | `true` | `true`, `false` | Enables the combined positive result for enabled types only. | Host |
-| `Base Upgrade Draw Weights.Health` | `20` | `0`–`1000` | Relative Health selection weight. | Host |
-| `Base Upgrade Draw Weights.Stamina` | `40` | `0`–`1000` | Relative Stamina selection weight. | Host |
-| `Base Upgrade Draw Weights.ExtraJump` | `10` | `0`–`1000` | Relative Extra Jump selection weight. | Host |
-| `Base Upgrade Draw Weights.Speed` | `30` | `0`–`1000` | Relative Speed selection weight. | Host |
-| `Base Upgrade Draw Weights.Strength` | `20` | `0`–`1000` | Relative Strength selection weight. | Host |
-| `Base Upgrade Draw Weights.Range` | `30` | `0`–`1000` | Relative Range selection weight. | Host |
-| `Base Upgrade Draw Weights.Launch` | `10` | `0`–`1000` | Relative Launch selection weight. | Host |
-| `Base Upgrade Draw Weights.TumbleClimb` | `10` | `0`–`1000` | Relative Tumble Climb selection weight. | Host |
-| `Base Upgrade Draw Weights.TumbleWings` | `10` | `0`–`1000` | Relative Tumble Wings selection weight. | Host |
-| `Base Upgrade Draw Weights.CrouchRest` | `30` | `0`–`1000` | Relative Crouch Rest selection weight. | Host |
-| `Base Upgrade Draw Weights.MapPlayerCount` | `10` | `0`–`1000` | Relative Map Player Count selection weight. | Host |
-| `Base Upgrade Draw Weights.DeathHeadBattery` | `10` | `0`–`1000` | Relative Death Head Battery selection weight. | Host |
-| `Base Upgrade Draw Weights.AllUpgrades` | `1` | `0`–`1000` | Relative `ALL UPGRADES` selection weight for positive results. | Host |
+Manual adjustments are off by default. Enable `Base Upgrades.ManualAdjustmentEnabled` to use +/- in the lobby, truck or shop. Each click changes the total by one and saves the adjustment with that game data, across run levels and reloads. Other saves remain independent. The total is Config + enabled Manual + Draw, clamped to 0–200 (Map Player Count: 0–1); the page shows this breakdown below each total. Disabling manual adjustments hides their controls and guidance and excludes saved amounts until re-enabled. At a clipped limit, a click recalculates the adjustment to change the visible total by one. After game over, the first lobby edit prepares a new save. Guests and lobbies without saving cannot edit. Correct malformed level rules in REPOConfig first. Role overrides and normal base-level application timing still apply.
+
+| Key | Default | Range / values | Effect |
+| --- | ---: | --- | --- |
+| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`, `false` | Enables manual adjustments and the minus/plus buttons in the lobby, truck and shop. Off hides the buttons, the Manual breakdown and related guidance, and excludes saved manual amounts from base targets; re-enabling restores them. Base rules and truck draws are unaffected. |
+| `Base Upgrades.HealthUpgradeLevels` | `1:1` | `level:value` pairs; value `0`–`200` | Base Health target by run level. |
+| `Base Upgrades.StaminaUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Stamina target by run level. |
+| `Base Upgrades.ExtraJumpUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Extra Jump target by run level. |
+| `Base Upgrades.SpeedUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Speed target by run level. |
+| `Base Upgrades.StrengthUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Strength target by run level. |
+| `Base Upgrades.RangeUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Range target by run level. |
+| `Base Upgrades.LaunchUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Launch target by run level. |
+| `Base Upgrades.TumbleClimbUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Tumble Climb target by run level. |
+| `Base Upgrades.TumbleWingsUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Tumble Wings target by run level. |
+| `Base Upgrades.CrouchRestUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Crouch Rest target by run level. |
+| `Base Upgrades.MapPlayerCountUpgradeLevels` | Blank | `level:value` pairs; value `0`–`1` | Base Map Player Count target by run level. |
+| `Base Upgrades.DeathHeadBatteryUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Death Head Battery target by run level. |
+| `Base Upgrade Draw.Enabled` | `true` | `true`, `false` | Enables the shared Base Upgrade draw after leaving the shop. |
+| `Base Upgrade Draw.MaximumLevel` | `200` | `0`–`200` | Maximum target that positive truck draws can reach. Map Player Count remains limited to 1. |
+| `Base Upgrade Draw.CappedUpgradeWeightMultiplier` | `0.25` | `0`–`1` | Upgrade weights decrease as their combined configured and truck levels approach the draw maximum, reaching this multiplier at the maximum. `0` excludes capped upgrades; `1` disables the decrease. All Upgrades is unaffected. |
+| `Base Upgrade Draw.WeightFalloffExponent` | `2` | `0.1`–`10` | Controls the weight decrease curve. `1` decreases evenly; larger values preserve more weight until near the maximum. |
+| `Base Upgrade Draw.ChangeAmountWeights` | `-1:10,0:15,1:60,2:15` | `change amount:weight` pairs; amount `-200`–`200`, weight `0`–`1000` | Relative weights for the possible change amounts. |
+| `Base Upgrade Draw Selection.Health` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.Stamina` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.ExtraJump` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.Speed` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.Strength` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.Range` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.Launch` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.TumbleClimb` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.TumbleWings` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.CrouchRest` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.MapPlayerCount` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.DeathHeadBattery` | `true` | `true`, `false` | Include this type in future draws. |
+| `Base Upgrade Draw Selection.AllUpgrades` | `true` | `true`, `false` | Enables the combined positive result for enabled types only. |
+| `Base Upgrade Draw Weights.Health` | `20` | `0`–`1000` | Relative Health selection weight. |
+| `Base Upgrade Draw Weights.Stamina` | `40` | `0`–`1000` | Relative Stamina selection weight. |
+| `Base Upgrade Draw Weights.ExtraJump` | `10` | `0`–`1000` | Relative Extra Jump selection weight. |
+| `Base Upgrade Draw Weights.Speed` | `30` | `0`–`1000` | Relative Speed selection weight. |
+| `Base Upgrade Draw Weights.Strength` | `20` | `0`–`1000` | Relative Strength selection weight. |
+| `Base Upgrade Draw Weights.Range` | `30` | `0`–`1000` | Relative Range selection weight. |
+| `Base Upgrade Draw Weights.Launch` | `10` | `0`–`1000` | Relative Launch selection weight. |
+| `Base Upgrade Draw Weights.TumbleClimb` | `10` | `0`–`1000` | Relative Tumble Climb selection weight. |
+| `Base Upgrade Draw Weights.TumbleWings` | `10` | `0`–`1000` | Relative Tumble Wings selection weight. |
+| `Base Upgrade Draw Weights.CrouchRest` | `30` | `0`–`1000` | Relative Crouch Rest selection weight. |
+| `Base Upgrade Draw Weights.MapPlayerCount` | `10` | `0`–`1000` | Relative Map Player Count selection weight. |
+| `Base Upgrade Draw Weights.DeathHeadBattery` | `10` | `0`–`1000` | Relative Death Head Battery selection weight. |
+| `Base Upgrade Draw Weights.AllUpgrades` | `1` | `0`–`1000` | Relative `ALL UPGRADES` selection weight for positive results. |
 
 Default Weights reflect vanilla maximum shop counts: Stamina 40; Speed, Range, and Crouch Rest 30; Health and Strength 20; other supported upgrades 10; ALL UPGRADES 1. The configured Weight is used directly without an additional shop multiplier. Weights decrease toward CappedUpgradeWeightMultiplier as upgrades approach the draw maximum. Existing saved weights are retained; reset individual entries to their defaults to adopt these values. Other mods' shop changes and ShopUpgradeItemCount do not alter the weights.
 
 #### Role selection
 
-Every standard role has an `Enabled` switch and a relative `Weight`. A standard role with `Enabled = false` or `Weight = 0` is excluded from random assignment. `???1` and `???2` each have an `Enabled` switch, but their selection weights are fixed.
+Host-controlled. Each standard role has an `Enabled` switch (`true`/`false`) and a relative `Weight` (`0`–`1000`). OFF or weight `0` excludes it from random assignment. The two secret roles have fixed weights. Exact keys and defaults are listed below.
 
-| Role | Enabled key and default | Weight key and default | Allowed values | Control |
-|---|---|---|---|---|
-| Tank | `Tank.Enabled = true` | `Tank.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Runner | `Runner.Enabled = true` | `Runner.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Jumper | `Jumper.Enabled = true` | `Jumper.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Lifter | `Lifter.Enabled = true` | `Lifter.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Launcher | `Launcher.Enabled = true` | `Launcher.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Climber | `Climber.Enabled = true` | `Climber.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Flyer | `Flyer.Enabled = true` | `Flyer.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Tracker | `Tracker.Enabled = true` | `Tracker.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Ghost | `Ghost.Enabled = true` | `Ghost.Weight = 80` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Bomber | `Bomber.Enabled = true` | `Bomber.Weight = 80` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Medic | `Medic.Enabled = true` | `Medic.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Phoenix | `Phoenix.Enabled = true` | `Phoenix.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Jobless | `Jobless.Enabled = true` | `Jobless.Weight = 20` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Rescuer | `Rescuer.Enabled = true` | `Rescuer.Weight = 80` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Vampire | `Vampire.Enabled = true` | `Vampire.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| King | `King.Enabled = true` | `King.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Tuna | `Tuna.Enabled = true` | `Tuna.Weight = 50` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Musician | `Musician.Enabled = true` | `Musician.Weight = 60` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Mage | `Mage.Enabled = true` | `Mage.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Gambler | `Gambler.Enabled = true` | `Gambler.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Hunter | `Hunter.Enabled = true` | `Hunter.Weight = 80` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Stinker | `Stinker.Enabled = true` | `Stinker.Weight = 80` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Engineer | `Engineer.Enabled = true` | `Engineer.Weight = 70` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Trickster | `Trickster.Enabled = true` | `Trickster.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Mechanic | `Mechanic.Enabled = true` | `Mechanic.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Electrician | `Electrician.Enabled = true` | `Electrician.Weight = 80` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Warden | `Warden.Enabled = true` | `Warden.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Ninja | `Ninja.Enabled = true` | `Ninja.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Executioner | `Executioner.Enabled = true` | `Executioner.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Rider | `Rider.Enabled = true` | `Rider.Weight = 60` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Influencer | `Influencer.Enabled = true` | `Influencer.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Werewolf | `Werewolf.Enabled = true` | `Werewolf.Weight = 40` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Berserker | `Berserker.Enabled = true` | `Berserker.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Bodyguard | `Bodyguard.Enabled = true` | `Bodyguard.Weight = 80` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Rammer | `Rammer.Enabled = true` | `Rammer.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Diver | `Diver.Enabled = true` | `Diver.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Sniper | `Sniper.Enabled = true` | `Sniper.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Imitator | `Imitator.Enabled = true` | `Imitator.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Avenger | `Avenger.Enabled = true` | `Avenger.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| Brawler | `Brawler.Enabled = true` | `Brawler.Weight = 100` | Enabled: `true`, `false`; Weight: `0`–`1000` | Host |
-| ???1 | `???1.Enabled = true` | Fixed | Enabled: `true`, `false` | Host |
-| ???2 | `???2.Enabled = true` | Fixed | Enabled: `true`, `false` | Host |
+| Enabled key and default | Weight key and default |
+|---|---|
+| `Tank.Enabled = true` | `Tank.Weight = 100` |
+| `Runner.Enabled = true` | `Runner.Weight = 100` |
+| `Jumper.Enabled = true` | `Jumper.Weight = 100` |
+| `Lifter.Enabled = true` | `Lifter.Weight = 100` |
+| `Launcher.Enabled = true` | `Launcher.Weight = 100` |
+| `Climber.Enabled = true` | `Climber.Weight = 100` |
+| `Flyer.Enabled = true` | `Flyer.Weight = 100` |
+| `Tracker.Enabled = true` | `Tracker.Weight = 100` |
+| `Ghost.Enabled = true` | `Ghost.Weight = 80` |
+| `Bomber.Enabled = true` | `Bomber.Weight = 80` |
+| `Medic.Enabled = true` | `Medic.Weight = 100` |
+| `Phoenix.Enabled = true` | `Phoenix.Weight = 100` |
+| `Jobless.Enabled = true` | `Jobless.Weight = 20` |
+| `Rescuer.Enabled = true` | `Rescuer.Weight = 80` |
+| `Vampire.Enabled = true` | `Vampire.Weight = 100` |
+| `King.Enabled = true` | `King.Weight = 100` |
+| `Tuna.Enabled = true` | `Tuna.Weight = 50` |
+| `Musician.Enabled = true` | `Musician.Weight = 60` |
+| `Mage.Enabled = true` | `Mage.Weight = 100` |
+| `Gambler.Enabled = true` | `Gambler.Weight = 100` |
+| `Hunter.Enabled = true` | `Hunter.Weight = 80` |
+| `Stinker.Enabled = true` | `Stinker.Weight = 80` |
+| `Engineer.Enabled = true` | `Engineer.Weight = 70` |
+| `Trickster.Enabled = true` | `Trickster.Weight = 100` |
+| `Mechanic.Enabled = true` | `Mechanic.Weight = 100` |
+| `Electrician.Enabled = true` | `Electrician.Weight = 80` |
+| `Warden.Enabled = true` | `Warden.Weight = 100` |
+| `Ninja.Enabled = true` | `Ninja.Weight = 100` |
+| `Executioner.Enabled = true` | `Executioner.Weight = 100` |
+| `Rider.Enabled = true` | `Rider.Weight = 60` |
+| `Influencer.Enabled = true` | `Influencer.Weight = 100` |
+| `Werewolf.Enabled = true` | `Werewolf.Weight = 40` |
+| `Berserker.Enabled = true` | `Berserker.Weight = 100` |
+| `Bodyguard.Enabled = true` | `Bodyguard.Weight = 80` |
+| `Rammer.Enabled = true` | `Rammer.Weight = 100` |
+| `Diver.Enabled = true` | `Diver.Weight = 100` |
+| `Sniper.Enabled = true` | `Sniper.Weight = 100` |
+| `Imitator.Enabled = true` | `Imitator.Weight = 100` |
+| `Avenger.Enabled = true` | `Avenger.Weight = 100` |
+| `Brawler.Enabled = true` | `Brawler.Weight = 100` |
+| `???1.Enabled = true` | Fixed |
+| `???2.Enabled = true` | Fixed |
 
 #### Upgrade and special-role settings
 
-| Key | Default | Range / values | Effect | Control |
-|---|---:|---|---|---|
-| `Tank.HealthUpgradeLevels` | `21` | `0`–`200` | Health levels granted to Tank. | Host |
-| `Tracker.HealthUpgradeLevels` | `3` | `0`–`200` | Health target while Tracker is assigned. | Host |
-| `Runner.SpeedUpgradeLevels` | `6` | `0`–`200` | Speed levels granted to Runner. | Host |
-| `Runner.StaminaUpgradeLevels` | `46` | `0`–`200` | Stamina levels granted to Runner. | Host |
-| `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`–`200` | Extra Jump levels granted to Jumper. | Host |
-| `Lifter.StrengthUpgradeLevels` | `25` | `0`–`200` | Strength levels granted to Lifter. | Host |
-| `Launcher.LaunchUpgradeLevels` | `10` | `0`–`200` | Launch levels granted to Launcher. | Host |
-| `Climber.ClimbUpgradeLevels` | `50` | `0`–`200` | Tumble Climb levels granted to Climber. | Host |
-| `Climber.RangeUpgradeLevels` | `20` | `0`–`200` | Range levels granted to Climber. | Host |
-| `Flyer.WingsUpgradeLevels` | `10` | `0`–`200` | Tumble Wings levels granted to Flyer. | Host |
-| `Ghost.DeathHeadBatteryUpgradeLevels` | `50` | `0`–`200` | Death Head Battery levels granted to Ghost. | Host |
-| `Bomber.DistancePerGrenade` | `8` | `1`–`100` | Travel distance in meters required for each grenade placement. | Host |
-| `Bomber.MaximumActiveGrenades` | `30` | `1`–`30` | Maximum generated grenades retained per Bomber. Placing another removes the oldest one. | Host |
-| `Bomber.AllowTruckSpawns` | `false` | `true`, `false` | Allows grenade placement inside the truck. | Host |
-| `Bomber.ExplosiveGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla explosive grenades in the random selection. | Host |
-| `Bomber.StunGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla stun grenades in the random selection. | Host |
-| `Bomber.ShockwaveGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla shockwave grenades in the random selection. | Host |
-| `Bomber.DuctTapedGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla duct-taped grenades in the random selection. | Host |
-| `Medic.HealAmount` | `5` | `1`–`100` | Health restored to each nearby teammate per tick. | Host |
-| `Medic.HealIntervalSeconds` | `2` | `0.1`–`30` | Seconds between Medic healing ticks. | Host |
-| `Medic.HealRadius` | `5` | `1`–`30` | Maximum healing distance in meters. | Host |
-| `Medic.TotalHealingLimit` | `150` | `1`–`10000` | Maximum total health restored by each Medic per stage. Only health actually missing from a target consumes the limit. | Host |
-| `Phoenix.ReviveDelaySeconds` | `2` | `2`–`10` | Seconds before Phoenix revival. | Host |
-| `Phoenix.FailureGraceSeconds` | `5` | `1`–`15` | Maximum seconds to hold a failed-stage transition while revival initializes. | Host |
-| `Phoenix.RevivalHealth` | `25` | `1`–`1000` | Health after Phoenix revival, capped at the player's maximum health. | Host |
-| `Jobless.Damage` | `1` | `1`–`100` | Damage per tick outside the truck. | Host |
-| `Jobless.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between damage ticks outside the truck. | Host |
-| `Rescuer.ReviveDelaySeconds` | `2` | `0`–`10` | Seconds a target must remain dead before rescue. | Host |
-| `Rescuer.Radius` | `3` | `1`–`50` | Maximum rescue distance in meters. | Host |
-| `Rescuer.MaximumRevives` | `2` | `1`–`10` | Maximum revivals for each Rescuer per stage. | Host |
-| `Rescuer.RevivalHealth` | `25` | `1`–`1000` | Health after a Rescuer revival, capped at the target's maximum health. | Host |
-| `Vampire.Tier1HealAmount` | `5` | `1`–`100` | Health restored by a nearby Danger Level 1 enemy death. | Host |
-| `Vampire.Tier2HealAmount` | `10` | `1`–`100` | Health restored by a nearby Danger Level 2 enemy death. | Host |
-| `Vampire.Tier3HealAmount` | `50` | `1`–`100` | Health restored by a nearby Danger Level 3 enemy death. | Host |
-| `Vampire.Radius` | `10` | `1`–`50` | Maximum distance in meters from the dying enemy. | Host |
-| `Tuna.StationaryDelaySeconds` | `3` | `0.1`–`30` | Seconds without movement before damage begins. | Host |
-| `Tuna.Damage` | `1` | `1`–`100` | Damage per stationary tick. | Host |
-| `Tuna.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between stationary damage ticks. | Host |
-| `Musician.HealAmount` | `5` | `1`–`100` | Health restored to the Musician and each living player in range per instrument note. | Host |
-| `Musician.HealRadius` | `10` | `1`–`50` | Maximum healing distance in meters from the Musician. | Host |
-| `Mage.CastIntervalSeconds` | `3` | `0.1`–`30` | Minimum seconds between spell activations. | Host |
-| `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `star`. | Host |
-| `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `roll`. | Host |
-| `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `gravity`. | Host |
-| `Mage.VoidExpression` | `EyesClosed` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `void`. | Host |
-| `Mage.LaserExpression` | `Scared` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `laser`. | Host |
-| `Mage.AutoRecoveryEnabled` | `true` | `true`, `false` | Enables automatic Mage health recovery after avoiding damage. | Host |
-| `Mage.AutoRecoveryDelaySeconds` | `10` | `0`–`300` | Seconds without taking damage before automatic recovery starts. | Host |
-| `Mage.AutoRecoveryIntervalSeconds` | `2` | `0.1`–`60` | Seconds between automatic recovery ticks. | Host |
-| `Mage.AutoRecoveryAmount` | `1` | `0`–`100` | Health restored by each automatic recovery tick. | Host |
-| `Mage.AutoRecoveryTotalHealingLimit` | `120` | `1`–`10000` | Maximum total automatic recovery per player per stage. Other healing is not counted. Death, revival, and role changes do not reset the amount already used. | Host |
-| `Mage.StarHealthCost` | `10` | `0`–`100` | Health consumed after a successful `star` cast. | Host |
-| `Mage.GravityHealthCost` | `10` | `0`–`100` | Health consumed after a successful `gravity` cast. | Host |
-| `Mage.RollHealthCost` | `15` | `0`–`100` | Health consumed after a successful `roll` cast. | Host |
-| `Mage.VoidHealthCost` | `30` | `0`–`100` | Health consumed after a successful `void` cast. | Host |
-| `Mage.LaserHealthCost` | `50` | `0`–`100` | Health consumed after a successful `laser` cast. | Host |
-| `Gambler.WinChancePercent` | `50` | `0`–`100` | Chance that a wager uses the win multiplier instead of destroying the valuable. | Host |
-| `Gambler.WinValueMultiplier` | `2` | `0`–`10` | Valuable multiplier applied to a winning wager. | Host |
-| `Gambler.GambitGreenHealAmount` | `50` | `25`–`1000` | Total HP restored by Gambit's green result for a Gambler. | Host |
-| `Gambler.GambitRedDamage` | `100` | `50`–`1000` | Total damage dealt by Gambit's red result to a Gambler. | Host |
-| `Gambler.GambitWhiteHealthUpgradeLevels` | `5` | `0`–`200` | Health upgrade levels added by Gambit's white result for the current stage only. | Host |
-| `Hunter.WeaponBatteryConsumptionPercent` | `75` | `0`–`100` | Percentage of normal weapon battery consumption used by Hunter. | Host |
-| `Hunter.DoubleOrbChancePercent` | `10` | `0`–`100` | Chance to double the normal orb count after Hunter defeats an enemy, checked only if the jackpot roll fails. | Host |
-| `Hunter.JackpotOrbChancePercent` | `0.5` | `0`–`100` | Chance to use the jackpot target after Hunter defeats an enemy. Missing orbs are added, but a normal drop above the target is not reduced. | Host |
-| `Hunter.JackpotOrbCount` | `10` | `1`–`30` | Target orb count used by Hunter's jackpot result. | Host |
-| `Stinker.DistancePerCloud` | `2` | `1`–`100` | Travel distance in meters between recorded uranium-cloud trail points. | Host |
-| `Stinker.MinimumSafetyDistance` | `2` | `1`–`30` | Minimum distance Stinker must be from the newest cloud position. Clouds appear one after another. | Host |
-| `Stinker.AllowTruckSpawns` | `false` | `true`, `false` | Allows uranium-cloud trail points to be recorded and created inside the truck. | Host |
-| `Trickster.ActiveSeconds` | `25` | `1`–`120` | Seconds before the active decoy is removed. | Host |
-| `Trickster.DecoyExpression` | `Happy` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that places the decoy. | Host |
-| `Trickster.CooldownSeconds` | `45` | `1`–`300` | Seconds after a decoy that attracted an enemy ends before another can be placed. | Host |
-| `Trickster.NoTargetCooldownSeconds` | `10` | `0`–`300` | Seconds after a decoy that attracted no enemies ends before another can be placed. | Host |
-| `Trickster.InvestigateRadius` | `40` | `1`–`100` | Enemy investigation radius around the decoy in meters. | Host |
-| `Trickster.PulseIntervalSeconds` | `1` | `0.25`–`10` | Seconds between enemy investigation pulses. | Host |
-| `Trickster.PlacementDistance` | `2` | `0.5`–`10` | Placement distance in front of Trickster in meters. | Host |
-| `Mechanic.RepairPercentPerSecond` | `2` | `0`–`100` | Shared original-value percentage repaired per second while Mechanic directly holds damaged valuables. | Host |
-| `Mechanic.MaximumRepairPercentPerStage` | `50` | `0`–`100` | Maximum cumulative original-value percentage repaired by each Mechanic per stage. | Host |
-| `Electrician.ChargePercentPerSecond` | `10` | `0`–`100` | Shared battery percentage restored per second while Electrician directly holds inactive rechargeable items. | Host |
-| `Electrician.MaximumChargePercentPerStage` | `100` | `0`–`1000` | Maximum cumulative battery percentage restored by each Electrician per stage. | Host |
-| `Warden.AdditionalStunSeconds` | `3` | `0`–`30` | Seconds added to enemy stuns caused by Warden. | Host |
-| `Ninja.VisionRecognitionMultiplier` | `2` | `1`–`10` | Multiplier applied to the time enemies need to visually recognize Ninja. | Host |
-| `Executioner.StunnedDamageMultiplier` | `2` | `1`–`10` | Direct attack damage multiplier against enemies already stunned before the hit. | Host |
-| `Rider.EnemyDamageMultiplier` | `3` | `1`–`10` | Vehicle impact damage multiplier against enemies while Rider drives. | Host |
-| `Rider.PlayerKnockbackMultiplier` | `2` | `1`–`10` | Multiplier for existing vehicle Tumble knockback against players. | Host |
-| `Influencer.PlayerRadius` | `20` | `1`–`100` | Radius in meters used to count nearby living teammates. | Host |
-| `Influencer.PlayerCheckIntervalSeconds` | `0.5` | `0.1`–`10` | Seconds between nearby-player and dynamic-upgrade checks. | Host |
-| `Influencer.NoiseRadiusMultiplier` | `2` | `1`–`10` | Multiplier for footstep, landing, VC, and chat TTS enemy investigation radii. | Host |
-| `Influencer.TTSInvestigateRadius` | `20` | `1`–`100` | Enemy investigation radius of periodic TTS. | Host |
-| `Influencer.MinimumTTSIntervalSeconds` | `20` | `1`–`300` | Minimum randomly selected periodic TTS interval. | Host |
-| `Influencer.MaximumTTSIntervalSeconds` | `40` | `1`–`300` | Maximum randomly selected periodic TTS interval. Values are safely swapped when configured below the minimum. | Host |
-| `Influencer.TTSQuietPeriodSeconds` | `1.5` | `0`–`10` | Quiet time required after any TTS, including Stage Flux, before periodic TTS fires. | Host |
-| `Influencer.<Upgrade>UpgradeScaling` | Per upgrade | `count:level` pairs | Sets that upgrade's minimum target by nearby-player count without lowering its pre-role level. Example: Strength defaults to `1:1,2:4,3:9,4:13,5:20`. Available upgrades match Base Upgrades. Blank grants no level. | Host |
-| `Werewolf.PlayerDamageMultiplier` | `2` | `1`–`10` | Multiplier for identifiable damage Werewolf deals to another player. | Host |
-| `Berserker.<Upgrade>UpgradeScaling` | Per upgrade | `HP%:level` pairs | Sets that upgrade's minimum target while remaining HP is at or below the percentage, without lowering its pre-role level. Example: Strength defaults to `80:1,60:4,40:9,20:13,10:20`. Available upgrades match Base Upgrades except Health. Blank grants no level. | Host |
-| `Bodyguard.HealthUpgradeLevels` | `11` | `0`–`200` | Health target while Bodyguard is assigned. | Host |
-| `Bodyguard.ProtectionRadius` | `15` | `1`–`100` | Maximum teammate-protection distance in meters. | Host |
-| `Bodyguard.DamageSharePercent` | `50` | `0`–`100` | Percentage of enemy damage transferred without reducing Bodyguard below 1 HP. | Host |
-| `Rammer.TumbleAttackDamage` | `100` | `0`–`100000` | Enemy damage dealt by Rammer's Tumble Attack. | Host |
-| `Rammer.SelfDamage` | `15` | `0`–`100000` | Damage Rammer takes after its Tumble Attack hits an enemy. | Host |
-| `Diver.UnderfloorDurationSeconds` | `10` | `1`–`120` | Maximum time below a floor before Diver dies. | Host |
-| `Diver.MovementForce` | `8` | `1`–`30` | Free-movement force while Diver is below a floor. | Host |
-| `Sniper.ReferenceDistance` | `8` | `1`–`50` | Distance in meters where enemy damage is unchanged. | Host |
-| `Sniper.MinimumDamageMultiplier` | `0.5` | `0`–`1` | Enemy damage multiplier at point-blank range. Positive hits still deal at least 1 damage. | Host |
-| `Sniper.MaximumDamageMultiplier` | `2` | `1`–`10` | Maximum enemy damage multiplier at long range. | Host |
-| `Sniper.MaximumMultiplierDistance` | `24` | `1`–`100` | Distance in meters where the maximum multiplier is reached. Values at or below Reference Distance use a point just beyond it. | Host |
-| `Avenger.DamageMultiplier` | `1.5` | `1`–`10` | Enemy damage multiplier after another player dies. | Host |
-| `Avenger.DurationSeconds` | `20` | `1`–`120` | Duration of the enemy damage bonus. Another death refreshes this duration. | Host |
-| `Avenger.TriggerRadius` | `30` | `1`–`100` | Maximum distance in meters from a dying player that activates Avenger. | Host |
-| `Brawler.MeleeDamageMultiplier` | `1.25` | `0`–`10` | Damage multiplier for identifiable melee weapon attacks against enemies and players. | Host |
-| `Brawler.RangedDamageMultiplier` | `0.75` | `0`–`10` | Damage multiplier for identifiable gun, staff-projectile, and laser attacks against enemies and players. | Host |
+All entries in this table are host-controlled.
+
+| Key | Default | Range / values | Effect |
+| --- | ---: | --- | --- |
+| `Tank.HealthUpgradeLevels` | `21` | `0`–`200` | Health levels granted to Tank. |
+| `Tracker.HealthUpgradeLevels` | `3` | `0`–`200` | Health target while Tracker is assigned. |
+| `Runner.SpeedUpgradeLevels` | `6` | `0`–`200` | Speed levels granted to Runner. |
+| `Runner.StaminaUpgradeLevels` | `46` | `0`–`200` | Stamina levels granted to Runner. |
+| `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`–`200` | Extra Jump levels granted to Jumper. |
+| `Lifter.StrengthUpgradeLevels` | `25` | `0`–`200` | Strength levels granted to Lifter. |
+| `Launcher.LaunchUpgradeLevels` | `10` | `0`–`200` | Launch levels granted to Launcher. |
+| `Climber.ClimbUpgradeLevels` | `50` | `0`–`200` | Tumble Climb levels granted to Climber. |
+| `Climber.RangeUpgradeLevels` | `20` | `0`–`200` | Range levels granted to Climber. |
+| `Flyer.WingsUpgradeLevels` | `10` | `0`–`200` | Tumble Wings levels granted to Flyer. |
+| `Ghost.DeathHeadBatteryUpgradeLevels` | `50` | `0`–`200` | Death Head Battery levels granted to Ghost. |
+| `Bomber.DistancePerGrenade` | `8` | `1`–`100` | Travel distance in meters required for each grenade placement. |
+| `Bomber.MaximumActiveGrenades` | `30` | `1`–`30` | Maximum generated grenades retained per Bomber. Placing another removes the oldest one. |
+| `Bomber.AllowTruckSpawns` | `false` | `true`, `false` | Allows grenade placement inside the truck. |
+| `Bomber.ExplosiveGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla explosive grenades in the random selection. |
+| `Bomber.StunGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla stun grenades in the random selection. |
+| `Bomber.ShockwaveGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla shockwave grenades in the random selection. |
+| `Bomber.DuctTapedGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla duct-taped grenades in the random selection. |
+| `Medic.HealAmount` | `5` | `1`–`100` | Health restored to each nearby teammate per tick. |
+| `Medic.HealIntervalSeconds` | `2` | `0.1`–`30` | Seconds between Medic healing ticks. |
+| `Medic.HealRadius` | `5` | `1`–`30` | Maximum healing distance in meters. |
+| `Medic.TotalHealingLimit` | `150` | `1`–`10000` | Maximum total health restored by each Medic per stage. Only health actually missing from a target consumes the limit. |
+| `Phoenix.ReviveDelaySeconds` | `2` | `2`–`10` | Seconds before Phoenix revival. |
+| `Phoenix.FailureGraceSeconds` | `5` | `1`–`15` | Maximum seconds to hold a failed-stage transition while revival initializes. |
+| `Phoenix.RevivalHealth` | `25` | `1`–`1000` | Health after Phoenix revival, capped at the player's maximum health. |
+| `Jobless.Damage` | `1` | `1`–`100` | Damage per tick outside the truck. |
+| `Jobless.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between damage ticks outside the truck. |
+| `Rescuer.ReviveDelaySeconds` | `2` | `0`–`10` | Seconds a target must remain dead before rescue. |
+| `Rescuer.Radius` | `3` | `1`–`50` | Maximum rescue distance in meters. |
+| `Rescuer.MaximumRevives` | `2` | `1`–`10` | Maximum revivals for each Rescuer per stage. |
+| `Rescuer.RevivalHealth` | `25` | `1`–`1000` | Health after a Rescuer revival, capped at the target's maximum health. |
+| `Vampire.Tier1HealAmount` | `5` | `1`–`100` | Health restored by a nearby Danger Level 1 enemy death. |
+| `Vampire.Tier2HealAmount` | `10` | `1`–`100` | Health restored by a nearby Danger Level 2 enemy death. |
+| `Vampire.Tier3HealAmount` | `50` | `1`–`100` | Health restored by a nearby Danger Level 3 enemy death. |
+| `Vampire.Radius` | `10` | `1`–`50` | Maximum distance in meters from the dying enemy. |
+| `Tuna.StationaryDelaySeconds` | `3` | `0.1`–`30` | Seconds without movement before damage begins. |
+| `Tuna.Damage` | `1` | `1`–`100` | Damage per stationary tick. |
+| `Tuna.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between stationary damage ticks. |
+| `Musician.HealAmount` | `5` | `1`–`100` | Health restored to the Musician and each living player in range per instrument note. |
+| `Musician.HealRadius` | `10` | `1`–`50` | Maximum healing distance in meters from the Musician. |
+| `Mage.CastIntervalSeconds` | `3` | `0.1`–`30` | Minimum seconds between spell activations. |
+| `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `star`. |
+| `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `roll`. |
+| `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `gravity`. |
+| `Mage.VoidExpression` | `EyesClosed` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `void`. |
+| `Mage.LaserExpression` | `Scared` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `laser`. |
+| `Mage.AutoRecoveryEnabled` | `true` | `true`, `false` | Enables automatic Mage health recovery after avoiding damage. |
+| `Mage.AutoRecoveryDelaySeconds` | `10` | `0`–`300` | Seconds without taking damage before automatic recovery starts. |
+| `Mage.AutoRecoveryIntervalSeconds` | `2` | `0.1`–`60` | Seconds between automatic recovery ticks. |
+| `Mage.AutoRecoveryAmount` | `1` | `0`–`100` | Health restored by each automatic recovery tick. |
+| `Mage.AutoRecoveryTotalHealingLimit` | `120` | `1`–`10000` | Maximum total automatic recovery per player per stage. Other healing is not counted. Death, revival, and role changes do not reset the amount already used. |
+| `Mage.StarHealthCost` | `10` | `0`–`100` | Health consumed after a successful `star` cast. |
+| `Mage.GravityHealthCost` | `10` | `0`–`100` | Health consumed after a successful `gravity` cast. |
+| `Mage.RollHealthCost` | `15` | `0`–`100` | Health consumed after a successful `roll` cast. |
+| `Mage.VoidHealthCost` | `30` | `0`–`100` | Health consumed after a successful `void` cast. |
+| `Mage.LaserHealthCost` | `50` | `0`–`100` | Health consumed after a successful `laser` cast. |
+| `Gambler.WinChancePercent` | `50` | `0`–`100` | Chance that a wager uses the win multiplier instead of destroying the valuable. |
+| `Gambler.WinValueMultiplier` | `2` | `0`–`10` | Valuable multiplier applied to a winning wager. |
+| `Gambler.GambitGreenHealAmount` | `50` | `25`–`1000` | Total HP restored by Gambit's green result for a Gambler. |
+| `Gambler.GambitRedDamage` | `100` | `50`–`1000` | Total damage dealt by Gambit's red result to a Gambler. |
+| `Gambler.GambitWhiteHealthUpgradeLevels` | `5` | `0`–`200` | Health upgrade levels added by Gambit's white result for the current stage only. |
+| `Hunter.WeaponBatteryConsumptionPercent` | `75` | `0`–`100` | Percentage of normal weapon battery consumption used by Hunter. |
+| `Hunter.DoubleOrbChancePercent` | `10` | `0`–`100` | Chance to double the normal orb count after Hunter defeats an enemy, checked only if the jackpot roll fails. |
+| `Hunter.JackpotOrbChancePercent` | `0.5` | `0`–`100` | Chance to use the jackpot target after Hunter defeats an enemy. Missing orbs are added, but a normal drop above the target is not reduced. |
+| `Hunter.JackpotOrbCount` | `10` | `1`–`30` | Target orb count used by Hunter's jackpot result. |
+| `Stinker.DistancePerCloud` | `2` | `1`–`100` | Travel distance in meters between recorded uranium-cloud trail points. |
+| `Stinker.MinimumSafetyDistance` | `2` | `1`–`30` | Minimum distance Stinker must be from the newest cloud position. Clouds appear one after another. |
+| `Stinker.AllowTruckSpawns` | `false` | `true`, `false` | Allows uranium-cloud trail points to be recorded and created inside the truck. |
+| `Trickster.ActiveSeconds` | `25` | `1`–`120` | Seconds before the active decoy is removed. |
+| `Trickster.DecoyExpression` | `Happy` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that places the decoy. |
+| `Trickster.CooldownSeconds` | `45` | `1`–`300` | Seconds after a decoy that attracted an enemy ends before another can be placed. |
+| `Trickster.NoTargetCooldownSeconds` | `10` | `0`–`300` | Seconds after a decoy that attracted no enemies ends before another can be placed. |
+| `Trickster.InvestigateRadius` | `40` | `1`–`100` | Enemy investigation radius around the decoy in meters. |
+| `Trickster.PulseIntervalSeconds` | `1` | `0.25`–`10` | Seconds between enemy investigation pulses. |
+| `Trickster.PlacementDistance` | `2` | `0.5`–`10` | Placement distance in front of Trickster in meters. |
+| `Mechanic.RepairPercentPerSecond` | `2` | `0`–`100` | Shared original-value percentage repaired per second while Mechanic directly holds damaged valuables. |
+| `Mechanic.MaximumRepairPercentPerStage` | `50` | `0`–`100` | Maximum cumulative original-value percentage repaired by each Mechanic per stage. |
+| `Electrician.ChargePercentPerSecond` | `10` | `0`–`100` | Shared battery percentage restored per second while Electrician directly holds inactive rechargeable items. |
+| `Electrician.MaximumChargePercentPerStage` | `100` | `0`–`1000` | Maximum cumulative battery percentage restored by each Electrician per stage. |
+| `Warden.AdditionalStunSeconds` | `3` | `0`–`30` | Seconds added to enemy stuns caused by Warden. |
+| `Ninja.VisionRecognitionMultiplier` | `2` | `1`–`10` | Multiplier applied to the time enemies need to visually recognize Ninja. |
+| `Executioner.StunnedDamageMultiplier` | `2` | `1`–`10` | Direct attack damage multiplier against enemies already stunned before the hit. |
+| `Rider.EnemyDamageMultiplier` | `3` | `1`–`10` | Vehicle impact damage multiplier against enemies while Rider drives. |
+| `Rider.PlayerKnockbackMultiplier` | `2` | `1`–`10` | Multiplier for existing vehicle Tumble knockback against players. |
+| `Influencer.PlayerRadius` | `20` | `1`–`100` | Radius in meters used to count nearby living teammates. |
+| `Influencer.PlayerCheckIntervalSeconds` | `0.5` | `0.1`–`10` | Seconds between nearby-player and dynamic-upgrade checks. |
+| `Influencer.NoiseRadiusMultiplier` | `2` | `1`–`10` | Multiplier for footstep, landing, VC, and chat TTS enemy investigation radii. |
+| `Influencer.TTSInvestigateRadius` | `20` | `1`–`100` | Enemy investigation radius of periodic TTS. |
+| `Influencer.MinimumTTSIntervalSeconds` | `20` | `1`–`300` | Minimum randomly selected periodic TTS interval. |
+| `Influencer.MaximumTTSIntervalSeconds` | `40` | `1`–`300` | Maximum randomly selected periodic TTS interval. Values are safely swapped when configured below the minimum. |
+| `Influencer.TTSQuietPeriodSeconds` | `1.5` | `0`–`10` | Quiet time required after any TTS, including Stage Flux, before periodic TTS fires. |
+| `Influencer.<Upgrade>UpgradeScaling` | Per upgrade | `count:level` pairs | Sets that upgrade's minimum target by nearby-player count without lowering its pre-role level. Example: Strength defaults to `1:1,2:4,3:9,4:13,5:20`. Available upgrades match Base Upgrades. Blank grants no level. |
+| `Werewolf.PlayerDamageMultiplier` | `2` | `1`–`10` | Multiplier for identifiable damage Werewolf deals to another player. |
+| `Berserker.<Upgrade>UpgradeScaling` | Per upgrade | `HP%:level` pairs | Sets that upgrade's minimum target while remaining HP is at or below the percentage, without lowering its pre-role level. Example: Strength defaults to `80:1,60:4,40:9,20:13,10:20`. Available upgrades match Base Upgrades except Health. Blank grants no level. |
+| `Bodyguard.HealthUpgradeLevels` | `11` | `0`–`200` | Health target while Bodyguard is assigned. |
+| `Bodyguard.ProtectionRadius` | `15` | `1`–`100` | Maximum teammate-protection distance in meters. |
+| `Bodyguard.DamageSharePercent` | `50` | `0`–`100` | Percentage of enemy damage transferred without reducing Bodyguard below 1 HP. |
+| `Rammer.TumbleAttackDamage` | `100` | `0`–`100000` | Enemy damage dealt by Rammer's Tumble Attack. |
+| `Rammer.SelfDamage` | `15` | `0`–`100000` | Damage Rammer takes after its Tumble Attack hits an enemy. |
+| `Diver.UnderfloorDurationSeconds` | `10` | `1`–`120` | Maximum time below a floor before Diver dies. |
+| `Diver.MovementForce` | `8` | `1`–`30` | Free-movement force while Diver is below a floor. |
+| `Sniper.ReferenceDistance` | `8` | `1`–`50` | Distance in meters where enemy damage is unchanged. |
+| `Sniper.MinimumDamageMultiplier` | `0.5` | `0`–`1` | Enemy damage multiplier at point-blank range. Positive hits still deal at least 1 damage. |
+| `Sniper.MaximumDamageMultiplier` | `2` | `1`–`10` | Maximum enemy damage multiplier at long range. |
+| `Sniper.MaximumMultiplierDistance` | `24` | `1`–`100` | Distance in meters where the maximum multiplier is reached. Values at or below Reference Distance use a point just beyond it. |
+| `Avenger.DamageMultiplier` | `1.5` | `1`–`10` | Enemy damage multiplier after another player dies. |
+| `Avenger.DurationSeconds` | `20` | `1`–`120` | Duration of the enemy damage bonus. Another death refreshes this duration. |
+| `Avenger.TriggerRadius` | `30` | `1`–`100` | Maximum distance in meters from a dying player that activates Avenger. |
+| `Brawler.MeleeDamageMultiplier` | `1.25` | `0`–`10` | Damage multiplier for identifiable melee weapon attacks against enemies and players. |
+| `Brawler.RangedDamageMultiplier` | `0.75` | `0`–`10` | Damage multiplier for identifiable gun, staff-projectile, and laser attacks against enemies and players. |
 
 The default base is Health 1 from run level 1 and 0 for every other managed upgrade. A static role-specific upgrade is an absolute target, not a bonus added to the base. When that role ends, RoleShuffle restores the configured base target; upgrades not overridden by the role stay at their base targets. Influencer and Berserker instead treat each dynamic target as a minimum and never lower the level captured when the role was assigned. Static-role levels change only with assignment or session state, while Influencer and Berserker re-evaluate their configured conditions at the Influencer check interval. `Tracker` always targets Map Player Count 1, while its Health target is configurable. `Rammer` always overrides Launch, Tumble Climb, and Tumble Wings to 0 during the stage. Throw is not managed. `King` has no effect-strength setting.
 
@@ -603,247 +609,253 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 #### 役職バランス
 
+この表はすべてホスト設定です。
+
 Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、Hardship役は`Jobless`、`Tuna`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
 
-| キー | デフォルト | 範囲・値 | 内容 | 管理 |
-|---|---:|---|---|---|
-| `Role Balance - Guarantees.ShowcaseEnabled` | `true` | `true`, `false` | 参加人数別のShowcase最低保証を有効にします。 | ホスト |
-| `Role Balance - Guarantees.ShowcaseMinimums` | `3:1,7:2,14:3,24:4` | `参加人数:最低人数`の組 | 参加人数ごとに保証するShowcaseの最低人数です。 | ホスト |
-| `Role Balance - Guarantees.SupportEnabled` | `true` | `true`, `false` | 参加人数別のSupport最低保証を有効にします。 | ホスト |
-| `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `参加人数:最低人数`の組 | 参加人数ごとに保証するSupportの最低人数です。 | ホスト |
-| `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Danger、Hardship、少人数時の複合上限を有効にします。 | ホスト |
-| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `参加人数:上限`の組 | 参加人数ごとの`Bomber`、`Stinker`、`Werewolf`の合計上限です。 | ホスト |
-| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `参加人数:上限`の組 | 参加人数ごとの`Jobless`と`Tuna`の合計上限です。 | ホスト |
-| `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`～`30` | DangerとHardshipの複合上限を使用する最大参加人数です。 | ホスト |
-| `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`～`30` | 少人数時に許可するDangerとHardshipの合計最大人数です。 | ホスト |
-| `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | ほかの候補がある場合、同じプレイヤーへの同役職の連続割り当てを防ぎます。 | ホスト |
-| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`～`10` | `Jobless`または`Tuna`の後、そのプレイヤーを両役職から通常除外するステージ数です。 | ホスト |
-| `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | 必要な敵、武器、使用対象が存在しない状況依存役を抽選から除外します。 | ホスト |
+| キー | デフォルト | 範囲・値 | 内容 |
+| --- | ---: | --- | --- |
+| `Role Balance - Guarantees.ShowcaseEnabled` | `true` | `true`, `false` | 参加人数別のShowcase最低保証を有効にします。 |
+| `Role Balance - Guarantees.ShowcaseMinimums` | `3:1,7:2,14:3,24:4` | `参加人数:最低人数`の組 | 参加人数ごとに保証するShowcaseの最低人数です。 |
+| `Role Balance - Guarantees.SupportEnabled` | `true` | `true`, `false` | 参加人数別のSupport最低保証を有効にします。 |
+| `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `参加人数:最低人数`の組 | 参加人数ごとに保証するSupportの最低人数です。 |
+| `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Danger、Hardship、少人数時の複合上限を有効にします。 |
+| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `参加人数:上限`の組 | 参加人数ごとの`Bomber`、`Stinker`、`Werewolf`の合計上限です。 |
+| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `参加人数:上限`の組 | 参加人数ごとの`Jobless`と`Tuna`の合計上限です。 |
+| `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`～`30` | DangerとHardshipの複合上限を使用する最大参加人数です。 |
+| `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`～`30` | 少人数時に許可するDangerとHardshipの合計最大人数です。 |
+| `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | ほかの候補がある場合、同じプレイヤーへの同役職の連続割り当てを防ぎます。 |
+| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`～`10` | `Jobless`または`Tuna`の後、そのプレイヤーを両役職から通常除外するステージ数です。 |
+| `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | 必要な敵、武器、使用対象が存在しない状況依存役を抽選から除外します。 |
 
 #### 基礎アップグレード
 
-役職が置き換えない場合に使用するアップグレード目標値です。カンマ区切りの`ランレベル:設定値`で記述し、現在のランレベル以下にある最後の設定値を使用します。ランレベルは1～999999に対応します。たとえば`1:1,5:3,10:6`なら、レベル1～4は1、レベル5～9は3、レベル10以降は6です。空欄および最初の指定レベルへ到達する前は0になります。設定範囲外の数値は最も近い上限または下限へ補正し、書式が不正な組だけを無視します。ホスト設定として動作し、基礎値はステージ外でも維持します。任意のトラック抽選を有効にすると、ショップを出た後のトラック準備フェーズに抽選を行います。1回の抽選で、個別に設定した相対Weightを使って対象アップグレードを1種類選びます。増減数はカンマ区切りの`増減値:重み`で設定し、デフォルトは-1（10）、変化なし（15）、+1（60）、+2（15）です。現在の上限または下限を越えずに適用できる対象が一つもない増減値は候補から外し、残った重みで抽選します。正の結果では`ALL UPGRADES`が選ばれることがあり、ONになっているBase Upgradeのうち、上限まで余地がある種類を強化します。変更はそのラン中維持され、結果はホストが発言します。Throwは対象外で、RoleShuffleから変更しません。
+この表はすべてホスト設定です。
 
-`ROLES` → `基本アップグレード` → `基本アップグレード設定`から、トラック抽選全体と13項目（強化12種類＋`All Upgrades`）のON/OFFを変更できます。REPOConfigの`Base Upgrade Draw.Enabled`および`Base Upgrade Draw Selection.<Upgrade>`と同じ設定値を保存し、どちらで変更してももう一方の表示に反映されます。変更できるのはホストで、RoleShuffleを導入した参加者はホストのON/OFFを閲覧できます。既存の重みは保持し、新しい選択スイッチはすべてONが初期値です。
+役職が上書きしない強化には基礎値を適用し、ステージ外でも維持します。カンマ区切りの`ランレベル:設定値`で指定します。`1:1,5:3,10:6`ならレベル1～4は1、5～9は3、10以降は6です。ランレベルは1～999999。空欄や最初の指定レベルより前は0、範囲外の値は上限・下限に補正し、不正な組は無視します。Throwは変更しません。
 
-`基本アップグレード`画面では、上段に名前・現在の合計値・小型の`−`・`+`ボタン、下段に「設定・手動・抽選」の内訳を表示する2行構成です。ロールガイド以外では、項目や機能のまとまりごとに区切り線を表示します。連続するボタンの間には表示しません。手動調整は初期状態でOFFで、ロビー・トラック・ショップでのみ操作できます。REPOConfigの`Base Upgrades.ManualAdjustmentEnabled`をONにするとボタンを操作できます。OFFでは±ボタン・内訳の「手動」・手動調整の案内を非表示にして「設定・抽選」だけを表示し、保存済み調整値を合計から除外します。値はセーブに保持され、再びONにすると適用されます。クリックごとに合計値を1ずつ加減し、手動調整分を現在のセーブデータに保存します。ランレベルが進んだ後や同じセーブの再開後も保持され、別のセーブには引き継ぎません。合計値は「設定値＋有効な手動調整＋トラック抽選」で、0～200（Map Player Countは0～1）に制限します。手動調整がOFFのときは設定値とトラック抽選だけを合算します。例えば`1:1,5:3`で手動調整を+1すると、ランレベル5でも+1を維持し、抽選分を除く合計は4になります。REPOConfigの設定式・ON/OFF・重みは変更しません。設定変更などで合計が上限・下限に切り詰められている場合は、クリックで表示値が1変わるよう手動調整分を再計算します。ゲームオーバー後は、再開前のロビーで最初に調整したときに新しいセーブを準備します。敗北したランの調整値はゲームのリセットで消去されます。参加者やセーブ非対応のロビーでは操作できません。不正な設定式はREPOConfigで修正してください。ゲーム内能力への反映タイミングはREPOConfigの基礎値変更と同じで、役職固有の上書きも維持します。
+トラック抽選はショップを出た後の準備中に行い、相対Weightで種類と増減値を選びます。範囲内で適用できる対象がない増減値は除外します。正の結果では`All Upgrades`も候補となり、ONの種類のうち上限まで余地があるものを強化します。結果はホストが発言し、そのラン中維持します。
 
-REPOConfigでは変更を適用してから設定画面を閉じてください。Roles UIのスイッチ変更と手動調整は、その場で保存されます。
+`ROLES` → `基本アップグレード` → `基本アップグレード設定`で、抽選全体と13項目（12種類＋`All Upgrades`）を切り替えます。REPOConfigと同じ値を保存し、ホストは編集、導入済み参加者はホストの設定を閲覧できます。REPOConfigでは変更を適用してから閉じてください。Roles UIは即時保存します。
 
-OFFの種類は、次回以降の個別抽選と`All Upgrades`の両方から除外します。獲得済みのボーナスや設定済みの基礎レベルは維持します。抽選アニメーション中に変更した場合、その抽選は開始時の選択内容を使用します。`個別抽選なし`は単独では抽選されない設定で、ONの種類は`All Upgrades`の一括強化に含まれます。`All Upgrades`の`抽選なし`は、一括抽選が選ばれない設定です。これらの表示は抽選重みが`0`の場合に付きます。`All Upgrades`のOFFは一括抽選だけを無効にします。すべてOFFの場合、抽選結果は発生しません。
+OFFの種類は次回以降の個別・一括抽選から除外し、基礎値や獲得済みボーナスは保持します。実行中の抽選は開始時の設定を使用します。`個別抽選なし`は重み`0`で、ONなら`All Upgrades`の対象になります。`All Upgrades`の`抽選なし`は一括抽選の重み`0`を示し、OFFは一括抽選だけを無効にします。全項目OFFなら抽選結果は発生しません。
 
-| キー | デフォルト | 範囲・値 | 内容 | 管理 |
-|---|---:|---|---|---|
-| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`、`false` | ロビー・トラック・ショップでの手動調整と±ボタンを有効にします。OFFではボタン・内訳の「手動」・手動調整の案内を非表示にし、保存済み調整値を基礎値から除外します。再びONにすると復元します。設定式とトラック抽選には影響しません。 | ホスト |
-| `Base Upgrades.HealthUpgradeLevels` | `1:1` | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのHealth基礎目標値です。 | ホスト |
-| `Base Upgrades.StaminaUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのStamina基礎目標値です。 | ホスト |
-| `Base Upgrades.ExtraJumpUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのExtra Jump基礎目標値です。 | ホスト |
-| `Base Upgrades.SpeedUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのSpeed基礎目標値です。 | ホスト |
-| `Base Upgrades.StrengthUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのStrength基礎目標値です。 | ホスト |
-| `Base Upgrades.RangeUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのRange基礎目標値です。 | ホスト |
-| `Base Upgrades.LaunchUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのLaunch基礎目標値です。 | ホスト |
-| `Base Upgrades.TumbleClimbUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのTumble Climb基礎目標値です。 | ホスト |
-| `Base Upgrades.TumbleWingsUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのTumble Wings基礎目標値です。 | ホスト |
-| `Base Upgrades.CrouchRestUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのCrouch Rest基礎目標値です。 | ホスト |
-| `Base Upgrades.MapPlayerCountUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`1` | ランレベルごとのMap Player Count基礎目標値です。 | ホスト |
-| `Base Upgrades.DeathHeadBatteryUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのDeath Head Battery基礎目標値です。 | ホスト |
-| `Base Upgrade Draw.Enabled` | `true` | `true`, `false` | ショップ後の共有Base Upgrade抽選を有効にします。 | ホスト |
-| `Base Upgrade Draw.MaximumLevel` | `200` | `0`～`200` | 正のトラック抽選で到達できる最大目標値です。Map Player Countは最大1のままです。 | ホスト |
-| `Base Upgrade Draw.CappedUpgradeWeightMultiplier` | `0.25` | `0`～`1` | アップグレードが抽選上限に近づくほどWeightが低下し、上限でこの倍率になります。設定分とトラック抽選分の合計を使用します。`0`では上限到達後に対象外となり、`1`では低下しません。All Upgradesは対象外です。 | ホスト |
-| `Base Upgrade Draw.WeightFalloffExponent` | `2` | `0.1`～`10` | 抽選Weightの低下カーブです。`1`は一定のペースで低下し、大きい値ほど上限付近まで重みを維持します。 | ホスト |
-| `Base Upgrade Draw.ChangeAmountWeights` | `-1:10,0:15,1:60,2:15` | `増減値:重み`の組、増減値`-200`～`200`、重み`0`～`1000` | 抽選される増減値の相対Weightです。 | ホスト |
-| `Base Upgrade Draw Selection.Health` | `true` | `true`, `false` | Healthを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.Stamina` | `true` | `true`, `false` | Staminaを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.ExtraJump` | `true` | `true`, `false` | ExtraJumpを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.Speed` | `true` | `true`, `false` | Speedを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.Strength` | `true` | `true`, `false` | Strengthを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.Range` | `true` | `true`, `false` | Rangeを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.Launch` | `true` | `true`, `false` | Launchを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.TumbleClimb` | `true` | `true`, `false` | TumbleClimbを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.TumbleWings` | `true` | `true`, `false` | TumbleWingsを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.CrouchRest` | `true` | `true`, `false` | CrouchRestを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.MapPlayerCount` | `true` | `true`, `false` | MapPlayerCountを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.DeathHeadBattery` | `true` | `true`, `false` | DeathHeadBatteryを次回以降の個別抽選とAll Upgradesの対象にします。既存の基礎レベルとボーナスは維持します。 | ホスト |
-| `Base Upgrade Draw Selection.AllUpgrades` | `true` | `true`, `false` | ONの種類だけを対象に、正の一括抽選を有効にします。 | ホスト |
-| `Base Upgrade Draw Weights.Health` | `20` | `0`～`1000` | Healthの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.Stamina` | `40` | `0`～`1000` | Staminaの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.ExtraJump` | `10` | `0`～`1000` | Extra Jumpの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.Speed` | `30` | `0`～`1000` | Speedの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.Strength` | `20` | `0`～`1000` | Strengthの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.Range` | `30` | `0`～`1000` | Rangeの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.Launch` | `10` | `0`～`1000` | Launchの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.TumbleClimb` | `10` | `0`～`1000` | Tumble Climbの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.TumbleWings` | `10` | `0`～`1000` | Tumble Wingsの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.CrouchRest` | `30` | `0`～`1000` | Crouch Restの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.MapPlayerCount` | `10` | `0`～`1000` | Map Player Countの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.DeathHeadBattery` | `10` | `0`～`1000` | Death Head Batteryの相対Weightです。 | ホスト |
-| `Base Upgrade Draw Weights.AllUpgrades` | `1` | `0`～`1000` | 正の結果で使う`ALL UPGRADES`の相対Weightです。 | ホスト |
+手動調整は初期OFFです。`Base Upgrades.ManualAdjustmentEnabled`をONにすると、ロビー・トラック・ショップで±を操作できます。クリックごとに合計を1変更し、調整分をセーブ別に保存してランレベル変更や再開後も保持します。合計は「設定＋有効な手動＋抽選」で0～200（Map Player Countは0～1）に制限し、各合計の下に内訳を表示します。OFFでは手動の操作・案内を隠し、再びONにするまで保存済み調整分を除外します。上限・下限では表示値が1変わるよう調整分を再計算します。ゲームオーバー後の最初のロビー操作では新しいセーブを準備します。参加者やセーブ非対応のロビーでは操作できません。不正な設定式はREPOConfigで修正してください。役職の上書きと基礎値の反映タイミングは通常どおりです。
+
+| キー | デフォルト | 範囲・値 | 内容 |
+| --- | ---: | --- | --- |
+| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`、`false` | ロビー・トラック・ショップでの手動調整と±ボタンを有効にします。OFFではボタン・内訳の「手動」・手動調整の案内を非表示にし、保存済み調整値を基礎値から除外します。再びONにすると復元します。設定式とトラック抽選には影響しません。 |
+| `Base Upgrades.HealthUpgradeLevels` | `1:1` | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのHealth基礎目標値です。 |
+| `Base Upgrades.StaminaUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのStamina基礎目標値です。 |
+| `Base Upgrades.ExtraJumpUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのExtra Jump基礎目標値です。 |
+| `Base Upgrades.SpeedUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのSpeed基礎目標値です。 |
+| `Base Upgrades.StrengthUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのStrength基礎目標値です。 |
+| `Base Upgrades.RangeUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのRange基礎目標値です。 |
+| `Base Upgrades.LaunchUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのLaunch基礎目標値です。 |
+| `Base Upgrades.TumbleClimbUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのTumble Climb基礎目標値です。 |
+| `Base Upgrades.TumbleWingsUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのTumble Wings基礎目標値です。 |
+| `Base Upgrades.CrouchRestUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのCrouch Rest基礎目標値です。 |
+| `Base Upgrades.MapPlayerCountUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`1` | ランレベルごとのMap Player Count基礎目標値です。 |
+| `Base Upgrades.DeathHeadBatteryUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのDeath Head Battery基礎目標値です。 |
+| `Base Upgrade Draw.Enabled` | `true` | `true`, `false` | ショップ後の共有Base Upgrade抽選を有効にします。 |
+| `Base Upgrade Draw.MaximumLevel` | `200` | `0`～`200` | 正のトラック抽選で到達できる最大目標値です。Map Player Countは最大1のままです。 |
+| `Base Upgrade Draw.CappedUpgradeWeightMultiplier` | `0.25` | `0`～`1` | アップグレードが抽選上限に近づくほどWeightが低下し、上限でこの倍率になります。設定分とトラック抽選分の合計を使用します。`0`では上限到達後に対象外となり、`1`では低下しません。All Upgradesは対象外です。 |
+| `Base Upgrade Draw.WeightFalloffExponent` | `2` | `0.1`～`10` | 抽選Weightの低下カーブです。`1`は一定のペースで低下し、大きい値ほど上限付近まで重みを維持します。 |
+| `Base Upgrade Draw.ChangeAmountWeights` | `-1:10,0:15,1:60,2:15` | `増減値:重み`の組、増減値`-200`～`200`、重み`0`～`1000` | 抽選される増減値の相対Weightです。 |
+| `Base Upgrade Draw Selection.Health` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.Stamina` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.ExtraJump` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.Speed` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.Strength` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.Range` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.Launch` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.TumbleClimb` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.TumbleWings` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.CrouchRest` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.MapPlayerCount` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.DeathHeadBattery` | `true` | `true`, `false` | この種類を抽選対象にする。 |
+| `Base Upgrade Draw Selection.AllUpgrades` | `true` | `true`, `false` | ONの種類だけを対象に、正の一括抽選を有効にします。 |
+| `Base Upgrade Draw Weights.Health` | `20` | `0`～`1000` | Healthの相対Weightです。 |
+| `Base Upgrade Draw Weights.Stamina` | `40` | `0`～`1000` | Staminaの相対Weightです。 |
+| `Base Upgrade Draw Weights.ExtraJump` | `10` | `0`～`1000` | Extra Jumpの相対Weightです。 |
+| `Base Upgrade Draw Weights.Speed` | `30` | `0`～`1000` | Speedの相対Weightです。 |
+| `Base Upgrade Draw Weights.Strength` | `20` | `0`～`1000` | Strengthの相対Weightです。 |
+| `Base Upgrade Draw Weights.Range` | `30` | `0`～`1000` | Rangeの相対Weightです。 |
+| `Base Upgrade Draw Weights.Launch` | `10` | `0`～`1000` | Launchの相対Weightです。 |
+| `Base Upgrade Draw Weights.TumbleClimb` | `10` | `0`～`1000` | Tumble Climbの相対Weightです。 |
+| `Base Upgrade Draw Weights.TumbleWings` | `10` | `0`～`1000` | Tumble Wingsの相対Weightです。 |
+| `Base Upgrade Draw Weights.CrouchRest` | `30` | `0`～`1000` | Crouch Restの相対Weightです。 |
+| `Base Upgrade Draw Weights.MapPlayerCount` | `10` | `0`～`1000` | Map Player Countの相対Weightです。 |
+| `Base Upgrade Draw Weights.DeathHeadBattery` | `10` | `0`～`1000` | Death Head Batteryの相対Weightです。 |
+| `Base Upgrade Draw Weights.AllUpgrades` | `1` | `0`～`1000` | 正の結果で使う`ALL UPGRADES`の相対Weightです。 |
 
 Weightのデフォルト値はバニラのショップ最大出現数を反映し、Staminaは40、Speed・Range・Crouch Restは30、Health・Strengthは20、その他の対象アップグレードは10、ALL UPGRADESは1です。設定Weightをそのまま使い、ショップ出現数による追加の乗算は行いません。抽選上限に近づくほどWeightが低下し、上限ではCappedUpgradeWeightMultiplierの倍率になります。保存済みのWeightは保持されるため、新しいデフォルト値を使う場合は各設定を初期値へ戻してください。他MODによるショップの変更やShopUpgradeItemCountには影響されません。
 
 #### 役職の抽選設定
 
-通常役職には`Enabled`と相対的な`Weight`があります。`Enabled = false`または`Weight = 0`の通常役職はランダム抽選から除外されます。`???1`と`???2`にはそれぞれ`Enabled`だけがあり、抽選Weightは固定です。
+ホスト設定です。通常役職には`Enabled`（`true`/`false`）と相対的な`Weight`（`0`～`1000`）があり、OFFまたは重み`0`でランダム抽選から除外します。隠し役職2種類の重みは固定です。正確なキーと初期値は次のとおりです。
 
-| 役職 | Enabledキーとデフォルト | Weightキーとデフォルト | 設定可能値 | 管理 |
-|---|---|---|---|---|
-| Tank | `Tank.Enabled = true` | `Tank.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Runner | `Runner.Enabled = true` | `Runner.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Jumper | `Jumper.Enabled = true` | `Jumper.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Lifter | `Lifter.Enabled = true` | `Lifter.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Launcher | `Launcher.Enabled = true` | `Launcher.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Climber | `Climber.Enabled = true` | `Climber.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Flyer | `Flyer.Enabled = true` | `Flyer.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Tracker | `Tracker.Enabled = true` | `Tracker.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Ghost | `Ghost.Enabled = true` | `Ghost.Weight = 80` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Bomber | `Bomber.Enabled = true` | `Bomber.Weight = 80` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Medic | `Medic.Enabled = true` | `Medic.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Phoenix | `Phoenix.Enabled = true` | `Phoenix.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Jobless | `Jobless.Enabled = true` | `Jobless.Weight = 20` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Rescuer | `Rescuer.Enabled = true` | `Rescuer.Weight = 80` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Vampire | `Vampire.Enabled = true` | `Vampire.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| King | `King.Enabled = true` | `King.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Tuna | `Tuna.Enabled = true` | `Tuna.Weight = 50` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Musician | `Musician.Enabled = true` | `Musician.Weight = 60` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Mage | `Mage.Enabled = true` | `Mage.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Gambler | `Gambler.Enabled = true` | `Gambler.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Hunter | `Hunter.Enabled = true` | `Hunter.Weight = 80` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Stinker | `Stinker.Enabled = true` | `Stinker.Weight = 80` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Engineer | `Engineer.Enabled = true` | `Engineer.Weight = 70` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Trickster | `Trickster.Enabled = true` | `Trickster.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Mechanic | `Mechanic.Enabled = true` | `Mechanic.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Electrician | `Electrician.Enabled = true` | `Electrician.Weight = 80` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Warden | `Warden.Enabled = true` | `Warden.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Ninja | `Ninja.Enabled = true` | `Ninja.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Executioner | `Executioner.Enabled = true` | `Executioner.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Rider | `Rider.Enabled = true` | `Rider.Weight = 60` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Influencer | `Influencer.Enabled = true` | `Influencer.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Werewolf | `Werewolf.Enabled = true` | `Werewolf.Weight = 40` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Berserker | `Berserker.Enabled = true` | `Berserker.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Bodyguard | `Bodyguard.Enabled = true` | `Bodyguard.Weight = 80` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Rammer | `Rammer.Enabled = true` | `Rammer.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Diver | `Diver.Enabled = true` | `Diver.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Sniper | `Sniper.Enabled = true` | `Sniper.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Imitator | `Imitator.Enabled = true` | `Imitator.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Avenger | `Avenger.Enabled = true` | `Avenger.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| Brawler | `Brawler.Enabled = true` | `Brawler.Weight = 100` | Enabled: `true`, `false`、Weight: `0`～`1000` | ホスト |
-| ???1 | `???1.Enabled = true` | 固定 | Enabled: `true`, `false` | ホスト |
-| ???2 | `???2.Enabled = true` | 固定 | Enabled: `true`, `false` | ホスト |
+| Enabledキーとデフォルト | Weightキーとデフォルト |
+|---|---|
+| `Tank.Enabled = true` | `Tank.Weight = 100` |
+| `Runner.Enabled = true` | `Runner.Weight = 100` |
+| `Jumper.Enabled = true` | `Jumper.Weight = 100` |
+| `Lifter.Enabled = true` | `Lifter.Weight = 100` |
+| `Launcher.Enabled = true` | `Launcher.Weight = 100` |
+| `Climber.Enabled = true` | `Climber.Weight = 100` |
+| `Flyer.Enabled = true` | `Flyer.Weight = 100` |
+| `Tracker.Enabled = true` | `Tracker.Weight = 100` |
+| `Ghost.Enabled = true` | `Ghost.Weight = 80` |
+| `Bomber.Enabled = true` | `Bomber.Weight = 80` |
+| `Medic.Enabled = true` | `Medic.Weight = 100` |
+| `Phoenix.Enabled = true` | `Phoenix.Weight = 100` |
+| `Jobless.Enabled = true` | `Jobless.Weight = 20` |
+| `Rescuer.Enabled = true` | `Rescuer.Weight = 80` |
+| `Vampire.Enabled = true` | `Vampire.Weight = 100` |
+| `King.Enabled = true` | `King.Weight = 100` |
+| `Tuna.Enabled = true` | `Tuna.Weight = 50` |
+| `Musician.Enabled = true` | `Musician.Weight = 60` |
+| `Mage.Enabled = true` | `Mage.Weight = 100` |
+| `Gambler.Enabled = true` | `Gambler.Weight = 100` |
+| `Hunter.Enabled = true` | `Hunter.Weight = 80` |
+| `Stinker.Enabled = true` | `Stinker.Weight = 80` |
+| `Engineer.Enabled = true` | `Engineer.Weight = 70` |
+| `Trickster.Enabled = true` | `Trickster.Weight = 100` |
+| `Mechanic.Enabled = true` | `Mechanic.Weight = 100` |
+| `Electrician.Enabled = true` | `Electrician.Weight = 80` |
+| `Warden.Enabled = true` | `Warden.Weight = 100` |
+| `Ninja.Enabled = true` | `Ninja.Weight = 100` |
+| `Executioner.Enabled = true` | `Executioner.Weight = 100` |
+| `Rider.Enabled = true` | `Rider.Weight = 60` |
+| `Influencer.Enabled = true` | `Influencer.Weight = 100` |
+| `Werewolf.Enabled = true` | `Werewolf.Weight = 40` |
+| `Berserker.Enabled = true` | `Berserker.Weight = 100` |
+| `Bodyguard.Enabled = true` | `Bodyguard.Weight = 80` |
+| `Rammer.Enabled = true` | `Rammer.Weight = 100` |
+| `Diver.Enabled = true` | `Diver.Weight = 100` |
+| `Sniper.Enabled = true` | `Sniper.Weight = 100` |
+| `Imitator.Enabled = true` | `Imitator.Weight = 100` |
+| `Avenger.Enabled = true` | `Avenger.Weight = 100` |
+| `Brawler.Enabled = true` | `Brawler.Weight = 100` |
+| `???1.Enabled = true` | 固定 |
+| `???2.Enabled = true` | 固定 |
 
 #### アップグレード・特殊役職設定
 
-| キー | デフォルト | 範囲・値 | 内容 | 管理 |
-|---|---:|---|---|---|
-| `Tank.HealthUpgradeLevels` | `21` | `0`～`200` | Tankへ付与するHealthレベルです。 | ホスト |
-| `Tracker.HealthUpgradeLevels` | `3` | `0`～`200` | TrackerのHealth目標値です。 | ホスト |
-| `Runner.SpeedUpgradeLevels` | `6` | `0`～`200` | Runnerへ付与するSpeedレベルです。 | ホスト |
-| `Runner.StaminaUpgradeLevels` | `46` | `0`～`200` | Runnerへ付与するStaminaレベルです。 | ホスト |
-| `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`～`200` | Jumperへ付与するExtra Jumpレベルです。 | ホスト |
-| `Lifter.StrengthUpgradeLevels` | `25` | `0`～`200` | Lifterへ付与するStrengthレベルです。 | ホスト |
-| `Launcher.LaunchUpgradeLevels` | `10` | `0`～`200` | Launcherへ付与するLaunchレベルです。 | ホスト |
-| `Climber.ClimbUpgradeLevels` | `50` | `0`～`200` | Climberへ付与するTumble Climbレベルです。 | ホスト |
-| `Climber.RangeUpgradeLevels` | `20` | `0`～`200` | Climberへ付与するRangeレベルです。 | ホスト |
-| `Flyer.WingsUpgradeLevels` | `10` | `0`～`200` | Flyerへ付与するTumble Wingsレベルです。 | ホスト |
-| `Ghost.DeathHeadBatteryUpgradeLevels` | `50` | `0`～`200` | Ghostへ付与するDeath Head Batteryレベルです。 | ホスト |
-| `Bomber.DistancePerGrenade` | `8` | `1`～`100` | グレネードを1個設置するために必要な移動距離です。単位はメートルです。 | ホスト |
-| `Bomber.MaximumActiveGrenades` | `30` | `1`～`30` | Bomberごとに保持する生成済みグレネードの最大数です。さらに設置すると最も古いものを削除します。 | ホスト |
-| `Bomber.AllowTruckSpawns` | `false` | `true`, `false` | トラック内でのグレネード設置を許可します。 | ホスト |
-| `Bomber.ExplosiveGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのExplosive Grenadeを含めます。 | ホスト |
-| `Bomber.StunGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのStun Grenadeを含めます。 | ホスト |
-| `Bomber.ShockwaveGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのShockwave Grenadeを含めます。 | ホスト |
-| `Bomber.DuctTapedGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのDuct Taped Grenadeを含めます。 | ホスト |
-| `Medic.HealAmount` | `5` | `1`～`100` | 1回につき周囲の各プレイヤーを回復する量です。 | ホスト |
-| `Medic.HealIntervalSeconds` | `2` | `0.1`～`30` | Medicの回復間隔です。 | ホスト |
-| `Medic.HealRadius` | `5` | `1`～`30` | 回復可能な最大距離です。単位はメートルです。 | ホスト |
-| `Medic.TotalHealingLimit` | `150` | `1`～`10000` | Medic一人が1ステージで回復できる合計HPです。対象が実際に失っているHPだけを消費します。 | ホスト |
-| `Phoenix.ReviveDelaySeconds` | `2` | `2`～`10` | Phoenixが復活するまでの秒数です。 | ホスト |
-| `Phoenix.FailureGraceSeconds` | `5` | `1`～`15` | 復活準備中に、失敗時のステージ遷移を保留する最大秒数です。 | ホスト |
-| `Phoenix.RevivalHealth` | `25` | `1`～`1000` | Phoenix復活後のHPです。プレイヤーの最大HPが上限です。 | ホスト |
-| `Jobless.Damage` | `1` | `1`～`100` | トラック外で1回ごとに受けるダメージです。 | ホスト |
-| `Jobless.DamageIntervalSeconds` | `0.1` | `0.05`～`10` | トラック外でダメージを受ける間隔です。 | ホスト |
-| `Rescuer.ReviveDelaySeconds` | `2` | `0`～`10` | 復活対象が死亡してから必要な秒数です。 | ホスト |
-| `Rescuer.Radius` | `3` | `1`～`50` | 復活可能な最大距離です。単位はメートルです。 | ホスト |
-| `Rescuer.MaximumRevives` | `2` | `1`～`10` | Rescuer1人あたり、1ステージで復活できる最大回数です。 | ホスト |
-| `Rescuer.RevivalHealth` | `25` | `1`～`1000` | Rescuerによる復活後のHPです。対象の最大HPが上限です。 | ホスト |
-| `Vampire.Tier1HealAmount` | `5` | `1`～`100` | 周囲でDanger Level 1の敵が死亡した際の回復量です。 | ホスト |
-| `Vampire.Tier2HealAmount` | `10` | `1`～`100` | 周囲でDanger Level 2の敵が死亡した際の回復量です。 | ホスト |
-| `Vampire.Tier3HealAmount` | `50` | `1`～`100` | 周囲でDanger Level 3の敵が死亡した際の回復量です。 | ホスト |
-| `Vampire.Radius` | `10` | `1`～`50` | 死亡した敵からの最大距離です。単位はメートルです。 | ホスト |
-| `Tuna.StationaryDelaySeconds` | `3` | `0.1`～`30` | 停止してからダメージが始まるまでの秒数です。 | ホスト |
-| `Tuna.Damage` | `1` | `1`～`100` | 停止中に1回ごとに受けるダメージです。 | ホスト |
-| `Tuna.DamageIntervalSeconds` | `0.1` | `0.05`～`10` | 停止中にダメージを受ける間隔です。 | ホスト |
-| `Musician.HealAmount` | `5` | `1`～`100` | 楽器で音を鳴らすたびに、本人と範囲内の各生存プレイヤーを回復する量です。 | ホスト |
-| `Musician.HealRadius` | `10` | `1`～`50` | Musicianから回復可能な最大距離です。単位はメートルです。 | ホスト |
-| `Mage.CastIntervalSeconds` | `3` | `0.1`～`30` | 魔法発動の最短間隔です。 | ホスト |
-| `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `star`を発動する表情です。 | ホスト |
-| `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `roll`を発動する表情です。 | ホスト |
-| `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `gravity`を発動する表情です。 | ホスト |
-| `Mage.VoidExpression` | `EyesClosed` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `void`を発動する表情です。 | ホスト |
-| `Mage.LaserExpression` | `Scared` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `laser`を発動する表情です。 | ホスト |
-| `Mage.AutoRecoveryEnabled` | `true` | `true`, `false` | ダメージを受けていないMageのHP自動回復を有効にします。 | ホスト |
-| `Mage.AutoRecoveryDelaySeconds` | `10` | `0`～`300` | 最後にダメージを受けてから自動回復が始まるまでの秒数です。 | ホスト |
-| `Mage.AutoRecoveryIntervalSeconds` | `2` | `0.1`～`60` | HPを自動回復する間隔です。 | ホスト |
-| `Mage.AutoRecoveryAmount` | `1` | `0`～`100` | 自動回復1回あたりの回復量です。 | ホスト |
-| `Mage.AutoRecoveryTotalHealingLimit` | `120` | `1`～`10000` | プレイヤーごとの、1ステージ中の自動回復の累計上限です。他の回復は数えず、死亡・復活・役職変更でも使用済みの回復量はリセットされません。 | ホスト |
-| `Mage.StarHealthCost` | `10` | `0`～`100` | `star`の発動成功後に消費するHPです。 | ホスト |
-| `Mage.GravityHealthCost` | `10` | `0`～`100` | `gravity`の発動成功後に消費するHPです。 | ホスト |
-| `Mage.RollHealthCost` | `15` | `0`～`100` | `roll`の発動成功後に消費するHPです。 | ホスト |
-| `Mage.VoidHealthCost` | `30` | `0`～`100` | `void`の発動成功後に消費するHPです。 | ホスト |
-| `Mage.LaserHealthCost` | `50` | `0`～`100` | `laser`の発動成功後に消費するHPです。 | ホスト |
-| `Gambler.WinChancePercent` | `50` | `0`～`100` | Valuableを破壊せず、勝利倍率を適用する確率です。 | ホスト |
-| `Gambler.WinValueMultiplier` | `2` | `0`～`10` | 勝利時にValuableへ適用する価格倍率です。 | ホスト |
-| `Gambler.GambitGreenHealAmount` | `50` | `25`～`1000` | Gamblerに対するGambitの緑結果で回復する合計HPです。 | ホスト |
-| `Gambler.GambitRedDamage` | `100` | `50`～`1000` | Gamblerに対するGambitの赤結果で受ける合計ダメージです。 | ホスト |
-| `Gambler.GambitWhiteHealthUpgradeLevels` | `5` | `0`～`200` | Gambitの白結果で、そのステージ中のみ追加するHealthアップグレードレベルです。 | ホスト |
-| `Hunter.WeaponBatteryConsumptionPercent` | `75` | `0`～`100` | Hunterが使用する武器バッテリー消費量の通常時に対する割合です。 | ホスト |
-| `Hunter.DoubleOrbChancePercent` | `10` | `0`～`100` | Hunterが敵を倒した際、特賞に外れた場合に通常のオーブ個数を2倍にする確率です。 | ホスト |
-| `Hunter.JackpotOrbChancePercent` | `0.5` | `0`～`100` | Hunterが敵を倒した際、特賞目標を使用する確率です。不足分は追加しますが、通常ドロップが目標を上回る場合は減らしません。 | ホスト |
-| `Hunter.JackpotOrbCount` | `10` | `1`～`30` | Hunterの特賞で使用する目標オーブ個数です。 | ホスト |
-| `Stinker.DistancePerCloud` | `2` | `1`～`100` | ウラン雲の通過地点を記録する間隔です。 | ホスト |
-| `Stinker.MinimumSafetyDistance` | `2` | `1`～`30` | 最新の発生待ち地点にウラン雲を発生させるために必要なStinker本人との最低距離です。古い待機地点は順番に発生します。 | ホスト |
-| `Stinker.AllowTruckSpawns` | `false` | `true`, `false` | トラック内でウラン雲の地点記録と発生を許可します。 | ホスト |
-| `Trickster.ActiveSeconds` | `25` | `1`～`120` | 設置したデコイを削除するまでの秒数です。 | ホスト |
-| `Trickster.DecoyExpression` | `Happy` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | デコイを設置する表情です。 | ホスト |
-| `Trickster.CooldownSeconds` | `45` | `1`～`300` | 敵を引きつけたデコイの終了後、次に設置できるまでの秒数です。 | ホスト |
-| `Trickster.NoTargetCooldownSeconds` | `10` | `0`～`300` | 敵を一体も引きつけなかったデコイの終了後、次に設置できるまでの秒数です。 | ホスト |
-| `Trickster.InvestigateRadius` | `40` | `1`～`100` | デコイを中心に敵へ調査を指示する半径です。単位はメートルです。 | ホスト |
-| `Trickster.PulseIntervalSeconds` | `1` | `0.25`～`10` | 敵へ調査を指示する間隔です。 | ホスト |
-| `Trickster.PlacementDistance` | `2` | `0.5`～`10` | Tricksterの前方へデコイを設置する距離です。単位はメートルです。 | ホスト |
-| `Mechanic.RepairPercentPerSecond` | `2` | `0`～`100` | Mechanicが破損Valuableを直接保持している間、毎秒修復する元価格に対する合計割合です。 | ホスト |
-| `Mechanic.MaximumRepairPercentPerStage` | `50` | `0`～`100` | Mechanic一人が1ステージで修復できる元価格に対する合計割合です。 | ホスト |
-| `Electrician.ChargePercentPerSecond` | `10` | `0`～`100` | Electricianが使用していない充電可能アイテムを直接保持している間、毎秒回復する合計バッテリー割合です。 | ホスト |
-| `Electrician.MaximumChargePercentPerStage` | `100` | `0`～`1000` | Electrician一人が1ステージで回復できる合計バッテリー割合です。 | ホスト |
-| `Warden.AdditionalStunSeconds` | `3` | `0`～`30` | Wardenが敵へ発生させたスタンに追加する秒数です。 | ホスト |
-| `Ninja.VisionRecognitionMultiplier` | `2` | `1`～`10` | 敵が視覚でNinjaを認識するまでの時間へ適用する倍率です。 | ホスト |
-| `Executioner.StunnedDamageMultiplier` | `2` | `1`～`10` | 攻撃前からスタンしている敵への直接攻撃ダメージ倍率です。 | ホスト |
-| `Rider.EnemyDamageMultiplier` | `3` | `1`～`10` | Riderが運転中の車両が敵へ与える衝突ダメージ倍率です。 | ホスト |
-| `Rider.PlayerKnockbackMultiplier` | `2` | `1`～`10` | プレイヤーへ元から発生する車両Tumbleノックバック倍率です。 | ホスト |
-| `Influencer.PlayerRadius` | `20` | `1`～`100` | 周囲の生存中の仲間を数える半径です。単位はメートルです。 | ホスト |
-| `Influencer.PlayerCheckIntervalSeconds` | `0.5` | `0.1`～`10` | 周囲人数と動的アップグレードを確認する間隔です。 | ホスト |
-| `Influencer.NoiseRadiusMultiplier` | `2` | `1`～`10` | 足音、着地音、VC、チャットTTSの敵探知範囲倍率です。 | ホスト |
-| `Influencer.TTSInvestigateRadius` | `20` | `1`～`100` | 定期TTSが発生させる敵探知範囲です。 | ホスト |
-| `Influencer.MinimumTTSIntervalSeconds` | `20` | `1`～`300` | 定期TTS間隔を抽選する最小秒数です。 | ホスト |
-| `Influencer.MaximumTTSIntervalSeconds` | `40` | `1`～`300` | 定期TTS間隔を抽選する最大秒数です。最小値より小さい場合は、小さい方を最小値として使用します。 | ホスト |
-| `Influencer.TTSQuietPeriodSeconds` | `1.5` | `0`～`10` | Stage Fluxを含む他のTTS終了後に必要な無音時間です。 | ホスト |
-| `Influencer.<Upgrade>UpgradeScaling` | アップグレードごと | `人数:レベル`の組 | 周囲人数に応じた最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`1:1,2:4,3:9,4:13,5:20`です。対象はBase Upgradesと同じで、空欄ならレベルを付与しません。 | ホスト |
-| `Werewolf.PlayerDamageMultiplier` | `2` | `1`～`10` | Werewolfが他のプレイヤーへ与える特定可能なダメージ倍率です。 | ホスト |
-| `Berserker.<Upgrade>UpgradeScaling` | アップグレードごと | `HP割合:レベル`の組 | 残りHPが指定割合以下の間に使う最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`80:1,60:4,40:9,20:13,10:20`です。対象はHealthを除くBase Upgradesと同じで、空欄ならレベルを付与しません。 | ホスト |
-| `Bodyguard.HealthUpgradeLevels` | `11` | `0`～`200` | BodyguardのHealth目標値です。 | ホスト |
-| `Bodyguard.ProtectionRadius` | `15` | `1`～`100` | 仲間を保護できる最大距離です。単位はメートルです。 | ホスト |
-| `Bodyguard.DamageSharePercent` | `50` | `0`～`100` | BodyguardのHPを1残して肩代わりする敵ダメージ割合です。 | ホスト |
-| `Rammer.TumbleAttackDamage` | `100` | `0`～`100000` | RammerのTumble Attackが敵へ与えるダメージです。 | ホスト |
-| `Rammer.SelfDamage` | `15` | `0`～`100000` | RammerのTumble Attackが敵へ命中した後、自身が受けるダメージです。 | ホスト |
-| `Diver.UnderfloorDurationSeconds` | `10` | `1`～`120` | Diverが死亡せず床下に滞在できる最大秒数です。 | ホスト |
-| `Diver.MovementForce` | `8` | `1`～`30` | Diverが床下を自由移動するときの力です。 | ホスト |
-| `Sniper.ReferenceDistance` | `8` | `1`～`50` | 敵へのダメージが1倍になる距離です。単位はメートルです。 | ホスト |
-| `Sniper.MinimumDamageMultiplier` | `0.5` | `0`～`1` | 密着時の敵ダメージ倍率です。元が正のダメージなら最低1ダメージを与えます。 | ホスト |
-| `Sniper.MaximumDamageMultiplier` | `2` | `1`～`10` | 遠距離での敵ダメージの最高倍率です。 | ホスト |
-| `Sniper.MaximumMultiplierDistance` | `24` | `1`～`100` | 最高倍率へ到達する距離です。基準距離以下の場合は、基準距離の直後として扱います。 | ホスト |
-| `Avenger.DamageMultiplier` | `1.5` | `1`～`10` | 他のプレイヤーが死亡した後の、敵へのダメージ倍率です。 | ホスト |
-| `Avenger.DurationSeconds` | `20` | `1`～`120` | 敵へのダメージ増加が続く秒数です。別の死亡で残り時間を更新します。 | ホスト |
-| `Avenger.TriggerRadius` | `30` | `1`～`100` | Avengerが発動する、死亡したプレイヤーからの最大距離です。 | ホスト |
-| `Brawler.MeleeDamageMultiplier` | `1.25` | `0`～`10` | 攻撃者を特定できる近接武器が敵とプレイヤーへ与えるダメージ倍率です。 | ホスト |
-| `Brawler.RangedDamageMultiplier` | `0.75` | `0`～`10` | 攻撃者を特定できる銃、杖の弾、レーザーが敵とプレイヤーへ与えるダメージ倍率です。 | ホスト |
+この表はすべてホスト設定です。
+
+| キー | デフォルト | 範囲・値 | 内容 |
+| --- | ---: | --- | --- |
+| `Tank.HealthUpgradeLevels` | `21` | `0`～`200` | Tankへ付与するHealthレベルです。 |
+| `Tracker.HealthUpgradeLevels` | `3` | `0`～`200` | TrackerのHealth目標値です。 |
+| `Runner.SpeedUpgradeLevels` | `6` | `0`～`200` | Runnerへ付与するSpeedレベルです。 |
+| `Runner.StaminaUpgradeLevels` | `46` | `0`～`200` | Runnerへ付与するStaminaレベルです。 |
+| `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`～`200` | Jumperへ付与するExtra Jumpレベルです。 |
+| `Lifter.StrengthUpgradeLevels` | `25` | `0`～`200` | Lifterへ付与するStrengthレベルです。 |
+| `Launcher.LaunchUpgradeLevels` | `10` | `0`～`200` | Launcherへ付与するLaunchレベルです。 |
+| `Climber.ClimbUpgradeLevels` | `50` | `0`～`200` | Climberへ付与するTumble Climbレベルです。 |
+| `Climber.RangeUpgradeLevels` | `20` | `0`～`200` | Climberへ付与するRangeレベルです。 |
+| `Flyer.WingsUpgradeLevels` | `10` | `0`～`200` | Flyerへ付与するTumble Wingsレベルです。 |
+| `Ghost.DeathHeadBatteryUpgradeLevels` | `50` | `0`～`200` | Ghostへ付与するDeath Head Batteryレベルです。 |
+| `Bomber.DistancePerGrenade` | `8` | `1`～`100` | グレネードを1個設置するために必要な移動距離です。単位はメートルです。 |
+| `Bomber.MaximumActiveGrenades` | `30` | `1`～`30` | Bomberごとに保持する生成済みグレネードの最大数です。さらに設置すると最も古いものを削除します。 |
+| `Bomber.AllowTruckSpawns` | `false` | `true`, `false` | トラック内でのグレネード設置を許可します。 |
+| `Bomber.ExplosiveGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのExplosive Grenadeを含めます。 |
+| `Bomber.StunGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのStun Grenadeを含めます。 |
+| `Bomber.ShockwaveGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのShockwave Grenadeを含めます。 |
+| `Bomber.DuctTapedGrenadesEnabled` | `true` | `true`, `false` | ランダム抽選へバニラのDuct Taped Grenadeを含めます。 |
+| `Medic.HealAmount` | `5` | `1`～`100` | 1回につき周囲の各プレイヤーを回復する量です。 |
+| `Medic.HealIntervalSeconds` | `2` | `0.1`～`30` | Medicの回復間隔です。 |
+| `Medic.HealRadius` | `5` | `1`～`30` | 回復可能な最大距離です。単位はメートルです。 |
+| `Medic.TotalHealingLimit` | `150` | `1`～`10000` | Medic一人が1ステージで回復できる合計HPです。対象が実際に失っているHPだけを消費します。 |
+| `Phoenix.ReviveDelaySeconds` | `2` | `2`～`10` | Phoenixが復活するまでの秒数です。 |
+| `Phoenix.FailureGraceSeconds` | `5` | `1`～`15` | 復活準備中に、失敗時のステージ遷移を保留する最大秒数です。 |
+| `Phoenix.RevivalHealth` | `25` | `1`～`1000` | Phoenix復活後のHPです。プレイヤーの最大HPが上限です。 |
+| `Jobless.Damage` | `1` | `1`～`100` | トラック外で1回ごとに受けるダメージです。 |
+| `Jobless.DamageIntervalSeconds` | `0.1` | `0.05`～`10` | トラック外でダメージを受ける間隔です。 |
+| `Rescuer.ReviveDelaySeconds` | `2` | `0`～`10` | 復活対象が死亡してから必要な秒数です。 |
+| `Rescuer.Radius` | `3` | `1`～`50` | 復活可能な最大距離です。単位はメートルです。 |
+| `Rescuer.MaximumRevives` | `2` | `1`～`10` | Rescuer1人あたり、1ステージで復活できる最大回数です。 |
+| `Rescuer.RevivalHealth` | `25` | `1`～`1000` | Rescuerによる復活後のHPです。対象の最大HPが上限です。 |
+| `Vampire.Tier1HealAmount` | `5` | `1`～`100` | 周囲でDanger Level 1の敵が死亡した際の回復量です。 |
+| `Vampire.Tier2HealAmount` | `10` | `1`～`100` | 周囲でDanger Level 2の敵が死亡した際の回復量です。 |
+| `Vampire.Tier3HealAmount` | `50` | `1`～`100` | 周囲でDanger Level 3の敵が死亡した際の回復量です。 |
+| `Vampire.Radius` | `10` | `1`～`50` | 死亡した敵からの最大距離です。単位はメートルです。 |
+| `Tuna.StationaryDelaySeconds` | `3` | `0.1`～`30` | 停止してからダメージが始まるまでの秒数です。 |
+| `Tuna.Damage` | `1` | `1`～`100` | 停止中に1回ごとに受けるダメージです。 |
+| `Tuna.DamageIntervalSeconds` | `0.1` | `0.05`～`10` | 停止中にダメージを受ける間隔です。 |
+| `Musician.HealAmount` | `5` | `1`～`100` | 楽器で音を鳴らすたびに、本人と範囲内の各生存プレイヤーを回復する量です。 |
+| `Musician.HealRadius` | `10` | `1`～`50` | Musicianから回復可能な最大距離です。単位はメートルです。 |
+| `Mage.CastIntervalSeconds` | `3` | `0.1`～`30` | 魔法発動の最短間隔です。 |
+| `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `star`を発動する表情です。 |
+| `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `roll`を発動する表情です。 |
+| `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `gravity`を発動する表情です。 |
+| `Mage.VoidExpression` | `EyesClosed` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `void`を発動する表情です。 |
+| `Mage.LaserExpression` | `Scared` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `laser`を発動する表情です。 |
+| `Mage.AutoRecoveryEnabled` | `true` | `true`, `false` | ダメージを受けていないMageのHP自動回復を有効にします。 |
+| `Mage.AutoRecoveryDelaySeconds` | `10` | `0`～`300` | 最後にダメージを受けてから自動回復が始まるまでの秒数です。 |
+| `Mage.AutoRecoveryIntervalSeconds` | `2` | `0.1`～`60` | HPを自動回復する間隔です。 |
+| `Mage.AutoRecoveryAmount` | `1` | `0`～`100` | 自動回復1回あたりの回復量です。 |
+| `Mage.AutoRecoveryTotalHealingLimit` | `120` | `1`～`10000` | プレイヤーごとの、1ステージ中の自動回復の累計上限です。他の回復は数えず、死亡・復活・役職変更でも使用済みの回復量はリセットされません。 |
+| `Mage.StarHealthCost` | `10` | `0`～`100` | `star`の発動成功後に消費するHPです。 |
+| `Mage.GravityHealthCost` | `10` | `0`～`100` | `gravity`の発動成功後に消費するHPです。 |
+| `Mage.RollHealthCost` | `15` | `0`～`100` | `roll`の発動成功後に消費するHPです。 |
+| `Mage.VoidHealthCost` | `30` | `0`～`100` | `void`の発動成功後に消費するHPです。 |
+| `Mage.LaserHealthCost` | `50` | `0`～`100` | `laser`の発動成功後に消費するHPです。 |
+| `Gambler.WinChancePercent` | `50` | `0`～`100` | Valuableを破壊せず、勝利倍率を適用する確率です。 |
+| `Gambler.WinValueMultiplier` | `2` | `0`～`10` | 勝利時にValuableへ適用する価格倍率です。 |
+| `Gambler.GambitGreenHealAmount` | `50` | `25`～`1000` | Gamblerに対するGambitの緑結果で回復する合計HPです。 |
+| `Gambler.GambitRedDamage` | `100` | `50`～`1000` | Gamblerに対するGambitの赤結果で受ける合計ダメージです。 |
+| `Gambler.GambitWhiteHealthUpgradeLevels` | `5` | `0`～`200` | Gambitの白結果で、そのステージ中のみ追加するHealthアップグレードレベルです。 |
+| `Hunter.WeaponBatteryConsumptionPercent` | `75` | `0`～`100` | Hunterが使用する武器バッテリー消費量の通常時に対する割合です。 |
+| `Hunter.DoubleOrbChancePercent` | `10` | `0`～`100` | Hunterが敵を倒した際、特賞に外れた場合に通常のオーブ個数を2倍にする確率です。 |
+| `Hunter.JackpotOrbChancePercent` | `0.5` | `0`～`100` | Hunterが敵を倒した際、特賞目標を使用する確率です。不足分は追加しますが、通常ドロップが目標を上回る場合は減らしません。 |
+| `Hunter.JackpotOrbCount` | `10` | `1`～`30` | Hunterの特賞で使用する目標オーブ個数です。 |
+| `Stinker.DistancePerCloud` | `2` | `1`～`100` | ウラン雲の通過地点を記録する間隔です。 |
+| `Stinker.MinimumSafetyDistance` | `2` | `1`～`30` | 最新の発生待ち地点にウラン雲を発生させるために必要なStinker本人との最低距離です。古い待機地点は順番に発生します。 |
+| `Stinker.AllowTruckSpawns` | `false` | `true`, `false` | トラック内でウラン雲の地点記録と発生を許可します。 |
+| `Trickster.ActiveSeconds` | `25` | `1`～`120` | 設置したデコイを削除するまでの秒数です。 |
+| `Trickster.DecoyExpression` | `Happy` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | デコイを設置する表情です。 |
+| `Trickster.CooldownSeconds` | `45` | `1`～`300` | 敵を引きつけたデコイの終了後、次に設置できるまでの秒数です。 |
+| `Trickster.NoTargetCooldownSeconds` | `10` | `0`～`300` | 敵を一体も引きつけなかったデコイの終了後、次に設置できるまでの秒数です。 |
+| `Trickster.InvestigateRadius` | `40` | `1`～`100` | デコイを中心に敵へ調査を指示する半径です。単位はメートルです。 |
+| `Trickster.PulseIntervalSeconds` | `1` | `0.25`～`10` | 敵へ調査を指示する間隔です。 |
+| `Trickster.PlacementDistance` | `2` | `0.5`～`10` | Tricksterの前方へデコイを設置する距離です。単位はメートルです。 |
+| `Mechanic.RepairPercentPerSecond` | `2` | `0`～`100` | Mechanicが破損Valuableを直接保持している間、毎秒修復する元価格に対する合計割合です。 |
+| `Mechanic.MaximumRepairPercentPerStage` | `50` | `0`～`100` | Mechanic一人が1ステージで修復できる元価格に対する合計割合です。 |
+| `Electrician.ChargePercentPerSecond` | `10` | `0`～`100` | Electricianが使用していない充電可能アイテムを直接保持している間、毎秒回復する合計バッテリー割合です。 |
+| `Electrician.MaximumChargePercentPerStage` | `100` | `0`～`1000` | Electrician一人が1ステージで回復できる合計バッテリー割合です。 |
+| `Warden.AdditionalStunSeconds` | `3` | `0`～`30` | Wardenが敵へ発生させたスタンに追加する秒数です。 |
+| `Ninja.VisionRecognitionMultiplier` | `2` | `1`～`10` | 敵が視覚でNinjaを認識するまでの時間へ適用する倍率です。 |
+| `Executioner.StunnedDamageMultiplier` | `2` | `1`～`10` | 攻撃前からスタンしている敵への直接攻撃ダメージ倍率です。 |
+| `Rider.EnemyDamageMultiplier` | `3` | `1`～`10` | Riderが運転中の車両が敵へ与える衝突ダメージ倍率です。 |
+| `Rider.PlayerKnockbackMultiplier` | `2` | `1`～`10` | プレイヤーへ元から発生する車両Tumbleノックバック倍率です。 |
+| `Influencer.PlayerRadius` | `20` | `1`～`100` | 周囲の生存中の仲間を数える半径です。単位はメートルです。 |
+| `Influencer.PlayerCheckIntervalSeconds` | `0.5` | `0.1`～`10` | 周囲人数と動的アップグレードを確認する間隔です。 |
+| `Influencer.NoiseRadiusMultiplier` | `2` | `1`～`10` | 足音、着地音、VC、チャットTTSの敵探知範囲倍率です。 |
+| `Influencer.TTSInvestigateRadius` | `20` | `1`～`100` | 定期TTSが発生させる敵探知範囲です。 |
+| `Influencer.MinimumTTSIntervalSeconds` | `20` | `1`～`300` | 定期TTS間隔を抽選する最小秒数です。 |
+| `Influencer.MaximumTTSIntervalSeconds` | `40` | `1`～`300` | 定期TTS間隔を抽選する最大秒数です。最小値より小さい場合は、小さい方を最小値として使用します。 |
+| `Influencer.TTSQuietPeriodSeconds` | `1.5` | `0`～`10` | Stage Fluxを含む他のTTS終了後に必要な無音時間です。 |
+| `Influencer.<Upgrade>UpgradeScaling` | アップグレードごと | `人数:レベル`の組 | 周囲人数に応じた最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`1:1,2:4,3:9,4:13,5:20`です。対象はBase Upgradesと同じで、空欄ならレベルを付与しません。 |
+| `Werewolf.PlayerDamageMultiplier` | `2` | `1`～`10` | Werewolfが他のプレイヤーへ与える特定可能なダメージ倍率です。 |
+| `Berserker.<Upgrade>UpgradeScaling` | アップグレードごと | `HP割合:レベル`の組 | 残りHPが指定割合以下の間に使う最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`80:1,60:4,40:9,20:13,10:20`です。対象はHealthを除くBase Upgradesと同じで、空欄ならレベルを付与しません。 |
+| `Bodyguard.HealthUpgradeLevels` | `11` | `0`～`200` | BodyguardのHealth目標値です。 |
+| `Bodyguard.ProtectionRadius` | `15` | `1`～`100` | 仲間を保護できる最大距離です。単位はメートルです。 |
+| `Bodyguard.DamageSharePercent` | `50` | `0`～`100` | BodyguardのHPを1残して肩代わりする敵ダメージ割合です。 |
+| `Rammer.TumbleAttackDamage` | `100` | `0`～`100000` | RammerのTumble Attackが敵へ与えるダメージです。 |
+| `Rammer.SelfDamage` | `15` | `0`～`100000` | RammerのTumble Attackが敵へ命中した後、自身が受けるダメージです。 |
+| `Diver.UnderfloorDurationSeconds` | `10` | `1`～`120` | Diverが死亡せず床下に滞在できる最大秒数です。 |
+| `Diver.MovementForce` | `8` | `1`～`30` | Diverが床下を自由移動するときの力です。 |
+| `Sniper.ReferenceDistance` | `8` | `1`～`50` | 敵へのダメージが1倍になる距離です。単位はメートルです。 |
+| `Sniper.MinimumDamageMultiplier` | `0.5` | `0`～`1` | 密着時の敵ダメージ倍率です。元が正のダメージなら最低1ダメージを与えます。 |
+| `Sniper.MaximumDamageMultiplier` | `2` | `1`～`10` | 遠距離での敵ダメージの最高倍率です。 |
+| `Sniper.MaximumMultiplierDistance` | `24` | `1`～`100` | 最高倍率へ到達する距離です。基準距離以下の場合は、基準距離の直後として扱います。 |
+| `Avenger.DamageMultiplier` | `1.5` | `1`～`10` | 他のプレイヤーが死亡した後の、敵へのダメージ倍率です。 |
+| `Avenger.DurationSeconds` | `20` | `1`～`120` | 敵へのダメージ増加が続く秒数です。別の死亡で残り時間を更新します。 |
+| `Avenger.TriggerRadius` | `30` | `1`～`100` | Avengerが発動する、死亡したプレイヤーからの最大距離です。 |
+| `Brawler.MeleeDamageMultiplier` | `1.25` | `0`～`10` | 攻撃者を特定できる近接武器が敵とプレイヤーへ与えるダメージ倍率です。 |
+| `Brawler.RangedDamageMultiplier` | `0.75` | `0`～`10` | 攻撃者を特定できる銃、杖の弾、レーザーが敵とプレイヤーへ与えるダメージ倍率です。 |
 
 デフォルトの基礎値はランレベル1からHealthが`1`、その他の管理対象アップグレードが`0`です。固定役職のアップグレード値は基礎値への加算ではなく、ステージ中の絶対的な目標値です。役職終了時は設定された基礎値へ戻し、役職が置き換えないアップグレードは基礎値を維持します。InfluencerとBerserkerは動的目標値を最低値として扱い、役職付与時に記録したレベル未満へ下げません。固定効果の役職は割り当てやセッション状態が変化した場合だけ変更し、InfluencerとBerserkerはInfluencerの確認間隔ごとに設定条件を再評価します。`Tracker`はMap Player Countを常に`1`へ設定し、Health目標値のみ変更できます。`Rammer`はステージ中、Launch、Tumble Climb、Tumble Wingsを常に0へ上書きします。Throwは管理対象外です。`King`には効果強度の設定がありません。
 

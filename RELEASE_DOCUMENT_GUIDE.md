@@ -121,6 +121,7 @@ Use English first and Japanese second. The two sections must describe the same r
 
 - Write for mod users, not developers.
 - Use in-game English names consistently in both language sections.
+- Keep README and CHANGELOG within Thunderstore's 100,000-character limit, encoded as UTF-8 without a BOM. The limit counts decoded characters, not UTF-8 bytes. Prefer shared explanations for repeated settings while retaining every key, default, range, effect, and control scope.
 - Keep internal class names, Harmony patches, RPC names, reflection, Prefab resolution, hashes, and historical implementation details out of the README.
 - Use backticks for configuration keys, literal role names where needed, and numeric examples.
 - Use tables for roles and configuration because they contain repeated fields.
@@ -190,6 +191,7 @@ The README normally does not display the package version. Avoid adding a version
 - [ ] `manifest.json` parses as JSON and contains only released dependencies.
 - [ ] The host-only description is present in English and Japanese.
 - [ ] README English and Japanese sections describe the same behavior.
+- [ ] `python tools/check_release_markdown.py` passes before creating the ZIP; check the archived Markdown against the validated source files.
 - [ ] Every released role is listed once in each role catalog.
 - [ ] Role counts agree everywhere, and internal testing commands are not documented.
 - [ ] Every visible REPOConfig entry has a default and explanation.
