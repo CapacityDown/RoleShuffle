@@ -212,6 +212,5 @@
   "Enabled draw entries: {0}/{1}": "Açık çekiliş seçenekleri: {0}/{1}",
   "Base Upgrade Settings": "Temel Yükseltme Ayarları",
   "+/- adjustments are saved with this game data.": "+/- değişiklikleri bu oyun kaydına kaydedilir.",
-  "Manual adjustment is OFF in MOD settings.": "Manuel ayar, mod ayarlarında kapalı.",
   "Load a saved game to use +/- adjustments.": "+/- kullanmak için kayıtlı bir oyun yükleyin."
 }

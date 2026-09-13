@@ -212,6 +212,5 @@
   "Enabled draw entries: {0}/{1}": "Choix activés : {0}/{1}",
   "Base Upgrade Settings": "Réglages des améliorations de base",
   "+/- adjustments are saved with this game data.": "Les ajustements +/- sont conservés dans cette sauvegarde.",
-  "Manual adjustment is OFF in MOD settings.": "L'ajustement manuel est désactivé dans les paramètres du mod.",
   "Load a saved game to use +/- adjustments.": "Chargez une sauvegarde pour utiliser +/-."
 }

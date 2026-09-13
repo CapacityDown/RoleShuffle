@@ -212,6 +212,5 @@
   "Enabled draw entries: {0}/{1}": "已開啟抽獎項：{0}/{1}",
   "Base Upgrade Settings": "基礎升級設定",
   "+/- adjustments are saved with this game data.": "+/- 調整會儲存在目前存檔中。",
-  "Manual adjustment is OFF in MOD settings.": "MOD設定中已停用手動調整。",
   "Load a saved game to use +/- adjustments.": "請載入存檔以使用 +/- 調整。"
 }

@@ -26,7 +26,8 @@ internal static class SaveAdjustmentChecks
             StatsManager.instance.Saves == blockedSaves, "Default-off rejects both valid edits without saving");
         RoleMenu.ShowLevels(config);
         Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => !e.Adjustment!.ShowButtons && e.Adjustment.Increase == null && e.Adjustment.Decrease == null) &&
-            RoleMenu.Entries.Any(e => e.Text == "Manual adjustment is OFF in MOD settings."), "Default-off buttons are hidden and explained");
+            RoleMenu.Entries.All(e => !e.Text.Contains("Manual", StringComparison.OrdinalIgnoreCase) && !e.Text.Contains("+/-")),
+            "Default-off hides controls, manual values and all manual-adjustment guidance");
         manualSetting.BoxedValue = true;
         RoleMenu.RefreshLevelsIfChanged();
         Check(RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment is { ShowButtons: true, Increase: not null, Decrease: not null },
@@ -209,6 +210,7 @@ internal static class SaveAdjustmentChecks
         Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => !e.Adjustment!.ShowButtons) &&
             RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 200) &&
             RoleMenu.Entries.Any(e => e.Text == "Config 200  Draw 0") &&
+            RoleMenu.Entries.All(e => e.Text != "Only the host can change Base Upgrade settings." && !e.Text.Contains("+/-")) &&
             BaseUpgradeSync.Read(config)[0].ManualAdjustment == 0, "Host-off hides guest buttons and syncs totals excluding manual amounts despite guest local on");
         foreach (object invalid in new object[] { "2|1", "1|x", "1|1|extra", 1 })
         {

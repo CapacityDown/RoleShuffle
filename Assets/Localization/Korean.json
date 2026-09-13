@@ -212,6 +212,5 @@
   "Enabled draw entries: {0}/{1}": "활성 추첨 항목: {0}/{1}",
   "Base Upgrade Settings": "기본 업그레이드 설정",
   "+/- adjustments are saved with this game data.": "+/- 조정은 이 저장 데이터에 보관됩니다.",
-  "Manual adjustment is OFF in MOD settings.": "MOD 설정에서 수동 조정이 OFF로 되어 있습니다.",
   "Load a saved game to use +/- adjustments.": "+/- 조정을 사용하려면 저장 데이터를 불러오세요."
 }

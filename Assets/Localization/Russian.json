@@ -212,6 +212,5 @@
   "Enabled draw entries: {0}/{1}": "Включено вариантов: {0}/{1}",
   "Base Upgrade Settings": "Настройки базовых улучшений",
   "+/- adjustments are saved with this game data.": "Изменения +/- сохраняются в этом сохранении.",
-  "Manual adjustment is OFF in MOD settings.": "Ручное изменение отключено в настройках мода.",
   "Load a saved game to use +/- adjustments.": "Загрузите сохранение, чтобы использовать +/-."
 }

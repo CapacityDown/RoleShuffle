@@ -49,15 +49,16 @@ internal sealed partial class RoleMenu
         else
         {
             bool manualDisabled = !BaseUpgradeSync.ManualAdjustmentEnabled(_config);
-            Text(manualDisabled
-                ? Localized("Manual adjustment is OFF in MOD settings.")
-                : Localized("+/- adjustments are saved with this game data."));
-            if (!RoleSelectionSettings.CanEdit) Text(Localized("Only the host can change Base Upgrade settings."));
-            else if (!manualDisabled && !BaseUpgradeSelectionSettings.CanAdjustInCurrentScene)
-                Text(Localized("+/- is available only in the lobby, truck, or shop."));
-            else if (!manualDisabled && BaseUpgradeManualStore.SaveIdentity.Length == 0)
-                Text(Localized("Load a saved game to use +/- adjustments."));
-            if (_utilityMessage.Length > 0) Text(_utilityMessage);
+            if (!manualDisabled)
+            {
+                Text(Localized("+/- adjustments are saved with this game data."));
+                if (!RoleSelectionSettings.CanEdit) Text(Localized("Only the host can change Base Upgrade settings."));
+                else if (!BaseUpgradeSelectionSettings.CanAdjustInCurrentScene)
+                    Text(Localized("+/- is available only in the lobby, truck, or shop."));
+                else if (BaseUpgradeManualStore.SaveIdentity.Length == 0)
+                    Text(Localized("Load a saved game to use +/- adjustments."));
+                if (_utilityMessage.Length > 0) Text(_utilityMessage);
+            }
             string saveIdentity = BaseUpgradeManualStore.SaveIdentity;
             foreach (BaseUpgradeSnapshot upgrade in upgrades)
             {
