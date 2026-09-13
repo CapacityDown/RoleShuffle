@@ -176,19 +176,9 @@ Open `ROLES` → `BASE UPGRADES` → `BASE UPGRADE SETTINGS` to switch the truck
 
 Each upgrade on `BASE UPGRADES` uses two lines: its name, current total and compact `−` / `+` buttons above a `Config` / `Manual` / `Draw` breakdown. Dividers separate menu groups outside Role Guide; consecutive buttons stay together. Manual adjustments are off by default. Enable `Base Upgrades.ManualAdjustmentEnabled` in REPOConfig to use the buttons. Turning it off hides the buttons and the Manual breakdown, showing only Config and Draw, and excludes saved manual amounts from base targets. Saved amounts are kept and apply again when re-enabled. Each click changes the total by one and saves the manual adjustment with the current game data. It survives later run levels and reloading that save; other saves start with their own adjustments. The total is the configured value + enabled manual adjustment + truck draw result, limited to 0–200 (Map Player Count: 0–1). When manual adjustments are off, only configured and truck values contribute. For example, a manual +1 remains +1 when `1:1,5:3` advances to level 5: the total becomes 4 before truck draws. REPOConfig level rules, selection switches, and weights remain unchanged. At a clipped limit, a click recalculates the manual adjustment so the visible total still changes by one. Guests and games without a loaded, writable native save cannot use these controls. Malformed level rules must be corrected in REPOConfig first. Gameplay uses the same application timing as REPOConfig base-level edits, retaining role-specific overrides.
 
-In REPOConfig, apply pending edits before leaving the settings page. Roles UI saves each switch, level adjustment or preset immediately.
+In REPOConfig, apply pending edits before leaving the settings page. Roles UI saves each switch or manual adjustment immediately.
 
 OFF excludes a type from both individual and `All Upgrades` results in future draws. It does not remove acquired bonuses or disable configured base levels. An in-progress draw keeps the selection it started with. Weight `0` excludes direct selection only; an enabled type can still receive an `All Upgrades` result. Turning OFF `All Upgrades` disables only the combined result. All-off selections produce no draw result.
-
-`PRESETS` replaces the 13 selection switches only. Draw activation, weights, change amounts, limits, base-level schedules, roles and acquired bonuses stay unchanged. Nonstandard presets turn OFF `All Upgrades`; it can be enabled separately to affect only the selected types. Manual combinations appear as `Custom`.
-
-| Preset | Enabled entries |
-|---|---|
-| Standard | All 12 upgrade types and All Upgrades |
-| Survival | Health, Stamina, Crouch Rest, Death Head Battery |
-| Exploration | Stamina, Extra Jump, Speed, Tumble Climb, Tumble Wings, Map Player Count |
-| Hauling | Stamina, Strength, Range, Launch |
-| Cooperative | Health, Stamina, Strength, Range, Map Player Count, Death Head Battery |
 
 | Key | Default | Range / values | Effect | Control |
 |---|---:|---|---|---|
@@ -638,19 +628,9 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 
 `基本アップグレード`画面では、上段に名前・現在の合計値・小型の`−`・`+`ボタン、下段に「設定・手動・抽選」の内訳を表示する2行構成です。ロールガイド以外では、項目や機能のまとまりごとに区切り線を表示します。連続するボタンの間には表示しません。手動調整は初期状態でOFFです。REPOConfigの`Base Upgrades.ManualAdjustmentEnabled`をONにするとボタンを操作できます。OFFでは±ボタンと内訳の「手動」を非表示にして「設定・抽選」だけを表示し、保存済み調整値を合計から除外します。値はセーブに保持され、再びONにすると適用されます。クリックごとに合計値を1ずつ加減し、手動調整分を現在のセーブデータに保存します。ランレベルが進んだ後や同じセーブの再開後も保持され、別のセーブには引き継ぎません。合計値は「設定値＋有効な手動調整＋トラック抽選」で、0～200（Map Player Countは0～1）に制限します。手動調整がOFFのときは設定値とトラック抽選だけを合算します。例えば`1:1,5:3`で手動調整を+1すると、ランレベル5でも+1を維持し、抽選分を除く合計は4になります。REPOConfigの設定式・ON/OFF・重みは変更しません。設定変更などで合計が上限・下限に切り詰められている場合は、クリックで表示値が1変わるよう手動調整分を再計算します。参加者や保存可能なセーブデータを読み込んでいない状態では操作できません。不正な設定式はREPOConfigで修正してください。ゲーム内能力への反映タイミングはREPOConfigの基礎値変更と同じで、役職固有の上書きも維持します。
 
-REPOConfigでは変更を適用してから設定画面を閉じてください。Roles UIのスイッチ変更とプリセット適用は、その場で保存されます。
+REPOConfigでは変更を適用してから設定画面を閉じてください。Roles UIのスイッチ変更と手動調整は、その場で保存されます。
 
 OFFの種類は、次回以降の個別抽選と`All Upgrades`の両方から除外します。獲得済みのボーナスや設定済みの基礎レベルは維持します。抽選アニメーション中に変更した場合、その抽選は開始時の選択内容を使用します。重み`0`は個別抽選のみを除外し、ONの種類は`All Upgrades`で強化される場合があります。`All Upgrades`のOFFは一括抽選だけを無効にします。すべてOFFの場合、抽選結果は発生しません。
-
-`プリセット`は13項目のON/OFFだけを置き換えます。抽選全体の有効・無効、重み、増減量、上限、基礎レベル設定、ロール、獲得済みボーナスは変更しません。標準以外では`All Upgrades`はOFFで、必要に応じて有効にすると選択中の種類だけを一括強化します。手動で組み合わせた設定は`カスタム`と表示します。
-
-| プリセット | ONになる項目 |
-|---|---|
-| 標準 | 強化12種類すべて＋All Upgrades |
-| 生存重視 | Health、Stamina、Crouch Rest、Death Head Battery |
-| 探索重視 | Stamina、Extra Jump、Speed、Tumble Climb、Tumble Wings、Map Player Count |
-| 運搬重視 | Stamina、Strength、Range、Launch |
-| 協力重視 | Health、Stamina、Strength、Range、Map Player Count、Death Head Battery |
 
 | キー | デフォルト | 範囲・値 | 内容 | 管理 |
 |---|---:|---|---|---|

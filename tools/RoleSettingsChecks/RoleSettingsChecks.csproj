@@ -15,7 +15,7 @@
     <Compile Include="../../RolePresets.cs" Link="RolePresets.cs" />
     <Compile Include="../../RoleSelectionSettings.cs" Link="RoleSelectionSettings.cs" />
     <Compile Include="../../RoleMenuSettings.cs" Link="RoleMenuSettings.cs" />
-    <Compile Include="../../BaseUpgradePresets.cs" Link="BaseUpgradePresets.cs" />
+    <Compile Include="../../BaseUpgradeDrawSelection.cs" Link="BaseUpgradeDrawSelection.cs" />
     <Compile Include="../../BaseUpgradeSelectionSettings.cs" Link="BaseUpgradeSelectionSettings.cs" />
     <Compile Include="../../BaseUpgradeSaveAdjustments.cs" Link="BaseUpgradeSaveAdjustments.cs" />
     <Compile Include="../../GameSaveState.cs" Link="GameSaveState.cs" />

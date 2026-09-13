@@ -118,37 +118,37 @@ SemiFunc.Multiplayer = false;
 config.Enabled.Value = true;
 var baseService = new BaseUpgradeSelectionSettings(config, file);
 StageRolesPlugin.Instance.BaseUpgradeSettings = baseService;
-var names = BaseUpgradePresets.UpgradeNames;
-Check(names.Count == 13 && names.Distinct().Count() == 13, "Twelve upgrade types plus All Upgrades");
+var names = BaseUpgradeDrawSelection.UpgradeNames;
+Check(names.SequenceEqual(new[] { "Health", "Stamina", "ExtraJump", "Speed", "Strength", "Range", "Launch",
+    "TumbleClimb", "TumbleWings", "CrouchRest", "MapPlayerCount", "DeathHeadBattery", "AllUpgrades" }),
+    "Twelve upgrade types plus All Upgrades retain the existing network flag order");
 foreach (string name in names)
 {
     var entry = config.BaseUpgradeDrawEnabledEntry(name)!;
     Check(entry.Definition.Section == "Base Upgrade Draw Selection" && entry.Definition.Key == name && Equals(entry.DefaultValue, true), "REPOConfig-compatible bool entries preserve defaults");
 }
-Check(!baseService.TrySetEnabled("Unknown", true) && !baseService.TryApplyPreset((BaseUpgradePreset)999), "Unknown inputs rejected");
+Check(!baseService.TrySetEnabled("Unknown", true), "Unknown upgrade rejected");
 config.BaseHealthLevels.Value = "1:3,5:7";
 config.TruckUpgradeDrawDeltaWeights.Value = "-2:4,3:8";
 config.TruckUpgradeDrawMaximumLevel.Value = 37;
 config.TruckUpgradeDrawEnabled.Value = false;
 var untouched = file.Where(p => p.Key.Section != "Base Upgrade Draw Selection").ToDictionary(p => p.Key, p => p.Value.BoxedValue);
 var previousBaseLevels = BaseUpgradeSync.LocalSignature(config);
-foreach (var preset in BaseUpgradePresets.All)
+foreach (string name in names)
 {
-    Check(baseService.TryApplyPreset(preset.Id), "Apply Base Upgrade preset");
-    Check(names.All(n => config.BaseUpgradeDrawIsEnabled(n) == preset.Includes(n)), "Every draw switch follows preset");
-    Check(names.Count(config.BaseUpgradeDrawIsEnabled) == preset.Count, "Correct preset size");
+    Check(baseService.TrySetEnabled(name, false), "Host can disable each draw selection independently");
+    Check(names.All(n => config.BaseUpgradeDrawIsEnabled(n) == (n != name)), "Only the selected upgrade switch changes");
     Check(untouched.All(p => Equals(file[p.Key].BoxedValue, p.Value)), "Preserve existing REPOConfig settings, roles and draw activation");
     var reload = new StageRolesConfig(new ConfigFile(path, false) { SaveOnConfigSet = false });
-    Check(names.All(n => reload.BaseUpgradeDrawIsEnabled(n) == preset.Includes(n)), "Preset persisted in REPOConfig file");
+    Check(names.All(n => reload.BaseUpgradeDrawIsEnabled(n) == (n != name)), "Individual selection persisted in REPOConfig file");
     Check(BaseUpgradeSync.LocalSignature(config) == previousBaseLevels, "Selections do not alter level snapshot");
-    Check(BaseUpgradePresets.MatchingName(config.BaseUpgradeDrawIsEnabled) == preset.Name, "Preset name derived from actual config");
+    Check(baseService.TrySetEnabled(name, true), "Host can restore each selection independently");
 }
-baseService.TryApplyPreset(BaseUpgradePreset.Standard);
 RoleMenu.ShowBase(config);
 RoleMenu.Entries.Single(e => e.Text == "[ON] Health").OnClick!();
 Check(!config.BaseUpgradeDrawEnabledEntry("Health")!.Value, "UI updates same REPOConfig ConfigEntry");
 Check(RoleMenu.Entries.Any(e => e.Text == "[OFF] Health" && e.OnClick != null), "OFF upgrade remains available");
-Check(RoleMenu.Entries.Any(e => e.Text == "Selection: Custom"), "Custom selection appears");
+Check(RoleMenu.Entries.All(e => e.Text != "PRESETS" && !e.Text.StartsWith("Selection: ")), "Base Upgrade settings have no preset controls or matching label");
 // REPOConfig applies its pending edits through ConfigEntryBase.BoxedValue.
 config.BaseUpgradeDrawEnabledEntry("Health")!.BoxedValue = true;
 config.TruckUpgradeDrawEnabled.BoxedValue = true;
@@ -156,14 +156,11 @@ RoleMenu.RefreshBaseIfChanged();
 Check(RoleMenu.Entries.Any(e => e.Text == "[ON] Health") && RoleMenu.Entries.Any(e => e.Text == "Truck draw: ON"), "REPOConfig edits refresh open UI");
 RoleMenu.Entries.Single(e => e.Text == "Truck draw: ON").OnClick!();
 Check(!config.TruckUpgradeDrawEnabled.Value, "Draw activation shares existing REPOConfig entry");
-RoleMenu.Entries.Single(e => e.Text == "PRESETS").OnClick!();
-RoleMenu.Entries.Single(e => e.Text == "Apply: Survival").OnClick!();
-Check(RoleMenu.Entries.Any(e => e.Text == "Selection: Survival") && !config.BaseUpgradeDrawIsEnabled("AllUpgrades"), "Preset UI applies all selection flags");
 var baseBeforeFailure = names.ToDictionary(n => n, config.BaseUpgradeDrawIsEnabled);
 failedSave = false;
 using (var locked = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
-{ try { baseService.TryApplyPreset(BaseUpgradePreset.Standard); } catch (IOException) { failedSave = true; } }
-Check(failedSave && baseBeforeFailure.All(p => config.BaseUpgradeDrawIsEnabled(p.Key) == p.Value) && file.SaveOnConfigSet, "Failed preset save rolls back all switches and autosave");
+{ try { baseService.TrySetEnabled("Health", false); } catch (IOException) { failedSave = true; } }
+Check(failedSave && baseBeforeFailure.All(p => config.BaseUpgradeDrawIsEnabled(p.Key) == p.Value) && file.SaveOnConfigSet, "Failed selection save rolls back the switch and autosave");
 SemiFunc.Multiplayer = true;
 PhotonNetwork.IsMasterClient = true;
 PhotonNetwork.CurrentRoom = new();
@@ -173,15 +170,14 @@ Check(PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("RS.BaseUpgrades"),
 RoleMenu.ShowBase(config);
 Action oldBaseClick = RoleMenu.Entries.Single(e => e.Text == "[ON] Health").OnClick!;
 PhotonNetwork.IsMasterClient = false;
-Check(!baseService.TrySetEnabled("Health", false) && !baseService.TrySetDrawEnabled(true) && !baseService.TryApplyPreset(BaseUpgradePreset.Standard), "Guests cannot mutate any Base Upgrade setting");
+Check(!baseService.TrySetEnabled("Health", false) && !baseService.TrySetDrawEnabled(true), "Guests cannot mutate any Base Upgrade setting");
 saved = File.ReadAllText(path);
 oldBaseClick();
 Check(saved == File.ReadAllText(path), "Authority checked again on stale host callback");
 config.BaseUpgradeDrawEnabledEntry("Health")!.Value = false;
 RoleMenu.ShowBase(config);
 Check(RoleMenu.Entries.Any(e => e.Text == "[ON] Health" && e.OnClick == null), "Guest shows host state instead of conflicting local config");
-RoleMenu.ShowBase(config, presets: true);
-Check(RoleMenu.Entries.Where(e => e.Text.StartsWith("Apply: ")).All(e => e.OnClick == null), "Guest preset controls read-only");
+Check(RoleMenu.Entries.Where(e => e.Text.StartsWith("[") || e.Text.StartsWith("Truck draw: ")).All(e => e.OnClick == null), "Guest selection controls read-only");
 foreach (string malformed in new[] { "", "unavailable", "11", new string('1', 14) + "x", new string('1', 16) })
 {
     PhotonNetwork.CurrentRoom.CustomProperties[BaseUpgradeSettingsSync.PropertyKey] = malformed;
@@ -204,10 +200,8 @@ RoleMenu.ShowBase(config);
 Check(RoleMenu.Entries.Any(e => e.Text.StartsWith("No enabled upgrade")), "Empty selection explained");
 foreach (var language in Enum.GetValues<RoleGuideLanguage>())
 {
-    foreach (var preset in BaseUpgradePresets.All)
-        Check(RoleText.Catalog(language).ContainsKey(preset.Name) && RoleText.Catalog(language).ContainsKey(preset.Description), "Every Base Upgrade preset is translated");
-    RoleMenu.ShowBase(config, presets: true, language);
-    Check(RoleMenu.Entries.Count(e => e.OnClick != null) == 6, "Localized presets retain buttons");
+    RoleMenu.ShowBase(config, language);
+    Check(RoleMenu.Entries.Count(e => e.OnClick != null) == 15, "Localized settings retain navigation, draw switch and all individual switches");
 }
 Console.WriteLine($"Base Upgrade settings checks passed: {checks - baseStart}");
 

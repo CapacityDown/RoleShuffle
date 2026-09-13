@@ -116,7 +116,7 @@ namespace REPOJP.StageRoles
     }
     internal sealed partial class RoleMenu
     {
-        private enum RoleMenuView { Settings, Presets, BaseUpgrades, BaseUpgradeSettings, BaseUpgradePresets }
+        private enum RoleMenuView { Settings, Presets, BaseUpgrades, BaseUpgradeSettings }
         private static StageRolesConfig _config = null!;
         private static MenuLib.MonoBehaviors.REPOPopupPage _openPage = new();
         private static RoleMenuView _activeView;
@@ -130,7 +130,7 @@ namespace REPOJP.StageRoles
         private static string[] WrapGuideText(object measurement, string value, float width, RoleGuideLanguage language) => new[] { value };
         private static string Localized(string text) => RoleText.Get(text, _guideLanguage);
         private static void SwitchView(MenuLib.MonoBehaviors.REPOPopupPage page, RoleMenuView view)
-        { _activeView = view; if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view is RoleMenuView.BaseUpgradeSettings or RoleMenuView.BaseUpgradePresets) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
+        { _activeView = view; if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view == RoleMenuView.BaseUpgradeSettings) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
         private static string DisplayUpgradeName(string name) => name;
         private static string SignedValue(int value) => value.ToString("+0;-0;0", System.Globalization.CultureInfo.InvariantCulture);
         internal record RoleMenuEntry(string Text, float Size, TMPro.FontStyles Style, float Height, bool Wrap,
@@ -141,8 +141,8 @@ namespace REPOJP.StageRoles
         private static void ApplyEntries(object page, IReadOnlyList<RoleMenuEntry> entries) => Entries = entries;
         internal static void Show(StageRolesConfig config, bool presets = false, RoleGuideLanguage language = RoleGuideLanguage.English)
         { _config = config; _guideLanguage = language; _activeView = presets ? RoleMenuView.Presets : RoleMenuView.Settings; RefreshRoleSettingsRows(_openPage); }
-        internal static void ShowBase(StageRolesConfig config, bool presets = false, RoleGuideLanguage language = RoleGuideLanguage.English)
-        { _config = config; _guideLanguage = language; _activeView = presets ? RoleMenuView.BaseUpgradePresets : RoleMenuView.BaseUpgradeSettings; RefreshBaseUpgradeSettingsRows(_openPage); }
+        internal static void ShowBase(StageRolesConfig config, RoleGuideLanguage language = RoleGuideLanguage.English)
+        { _config = config; _guideLanguage = language; _activeView = RoleMenuView.BaseUpgradeSettings; RefreshBaseUpgradeSettingsRows(_openPage); }
         internal static void RefreshBaseIfChanged()
         { if (_openSignature != BaseUpgradeSettingsSignature()) RefreshBaseUpgradeSettingsRows(_openPage); }
         internal static void ShowLevels(StageRolesConfig config)

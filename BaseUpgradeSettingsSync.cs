@@ -9,8 +9,8 @@ internal sealed class BaseUpgradeSettingsSnapshot(bool modEnabled, bool drawEnab
     internal bool DrawEnabled { get; } = drawEnabled;
     internal bool IsEnabled(string name)
     {
-        for (int i = 0; i < BaseUpgradePresets.UpgradeNames.Count; i++)
-            if (BaseUpgradePresets.UpgradeNames[i] == name) return flags[i] == '1';
+        for (int i = 0; i < BaseUpgradeDrawSelection.UpgradeNames.Count; i++)
+            if (BaseUpgradeDrawSelection.UpgradeNames[i] == name) return flags[i] == '1';
         return false;
     }
 }
@@ -22,7 +22,7 @@ internal static class BaseUpgradeSettingsSync
     {
         StringBuilder result = new();
         result.Append(config.Enabled.Value ? '1' : '0').Append(config.TruckUpgradeDrawEnabled.Value ? '1' : '0');
-        foreach (string name in BaseUpgradePresets.UpgradeNames) result.Append(config.BaseUpgradeDrawIsEnabled(name) ? '1' : '0');
+        foreach (string name in BaseUpgradeDrawSelection.UpgradeNames) result.Append(config.BaseUpgradeDrawIsEnabled(name) ? '1' : '0');
         return result.ToString();
     }
     internal static string CurrentSignature(StageRolesConfig config)
@@ -35,7 +35,7 @@ internal static class BaseUpgradeSettingsSync
     internal static BaseUpgradeSettingsSnapshot? Read(StageRolesConfig config)
     {
         string text = CurrentSignature(config);
-        if (text.Length != BaseUpgradePresets.UpgradeNames.Count + 2) return null;
+        if (text.Length != BaseUpgradeDrawSelection.UpgradeNames.Count + 2) return null;
         foreach (char flag in text) if (flag is not ('0' or '1')) return null;
         return new BaseUpgradeSettingsSnapshot(text[0] == '1', text[1] == '1', text.Substring(2));
     }

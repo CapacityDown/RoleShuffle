@@ -41,7 +41,7 @@ dotnet run --project tools/UtilityRuntimeChecks/UtilityRuntimeChecks.csproj -c R
 
 多言語の設定保存・翻訳・ホスト値保持は[LocalizationChecks](tools/LocalizationChecks/README.md)で検証します。
 表情による能力発動とESCメニュー遷移は[ExpressionChecks](tools/ExpressionChecks/README.md)で検証します。
-Roles UIのロール／Base Upgrade切替・プリセット・REPOConfigとの設定共有・保存・ホスト権限は[RoleSettingsChecks](tools/RoleSettingsChecks/README.md)で検証します。
+Roles UIのロール／Base Upgrade切替・ロールのプリセット・REPOConfigとの設定共有・保存・ホスト権限は[RoleSettingsChecks](tools/RoleSettingsChecks/README.md)で検証します。
 翻訳の編集方法は[Localization](Assets/Localization/README.md)、同梱フォントの生成方法とライセンスは[Fonts](Assets/Fonts/Localization/README.md)を参照してください。
 
 ## 管理するファイル

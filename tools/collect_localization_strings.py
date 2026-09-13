@@ -34,7 +34,7 @@ def catalog():
             for match in re.finditer(r'RoleText\.Format\(\s*' + TOKEN, source):
                 value = decode(match[1])
                 result[value] = value
-    for prefix in ('Role', 'BaseUpgrade'):
+    for prefix in ('Role',):
         source = (ROOT / (prefix + 'Presets.cs')).read_text(encoding='utf-8-sig')
         for match in re.finditer(r'new ' + prefix + r'PresetDefinition\(' + prefix + r'Preset\.\w+,\s*' + TOKEN + r',\s*' + TOKEN, source):
             for value in (decode(match[1]), decode(match[2])):
@@ -50,7 +50,7 @@ def catalog():
         'BottomLeft', 'BottomCenter', 'BottomRight', 'ON', 'OFF',
         'Host v{0} / Local v{1}',
         'ROLE SETTINGS', 'Role Settings', 'Role Presets', 'Custom', 'Weight 0',
-        'Base Upgrade Settings', 'Base Upgrade Presets',
+        'Base Upgrade Settings',
     ]:
         result[value] = value
     return result

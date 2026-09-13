@@ -60,13 +60,4 @@ internal sealed class BaseUpgradeSelectionSettings(StageRolesConfig settings, Co
         RoleSelectionSettings.SaveEntries(file, new Dictionary<ConfigEntry<bool>, bool> { [settings.TruckUpgradeDrawEnabled] = enabled });
         return true;
     }
-    internal bool TryApplyPreset(BaseUpgradePreset id)
-    {
-        if (!RoleSelectionSettings.CanEdit || BaseUpgradePresets.Find(id) is not { } preset) return false;
-        Dictionary<ConfigEntry<bool>, bool> entries = new();
-        foreach (string name in BaseUpgradePresets.UpgradeNames)
-            entries[settings.BaseUpgradeDrawEnabledEntry(name)!] = preset.Includes(name);
-        RoleSelectionSettings.SaveEntries(file, entries);
-        return true;
-    }
 }

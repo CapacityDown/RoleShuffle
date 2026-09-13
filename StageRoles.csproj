@@ -39,7 +39,7 @@
     <Compile Include="StageRole.cs" />
     <Compile Include="RolePresets.cs" />
     <Compile Include="RoleSelectionSettings.cs" />
-    <Compile Include="BaseUpgradePresets.cs" />
+    <Compile Include="BaseUpgradeDrawSelection.cs" />
     <Compile Include="BaseUpgradeSelectionSettings.cs" />
     <Compile Include="BaseUpgradeSaveAdjustments.cs" />
     <Compile Include="GameSaveState.cs" />
