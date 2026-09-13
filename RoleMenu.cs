@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 427;
+    private const int RoleUiBuildNumber = 428;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -1030,7 +1030,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             row.Visual.Configure(control, clickable);
             labelText.raycastTarget = false;
             Sprite? emblem = entry.EmblemRole.HasValue
-                ? RoleEmblems.Get(entry.EmblemRole.Value, entry.UnrevealedEmblem) : null;
+                ? RoleEmblems.Get(entry.EmblemRole.Value, entry.UnrevealedEmblem, entry.EmblemGrayedOut) : null;
             row.Emblem.sprite = emblem;
             row.Emblem.gameObject.SetActive(emblem != null);
             float emblemSize = Mathf.Min(56f, entry.Height - 8f);
@@ -1228,7 +1228,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Action? onClick = null,
         StageRole? emblemRole = null,
         bool unrevealedEmblem = false,
-        bool isControl = false)
+        bool isControl = false,
+        bool emblemGrayedOut = false)
     {
         internal string Text { get; } = text;
         internal float FontSize { get; } = fontSize;
@@ -1240,6 +1241,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         internal StageRole? EmblemRole { get; } = emblemRole;
         internal bool UnrevealedEmblem { get; } = unrevealedEmblem;
         internal bool IsControl { get; } = isControl;
+        internal bool EmblemGrayedOut { get; } = emblemGrayedOut;
     }
 
     private sealed class RoleMenuRow(

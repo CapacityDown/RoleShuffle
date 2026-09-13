@@ -80,7 +80,8 @@ namespace REPOJP.StageRoles
         { _activeView = view; if (view is RoleMenuView.BaseUpgradeSettings or RoleMenuView.BaseUpgradePresets) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
         private static string DisplayUpgradeName(string name) => name;
         internal record RoleMenuEntry(string Text, float Size, TMPro.FontStyles Style, float Height, bool Wrap,
-            bool Language, Action? OnClick = null, StageRole? Role = null, bool Secret = false, bool isControl = false);
+            bool Language, Action? OnClick = null, StageRole? Role = null, bool Secret = false, bool isControl = false,
+            bool emblemGrayedOut = false);
         internal static IReadOnlyList<RoleMenuEntry> Entries = Array.Empty<RoleMenuEntry>();
         private static void ApplyEntries(object page, IReadOnlyList<RoleMenuEntry> entries) => Entries = entries;
         internal static void Show(StageRolesConfig config, bool presets = false, RoleGuideLanguage language = RoleGuideLanguage.English)

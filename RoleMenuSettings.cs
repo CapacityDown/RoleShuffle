@@ -33,7 +33,7 @@ internal sealed partial class RoleMenu
             foreach (string line in WrapGuideText(MeasurementText(page), value, ContentWidth(page), _guideLanguage))
                 entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
         }
-        void Button(string label, Action action, bool enabled = true, StageRole? emblem = null)
+        void Button(string label, Action action, bool enabled = true, StageRole? emblem = null, bool emblemGrayedOut = false)
         {
             Action? click = enabled ? () =>
             {
@@ -47,7 +47,8 @@ internal sealed partial class RoleMenu
                 if (_openPage == page && _activeView == view) RefreshRoleSettingsRows(page);
             } : null;
             entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, emblem.HasValue ? 56 : 40,
-                false, UseLanguageFont, click, emblem, emblem.HasValue && RoleCatalog.IsSecretRole(emblem.Value), isControl: true));
+                false, UseLanguageFont, click, emblem, emblem.HasValue && RoleCatalog.IsSecretRole(emblem.Value),
+                isControl: true, emblemGrayedOut: emblemGrayedOut));
         }
         bool Enabled(StageRole role) => editable ? _config.RoleIsEnabled(role) : RoleGuideSync.IsVisible(role, _config);
 
@@ -90,10 +91,12 @@ internal sealed partial class RoleMenu
                 if (editable && !hasCandidate) Text(Localized("No regular roles with a positive weight are enabled. Random assignment has no candidates."));
                 foreach (StageRole role in RoleCatalog.AllRoles)
                 {
-                    string state = Localized(Enabled(role) ? "ON" : "OFF");
+                    bool roleEnabled = Enabled(role);
+                    string state = Localized(roleEnabled ? "ON" : "OFF");
                     string label = $"[{state}] {RoleCatalog.DisplayName(role)}";
                     if (editable && _config.RoleWeightValue(role) == 0) label += " — " + Localized("Weight 0");
-                    Button(label, () => StageRolesPlugin.Instance.RoleSettings.TrySetEnabled(role, !_config.RoleIsEnabled(role)), editable, role);
+                    Button(label, () => StageRolesPlugin.Instance.RoleSettings.TrySetEnabled(role, !_config.RoleIsEnabled(role)),
+                        editable, role, emblemGrayedOut: !roleEnabled);
                 }
             }
         }

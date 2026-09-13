@@ -15,6 +15,8 @@ These checks do not render the game or simulate Photon transport. Remaining mult
 
 ## Verification on 2026-09-13
 
+- Disabled role icons build 428 (v4.4.7): no warnings or errors. RoleSettingsChecks: 241 role and 156 Base Upgrade checks, all passing. OFF settings rows request a cached grayscale variant using the same host/local state as their ON/OFF label; ON rows, HUD and guide retain the normal sprite. Conversion preserves the original alpha. Live visual verification is left to the user as requested; no game controls were operated.
+
 - Button visuals build 427 (v4.4.7): no warnings or errors. RoleSettingsChecks: 241 role and 156 Base Upgrade checks; ScrollChecks: 71, all passing.
 - R.E.P.O. 0.4.4.3, MenuLib 2.5.4, Default profile, Japanese private host lobby: verified the permanent background/border, hover color, padding, emblems and scroll clipping. Clicking the empty right/top area of a framed preset button opened its page. Clicking Tank OFF then ON changed the count 42 -> 41 -> 42 and Standard -> Custom -> Standard.
 - Opened Base Upgrade settings and applied Survival using its framed button. The page displayed Survival; comparing the real saved config with the backup showed only the nine expected draw-selection switches changed. The global draw switch, weights, base levels and all other settings remained intact. Tools and Report actions displayed the same framing, while returning to the guide restored the reused rows to unframed orange descriptions. Guest visuals and multiplayer transport still require a second client.
