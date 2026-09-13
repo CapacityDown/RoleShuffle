@@ -147,14 +147,14 @@ internal static class SaveAdjustmentChecks
         SemiFunc.Multiplayer = false;
         StatsManager.instance.Load("readiness.json");
         identity = BaseUpgradeManualStore.SaveIdentity;
-        StatsManager.instance.saveFileReady = false;
+        StatsManager.instance.ReadyForTests = false;
         Check(!service.TryAdjustLevel("Health", 1, identity), "Loading/reset phase cannot save adjustments");
-        StatsManager.instance.saveFileReady = true;
-        GameManager.instance.lobbyType = GameManager.LobbyTypes.Public;
+        StatsManager.instance.ReadyForTests = true;
+        GameManager.instance.LobbyForTests = GameManager.LobbyTypes.Public;
         Check(!service.TryAdjustLevel("Health", 1, identity), "Native unsaved lobby cannot promise persistent edits");
         RoleMenu.ShowLevels(config);
         Check(RoleMenu.Entries.Any(e => e.Text == "Load a saved game to use +/- adjustments."), "Explains unavailable save controls");
-        GameManager.instance.lobbyType = GameManager.LobbyTypes.Private;
+        GameManager.instance.LobbyForTests = GameManager.LobbyTypes.Private;
         GameDirector.instance = null;
         Check(!service.TryAdjustLevel("Health", 1, identity), "No game director cannot call native save");
         GameDirector.instance = new();

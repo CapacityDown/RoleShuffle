@@ -12,6 +12,7 @@ internal sealed class MageStaffEffectMarker : MonoBehaviour { }
 
 internal static class MageStaffRuntime
 {
+    private static readonly FieldInfo? LastPlayerGrabbingField = AccessTools.Field(typeof(PhysGrabObject), "lastPlayerGrabbing");
     internal const float DurationMultiplier = 1.3f;
 
     internal static bool IsMageStaff(GameObject? staff)
@@ -24,7 +25,7 @@ internal static class MageStaffRuntime
         PhysGrabObject? phys = staff.GetComponent<PhysGrabObject>();
         return phys != null && phys.playerGrabbing.Count > 0 &&
             StageRolesPlugin.Instance?.Controller?.PlayerHasRole(
-                phys.lastPlayerGrabbing, StageRole.Mage) == true;
+                LastPlayerGrabbingField?.GetValue(phys) as PlayerAvatar, StageRole.Mage) == true;
     }
 
     internal static void PrepareProjectile(SlowProjectile projectile, GameObject staff)

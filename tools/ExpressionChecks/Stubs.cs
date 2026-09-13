@@ -4,10 +4,12 @@ namespace Photon.Pun
     public sealed class PhotonView { }
     public struct PhotonMessageInfo { public bool Rejected; }
 }
+public sealed class MenuPage { }
 public sealed class MenuManager
 {
     public static MenuManager? instance;
-    public object? currentMenuPage;
+    private MenuPage? currentMenuPage;
+    public MenuPage? PageForTests { get => currentMenuPage; set => currentMenuPage = value; }
 }
 public sealed class PlayerExpression
 {
@@ -16,7 +18,8 @@ public sealed class PlayerExpression
 }
 public sealed class PlayerAvatar
 {
-    public bool isLocal = true;
+    private bool isLocal = true;
+    public bool IsLocalForTests { get => isLocal; set => isLocal = value; }
     public Photon.Pun.PhotonView photonView = new();
     public PlayerExpression playerExpression;
     public PlayerAvatar() { playerExpression = new(this); }

@@ -18,6 +18,7 @@
     <Compile Include="../../BaseUpgradePresets.cs" Link="BaseUpgradePresets.cs" />
     <Compile Include="../../BaseUpgradeSelectionSettings.cs" Link="BaseUpgradeSelectionSettings.cs" />
     <Compile Include="../../BaseUpgradeSaveAdjustments.cs" Link="BaseUpgradeSaveAdjustments.cs" />
+    <Compile Include="../../GameSaveState.cs" Link="GameSaveState.cs" />
     <Compile Include="../../BaseUpgradeSettingsSync.cs" Link="BaseUpgradeSettingsSync.cs" />
     <Compile Include="../../BaseUpgradeSync.cs" Link="BaseUpgradeSync.cs" />
     <Compile Include="../../RoleMenuBaseUpgradeSettings.cs" Link="RoleMenuBaseUpgradeSettings.cs" />

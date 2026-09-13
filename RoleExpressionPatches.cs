@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using Photon.Pun;
@@ -8,6 +9,8 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleExpressionPatches
 {
+    private static readonly FieldInfo? IsLocalField = AccessTools.Field(typeof(PlayerAvatar), "isLocal");
+    private static readonly FieldInfo? CurrentMenuPageField = AccessTools.Field(typeof(MenuManager), "currentMenuPage");
     private static readonly ConditionalWeakTable<PlayerAvatar, Dictionary<int, float>> PendingInputs = new();
 
     // ToggleExpression applies a key press after a native 0.1-second delay.
@@ -32,7 +35,7 @@ internal static class RoleExpressionPatches
     private static void RecordInput(PlayerExpression expression, int index)
     {
         PlayerAvatar player = expression.playerAvatar;
-        if (player == null || !player.isLocal ||
+        if (player == null || IsLocalField?.GetValue(player) is not true ||
             !ReferenceEquals(expression, player.playerExpression) || MenuIsOpen())
         {
             return;
@@ -42,7 +45,8 @@ internal static class RoleExpressionPatches
     }
 
     private static bool MenuIsOpen() =>
-        MenuManager.instance != null && MenuManager.instance.currentMenuPage != null;
+        MenuManager.instance != null &&
+        CurrentMenuPageField?.GetValue(MenuManager.instance) is MenuPage page && page != null;
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerAvatar), nameof(PlayerAvatar.PlayerExpressionSetRPC))]
@@ -63,7 +67,7 @@ internal static class RoleExpressionPatches
         // Stop/reset notifications and local menu restoration are not ability inputs.
         // Vanilla peers have no input-intent signal, so their positive owner RPC
         // remains the host-only trigger; never gate peers on the host's menu.
-        if (_percent <= 0f || (__instance.isLocal && (!hasInput || MenuIsOpen())))
+        if (_percent <= 0f || (IsLocalField?.GetValue(__instance) is true && (!hasInput || MenuIsOpen())))
         {
             return;
         }

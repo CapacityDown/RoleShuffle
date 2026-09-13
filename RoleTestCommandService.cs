@@ -106,7 +106,7 @@ internal sealed class RoleTestCommandService : MonoBehaviour
     private void ExecuteHudMultibyte(bool isDebugConsole, string[] args)
     {
         bool success = RoleHudTestPreview.TrySet(_config.SetRoleCommandEnabled.Value, args,
-            PhotonNetwork.CurrentRoom, StatsManager.instance?.saveFileCurrent ?? string.Empty,
+            PhotonNetwork.CurrentRoom, GameSaveState.CurrentName,
             PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal()), out string response);
         Respond(response, success);
     }

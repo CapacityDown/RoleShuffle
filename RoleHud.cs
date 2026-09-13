@@ -226,7 +226,7 @@ internal sealed class RoleHud : MonoBehaviour
     {
         string localId = PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal());
         var testPlayers = RoleHudTestPreview.Read(PhotonNetwork.CurrentRoom,
-            StatsManager.instance?.saveFileCurrent ?? string.Empty, localId);
+            GameSaveState.CurrentName, localId);
         _testPreview = testPlayers != null;
         IReadOnlyList<RoleSnapshot> current = testPlayers ?? (PreviewSettings != null ? PreviewPlayers : RoleAssignmentSync.Read());
         _hasAssignments = current.Count > 0;

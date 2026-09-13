@@ -37,10 +37,10 @@ foreach (int index in Enumerable.Range(1, 6))
     Check(casts.Count == before + 1, "Repeated set without input does not recast");
 
     Time.unscaledTime = 10; // well beyond Mage's cooldown
-    MenuManager.instance.currentMenuPage = new();
+    MenuManager.instance.PageForTests = new();
     Stop(local, index);
     Check(casts.Count == before + 1, "Escape opening / expression expiry cannot cast");
-    MenuManager.instance.currentMenuPage = null;
+    MenuManager.instance.PageForTests = null;
     Hold(local, index, input: false);
     Set(local, index);
     Check(casts.Count == before + 1, "Menu close restores toggled expression without casting");
@@ -62,9 +62,9 @@ foreach (int index in Enumerable.Range(1, 6))
     Set(local, index);
     Check(casts.Count == before + 2, "Deliberate held expression still casts after menu closes");
     Hold(local, index); // native hold repeats each frame without new set RPC
-    MenuManager.instance.currentMenuPage = new();
+    MenuManager.instance.PageForTests = new();
     Stop(local, index);
-    MenuManager.instance.currentMenuPage = null;
+    MenuManager.instance.PageForTests = null;
     Hold(local, index, input: false);
     Set(local, index);
     Check(casts.Count == before + 2, "Menu stop clears repeated hold intent");
@@ -75,19 +75,19 @@ foreach (int index in Enumerable.Range(1, 6))
     Set(local, index);
     Check(casts.Count == before + 3, "Unowned RPC cannot consume the owner's valid input");
     Toggle(local, index);
-    MenuManager.instance.currentMenuPage = new();
+    MenuManager.instance.PageForTests = new();
     Set(local, index);
     Check(casts.Count == before + 3, "Menu opening before delayed toggle blocks cast");
     Toggle(local, index);
-    MenuManager.instance.currentMenuPage = null;
+    MenuManager.instance.PageForTests = null;
     Set(local, index);
     Check(casts.Count == before + 3, "Input inside menu cannot leak into gameplay");
     Call("TogglePrefix", new PlayerExpression(local), index);
     Set(local, index);
     Check(casts.Count == before + 3, "Menu preview avatar cannot authorize gameplay casts");
 
-    var peer = new PlayerAvatar { isLocal = false };
-    MenuManager.instance.currentMenuPage = new();
+    var peer = new PlayerAvatar { IsLocalForTests = false };
+    MenuManager.instance.PageForTests = new();
     Set(peer, index);
     Check(casts.Count == before + 4 && casts[^1] == (peer, index), "Vanilla peer can cast while host has menu open");
     Stop(peer, index);

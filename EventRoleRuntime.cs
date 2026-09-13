@@ -9,6 +9,7 @@ namespace REPOJP.StageRoles;
 
 internal sealed class EventRoleRuntime
 {
+    private static readonly FieldInfo? IsLocalPlayerField = AccessTools.Field(typeof(PlayerAvatar), "isLocal");
     private static readonly FieldInfo? PlayerTumbleField =
         AccessTools.Field(typeof(PlayerAvatar), "tumble");
     private static readonly FieldInfo? TumbleIsTumblingField =
@@ -281,7 +282,7 @@ internal sealed class EventRoleRuntime
             !PlayerState.IsLiving(target) ||
             DetectionOnlyField?.GetValue(collider) is true ||
             collider.ignorePlayers?.Contains(target) == true ||
-            (target.isLocal && IgnoreLocalPlayerField?.GetValue(collider) is true))
+            (IsLocalPlayerField?.GetValue(target) is true && IgnoreLocalPlayerField?.GetValue(collider) is true))
         {
             return;
         }

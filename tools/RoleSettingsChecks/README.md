@@ -15,6 +15,10 @@ Level adjustment checks compile the production save-backed stores, effective-lev
 
 These checks do not render the game or simulate Photon transport. Remaining multiplayer checks require a second game client: as a participant, verify the host's selection updates and no role, upgrade or preset can be changed; check the next assignment/draw and late joins after a settings change.
 
+## Verification on 2026-09-14
+
+- Native field access build 439 (v4.4.7): the game log showed `FieldAccessException` in Base Upgrade save identity and HUD refresh. Replaced direct accesses to internal save fields with cached reflection; applied the same correction to local-player, menu and staff state. Save/menu/local-player test fixtures now keep the relevant fields private. RoleSettingsChecks: 241 role, 156 Base Upgrade selection and 134 save-adjustment checks; ExpressionChecks: 106; HUD command callbacks: 21; staff integration checks: 26, all passing. `tools/Test-GameFieldAccess.ps1` rejected the old build's 10 illegal accesses, then passed all 424 remaining compiled game field references in build 439 against the installed non-publicized game DLL. Production build passed with no warnings or errors. Live rendering/gameplay remains user verification; no game controls were operated.
+
 ## Verification on 2026-09-13
 
 - Persistent adjustment build 436 (v4.4.7): no build warnings or errors. RoleSettingsChecks: 241 role, 156 selection and 134 save-adjustment checks. Draw selection/application: 131,086 checks, including adjustments during animation and positive results above the draw cap. LocalizationChecks: 10,663; resource coverage: 2,899 phrases; OptimizationChecks: 87; UtilityRuntimeChecks: 69; ScrollChecks: 71, all passing. The native save code includes `runStats` in its ES3 dictionary payload and clears it on a new-run reset. The new manual prefix shares that lifecycle while remaining separate from truck bonuses. Updated all 14 UI catalogs and bundled font subsets; role-guide content is unchanged. Persistence tests use disk-backed save stand-ins. Actual game saving, rendering and multiplayer transport are left to the user; no game controls were operated.

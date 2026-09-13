@@ -25,6 +25,7 @@ public record RoleSnapshot(string SteamId, string PlayerName, StageRole Role, St
 public class Flag { public bool Value = true; }
 public class StageRolesConfig { public const int MaximumSupportedPlayers = 30; public Flag SetRoleCommandEnabled = new(); }
 public class StatsManager { public static StatsManager instance = new(); public string saveFileCurrent = "test-save"; }
+public static class GameSaveState { public static string CurrentName => StatsManager.instance.saveFileCurrent; }
 public static class PhotonNetwork { public static object CurrentRoom = new(); }
 public static class SemiFunc { public static object PlayerGetLocal() => new(); }
 public static class PlayerIdentity { public static string SteamId(object player) => "self"; }

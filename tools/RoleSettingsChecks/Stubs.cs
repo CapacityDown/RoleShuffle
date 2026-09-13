@@ -13,7 +13,8 @@ public sealed class GameManager
 {
     public enum LobbyTypes { Private, Public }
     public static GameManager? instance = new();
-    public LobbyTypes lobbyType = LobbyTypes.Private;
+    private LobbyTypes lobbyType = LobbyTypes.Private;
+    public LobbyTypes LobbyForTests { get => lobbyType; set => lobbyType = value; }
 }
 public sealed class GameDirector { public static GameDirector? instance = new(); }
 public sealed class StatsManager
@@ -21,15 +22,16 @@ public sealed class StatsManager
     public static StatsManager? instance = new();
     public Dictionary<string, int> runStats = new();
     public List<GameManager.LobbyTypes> savedLobbyTypes = new() { GameManager.LobbyTypes.Private };
-    public string saveFileCurrent = "save-a.json";
-    public bool saveFileReady = true;
+    private string saveFileCurrent = "save-a.json";
+    private bool saveFileReady = true;
+    public bool ReadyForTests { get => saveFileReady; set => saveFileReady = value; }
     public static string DirectoryPath = "";
     public bool FailSave;
     public int Saves;
     public void SaveFileSave()
     {
         if (FailSave) throw new IOException("Simulated disk failure");
-        if (savedLobbyTypes.Contains(GameManager.instance!.lobbyType))
+        if (savedLobbyTypes.Contains(GameManager.instance!.LobbyForTests))
             File.WriteAllText(Path.Combine(DirectoryPath, saveFileCurrent), System.Text.Json.JsonSerializer.Serialize(runStats));
         Saves++;
     }

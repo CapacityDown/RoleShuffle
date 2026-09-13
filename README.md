@@ -24,6 +24,7 @@ dotnet build StageRoles.csproj -c Release --no-restore
 ```
 
 出力先は`bin/Release/netstandard2.1/RoleShuffle.dll`です。
+ビルド後は`pwsh -NoProfile -File tools/Test-GameFieldAccess.ps1`を実行し、実ゲームDLLの非公開フィールドを直接参照していないことを確認してください。ビルド用GameLibsの公開範囲と実ゲームの公開範囲は異なります。ゲームが別の場所にある場合は`-GameAssembly`で`Assembly-CSharp.dll`のパスを指定します。
 このプロジェクトのビルドではゲームへの自動配備を行いません。
 ゲームで使用する際は、`package/manifest.json`に記載された依存MODを別途導入してください。
 

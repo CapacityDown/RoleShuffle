@@ -9,11 +9,7 @@ internal static class BaseUpgradeManualStore
 
     // runStats belongs to the loaded save and is cleared by the game's reset.
     // Do not offer a persistent edit when the native save operation would skip it.
-    internal static string SaveIdentity => StatsManager.instance != null &&
-        GameManager.instance != null && GameDirector.instance != null &&
-        StatsManager.instance.saveFileReady &&
-        StatsManager.instance.savedLobbyTypes.Contains(GameManager.instance.lobbyType)
-            ? StatsManager.instance.saveFileCurrent ?? string.Empty : string.Empty;
+    internal static string SaveIdentity => GameSaveState.CanSave ? GameSaveState.CurrentName : string.Empty;
 
     internal static int Get(string dictionaryName) => StatsManager.instance == null
         ? 0 : StatsManager.instance.runStats.GetValueOrDefault(KeyPrefix + dictionaryName, 0);
