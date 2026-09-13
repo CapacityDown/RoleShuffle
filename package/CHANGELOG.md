@@ -1,3 +1,5 @@
+## 4.4.8
+
 ## 4.4.7
 - Fixed Mage and Trickster abilities activating when expressions end or when opening the Escape menu.
 - Improved Current Roles to list your role first, show its description on opening, and keep long messages within the menu.
