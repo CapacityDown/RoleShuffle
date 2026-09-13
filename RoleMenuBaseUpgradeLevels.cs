@@ -7,8 +7,9 @@ using TMPro;
 
 namespace REPOJP.StageRoles;
 
-internal sealed class RoleMenuAdjustment(int currentLevel, Action? decrease, Action? increase)
+internal sealed class RoleMenuAdjustment(int currentLevel, Action? decrease, Action? increase, bool showButtons = true)
 {
+    internal bool ShowButtons { get; } = showButtons;
     internal int CurrentLevel { get; } = currentLevel;
     internal Action? Decrease { get; } = decrease;
     internal Action? Increase { get; } = increase;
@@ -21,9 +22,9 @@ internal sealed partial class RoleMenu
         bool editable = RoleSelectionSettings.CanEdit;
         StringBuilder signature = new(editable ? "host:" : "guest:");
         signature.Append(BaseUpgradeSync.CurrentSignature(_config));
+        signature.Append('|').Append(BaseUpgradeSync.ManualAdjustmentEnabled(_config));
         if (editable)
         {
-            signature.Append('|').Append(_config.BaseUpgradeManualAdjustmentEnabled.Value);
             signature.Append('|').Append(BaseUpgradeSelectionSettings.CurrentRunLevel);
             signature.Append('|').Append(BaseUpgradeManualStore.SaveIdentity);
             foreach (var definition in RoleUpgradeScaling.Definitions)
@@ -46,7 +47,7 @@ internal sealed partial class RoleMenu
         if (upgrades.Count == 0) Text(Localized("Base Upgrade data is not available yet."));
         else
         {
-            bool manualDisabled = RoleSelectionSettings.CanEdit && !_config.BaseUpgradeManualAdjustmentEnabled.Value;
+            bool manualDisabled = !BaseUpgradeSync.ManualAdjustmentEnabled(_config);
             Text(manualDisabled
                 ? Localized("Manual adjustment is OFF in MOD settings.")
                 : Localized("+/- adjustments are saved with this game data."));
@@ -75,7 +76,7 @@ internal sealed partial class RoleMenu
                 entries.Add(new RoleMenuEntry(
                     DisplayUpgradeName(upgrade.Name),
                     21, FontStyles.Bold, 30, false, UseLanguageFont,
-                    adjustment: new RoleMenuAdjustment(upgrade.CurrentLevel, Adjust(-1), Adjust(1))));
+                    adjustment: new RoleMenuAdjustment(upgrade.CurrentLevel, Adjust(-1), Adjust(1), showButtons: !manualDisabled)));
                 entries.Add(new RoleMenuEntry(
                     string.Format(CultureInfo.InvariantCulture, Localized("Config {0}  Manual {1}  Draw {2}"),
                         upgrade.ConfiguredLevel, SignedValue(upgrade.ManualAdjustment), SignedValue(upgrade.TruckDrawBonus)),

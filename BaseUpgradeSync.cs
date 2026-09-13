@@ -33,6 +33,7 @@ internal static class BaseUpgradeSync
 {
     private const string PropertyKey = "RS.BaseUpgrades";
     private const string DetailPropertyKey = "RS.BaseUpgrades.Detail";
+    internal const string ManualStatePropertyKey = "RS.BaseUpgrades.ManualState";
     private const char EntrySeparator = ';';
     private const char FieldSeparator = ',';
 
@@ -56,6 +57,12 @@ internal static class BaseUpgradeSync
     // clients. The extension is accepted only for the same host and base data.
     internal static void AddDetails(Hashtable properties, StageRolesConfig config)
     {
+        string manualState = (PhotonNetwork.LocalPlayer?.ActorNumber ?? 0) + "|" +
+            (config.BaseUpgradeManualAdjustmentEnabled.Value ? "1" : "0");
+        if (PhotonNetwork.CurrentRoom == null ||
+            !PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(ManualStatePropertyKey, out object oldState) ||
+            !string.Equals(oldState as string, manualState, StringComparison.Ordinal))
+            properties[ManualStatePropertyKey] = manualState;
         string detail = (PhotonNetwork.LocalPlayer?.ActorNumber ?? 0) + "|" + Serialize(BuildLocal(config), true);
         if (PhotonNetwork.CurrentRoom == null ||
             !PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(DetailPropertyKey, out object old) ||
@@ -67,7 +74,23 @@ internal static class BaseUpgradeSync
         Serialize(BuildLocal(config));
 
     internal static string LocalPublishSignature(StageRolesConfig config) =>
-        CurrentSignature(config) + "|" + BaseUpgradeSettingsSync.LocalSignature(config);
+        CurrentSignature(config) + "|" + BaseUpgradeSettingsSync.LocalSignature(config) +
+        "|manual:" + config.BaseUpgradeManualAdjustmentEnabled.Value;
+
+    internal static bool ManualAdjustmentEnabled(StageRolesConfig config)
+    {
+        if (!SemiFunc.IsMultiplayer() || PhotonNetwork.IsMasterClient)
+            return config.BaseUpgradeManualAdjustmentEnabled.Value;
+        if (PhotonNetwork.CurrentRoom == null) return false;
+        // Hosts predating this extension had read-only participant buttons.
+        // Preserve that display when no state is published; never use a guest's
+        // local configuration to reinterpret the host's totals or permissions.
+        if (!PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(ManualStatePropertyKey, out object raw)) return true;
+        if (raw is not string text) return false;
+        string[] fields = text.Split('|');
+        return fields.Length == 2 && int.TryParse(fields[0], out int actor) && actor > 0 &&
+            actor == (PhotonNetwork.MasterClient?.ActorNumber ?? 0) && fields[1] == "1";
+    }
 
     internal static string CurrentSignature(StageRolesConfig config)
     {
@@ -126,7 +149,7 @@ internal static class BaseUpgradeSync
                 upgrade.Level,
                 configuredLevel,
                 BaseUpgradeBonusStore.Get(upgrade.DictionaryName),
-                BaseUpgradeManualStore.Get(upgrade.DictionaryName)));
+                BaseUpgradeManualStore.Applied(upgrade.DictionaryName, config.BaseUpgradeManualAdjustmentEnabled.Value)));
         }
         return result;
     }

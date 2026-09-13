@@ -13,7 +13,8 @@ internal sealed class RoleMenuStepper
     private const float Gap = 6f;
     private const float ValueWidth = 34f;
     private const float TextGap = 8f;
-    internal const float ReservedWidth = ButtonSize * 2f + Gap + ValueWidth + TextGap * 2f;
+    internal static float ReservedWidth(RoleMenuAdjustment adjustment) => adjustment.ShowButtons
+        ? ButtonSize * 2f + Gap + ValueWidth + TextGap * 2f : ValueWidth + TextGap;
     private readonly REPOLabel _value;
     private readonly REPOButton _minus;
     private readonly REPOButton _plus;
@@ -50,12 +51,22 @@ internal sealed class RoleMenuStepper
 
     internal void Configure(RoleMenuAdjustment adjustment, float width, float height)
     {
-        float buttonsLeft = width - ButtonSize * 2f - Gap;
-        ConfigureButton(_minus, _minusVisual, adjustment.Decrease, buttonsLeft, height);
-        ConfigureButton(_plus, _plusVisual, adjustment.Increase, width - ButtonSize, height);
+        float valueLeft = width - ValueWidth;
+        if (adjustment.ShowButtons)
+        {
+            float buttonsLeft = width - ButtonSize * 2f - Gap;
+            ConfigureButton(_minus, _minusVisual, adjustment.Decrease, buttonsLeft, height);
+            ConfigureButton(_plus, _plusVisual, adjustment.Increase, width - ButtonSize, height);
+            valueLeft = buttonsLeft - TextGap - ValueWidth;
+        }
+        else
+        {
+            _minus.gameObject.SetActive(false);
+            _plus.gameObject.SetActive(false);
+        }
         _value.gameObject.SetActive(true);
         _value.labelTMP.text = adjustment.CurrentLevel.ToString(CultureInfo.InvariantCulture);
-        _value.rectTransform.anchoredPosition = new Vector2(buttonsLeft - TextGap - ValueWidth, 0f);
+        _value.rectTransform.anchoredPosition = new Vector2(valueLeft, 0f);
         Vector2 valueSize = new(ValueWidth, height);
         _value.rectTransform.sizeDelta = valueSize;
         _value.labelTMP.rectTransform.sizeDelta = valueSize;

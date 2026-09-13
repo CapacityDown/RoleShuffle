@@ -23,6 +23,7 @@ public class StageRolesConfig {
     public Entry<int> TruckUpgradeDrawMaximumLevel = new(50);
     public Entry<float> TruckUpgradeDrawCappedWeightMultiplier = new(0.25f);
     public Entry<float> TruckUpgradeDrawWeightFalloffExponent = new(2f);
+    public Entry<bool> BaseUpgradeManualAdjustmentEnabled = new(false);
     public bool BaseUpgradeDrawIsEnabled(string name) => Enabled.GetValueOrDefault(name);
     public int TruckUpgradeDrawWeight(string name) => Weights.GetValueOrDefault(name, 10);
 }
@@ -36,7 +37,9 @@ public class Logger { public void LogInfo(string s) {} public void LogWarning(st
 public static class StageRolesPlugin { public static Logger ModLogger = new(); }
 public static class BaseUpgradeBonusStore {
     public static List<(string Name, int Level, int Configured, int Delta)> Calls = new();
-    public static bool ApplyEffectiveDelta(string name, int level, int configured, int delta, int maximum) {
+    public static bool LastManualEnabled;
+    public static bool ApplyEffectiveDelta(string name, int level, int configured, int delta, int maximum, bool manualEnabled) {
+        LastManualEnabled = manualEnabled;
         Calls.Add((name, level, configured, delta)); return true;
     }
 }
@@ -116,6 +119,10 @@ __METHODS__
         c.Bases = new[] { previous[0], new UpgradeGrant("Stamina", "playerUpgradeStamina", 5) };
         BaseUpgradeBonusStore.Calls.Clear(); draw.ApplyResults();
         Check(BaseUpgradeBonusStore.Calls.Single().Level == 5, "Individual draw uses the level after an in-flight manual adjustment");
+        Check(!BaseUpgradeBonusStore.LastManualEnabled, "Draw application passes the default-off manual state to bonus arithmetic");
+        c.BaseUpgradeManualAdjustmentEnabled.Value = true;
+        draw.ApplyResults();
+        Check(BaseUpgradeBonusStore.LastManualEnabled, "Draw application uses the live manual state after a setting change");
         c.TruckUpgradeDrawMaximumLevel.Value = 4;
         BaseUpgradeBonusStore.Calls.Clear(); draw.ApplyResults();
         Check(BaseUpgradeBonusStore.Calls.Count == 0, "A positive result never lowers a manually increased level above the draw cap");

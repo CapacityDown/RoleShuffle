@@ -98,7 +98,8 @@ namespace REPOJP.StageRoles
         }).ToArray();
         internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(StageRolesConfig config) => ConfiguredBaseUpgrades(config)
             .Select(g => new UpgradeGrant(g.CommandName, g.DictionaryName,
-                BaseUpgradeManualStore.EffectiveLevel(g.DictionaryName, g.Level, g.CommandName == "MapPlayerCount" ? 1 : 200))).ToArray();
+                BaseUpgradeManualStore.EffectiveLevel(g.DictionaryName, g.Level, g.CommandName == "MapPlayerCount" ? 1 : 200,
+                    config.BaseUpgradeManualAdjustmentEnabled.Value))).ToArray();
         internal static IReadOnlyList<StageRole> AllRoles = Enum.GetValues<StageRole>();
         internal static bool IsSecretRole(StageRole role) => role is StageRole.Superbot or StageRole.Disaster;
         internal static string DisplayName(StageRole role) => role switch

@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 444;
+    private const int RoleUiBuildNumber = 445;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -992,7 +992,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             row.Button.overrideButtonSize = size;
             row.Button.rectTransform.sizeDelta = size;
             row.Label.rectTransform.anchoredPosition = new Vector2(textInset, 0f);
-            float reservedWidth = entry.Adjustment != null ? RoleMenuStepper.ReservedWidth : 0f;
+            float reservedWidth = entry.Adjustment != null ? RoleMenuStepper.ReservedWidth(entry.Adjustment) : 0f;
             Vector2 textSize = new(contentWidth - textInset - padding - reservedWidth, entry.Height);
             row.Label.rectTransform.sizeDelta = textSize;
             labelText.rectTransform.sizeDelta = textSize;

@@ -31,9 +31,11 @@ internal static class BaseUpgradeManualStore
         return true;
     }
 
-    internal static int EffectiveLevel(string dictionaryName, int configured, int maximum) =>
+    internal static int Applied(string dictionaryName, bool enabled) => enabled ? Get(dictionaryName) : 0;
+
+    internal static int EffectiveLevel(string dictionaryName, int configured, int maximum, bool manualEnabled) =>
         (int)Math.Max(0L, Math.Min(maximum,
-            (long)configured + Get(dictionaryName) + BaseUpgradeBonusStore.Get(dictionaryName)));
+            (long)configured + Applied(dictionaryName, manualEnabled) + BaseUpgradeBonusStore.Get(dictionaryName)));
 }
 
 internal static class BaseUpgradeBonusStore
@@ -45,12 +47,14 @@ internal static class BaseUpgradeBonusStore
         StatsManager.instance.runStats.GetValueOrDefault(KeyPrefix + dictionaryName, 0);
 
     internal static bool ApplyEffectiveDelta(string dictionaryName, int currentLevel,
-        int configuredLevel, int delta, int maximumLevel)
+        int configuredLevel, int delta, int maximumLevel, bool manualEnabled)
     {
         if (StatsManager.instance == null || string.IsNullOrEmpty(dictionaryName) || delta == 0) return false;
         int desired = (int)Math.Max(0L, Math.Min(maximumLevel, (long)currentLevel + delta));
         if (desired == currentLevel) return false;
-        long bonus = (long)desired - configuredLevel - BaseUpgradeManualStore.Get(dictionaryName);
+        // Disabled manual amounts stay in the save, but must not be compensated
+        // for by a draw or they would leak into the independent truck bonus.
+        long bonus = (long)desired - configuredLevel - BaseUpgradeManualStore.Applied(dictionaryName, manualEnabled);
         if (bonus < int.MinValue || bonus > int.MaxValue) return false;
         StatsManager.instance.runStats[KeyPrefix + dictionaryName] = (int)bonus;
         return true;

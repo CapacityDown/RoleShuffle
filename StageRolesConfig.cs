@@ -120,7 +120,8 @@ internal sealed class StageRolesConfig
 
         BaseUpgradeManualAdjustmentEnabled = BindBool(config, "Base Upgrades", "ManualAdjustmentEnabled", false,
             "Allows the host to use the minus/plus buttons on BASE UPGRADES. Default: off. " +
-            "Turning this off prevents further manual edits; saved adjustments remain applied. " +
+            "Turning this off hides the buttons and excludes saved manual adjustments from base targets. " +
+            "Saved amounts are kept and apply again when enabled. " +
             "Configured base levels and truck draws are unaffected.");
         BaseHealthLevels = BaseUpgradeScaling(config, "HealthUpgradeLevels", "1:1", RoleUpgradeScaling.MaximumUpgradeLevel);
         BaseStaminaLevels = BaseUpgradeScaling(config, "StaminaUpgradeLevels", string.Empty, RoleUpgradeScaling.MaximumUpgradeLevel);

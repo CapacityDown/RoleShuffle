@@ -37,7 +37,8 @@ internal sealed class BaseUpgradeSelectionSettings(StageRolesConfig settings, Co
             if (rule.Condition <= CurrentRunLevel) configured = rule.Level;
         }
         dictionaryName = "playerUpgrade" + name;
-        int next = BaseUpgradeManualStore.EffectiveLevel(dictionaryName, configured, maximum) + delta;
+        int next = BaseUpgradeManualStore.EffectiveLevel(dictionaryName, configured, maximum,
+            settings.BaseUpgradeManualAdjustmentEnabled.Value) + delta;
         if (next < 0 || next > maximum) return false;
         // Keep configuration and truck results intact. If a changed rule has
         // clipped the total, one click still moves the displayed total by one.

@@ -25,11 +25,11 @@ internal static class SaveAdjustmentChecks
             !service.TryAdjustLevel("Health", 1, toggleSave) && !service.TryAdjustLevel("Health", -1, toggleSave) &&
             StatsManager.instance.Saves == blockedSaves, "Default-off rejects both valid edits without saving");
         RoleMenu.ShowLevels(config);
-        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Increase == null && e.Adjustment.Decrease == null) &&
-            RoleMenu.Entries.Any(e => e.Text == "Manual adjustment is OFF in MOD settings."), "Default-off controls are disabled and explained");
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => !e.Adjustment!.ShowButtons && e.Adjustment.Increase == null && e.Adjustment.Decrease == null) &&
+            RoleMenu.Entries.Any(e => e.Text == "Manual adjustment is OFF in MOD settings."), "Default-off buttons are hidden and explained");
         manualSetting.BoxedValue = true;
         RoleMenu.RefreshLevelsIfChanged();
-        Check(RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment is { Increase: not null, Decrease: not null },
+        Check(RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment is { ShowButtons: true, Increase: not null, Decrease: not null },
             "REPOConfig enable refreshes the open level page even when levels did not change");
         var enabledReload = new StageRolesConfig(new ConfigFile(file.ConfigFilePath, false) { SaveOnConfigSet = false });
         Check(enabledReload.BaseUpgradeManualAdjustmentEnabled.Value, "Enabled preference persists through real configuration reload");
@@ -50,6 +50,12 @@ internal static class SaveAdjustmentChecks
             StatsManager.instance = new();
             StatsManager.instance.Load(save);
             Check(BaseUpgradeManualStore.Get(definition.DictionaryName) == 1, "Manual adjustment reloads after process state is discarded");
+            manualSetting.Value = false;
+            Check(RoleCatalog.BaseUpgrades(config).Single(g => g.CommandName == definition.Name).Level ==
+                (definition.MaximumLevel == 1 ? 0 : 2), "Off excludes the saved positive amount for every upgrade");
+            Check(BaseUpgradeSync.Read(config).Single(g => g.Name == definition.Name).ManualAdjustment == 0 &&
+                BaseUpgradeManualStore.Get(definition.DictionaryName) == 1, "Off reports no applied manual value without deleting the saved amount");
+            manualSetting.Value = true;
             RunManager.instance.levelsCompleted = 8;
             Check(RoleCatalog.BaseUpgrades(config).Single(g => g.CommandName == definition.Name).Level ==
                 (definition.MaximumLevel == 1 ? 1 : 8), "Adjustment survives later configured thresholds");
@@ -57,6 +63,14 @@ internal static class SaveAdjustmentChecks
             RunManager.instance.levelsCompleted = 2;
             Check(service.TryAdjustLevel(definition.Name, -1, save) && BaseUpgradeManualStore.Get(definition.DictionaryName) == 0,
                 "Decrease reverses the manual increment without rewriting rules");
+            entry.Value = "1:1";
+            Check(service.TryAdjustLevel(definition.Name, -1, save), "Each upgrade accepts a negative manual amount");
+            manualSetting.Value = false;
+            Check(RoleCatalog.BaseUpgrades(config).Single(g => g.CommandName == definition.Name).Level == 1 &&
+                BaseUpgradeManualStore.Get(definition.DictionaryName) == -1, "Off also excludes negative manual amounts without erasing them");
+            manualSetting.Value = true;
+            Check(RoleCatalog.BaseUpgrades(config).Single(g => g.CommandName == definition.Name).Level == 0,
+                "Re-enabling restores negative saved amounts, including the Map cap");
         }
 
         StatsManager.instance = new();
@@ -66,38 +80,40 @@ internal static class SaveAdjustmentChecks
         int Total() => RoleCatalog.BaseUpgrades(config).Single(g => g.CommandName == "Health").Level;
         config.BaseHealthLevels.Value = "1:2,5:7";
         Check(service.TryAdjustLevel("Health", 1, identity) && Total() == 3, "Initial manual increase");
-        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, 2, 200), "Truck result can follow manual adjustment");
+        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, 2, 200, manualSetting.Value), "Truck result can follow manual adjustment");
         Check(Total() == 5 && BaseUpgradeManualStore.Get(health) == 1 && BaseUpgradeBonusStore.Get(health) == 2,
             "Truck result retains manual amount");
         Check(service.TryAdjustLevel("Health", 1, identity) && Total() == 6 && BaseUpgradeBonusStore.Get(health) == 2,
             "Manual result retains truck amount");
-        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, -1, 200) && Total() == 5 &&
+        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, -1, 200, manualSetting.Value) && Total() == 5 &&
             BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1, "Negative truck result remains separate");
         RoleMenu.ShowLevels(config);
         Action staleEnabledClick = RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment!.Increase!;
         manualSetting.BoxedValue = false;
         RoleMenu.RefreshLevelsIfChanged();
-        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Increase == null && e.Adjustment.Decrease == null),
-            "REPOConfig disable refreshes every adjustment control");
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => !e.Adjustment!.ShowButtons && e.Adjustment.Increase == null && e.Adjustment.Decrease == null),
+            "REPOConfig disable hides every adjustment control");
         blockedSaves = StatsManager.instance.Saves;
         staleEnabledClick();
         Check(!service.TryAdjustLevel("Health", 1, identity) && !service.TryAdjustLevel("Health", -1, identity) &&
             StatsManager.instance.Saves == blockedSaves, "Disabling also blocks stale callbacks and direct edits");
-        Check(Total() == 5 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1 &&
-            config.BaseHealthLevels.Value == "1:2,5:7", "Disabling preserves applied manual levels, draw bonuses and base rules");
+        Check(Total() == 3 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1 &&
+            config.BaseHealthLevels.Value == "1:2,5:7", "Off removes the applied manual level while retaining saved amounts, draw bonuses and rules");
+        Check(RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 3) &&
+            RoleMenu.Entries.Any(e => e.Text == "Config 2  Manual 0  Draw +1"), "Off display adds up to configured and truck values only");
         var disabledReload = new StageRolesConfig(new ConfigFile(file.ConfigFilePath, false) { SaveOnConfigSet = false });
         Check(!disabledReload.BaseUpgradeManualAdjustmentEnabled.Value, "Disabled preference persists through real configuration reload");
         StatsManager.instance.SaveFileSave();
         StatsManager.instance = new();
         StatsManager.instance.Load(identity);
-        Check(Total() == 5 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1, "Both amounts persist together while editing is disabled");
-        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, 1, 200) && Total() == 6 &&
-            BaseUpgradeManualStore.Get(health) == 2, "Truck draws remain active while manual editing is disabled");
-        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, -1, 200) && Total() == 5,
-            "Negative truck draws also remain active while manual editing is disabled");
+        Check(Total() == 3 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1, "Off survives reload and retains the inactive manual amount");
+        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, 1, 200, manualSetting.Value) && Total() == 4 &&
+            BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 2, "Off truck increment does not compensate for the inactive manual amount");
+        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, -1, 200, manualSetting.Value) && Total() == 3 &&
+            BaseUpgradeBonusStore.Get(health) == 1, "Off truck decrement changes only the truck bonus");
         manualSetting.BoxedValue = true;
-        Check(service.CanAdjustLevel("Health", 1, identity) && service.CanAdjustLevel("Health", -1, identity),
-            "Re-enabling resumes editing the existing saved total");
+        Check(Total() == 5 && service.CanAdjustLevel("Health", 1, identity) && service.CanAdjustLevel("Health", -1, identity),
+            "Re-enabling restores the saved amount without double counting off-time draws");
         RunManager.instance.levelsCompleted = 5;
         Check(Total() == 10, "Later threshold adds both saved amounts");
         StatsManager.instance.Load("other-save.json");
@@ -163,6 +179,12 @@ internal static class SaveAdjustmentChecks
         SemiFunc.Multiplayer = true;
         PhotonNetwork.IsMasterClient = true;
         PhotonNetwork.CurrentRoom = new();
+        manualSetting.Value = false;
+        BaseUpgradeSync.Publish(config);
+        string offLegacy = (string)PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades"];
+        string offDetail = (string)PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades.Detail"];
+        string offState = (string)PhotonNetwork.CurrentRoom.CustomProperties[BaseUpgradeSync.ManualStatePropertyKey];
+        manualSetting.Value = true;
         BaseUpgradeSync.Publish(config);
         string legacy = (string)PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades"];
         string detail = (string)PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades.Detail"];
@@ -173,10 +195,31 @@ internal static class SaveAdjustmentChecks
         Check(StatsManager.instance.Saves == saves && !service.TryAdjustLevel("Health", -1, BaseUpgradeManualStore.SaveIdentity), "Host authority rechecked at invocation");
         config.BaseHealthLevels.Value = "1:3";
         StatsManager.instance.runStats.Clear();
+        manualSetting.Value = false;
         RoleMenu.ShowLevels(config);
         Check(RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 199) &&
             RoleMenu.Entries.Any(e => e.Text == "Config 200  Manual -1  Draw 0"), "Guest sees host breakdown instead of local data");
-        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Increase == null && e.Adjustment.Decrease == null), "All guest controls disabled");
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.ShowButtons && e.Adjustment.Increase == null && e.Adjustment.Decrease == null),
+            "Host-on guest controls remain read-only even when the guest local setting is off");
+        PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades"] = offLegacy;
+        PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades.Detail"] = offDetail;
+        PhotonNetwork.CurrentRoom.CustomProperties[BaseUpgradeSync.ManualStatePropertyKey] = offState;
+        manualSetting.Value = true;
+        RoleMenu.RefreshLevelsIfChanged();
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => !e.Adjustment!.ShowButtons) &&
+            RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 200) &&
+            BaseUpgradeSync.Read(config)[0].ManualAdjustment == 0, "Host-off hides guest buttons and syncs totals excluding manual amounts despite guest local on");
+        foreach (object invalid in new object[] { "2|1", "1|x", "1|1|extra", 1 })
+        {
+            PhotonNetwork.CurrentRoom.CustomProperties[BaseUpgradeSync.ManualStatePropertyKey] = invalid;
+            Check(!BaseUpgradeSync.ManualAdjustmentEnabled(config), "Malformed or previous-host button state is ignored");
+        }
+        PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades"] = legacy;
+        PhotonNetwork.CurrentRoom.CustomProperties["RS.BaseUpgrades.Detail"] = detail;
+        PhotonNetwork.CurrentRoom.CustomProperties.Remove(BaseUpgradeSync.ManualStatePropertyKey);
+        RoleMenu.RefreshLevelsIfChanged();
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.ShowButtons && e.Adjustment.Increase == null),
+            "Missing extension preserves older hosts' read-only button display");
         PhotonNetwork.CurrentRoom.CustomProperties.Remove("RS.BaseUpgrades.Detail");
         Check(BaseUpgradeSync.Read(config)[0].ManualAdjustment == 0 && BaseUpgradeSync.Read(config)[0].CurrentLevel == 199, "Older hosts remain readable");
         foreach (string invalid in new[] { "broken", "2|" + detail.Split('|')[1], detail.Replace("Health,199,", "Health,198,"), detail.Replace(",0,-1;", ",0,invalid;") })
@@ -187,6 +230,20 @@ internal static class SaveAdjustmentChecks
         PhotonNetwork.CurrentRoom.CustomProperties.Remove("RS.BaseUpgrades");
         RoleMenu.ShowLevels(config);
         Check(RoleMenu.Entries.All(e => e.Adjustment == null), "No host payload does not fabricate values");
+
+        PhotonNetwork.IsMasterClient = true;
+        BaseUpgradeSync.Publish(config);
+        string unchangedLevels = BaseUpgradeSync.LocalSignature(config);
+        string beforeToggle = BaseUpgradeSync.LocalPublishSignature(config);
+        manualSetting.Value = false;
+        Check(unchangedLevels == BaseUpgradeSync.LocalSignature(config) && beforeToggle != BaseUpgradeSync.LocalPublishSignature(config),
+            "An on/off change is published even when all saved manual amounts are zero");
+        BaseUpgradeSync.Publish(config);
+        PhotonNetwork.IsMasterClient = false;
+        RoleMenu.ShowLevels(config);
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => !e.Adjustment!.ShowButtons),
+            "Zero-manual host toggle still updates guest button visibility");
+        manualSetting.Value = true;
 
         SemiFunc.Multiplayer = false;
         StatsManager.instance.Load("readiness.json");

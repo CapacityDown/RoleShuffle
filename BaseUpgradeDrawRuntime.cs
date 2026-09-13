@@ -298,7 +298,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
                     upgrade.Level,
                     configured,
                     delta,
-                    maximum))
+                    maximum,
+                    _config.BaseUpgradeManualAdjustmentEnabled.Value))
             {
                 applied.Add(new AppliedUpgrade(upgrade, delta));
             }
@@ -774,7 +775,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
                     upgrade.Level,
                     configuredLevel,
                     actualDelta,
-                    absoluteMaximum))
+                    absoluteMaximum,
+                    _config.BaseUpgradeManualAdjustmentEnabled.Value))
             {
                 applied.Add(new AppliedUpgrade(upgrade, actualDelta));
             }

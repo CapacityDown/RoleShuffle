@@ -152,18 +152,18 @@ internal static class RoleCatalog
         bool includeTruckDrawBonus) =>
         new[]
         {
-            BaseGrant("Health", "playerUpgradeHealth", config.BaseHealthLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("Stamina", "playerUpgradeStamina", config.BaseStaminaLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("ExtraJump", "playerUpgradeExtraJump", config.BaseExtraJumpLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("Speed", "playerUpgradeSpeed", config.BaseSpeedLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("Strength", "playerUpgradeStrength", config.BaseStrengthLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("Range", "playerUpgradeRange", config.BaseRangeLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("Launch", "playerUpgradeLaunch", config.BaseLaunchLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("TumbleClimb", "playerUpgradeTumbleClimb", config.BaseTumbleClimbLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("TumbleWings", "playerUpgradeTumbleWings", config.BaseTumbleWingsLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("CrouchRest", "playerUpgradeCrouchRest", config.BaseCrouchRestLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
-            BaseGrant("MapPlayerCount", "playerUpgradeMapPlayerCount", config.BaseMapPlayerCountLevels.Value, 1, includeTruckDrawBonus),
-            BaseGrant("DeathHeadBattery", "playerUpgradeDeathHeadBattery", config.BaseDeathHeadBatteryLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus)
+            BaseGrant(config, "Health", "playerUpgradeHealth", config.BaseHealthLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "Stamina", "playerUpgradeStamina", config.BaseStaminaLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "ExtraJump", "playerUpgradeExtraJump", config.BaseExtraJumpLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "Speed", "playerUpgradeSpeed", config.BaseSpeedLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "Strength", "playerUpgradeStrength", config.BaseStrengthLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "Range", "playerUpgradeRange", config.BaseRangeLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "Launch", "playerUpgradeLaunch", config.BaseLaunchLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "TumbleClimb", "playerUpgradeTumbleClimb", config.BaseTumbleClimbLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "TumbleWings", "playerUpgradeTumbleWings", config.BaseTumbleWingsLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "CrouchRest", "playerUpgradeCrouchRest", config.BaseCrouchRestLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus),
+            BaseGrant(config, "MapPlayerCount", "playerUpgradeMapPlayerCount", config.BaseMapPlayerCountLevels.Value, 1, includeTruckDrawBonus),
+            BaseGrant(config, "DeathHeadBattery", "playerUpgradeDeathHeadBattery", config.BaseDeathHeadBatteryLevels.Value, RoleUpgradeScaling.MaximumUpgradeLevel, includeTruckDrawBonus)
         };
 
     internal static bool BaseUpgradeMeetsOrExceedsRoleTarget(
@@ -339,6 +339,7 @@ internal static class RoleCatalog
         new[] { new UpgradeGrant(commandName, dictionaryName, level) };
 
     private static UpgradeGrant BaseGrant(
+        StageRolesConfig config,
         string commandName,
         string dictionaryName,
         string source,
@@ -349,7 +350,8 @@ internal static class RoleCatalog
             dictionaryName,
             includeTruckDrawBonus
                 ? BaseUpgradeManualStore.EffectiveLevel(dictionaryName,
-                    ResolveBaseLevel(commandName, source, maximumLevel), maximumLevel)
+                    ResolveBaseLevel(commandName, source, maximumLevel), maximumLevel,
+                    config.BaseUpgradeManualAdjustmentEnabled.Value)
                 : ResolveBaseLevel(commandName, source, maximumLevel));
 
     private static int ResolveBaseLevel(
