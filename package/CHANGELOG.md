@@ -1,10 +1,10 @@
 ## 4.4.7
-- Long translated messages on the empty Current Roles page now wrap within the menu instead of being cut off at the right edge.
-- The Current Roles page lists your role first and expands its description when opened.
-- The HUD now fits six players including the local player with multibyte names or role icons, when the page limit is at least six. Long names preserve role text, and taller layouts stay within the screen.
-- Fixed Mage and Trickster abilities activating when an expression ends, including when opening the Escape menu. The host's own menu expression restoration no longer activates abilities.
-- Added host-controlled role ON/OFF switches in Roles UI and Standard, Beginner, Cooperative, Chaos, and Challenge presets. Framed controls distinguish actions from descriptions: ON roles use orange, editable OFF roles use blue with grayscale icons, and unavailable controls use gray without hover feedback. Selections are saved to MOD settings for future assignments; existing roles, weights, and ability settings are preserved.
-- Added host-controlled Base Upgrade draw switches in Roles UI and REPOConfig. Disabled types are excluded from future individual and All Upgrades draws. Manual adjustments are off by default and can be enabled with Base Upgrades.ManualAdjustmentEnabled in MOD settings. In the lobby, truck and shop, per-upgrade minus/plus buttons adjust the total by one and save a separate manual adjustment with the current game data, preserving it across run levels and reloads. After game over, the first lobby edit prepares a new save for the restarted run. Disabling manual adjustments hides the buttons, manual breakdown and related guidance, and excludes their saved amounts from base targets until re-enabled. Installed participants follow the host setting. Compact two-line entries show the name, total and controls above a breakdown of configured values, manual adjustments and truck draw results; REPOConfig rules, draw bonuses and weights are preserved. Dividers separate menu groups outside Role Guide; consecutive buttons stay together.
+- Fixed Mage and Trickster abilities activating when expressions end or when opening the Escape menu.
+- Improved Current Roles to list your role first, show its description on opening, and keep long messages within the menu.
+- Improved six-player HUD layouts for multibyte names and role icons.
+- Added host-controlled role ON/OFF settings and Standard, Beginner, Cooperative, Chaos, and Challenge presets in Roles UI, shared with MOD settings.
+- Added host-controlled Base Upgrade draw ON/OFF settings in Roles UI, shared with REPOConfig.
+- Added optional Base Upgrade +/- adjustments saved per game, available in the lobby, truck, and shop. Disabled by default.
 
 ## 4.4.6
 - Moved questions, bug reports, and feedback to GitHub Issues.
