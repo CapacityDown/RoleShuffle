@@ -15,6 +15,8 @@ These checks do not render the game or simulate Photon transport. Remaining mult
 
 ## Verification on 2026-09-13
 
+- Role button states build 429 (v4.4.7): no warnings or errors. RoleSettingsChecks: 241 role and 156 Base Upgrade checks, all passing. Editable ON roles retain orange framing; editable OFF roles use blue framing/backgrounds and a brighter blue hover state. Unavailable controls use muted gray with no hover feedback. The existing callback and shared config paths are unchanged. Live visual verification is left to the user; no game controls were operated.
+
 - Disabled role icons build 428 (v4.4.7): no warnings or errors. RoleSettingsChecks: 241 role and 156 Base Upgrade checks, all passing. OFF settings rows request a cached grayscale variant using the same host/local state as their ON/OFF label; ON rows, HUD and guide retain the normal sprite. Conversion preserves the original alpha. Live visual verification is left to the user as requested; no game controls were operated.
 
 - Button visuals build 427 (v4.4.7): no warnings or errors. RoleSettingsChecks: 241 role and 156 Base Upgrade checks; ScrollChecks: 71, all passing.

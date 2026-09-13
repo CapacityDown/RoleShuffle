@@ -18,6 +18,7 @@ internal sealed class RoleMenuButtonVisual : MonoBehaviour
     private Image? _background;
     private readonly Image[] _edges = new Image[4];
     private bool _clickable;
+    private bool _off;
     private bool _hovered;
 
     internal void Initialize(REPOButton button, TMP_Text label)
@@ -28,11 +29,12 @@ internal sealed class RoleMenuButtonVisual : MonoBehaviour
         enabled = false;
     }
 
-    internal void Configure(bool control, bool clickable)
+    internal void Configure(bool control, bool clickable, bool off)
     {
         if (control && _background == null) CreateFrame();
         if (_background != null) _background.gameObject.SetActive(control);
         _clickable = clickable;
+        _off = off;
         _hovered = false;
         enabled = control;
         if (control) Paint();
@@ -49,15 +51,32 @@ internal sealed class RoleMenuButtonVisual : MonoBehaviour
 
     private void Paint()
     {
-        _background!.color = !_clickable ? new Color(0.075f, 0.08f, 0.09f, 0.9f)
-            : _hovered ? new Color(0.32f, 0.16f, 0.045f, 0.96f)
-            : new Color(0.16f, 0.075f, 0.025f, 0.94f);
-        Color border = !_clickable ? new Color(0.35f, 0.37f, 0.4f, 0.75f)
-            : _hovered ? new Color(1f, 0.75f, 0.3f, 1f)
-            : new Color(1f, 0.46f, 0.08f, 0.9f);
+        Color border;
+        if (!_clickable)
+        {
+            _background!.color = new Color(0.075f, 0.08f, 0.09f, 0.9f);
+            border = new Color(0.35f, 0.37f, 0.4f, 0.75f);
+            _label.color = new Color(0.5f, 0.52f, 0.55f, 1f);
+        }
+        else if (_off)
+        {
+            // Blue means OFF but still actionable; gray is reserved for
+            // controls without permission/callbacks. Hover stays blue.
+            _background!.color = _hovered ? new Color(0.065f, 0.16f, 0.24f, 0.96f)
+                : new Color(0.035f, 0.075f, 0.11f, 0.94f);
+            border = _hovered ? new Color(0.5f, 0.82f, 1f, 1f)
+                : new Color(0.25f, 0.65f, 0.95f, 0.95f);
+            _label.color = _hovered ? Color.white : new Color(0.72f, 0.85f, 0.97f, 1f);
+        }
+        else
+        {
+            _background!.color = _hovered ? new Color(0.32f, 0.16f, 0.045f, 0.96f)
+                : new Color(0.16f, 0.075f, 0.025f, 0.94f);
+            border = _hovered ? new Color(1f, 0.75f, 0.3f, 1f)
+                : new Color(1f, 0.46f, 0.08f, 0.9f);
+            _label.color = _hovered ? Color.white : new Color(1f, 0.88f, 0.7f, 1f);
+        }
         foreach (Image edge in _edges) edge.color = border;
-        _label.color = !_clickable ? new Color(0.62f, 0.64f, 0.67f, 1f)
-            : _hovered ? Color.white : new Color(1f, 0.88f, 0.7f, 1f);
     }
 
     private void CreateFrame()

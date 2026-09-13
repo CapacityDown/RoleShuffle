@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 428;
+    private const int RoleUiBuildNumber = 429;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -1027,7 +1027,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 : row.DefaultFont;
             row.Button.onClick = entry.OnClick;
             row.Button.menuButton.enabled = clickable;
-            row.Visual.Configure(control, clickable);
+            row.Visual.Configure(control, clickable, entry.EmblemRole.HasValue && entry.EmblemGrayedOut);
             labelText.raycastTarget = false;
             Sprite? emblem = entry.EmblemRole.HasValue
                 ? RoleEmblems.Get(entry.EmblemRole.Value, entry.UnrevealedEmblem, entry.EmblemGrayedOut) : null;
