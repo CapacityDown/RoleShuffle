@@ -111,7 +111,7 @@ internal sealed class StageRolesConfig
         HudOffsetX = BindInt(config, "HUD", "OffsetX", 0, -3840, 3840, "Horizontal offset from the anchor in pixels.");
         HudOffsetY = BindInt(config, "HUD", "OffsetY", 80, -2160, 2160, "Vertical offset from the anchor in pixels.");
         HudScalePercent = BindInt(config, "HUD", "ScalePercent", 70, 50, 200, "Role HUD scale percentage.");
-        HudPlayersPerPage = BindInt(config, "HUD", "PlayersPerPage", 8, 2, 20, "Maximum players shown at once, including the pinned local player. Fewer players are shown when needed to fit the icons and font height.");
+        HudPlayersPerPage = BindInt(config, "HUD", "PlayersPerPage", 8, 2, 20, "Maximum players shown at once, including the pinned local player. The HUD reserves room for six players when this is at least 6, including taller fallback fonts and icons.");
         HudPageIntervalSeconds = BindFloat(config, "HUD", "PageIntervalSeconds", 5f, 1f, 30f, "Seconds each role page remains visible.");
         HudTransitionDurationSeconds = BindFloat(config, "HUD", "TransitionDurationSeconds", 0.2f, 0f, 1f, "Duration of the fade between role pages.");
         HudPinLocalPlayer = BindBool(config, "HUD", "PinLocalPlayer", true, "Keeps the local player's role visible on every page.");

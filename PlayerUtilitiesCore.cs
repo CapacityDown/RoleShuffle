@@ -10,6 +10,16 @@ namespace REPOJP.StageRoles;
 
 internal static class HudLayoutMath
 {
+    internal static float ContentHeight(float minimumHeight, float headingHeight, float headingGap, float rowHeight, int requestedPlayers)
+    {
+        int reservedRows = Math.Min(6, Math.Max(2, Math.Min(20, requestedPlayers)));
+        return Math.Max(minimumHeight, headingHeight + headingGap + reservedRows * rowHeight);
+    }
+
+    internal static int PageCapacity(int requestedPlayers, float contentHeight, float headingHeight, float headingGap, float rowHeight) =>
+        Math.Min(Math.Max(2, Math.Min(20, requestedPlayers)),
+            Math.Max(2, (int)Math.Floor((contentHeight - headingHeight - headingGap + 0.01f) / rowHeight)));
+
     internal static float Scale(float width, float height, float contentWidth, float contentHeight, float userScale, float resolutionScale)
     {
         float desired = Math.Max(0.1f, resolutionScale * userScale);
@@ -24,6 +34,37 @@ internal static class HudLayoutMath
         int minimum = (int)Math.Ceiling(Math.Max(-limit, -anchor * remaining / resolutionScale));
         int maximum = (int)Math.Floor(Math.Min(limit, (1 - anchor) * remaining / resolutionScale));
         return Math.Max(minimum, Math.Min(maximum, value));
+    }
+}
+
+internal static class HudLabelText
+{
+    private const int MaximumNameElements = 20;
+
+    internal static string SingleLine(string value)
+    {
+        StringBuilder text = new(value.Length);
+        foreach (char character in value)
+            text.Append(char.IsControl(character) || character is '\u2028' or '\u2029' ? ' ' : character);
+        return text.ToString().Trim();
+    }
+
+    internal static string Fit(string playerName, string roleName, float width, Func<string, float> measure)
+    {
+        string name = SingleLine(playerName);
+        if (string.IsNullOrWhiteSpace(name)) name = "Player";
+        int[] elements = StringInfo.ParseCombiningCharacters(name);
+        int count = elements.Length <= MaximumNameElements ? elements.Length : MaximumNameElements - 1;
+        string suffix = roleName.Length == 0 ? string.Empty : ": " + roleName;
+        while (true)
+        {
+            string shortened = count == elements.Length ? name : name.Substring(0, elements[count]) + "…";
+            string label = shortened + suffix;
+            // Preserve the role name. TMP may shrink this minimal label if
+            // the selected font size still makes it wider than the HUD.
+            if (measure(label) <= width || count == 0) return label;
+            count--;
+        }
     }
 }
 

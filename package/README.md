@@ -138,13 +138,13 @@ When an older configuration is detected, RoleShuffle keeps compatible customized
 | `Notifications.StageFluxDelaySeconds` | `5` | `0`–`30` | Minimum delay before role announcements when Stage Flux is installed. RoleShuffle also waits for Stage Flux TTS to finish and for a 1.5-second quiet period. | Host |
 | `HUD.Enabled` | `true` | `true`, `false` | Shows the current roles during a stage. | Local |
 | `HUD.RoleDisplay` | `NameOnly` | `IconAndName`, `NameOnly`, `IconOnly` | Shows role icons and names, names only, or icons only. Player names remain visible. | Local |
-| `HUD.IconSize` | `64` | `32`–`128` | Role icon size before HUD scaling. Row spacing and the number of players per page adjust automatically. | Local |
+| `HUD.IconSize` | `64` | `32`–`128` | Role icon size before HUD scaling. The HUD grows for six rows and scales to fit the screen. | Local |
 | `HUD.Anchor` | `BottomLeft` | `TopLeft`, `TopCenter`, `TopRight`, `MiddleLeft`, `MiddleCenter`, `MiddleRight`, `BottomLeft`, `BottomCenter`, `BottomRight` | Selects the HUD anchor. | Local |
 | `HUD.Alignment` | `Left` | `Left`, `Center`, `Right` | Selects the role text alignment. | Local |
 | `HUD.OffsetX` | `0` | `-3840`–`3840` | Horizontal offset from the anchor in pixels. | Local |
 | `HUD.OffsetY` | `80` | `-2160`–`2160` | Vertical offset from the anchor in pixels. | Local |
 | `HUD.ScalePercent` | `70` | `50`–`200` | HUD display scale percentage. | Local |
-| `HUD.PlayersPerPage` | `8` | `2`–`20` | Maximum players shown at once, including the pinned local player. The actual count may be lower to fit the icons and font height. | Local |
+| `HUD.PlayersPerPage` | `8` | `2`–`20` | Maximum players shown at once, including the pinned local player. Values of 6 or more reserve room for at least six, even with taller fonts or icons. | Local |
 | `HUD.PageIntervalSeconds` | `5` | `1`–`30` | Seconds each role page remains visible. | Local |
 | `HUD.TransitionDurationSeconds` | `0.2` | `0`–`1` | Duration of the fade between role pages. | Local |
 | `HUD.PinLocalPlayer` | `true` | `true`, `false` | Keeps the local player's role visible on every page. | Local |
@@ -427,7 +427,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 - RoleShuffle waits until Stage Flux TTS has finished and remains quiet for 1.5 seconds before announcing roles.
 - Role assignments, role-effect notices, and automatic role-query responses are spoken one at a time and do not overlap Stage Flux announcements.
 - Influencer TTS also waits for other announcements, but intentionally remains audible to enemies as part of the role ability.
-- Installed participants see a one-column `ROLES` HUD with names only at the bottom left by default. Their own role stays pinned while other players rotate every 5 seconds. `HUD.RoleDisplay` can enable role icons. Icon size is adjustable with `HUD.IconSize`; larger icons use wider row spacing and fewer players per page. Icons at the default size show up to four players per page, including the pinned player. Names only show up to eight; the actual count adjusts to the font height so names remain visible.
+- Installed participants see a one-column `ROLES` HUD with names only at the bottom left by default. Their own role stays pinned while additional pages rotate every 5 seconds. With `HUD.PlayersPerPage` at 6 or higher (default: 8), the HUD reserves enough height for six people including the local player, even with Japanese, Chinese or Korean names and role icons. The HUD scales and adjusts its visible position to stay on screen. Long player names are shortened to the available width while preserving role names and Unicode characters. Explicit page limits below six are respected. `HUD.RoleDisplay` and `HUD.IconSize` still control icon display and size.
 - The Base Upgrade draw animation is shown to the host and participants who have RoleShuffle installed.
 - A `ROLES` button at the top-right of the Escape and lobby menus opens the Roles page. The Escape menu opens on `CURRENT ROLES`; the lobby menu opens on `ROLE GUIDE`, with `CURRENT ROLES` disabled. The left column switches between available views and `BASE UPGRADES`. Click a player in `CURRENT ROLES` to show or hide that role's description. `BASE UPGRADES` shows the current shared target, configured target, and accumulated truck-draw bonus for every supported upgrade. Installed participants see the host's current values.
 - `ROLE GUIDE` shows enabled role descriptions in the selected language; disabled roles are hidden. The language toggle switches immediately and shares its saved selection with MOD settings. Japanese uses Checkpoint Revenge; other added languages use bundled Noto font subsets. In multiplayer, installed participants see descriptions and visibility based on the host's settings. Translations preserve the host's numeric values. Until settings arrive, descriptions omit unconfirmed values; unknown descriptions from newer hosts remain in English. Single-player uses the player's own settings.
@@ -599,13 +599,13 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 | `Notifications.StageFluxDelaySeconds` | `5` | `0`～`30` | Stage Flux導入時、役職通知までに最低限待つ秒数です。Stage FluxのTTS終了後、さらに1.5秒間の無音を確認します。 | ホスト |
 | `HUD.Enabled` | `true` | `true`, `false` | ステージ中、現在の全役職を表示します。 | ローカル |
 | `HUD.RoleDisplay` | `NameOnly` | `IconAndName`, `NameOnly`, `IconOnly` | 役職のアイコン＋名前、名前のみ、アイコンのみを選択します。プレイヤー名は常に表示します。 | ローカル |
-| `HUD.IconSize` | `64` | `32`～`128` | HUD全体の倍率を適用する前の役職アイコンの大きさです。行間と1ページの表示人数を自動調整します。 | ローカル |
+| `HUD.IconSize` | `64` | `32`～`128` | HUD全体の倍率を適用する前の役職アイコンの大きさです。6人分の高さを確保し、画面に収まる倍率へ調整します。 | ローカル |
 | `HUD.Anchor` | `BottomLeft` | `TopLeft`, `TopCenter`, `TopRight`, `MiddleLeft`, `MiddleCenter`, `MiddleRight`, `BottomLeft`, `BottomCenter`, `BottomRight` | HUDの基準位置を選択します。 | ローカル |
 | `HUD.Alignment` | `Left` | `Left`, `Center`, `Right` | 役職テキストの揃え方を選択します。 | ローカル |
 | `HUD.OffsetX` | `0` | `-3840`～`3840` | 基準位置からの水平オフセットです。単位はピクセルです。 | ローカル |
 | `HUD.OffsetY` | `80` | `-2160`～`2160` | 基準位置からの垂直オフセットです。単位はピクセルです。 | ローカル |
 | `HUD.ScalePercent` | `70` | `50`～`200` | HUDの表示倍率です。 | ローカル |
-| `HUD.PlayersPerPage` | `8` | `2`～`20` | 自分の固定表示を含め、同時に表示する最大人数です。アイコンの大きさと文字の高さに合わせ、実際の表示人数が少なくなる場合があります。 | ローカル |
+| `HUD.PlayersPerPage` | `8` | `2`～`20` | 自分の固定表示を含め、同時に表示する最大人数です。6以上なら、文字やアイコンが高くても6人分の表示領域を確保します。 | ローカル |
 | `HUD.PageIntervalSeconds` | `5` | `1`～`30` | 各役職ページを表示する秒数です。 | ローカル |
 | `HUD.TransitionDurationSeconds` | `0.2` | `0`～`1` | 役職ページ切替時のフェード時間です。 | ローカル |
 | `HUD.PinLocalPlayer` | `true` | `true`, `false` | 自分の役職をすべてのページへ固定表示します。 | ローカル |
@@ -888,7 +888,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - Stage FluxのTTS終了後、1.5秒間の無音を確認してから役職を通知します。
 - 役職割り当て、役職効果通知、役職照会への自動応答は1件ずつ順番に発話し、Stage Fluxの通知とも重なりません。
 - InfluencerのTTSもほかの通知が終わるまで待機しますが、役職能力として意図的に敵へ聞こえる状態を維持します。
-- MOD導入済みの参加者には、1列の`ROLES` HUDがデフォルトで左下に名前のみで表示されます。自分の役職を固定し、ほかのプレイヤーを5秒ごとに切り替えます。`HUD.RoleDisplay`でアイコン表示を有効にできます。`HUD.IconSize`でアイコンを拡大すると、行間を広げて1ページの表示人数を自動調整します。標準サイズのアイコン表示では自分を含め最大4人、名前のみでは最大8人を表示します。文字が消えないよう、使用フォントの高さに合わせて実際の表示人数を調整します。
+- MOD導入済みの参加者には、1列の`ROLES` HUDがデフォルトで左下に名前のみで表示されます。自分の役職を固定し、複数ページがある場合は5秒ごとに切り替えます。`HUD.PlayersPerPage`が6以上（既定値8）なら、日本語・中国語・韓国語などの名前や役職アイコンがあっても、自分を含む6人分の高さを確保します。倍率と表示位置を自動調整し、画面内に収めます。長いプレイヤー名は文字の途中を壊さず、役職名が残る幅に省略します。表示人数を6未満に設定している場合はその値を優先します。`HUD.RoleDisplay`と`HUD.IconSize`でアイコン表示と大きさを変更できます。
 - Base Upgradeの抽選演出は、ホストとRoleShuffleを導入している参加者に表示されます。
 - Escメニュー・ロビーの右上にある`ROLES`ボタンからRolesページを開けます。Escメニューからは`CURRENT ROLES`、ロビーからは`ROLE GUIDE`を最初に表示し、ロビーでは`CURRENT ROLES`を無効にします。左カラムから利用可能な表示や`BASE UPGRADES`へ切り替えられます。`CURRENT ROLES`のプレイヤーをクリックすると、その役職の説明を表示または非表示にできます。`BASE UPGRADES`では、各アップグレードの現在の共有目標値、設定上の目標値、トラック抽選で累積した追加値を確認できます。MOD導入済み参加者にはホストの現在値を表示します。
 - `ROLE GUIDE`では有効な役職の説明を選択言語で表示し、無効化された役職は非表示になります。言語トグルですぐに切り替えられ、MOD設定と同じ選択を保存します。日本語には「チェックポイント★リベンジ」、その他の追加言語には同梱のNotoフォントを使用します。マルチプレイではホストの設定値を保った説明と役職の表示・非表示を反映します。ホストの設定がまだ確認できない間は未確認の数値を含まない説明を表示し、新しいホストの未知の説明文は英語で表示します。シングルプレイでは自分の設定を使用します。

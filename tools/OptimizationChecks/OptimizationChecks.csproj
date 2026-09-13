@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../RoleAssignmentSync.cs" Link="RoleAssignmentSync.cs" />
+    <Compile Include="../../RoleHudTestPreview.cs" Link="RoleHudTestPreview.cs" />
     <Compile Include="../../RoleGuideSync.cs" Link="RoleGuideSync.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />

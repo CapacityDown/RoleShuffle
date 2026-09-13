@@ -9,6 +9,39 @@ void Check(bool condition, string message)
     assertions++;
 }
 string Encode(string text) => Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
+object hudPreviewRoom = new();
+string hudPayloadBefore = RoleAssignmentSync.LocalPayload;
+var hudActualBefore = RoleAssignmentSync.Read();
+Check(!RoleHudTestPreview.TrySet(false, Array.Empty<string>(), hudPreviewRoom, "save-a", "self", out _) &&
+    RoleHudTestPreview.Read(hudPreviewRoom, "save-a", "self") == null, "HUD test requires Testing.Enabled");
+Check(RoleHudTestPreview.TrySet(true, Array.Empty<string>(), hudPreviewRoom, "save-a", "self", out _), "HUD Unicode command defaults to six");
+var unicodePreview = RoleHudTestPreview.Read(hudPreviewRoom, "save-a", "self")!;
+Check(unicodePreview.Count == 6 && unicodePreview[0].SteamId == "self" && unicodePreview[0].PlayerName == "YOU", "Six includes the local player");
+Check(unicodePreview.Skip(1).All(p => p.PlayerName.Any(c => c > 127)), "All five test teammates have multibyte names");
+Check(unicodePreview.Select(p => p.SteamId).Distinct().Count() == 6 && unicodePreview.All(p => p.PlayerNumber == 0), "Synthetic players never become command targets");
+Check(ReferenceEquals(unicodePreview, RoleHudTestPreview.Read(hudPreviewRoom, "save-a", "self")), "Unchanged preview reuses its snapshot");
+Check(RoleAssignmentSync.LocalPayload == hudPayloadBefore && ReferenceEquals(hudActualBefore, RoleAssignmentSync.Read()), "Preview never changes real assignment/report/network data");
+foreach (string[] bad in new[] { new[] { "0" }, new[] { "31" }, new[] { "-1" }, new[] { "six" }, new[] { "6", "extra" } })
+{
+    Check(!RoleHudTestPreview.TrySet(true, bad, hudPreviewRoom, "save-a", "self", out _) &&
+        ReferenceEquals(unicodePreview, RoleHudTestPreview.Read(hudPreviewRoom, "save-a", "self")), "Invalid preview arguments preserve the existing test");
+}
+foreach (int count in new[] { 1, 6, 12, 30 })
+{
+    Check(RoleHudTestPreview.TrySet(true, new[] { count.ToString() }, hudPreviewRoom, "save-a", "self", out _) &&
+        RoleHudTestPreview.Read(hudPreviewRoom, "save-a", "self")!.Count == count, "HUD test supports requested count");
+}
+Check(RoleHudTestPreview.Read(new object(), "save-a", "self") == null, "Changing room clears HUD samples");
+RoleHudTestPreview.TrySet(true, Array.Empty<string>(), hudPreviewRoom, "save-a", "self", out _);
+Check(RoleHudTestPreview.Read(hudPreviewRoom, "save-b", "self") == null, "Changing save clears HUD samples");
+RoleHudTestPreview.TrySet(true, Array.Empty<string>(), hudPreviewRoom, "save-a", "self", out _);
+Check(RoleHudTestPreview.Read(hudPreviewRoom, "save-a", "new-self") == null, "Changing local identity clears HUD samples");
+RoleHudTestPreview.TrySet(true, Array.Empty<string>(), hudPreviewRoom, "save-a", "self", out _);
+Check(RoleHudTestPreview.TrySet(true, new[] { "RESET" }, hudPreviewRoom, "save-a", "self", out _) &&
+    RoleHudTestPreview.Read(hudPreviewRoom, "save-a", "self") == null, "Reset restores the actual HUD data");
+RoleHudTestPreview.TrySet(true, Array.Empty<string>(), null, "", "", out _);
+Check(RoleHudTestPreview.Read(null, "", "")![0].PlayerName == "YOU", "Editor preview works before a local avatar exists");
+RoleHudTestPreview.Clear();
 string ExpectedGuide(int value, bool legacy) => string.Join(";", RoleCatalog.AllRoles.Select(role =>
     legacy
         ? $"{(int)role}:{Encode(RoleGuideCatalog.Expected(role, value, RoleGuideLanguage.English))}"

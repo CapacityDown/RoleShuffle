@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,6 @@ namespace REPOJP.StageRoles;
 internal sealed class RoleHud : MonoBehaviour
 {
     private const float RefreshIntervalSeconds = 0.25f;
-    private const int MaximumNameCharacters = 20;
     private const float MinimumHeadingHeight = 36f;
     private const float HeadingGap = 4f;
     private const float MinimumRowHeight = 36f;
@@ -18,7 +18,7 @@ internal sealed class RoleHud : MonoBehaviour
     private const float IconTextGap = 12f;
     private static readonly Vector2 LayoutSize = new(620f, 340f);
     private Vector2 CurrentLayoutSize => new(LayoutSize.x,
-        Mathf.Max(LayoutSize.y, _headingHeight + HeadingGap + 2f * RowHeight));
+        HudLayoutMath.ContentHeight(LayoutSize.y, _headingHeight, HeadingGap, RowHeight, _config.HudPlayersPerPage.Value));
 
     private readonly List<TMP_Text> _fontTargets = new();
     private readonly List<RoleSnapshot> _assignments = new();
@@ -61,6 +61,7 @@ internal sealed class RoleHud : MonoBehaviour
     private bool _transitioning;
     private bool _pageSwitched;
     private bool _hasAssignments;
+    private bool _testPreview;
 
     internal void Initialize(StageRolesConfig config)
     {
@@ -223,7 +224,11 @@ internal sealed class RoleHud : MonoBehaviour
 
     private void RefreshAssignments()
     {
-        IReadOnlyList<RoleSnapshot> current = PreviewSettings != null ? PreviewPlayers : RoleAssignmentSync.Read();
+        string localId = PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal());
+        var testPlayers = RoleHudTestPreview.Read(PhotonNetwork.CurrentRoom,
+            StatsManager.instance?.saveFileCurrent ?? string.Empty, localId);
+        _testPreview = testPlayers != null;
+        IReadOnlyList<RoleSnapshot> current = testPlayers ?? (PreviewSettings != null ? PreviewPlayers : RoleAssignmentSync.Read());
         _hasAssignments = current.Count > 0;
         var state = (current, _config.HudPlayersPerPage.Value,
             _config.HudPinLocalPlayer.Value, PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal()),
@@ -360,9 +365,10 @@ internal sealed class RoleHud : MonoBehaviour
         if (_heading != null)
         {
             // Restore TMP's text buffers after measuring arbitrary player labels.
+            string title = _testPreview ? "ROLES [TEST]" : "ROLES";
             _heading.SetText(pageCount > 1
-                ? $"ROLES  {_pageIndex + 1} / {pageCount}"
-                : "ROLES");
+                ? $"{title}  {_pageIndex + 1} / {pageCount}"
+                : title);
         }
         if (local.HasValue)
         {
@@ -377,22 +383,20 @@ internal sealed class RoleHud : MonoBehaviour
         }
     }
 
-    private string FormatPlayerRole(RoleSnapshot snapshot, int index, bool hasIcon)
+    private string FormatPlayerRole(RoleSnapshot snapshot, int index, bool hasIcon, float width, Func<string, float> measure)
     {
         RoleSnapshot? local = FindLocalSnapshot();
         bool isLocal = local.HasValue && string.Equals(
             snapshot.SteamId, local.Value.SteamId, StringComparison.Ordinal);
         int otherCapacity = Mathf.Max(1, EffectivePageSize - (local.HasValue ? 1 : 0));
         int playerNumber = _pageIndex * otherCapacity + index + 1 - (local.HasValue ? 1 : 0);
-        string playerName = isLocal ? "YOU" : Ellipsize(
+        string playerName = isLocal ? "YOU" : (
             string.IsNullOrWhiteSpace(snapshot.PlayerName)
                 ? $"Player {playerNumber}"
-                : snapshot.PlayerName.Trim(), MaximumNameCharacters);
-        // Never allow a player name to add extra HUD lines or rich-text markup.
-        playerName = playerName.Replace('\n', ' ').Replace('\r', ' ');
+                : snapshot.PlayerName);
         bool iconOnly = _lastDisplayMode == "IconOnly" && hasIcon;
-        return iconOnly ? playerName
-            : $"{playerName}: {RoleCatalog.AssignmentName(snapshot.Role, snapshot.EffectiveRole)}";
+        return HudLabelText.Fit(playerName, iconOnly ? string.Empty :
+            RoleCatalog.AssignmentName(snapshot.Role, snapshot.EffectiveRole), width, measure);
     }
 
     private int IconSize => Mathf.Clamp(Layout.IconSize, 32, 128);
@@ -408,14 +412,14 @@ internal sealed class RoleHud : MonoBehaviour
         // ascender-to-descender height exceeds the rectangle. Font size 28 does
         // not imply a 28-pixel line (Teko needs about 40, for example).
         _headingHeight = Mathf.Max(MinimumHeadingHeight,
-            Mathf.Ceil(_heading.GetPreferredValues("ROLES  30 / 30").y) + TextHeightPadding);
+            Mathf.Ceil(_heading.GetPreferredValues("ROLES [TEST]  30 / 30").y) + TextHeightPadding);
         _textRowHeight = Mathf.Max(MinimumRowHeight,
             Mathf.Ceil(_heading.GetPreferredValues("YOU: Player").y) + TextHeightPadding);
         foreach (RoleSnapshot snapshot in _assignments)
         {
-            string playerName = Ellipsize(
+            string playerName = HudLabelText.Fit(
                 string.IsNullOrWhiteSpace(snapshot.PlayerName) ? "Player" : snapshot.PlayerName.Trim(),
-                MaximumNameCharacters).Replace('\n', ' ').Replace('\r', ' ');
+                string.Empty, float.PositiveInfinity, _ => 0f);
             string sample = $"{playerName}: {RoleCatalog.AssignmentName(snapshot.Role, snapshot.EffectiveRole)}";
             _textRowHeight = Mathf.Max(_textRowHeight,
                 Mathf.Ceil(_heading.GetPreferredValues(sample).y) + TextHeightPadding);
@@ -426,10 +430,10 @@ internal sealed class RoleHud : MonoBehaviour
         _lastLayout = null;
     }
 
-    // Page before shrinking: detailed emblems must keep their requested size.
-    private int EffectivePageSize => Mathf.Min(
-        Mathf.Clamp(_config.HudPlayersPerPage.Value, 2, 20),
-        Mathf.Max(2, Mathf.FloorToInt((CurrentLayoutSize.y - _headingHeight - HeadingGap) / RowHeight)));
+    // The content expands for six rows before responsive screen fitting.
+    // An explicitly smaller PlayersPerPage setting still takes precedence.
+    private int EffectivePageSize => HudLayoutMath.PageCapacity(_config.HudPlayersPerPage.Value,
+        CurrentLayoutSize.y, _headingHeight, HeadingGap, RowHeight);
 
     private void UpdateRows()
     {
@@ -478,9 +482,11 @@ internal sealed class RoleHud : MonoBehaviour
             row.Icon.sprite = show ? RoleEmblems.Get(emblemRole) : null;
             bool hasIcon = row.Icon.sprite != null;
             row.Icon.gameObject.SetActive(hasIcon);
-            row.Label.text = FormatPlayerRole(snapshot, index, hasIcon);
-
             float iconSpace = hasIcon ? IconSize + IconTextGap : 0f;
+            row.Label.enableAutoSizing = false;
+            row.Label.fontSize = Layout.FontSize;
+            row.Label.SetText(FormatPlayerRole(snapshot, index, hasIcon, LayoutSize.x - iconSpace,
+                text => row.Label.GetPreferredValues(text).x));
             float textWidth = Mathf.Clamp(Mathf.Ceil(row.Label.preferredWidth) + 2f, 1f, LayoutSize.x - iconSpace);
             float groupWidth = iconSpace + textWidth;
             float left = Layout.Alignment switch
@@ -493,6 +499,9 @@ internal sealed class RoleHud : MonoBehaviour
             row.Icon.rectTransform.anchoredPosition = new Vector2(left, 0f);
             row.Label.rectTransform.sizeDelta = new Vector2(textWidth, rowHeight);
             row.Label.rectTransform.anchoredPosition = new Vector2(left + iconSpace, 0f);
+            row.Label.fontSizeMin = Mathf.Min(16f, Layout.FontSize);
+            row.Label.fontSizeMax = Layout.FontSize;
+            row.Label.enableAutoSizing = true;
         }
         for (int index = _displayedAssignments.Count; index < _rows.Count; index++)
         {
@@ -509,7 +518,7 @@ internal sealed class RoleHud : MonoBehaviour
 
     private RoleSnapshot? FindLocalSnapshot()
     {
-        if (PreviewSettings != null) return PreviewPlayers[0];
+        if ((PreviewSettings != null || _testPreview) && _assignments.Count > 0) return _assignments[0];
         if (!_config.HudPinLocalPlayer.Value)
         {
             return null;
@@ -545,15 +554,6 @@ internal sealed class RoleHud : MonoBehaviour
     private float ClampedPageInterval =>
         Mathf.Clamp(_config.HudPageIntervalSeconds.Value, 1f, 30f);
 
-    private static string Ellipsize(string value, int maximumCharacters)
-    {
-        if (value.Length <= maximumCharacters)
-        {
-            return value;
-        }
-        return value.Substring(0, Mathf.Max(1, maximumCharacters - 1)) + "…";
-    }
-
     private void ApplyLayout()
     {
         if (_contentRect == null || _heading == null)
@@ -585,9 +585,14 @@ internal sealed class RoleHud : MonoBehaviour
         _contentRect.anchorMin = anchor;
         _contentRect.anchorMax = anchor;
         _contentRect.pivot = anchor;
+        // Keep taller fallback-font rows on screen without rewriting offsets.
+        int x = HudLayoutMath.ClampOffset(layout.X, anchor.x, canvasWidth,
+            CurrentLayoutSize.x * scale, resolutionScale, 3840);
+        int y = HudLayoutMath.ClampOffset(layout.Y, anchor.y, canvasHeight,
+            CurrentLayoutSize.y * scale, resolutionScale, 2160);
         _contentRect.anchoredPosition = new Vector2(
-            layout.X * resolutionScale,
-            layout.Y * resolutionScale);
+            x * resolutionScale,
+            y * resolutionScale);
         _contentRect.localScale = Vector3.one * scale;
         _heading.alignment = layout.Alignment switch
         {

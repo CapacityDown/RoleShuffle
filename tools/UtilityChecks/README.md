@@ -4,6 +4,22 @@ Run `dotnet run --project tools/UtilityChecks/UtilityChecks.csproj -c Release` f
 
 The checks link production code for bounded draw-history storage and serialization, snapshot hashes and timestamp rollover, report redaction, and HUD geometry across resolutions. They do not simulate Unity input, TMP rendering, real Photon transport, or a game save on disk.
 
+## Multibyte HUD display command
+
+Enable `Testing.Enabled` locally. The regular command `/hudmultibyte` and short form `/hmb` use the same handler.
+
+- `/hmb`: preview six players including YOU, with Japanese, Simplified Chinese, Traditional Chinese, Korean and Cyrillic names.
+- `/hmb 12`: preview a specified count from 1 to 30 to check paging.
+- `/hmb reset`: restore the previous HUD data.
+
+View the stage HUD, or open `ROLES` → `TOOLS` → `HUD EDITOR` in the lobby or stage to see the same sample. The heading is `ROLES [TEST]`. Stage display follows `HUD.Enabled` and the normal stage visibility rules. To see six rows simultaneously, set `HUD.PlayersPerPage` to 6 or higher (default 8). Compare NameOnly, IconAndName and IconOnly; test all anchors and high font/icon sizes. Long names should shorten before the role name, and all six rows should remain on screen. The editor's SAVE/CANCEL still apply only to local layout settings.
+
+This preview is read only by the HUD and HUD editor. It never changes assignments, CURRENT ROLES, command target numbers, save data, reports or network payloads. It clears on scene, room, save or local-player changes, when testing is disabled, on shutdown, or with `reset`. Invalid arguments preserve the current preview. Multiplayer participants may use it locally.
+
+Run `pwsh -NoProfile -File tools/Test-HudMultibyteCommands.ps1` to check the production registration methods, both aliases, Testing permission checks, suggestions and callbacks. OptimizationChecks compiles the production preview store to verify default counts, invalid arguments, reset, context changes and separation from real assignment data. UtilityChecks verifies six-row geometry across fallback-font heights and Unicode-safe width truncation using synthetic glyph measurements; actual TMP rendering remains a game check.
+
+Build 437 (v4.4.7), 2026-09-13: production build passed with no warnings or errors. UtilityChecks: 6,654; HUD command callbacks: 21; OptimizationChecks: 108; UtilityRuntimeChecks: 69; RoleSettingsChecks: 241 role, 156 Base Upgrade selection and 134 save-adjustment checks, all passing. Actual game rendering is left to the user; no game controls were operated.
+
 Also run `dotnet run --project tools/UtilityRuntimeChecks/UtilityRuntimeChecks.csproj -c Release`. This harness links the runtime service with deterministic game/network stand-ins. It covers initial publication, unchanged heartbeats, refresh requests, mismatched data, delayed updates, version differences, host migration, reconnects, host-only history recording, preview arguments/variety/reset/isolation, real UTF-8 report file I/O, privacy masking, a 500-entry log window including long messages, and failed file writes. Four-part version metadata must remain intact even when the same string in a log is treated as an IP address. Generated reports stay under the ignored test build output.
 
 ## Internal draw-history display command

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using Photon.Pun;
 using UnityEngine;
 
 namespace REPOJP.StageRoles;
@@ -13,6 +14,8 @@ internal sealed class RoleTestCommandService : MonoBehaviour
     private const string ShortCommand = "sr";
     private const string HudPlayersCommand = "hudplayers";
     private const string HudPlayersShortCommand = "hp";
+    private const string HudMultibyteCommand = "hudmultibyte";
+    private const string HudMultibyteShortCommand = "hmb";
     private const string BaseSlotCommand = "baseslot";
     private const string BaseSlotShortCommand = "bs";
     private const string BaseUpgradeCommand = "baseupgrade";
@@ -72,14 +75,49 @@ internal sealed class RoleTestCommandService : MonoBehaviour
             BaseUpgradeShortCommand);
         bool drawHistoryRegistered = TryRegisterDrawHistory(handler, DrawHistoryCommand);
         bool drawHistoryShortRegistered = TryRegisterDrawHistory(handler, DrawHistoryShortCommand);
+        bool hudMultibyteRegistered = TryRegisterHudMultibyte(handler, HudMultibyteCommand);
+        bool hudMultibyteShortRegistered = TryRegisterHudMultibyte(handler, HudMultibyteShortCommand);
         if (fullRegistered || shortRegistered || hudPlayersRegistered ||
             hudPlayersShortRegistered || baseSlotRegistered ||
             baseSlotShortRegistered || baseUpgradeRegistered ||
-            baseUpgradeShortRegistered || drawHistoryRegistered || drawHistoryShortRegistered)
+            baseUpgradeShortRegistered || drawHistoryRegistered || drawHistoryShortRegistered ||
+            hudMultibyteRegistered || hudMultibyteShortRegistered)
         {
             StageRolesPlugin.ModLogger.LogInfo(
                 "Role testing command registration completed.");
         }
+    }
+
+    private bool TryRegisterHudMultibyte(DebugCommandHandler handler, string commandName)
+    {
+        try
+        {
+            return RegisterWithoutCommandNames(handler, new DebugCommandHandler.ChatCommand(
+                commandName, "Previews multibyte player names locally in the HUD and HUD editor.",
+                ExecuteHudMultibyte, SuggestHudMultibyte, () => _config.SetRoleCommandEnabled.Value, debugOnly: false));
+        }
+        catch (Exception exception)
+        {
+            StageRolesPlugin.ModLogger.LogWarning($"Role testing command registration failed ({exception.GetType().Name}).");
+            return false;
+        }
+    }
+
+    private void ExecuteHudMultibyte(bool isDebugConsole, string[] args)
+    {
+        bool success = RoleHudTestPreview.TrySet(_config.SetRoleCommandEnabled.Value, args,
+            PhotonNetwork.CurrentRoom, StatsManager.instance?.saveFileCurrent ?? string.Empty,
+            PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal()), out string response);
+        Respond(response, success);
+    }
+
+    private static List<string> SuggestHudMultibyte(bool isDebugConsole, string partial, string[] args)
+    {
+        List<string> suggestions = new();
+        if (args.Length > 1) return suggestions;
+        foreach (string value in new[] { "6", "12", "30", "reset" })
+            AddSuggestion(suggestions, value, partial ?? string.Empty);
+        return suggestions;
     }
 
     private bool TryRegisterDrawHistory(DebugCommandHandler handler, string commandName)

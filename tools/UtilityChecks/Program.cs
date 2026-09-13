@@ -93,4 +93,45 @@ foreach (var viewport in new[] { (960f, 540f), (1280f, 720f), (1920f, 1080f), (3
         }
     }
 }
-Console.WriteLine($"PASS: {checks} utility checks (history, save boundaries, synchronization, privacy, HUD geometry).");
+foreach (float rowHeight in new[] { 36f, 44f, 58.3f, 72f, 96.7f, 136f, 180f })
+foreach (int requested in new[] { 2, 4, 6, 8, 20 })
+{
+    const float heading = 68.3f, gap = 4f;
+    float height = HudLayoutMath.ContentHeight(340, heading, gap, rowHeight, requested);
+    int capacity = HudLayoutMath.PageCapacity(requested, height, heading, gap, rowHeight);
+    Check(capacity >= Math.Min(6, requested) && capacity <= requested, "Tall fallback glyphs/icons cannot reduce a six-player page");
+    Check(heading + gap + capacity * rowHeight <= height + 0.01f, "Every row fits below the heading");
+    foreach (var viewport in new[] { (960f, 540f), (720f, 540f), (1920f, 1080f), (3840f, 2160f), (2560f, 720f) })
+    foreach (float userScale in new[] { 0.5f, 0.7f, 2f })
+    {
+        float density = viewport.Item2 / 540f;
+        float scale = HudLayoutMath.Scale(viewport.Item1, viewport.Item2, 620, height, userScale, density);
+        foreach (float anchor in new[] { 0f, 0.5f, 1f })
+        foreach (int offset in new[] { -2160, 0, 80, 2160 })
+        {
+            int y = HudLayoutMath.ClampOffset(offset, anchor, viewport.Item2, height * scale, density, 2160);
+            float bottom = anchor * viewport.Item2 + y * density - anchor * height * scale;
+            Check(bottom >= -0.01f && bottom + height * scale <= viewport.Item2 + 0.01f,
+                "Six rows stay on screen for all anchors, scales and offsets");
+        }
+    }
+}
+// Model wide CJK and narrow Latin glyphs; production supplies TMP's measured width.
+float TextWidth(string text) => text.Sum(c => c > 127 ? 28f : 12f);
+foreach (string name in new[] { "日本語の長いプレイヤー名あいうえおかきくけこ", "简体中文测试玩家名字很长", "繁體中文測試玩家名字很長", "한국어긴플레이어이름테스트", "Український_гравець", "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰ", "Player\nNew\rLine\tTest\u2028Name\u2029End" })
+foreach (float width in new[] { 240f, 480f, 620f })
+{
+    string text = HudLabelText.Fit(name, "Imitator", width, TextWidth);
+    Check(text.EndsWith(": Imitator", StringComparison.Ordinal) && TextWidth(text) <= width, "Long names preserve the whole role within the available width");
+    Check(!text.Any(c => char.IsControl(c) || c is '\u2028' or '\u2029'), "Player names never add HUD rows");
+}
+string combinedName = string.Concat(Enumerable.Repeat("e\u0301", 30));
+string shortenedCombining = HudLabelText.Fit(combinedName, "", 120, TextWidth);
+Check(shortenedCombining.EndsWith("\u0301…", StringComparison.Ordinal), "Ellipsis retains the complete combining character");
+string supplementary = string.Concat(Enumerable.Repeat("𠮷", 30));
+string shortenedSupplementary = HudLabelText.Fit(supplementary, "Tank", 240, TextWidth);
+Check(!System.Text.RegularExpressions.Regex.IsMatch(shortenedSupplementary, "[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?<![\\uD800-\\uDBFF])[\\uDC00-\\uDFFF]"), "Ellipsis never splits surrogate pairs");
+Check(HudLabelText.Fit("YOU", "Tank", 620, TextWidth) == "YOU: Tank", "Pinned self stays readable");
+Check(HudLabelText.Fit("Player", "", 620, TextWidth) == "Player", "Icon-only display omits the role text");
+Check(HudLabelText.Fit("\n\t", "Tank", 620, TextWidth) == "Player: Tank", "Empty/control-only names use a fallback");
+Console.WriteLine($"PASS: {checks} utility checks (history, save boundaries, synchronization, privacy, HUD geometry and Unicode names).");
