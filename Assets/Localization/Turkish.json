@@ -206,7 +206,6 @@
   "OFF excludes a type from all draws.": "OFF, bir türü tüm çekilişlerden çıkarır.",
   "No individual draw": "Tekli çekiliş yok",
   "No draw": "Çekiliş yok",
-  "Types marked 'No individual draw' can still be boosted by All Upgrades when ON.": "'Tekli çekiliş yok' yazan türler açıkken All Upgrades ile geliştirilebilir.",
   "RoleShuffle is disabled in MOD settings.": "RoleShuffle MOD ayarlarında devre dışı.",
   "Truck draws are disabled.": "Kamyon çekilişleri devre dışı.",
   "No enabled upgrade types can enter the draw with these weights.": "Bu ağırlıklarla çekilişe girebilecek açık yükseltme türü yok.",

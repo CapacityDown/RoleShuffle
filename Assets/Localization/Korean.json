@@ -206,7 +206,6 @@
   "OFF excludes a type from all draws.": "OFF인 종류는 모든 추첨에서 제외됩니다.",
   "No individual draw": "개별 추첨 없음",
   "No draw": "추첨 없음",
-  "Types marked 'No individual draw' can still be boosted by All Upgrades when ON.": "'개별 추첨 없음'인 항목도 ON이면 All Upgrades의 일괄 강화에 포함됩니다.",
   "RoleShuffle is disabled in MOD settings.": "MOD 설정에서 RoleShuffle이 비활성화되어 있습니다.",
   "Truck draws are disabled.": "트럭 추첨이 비활성화되어 있습니다.",
   "No enabled upgrade types can enter the draw with these weights.": "현재 가중치로 추첨 가능한 업그레이드 후보가 없습니다.",

@@ -122,7 +122,6 @@
   "OFF excludes a type from all draws.": "OFFの種類はすべての抽選から除外します。",
   "No individual draw": "個別抽選なし",
   "No draw": "抽選なし",
-  "Types marked 'No individual draw' can still be boosted by All Upgrades when ON.": "「個別抽選なし」でも、ONならAll Upgradesの一括強化には含まれます。",
   "RoleShuffle is disabled in MOD settings.": "MOD設定でRoleShuffleが無効になっています。",
   "Truck draws are disabled.": "トラック抽選は無効です。",
   "No enabled upgrade types can enter the draw with these weights.": "現在の重みでは抽選可能なアップグレード候補がありません。",

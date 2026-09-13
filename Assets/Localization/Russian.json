@@ -206,7 +206,6 @@
   "OFF excludes a type from all draws.": "OFF исключает тип улучшения из всех розыгрышей.",
   "No individual draw": "Без отдельного розыгрыша",
   "No draw": "Без розыгрыша",
-  "Types marked 'No individual draw' can still be boosted by All Upgrades when ON.": "Типы с пометкой «Без отдельного розыгрыша» могут получать All Upgrades, если включены.",
   "RoleShuffle is disabled in MOD settings.": "RoleShuffle отключён в настройках MOD.",
   "Truck draws are disabled.": "Розыгрыши в грузовике отключены.",
   "No enabled upgrade types can enter the draw with these weights.": "С этими весами ни один включённый тип не может участвовать в розыгрыше.",

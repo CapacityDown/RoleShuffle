@@ -206,7 +206,6 @@
   "OFF excludes a type from all draws.": "OFF會將該類型排除在所有抽獎之外。",
   "No individual draw": "不單獨抽選",
   "No draw": "不參與抽選",
-  "Types marked 'No individual draw' can still be boosted by All Upgrades when ON.": "標記為「不單獨抽選」的類型在ON時，仍可透過All Upgrades一起強化。",
   "RoleShuffle is disabled in MOD settings.": "MOD設定中已停用RoleShuffle。",
   "Truck draws are disabled.": "卡車抽獎已停用。",
   "No enabled upgrade types can enter the draw with these weights.": "目前權重下沒有可參與抽獎的已開啟升級類型。",

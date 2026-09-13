@@ -64,7 +64,6 @@ internal sealed partial class RoleMenu
             }
             Text(RoleText.Format("Enabled draw entries: {0}/{1}", _guideLanguage, count, BaseUpgradeDrawSelection.UpgradeNames.Count));
             Text(Localized("OFF excludes a type from all draws."));
-            Text(Localized("Types marked 'No individual draw' can still be boosted by All Upgrades when ON."));
             if (!state.ModEnabled) Text(Localized("RoleShuffle is disabled in MOD settings."));
             if (!state.DrawEnabled) Text(Localized("Truck draws are disabled."));
             if (editable && !hasCandidate) Text(Localized("No enabled upgrade types can enter the draw with these weights."));

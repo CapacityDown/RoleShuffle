@@ -206,7 +206,6 @@
   "OFF excludes a type from all draws.": "OFF wyklucza dany typ ze wszystkich losowań.",
   "No individual draw": "Bez osobnego losowania",
   "No draw": "Bez losowania",
-  "Types marked 'No individual draw' can still be boosted by All Upgrades when ON.": "Typy oznaczone «Bez osobnego losowania» mogą otrzymać All Upgrades, gdy są włączone.",
   "RoleShuffle is disabled in MOD settings.": "RoleShuffle jest wyłączony w ustawieniach MOD.",
   "Truck draws are disabled.": "Losowania w ciężarówce są wyłączone.",
   "No enabled upgrade types can enter the draw with these weights.": "Żaden włączony typ nie może zostać wylosowany przy tych wagach.",
