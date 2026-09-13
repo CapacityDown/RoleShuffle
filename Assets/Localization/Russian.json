@@ -222,5 +222,6 @@
   "Base Upgrade Presets": "Наборы базовых улучшений",
   "+/- adjustments are saved with this game data.": "Изменения +/- сохраняются в этом сохранении.",
   "Manual adjustment": "Ручная поправка",
+  "Manual adjustment is OFF in MOD settings.": "Ручное изменение отключено в настройках мода.",
   "Load a saved game to use +/- adjustments.": "Загрузите сохранение, чтобы использовать +/-."
 }

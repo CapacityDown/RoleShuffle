@@ -12,6 +12,27 @@ internal static class SaveAdjustmentChecks
         SemiFunc.Multiplayer = false;
         GameManager.instance = new();
         RunManager.instance = new() { levelsCompleted = 2 };
+        var manualSetting = config.BaseUpgradeManualAdjustmentEnabled;
+        Check(!manualSetting.Value && Equals(manualSetting.DefaultValue, false), "Manual editing defaults to off");
+        Check(manualSetting.Definition.Section == "Base Upgrades" && manualSetting.Definition.Key == "ManualAdjustmentEnabled",
+            "Manual editing is a regular REPOConfig boolean setting");
+        StatsManager.instance = new();
+        StatsManager.instance.Load("manual-toggle.json");
+        config.BaseHealthLevels.Value = "1:2";
+        string toggleSave = BaseUpgradeManualStore.SaveIdentity;
+        int blockedSaves = StatsManager.instance.Saves;
+        Check(!service.CanAdjustLevel("Health", 1, toggleSave) && !service.CanAdjustLevel("Health", -1, toggleSave) &&
+            !service.TryAdjustLevel("Health", 1, toggleSave) && !service.TryAdjustLevel("Health", -1, toggleSave) &&
+            StatsManager.instance.Saves == blockedSaves, "Default-off rejects both valid edits without saving");
+        RoleMenu.ShowLevels(config);
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Increase == null && e.Adjustment.Decrease == null) &&
+            RoleMenu.Entries.Any(e => e.Text == "Manual adjustment is OFF in MOD settings."), "Default-off controls are disabled and explained");
+        manualSetting.BoxedValue = true;
+        RoleMenu.RefreshLevelsIfChanged();
+        Check(RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment is { Increase: not null, Decrease: not null },
+            "REPOConfig enable refreshes the open level page even when levels did not change");
+        var enabledReload = new StageRolesConfig(new ConfigFile(file.ConfigFilePath, false) { SaveOnConfigSet = false });
+        Check(enabledReload.BaseUpgradeManualAdjustmentEnabled.Value, "Enabled preference persists through real configuration reload");
         foreach (var definition in RoleUpgradeScaling.Definitions)
         {
             StatsManager.instance = new();
@@ -52,10 +73,31 @@ internal static class SaveAdjustmentChecks
             "Manual result retains truck amount");
         Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, -1, 200) && Total() == 5 &&
             BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1, "Negative truck result remains separate");
+        RoleMenu.ShowLevels(config);
+        Action staleEnabledClick = RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment!.Increase!;
+        manualSetting.BoxedValue = false;
+        RoleMenu.RefreshLevelsIfChanged();
+        Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Increase == null && e.Adjustment.Decrease == null),
+            "REPOConfig disable refreshes every adjustment control");
+        blockedSaves = StatsManager.instance.Saves;
+        staleEnabledClick();
+        Check(!service.TryAdjustLevel("Health", 1, identity) && !service.TryAdjustLevel("Health", -1, identity) &&
+            StatsManager.instance.Saves == blockedSaves, "Disabling also blocks stale callbacks and direct edits");
+        Check(Total() == 5 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1 &&
+            config.BaseHealthLevels.Value == "1:2,5:7", "Disabling preserves applied manual levels, draw bonuses and base rules");
+        var disabledReload = new StageRolesConfig(new ConfigFile(file.ConfigFilePath, false) { SaveOnConfigSet = false });
+        Check(!disabledReload.BaseUpgradeManualAdjustmentEnabled.Value, "Disabled preference persists through real configuration reload");
         StatsManager.instance.SaveFileSave();
         StatsManager.instance = new();
         StatsManager.instance.Load(identity);
-        Check(Total() == 5 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1, "Both amounts persist together");
+        Check(Total() == 5 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1, "Both amounts persist together while editing is disabled");
+        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, 1, 200) && Total() == 6 &&
+            BaseUpgradeManualStore.Get(health) == 2, "Truck draws remain active while manual editing is disabled");
+        Check(BaseUpgradeBonusStore.ApplyEffectiveDelta(health, Total(), 2, -1, 200) && Total() == 5,
+            "Negative truck draws also remain active while manual editing is disabled");
+        manualSetting.BoxedValue = true;
+        Check(service.CanAdjustLevel("Health", 1, identity) && service.CanAdjustLevel("Health", -1, identity),
+            "Re-enabling resumes editing the existing saved total");
         RunManager.instance.levelsCompleted = 5;
         Check(Total() == 10, "Later threshold adds both saved amounts");
         StatsManager.instance.Load("other-save.json");

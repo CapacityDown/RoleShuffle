@@ -222,5 +222,6 @@
   "Base Upgrade Presets": "Predefinições de melhorias base",
   "+/- adjustments are saved with this game data.": "Os ajustes +/- ficam salvos nesta partida.",
   "Manual adjustment": "Ajuste manual",
+  "Manual adjustment is OFF in MOD settings.": "O ajuste manual está desativado nas configurações do mod.",
   "Load a saved game to use +/- adjustments.": "Carregue uma partida salva para usar +/-."
 }

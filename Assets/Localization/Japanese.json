@@ -138,5 +138,6 @@
   "Base Upgrade Presets": "基本アップグレードプリセット",
   "+/- adjustments are saved with this game data.": "+/-の調整はこのセーブデータに保存されます。",
   "Manual adjustment": "手動調整",
+  "Manual adjustment is OFF in MOD settings.": "MOD設定で手動調整がOFFになっています。",
   "Load a saved game to use +/- adjustments.": "+/-の調整にはセーブデータを読み込んでください。"
 }

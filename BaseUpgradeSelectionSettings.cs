@@ -25,7 +25,8 @@ internal sealed class BaseUpgradeSelectionSettings(StageRolesConfig settings, Co
         dictionaryName = string.Empty;
         adjustment = 0;
         var entry = settings.BaseUpgradeLevelsEntry(name);
-        if (entry == null || delta is not (-1 or 1) || string.IsNullOrEmpty(saveIdentity) ||
+        if (!settings.BaseUpgradeManualAdjustmentEnabled.Value || entry == null ||
+            delta is not (-1 or 1) || string.IsNullOrEmpty(saveIdentity) ||
             saveIdentity != BaseUpgradeManualStore.SaveIdentity) return false;
         int maximum = name == "MapPlayerCount" ? 1 : RoleUpgradeScaling.MaximumUpgradeLevel;
         // Refuse malformed expressions instead of discarding user-authored rules.

@@ -118,6 +118,10 @@ internal sealed class StageRolesConfig
 
         SetRoleCommandEnabled = BindBool(config, "Testing", "Enabled", false, "Enables the testing commands.");
 
+        BaseUpgradeManualAdjustmentEnabled = BindBool(config, "Base Upgrades", "ManualAdjustmentEnabled", false,
+            "Allows the host to use the minus/plus buttons on BASE UPGRADES. Default: off. " +
+            "Turning this off prevents further manual edits; saved adjustments remain applied. " +
+            "Configured base levels and truck draws are unaffected.");
         BaseHealthLevels = BaseUpgradeScaling(config, "HealthUpgradeLevels", "1:1", RoleUpgradeScaling.MaximumUpgradeLevel);
         BaseStaminaLevels = BaseUpgradeScaling(config, "StaminaUpgradeLevels", string.Empty, RoleUpgradeScaling.MaximumUpgradeLevel);
         BaseExtraJumpLevels = BaseUpgradeScaling(config, "ExtraJumpUpgradeLevels", string.Empty, RoleUpgradeScaling.MaximumUpgradeLevel);
@@ -463,6 +467,7 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> HudPinLocalPlayer { get; }
     internal ConfigEntry<bool> SetRoleCommandEnabled { get; }
 
+    internal ConfigEntry<bool> BaseUpgradeManualAdjustmentEnabled { get; }
     internal ConfigEntry<string> BaseHealthLevels { get; }
     internal ConfigEntry<string> BaseStaminaLevels { get; }
     internal ConfigEntry<string> BaseExtraJumpLevels { get; }

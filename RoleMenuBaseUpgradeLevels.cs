@@ -23,6 +23,7 @@ internal sealed partial class RoleMenu
         signature.Append(BaseUpgradeSync.CurrentSignature(_config));
         if (editable)
         {
+            signature.Append('|').Append(_config.BaseUpgradeManualAdjustmentEnabled.Value);
             signature.Append('|').Append(BaseUpgradeSelectionSettings.CurrentRunLevel);
             signature.Append('|').Append(BaseUpgradeManualStore.SaveIdentity);
             foreach (var definition in RoleUpgradeScaling.Definitions)
@@ -45,9 +46,12 @@ internal sealed partial class RoleMenu
         if (upgrades.Count == 0) Text(Localized("Base Upgrade data is not available yet."));
         else
         {
-            Text(Localized("+/- adjustments are saved with this game data."));
+            bool manualDisabled = RoleSelectionSettings.CanEdit && !_config.BaseUpgradeManualAdjustmentEnabled.Value;
+            Text(manualDisabled
+                ? Localized("Manual adjustment is OFF in MOD settings.")
+                : Localized("+/- adjustments are saved with this game data."));
             if (!RoleSelectionSettings.CanEdit) Text(Localized("Only the host can change Base Upgrade settings."));
-            else if (BaseUpgradeManualStore.SaveIdentity.Length == 0)
+            else if (!manualDisabled && BaseUpgradeManualStore.SaveIdentity.Length == 0)
                 Text(Localized("Load a saved game to use +/- adjustments."));
             if (_utilityMessage.Length > 0) Text(_utilityMessage);
             string saveIdentity = BaseUpgradeManualStore.SaveIdentity;

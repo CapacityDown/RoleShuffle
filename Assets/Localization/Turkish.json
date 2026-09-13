@@ -222,5 +222,6 @@
   "Base Upgrade Presets": "Temel Yükseltme Ön Ayarları",
   "+/- adjustments are saved with this game data.": "+/- değişiklikleri bu oyun kaydına kaydedilir.",
   "Manual adjustment": "Manuel ayar",
+  "Manual adjustment is OFF in MOD settings.": "Manuel ayar, mod ayarlarında kapalı.",
   "Load a saved game to use +/- adjustments.": "+/- kullanmak için kayıtlı bir oyun yükleyin."
 }
