@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 440;
+    private const int RoleUiBuildNumber = 441;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -950,7 +950,10 @@ internal sealed partial class RoleMenu : MonoBehaviour
             // body line. Keep it inside the existing padding so wheel distance
             // and row heights are unaffected on all Roles pages.
             bool separate = entry.SeparatorBefore || control || entry.EmblemRole.HasValue || entry.Adjustment != null;
-            row.Separator.gameObject.SetActive(index > 0 && separate);
+            // Adjacent buttons form one group, including disabled controls.
+            bool consecutiveButtons = index > 0 && (control || entry.Adjustment != null) &&
+                (entries[index - 1].OnClick != null || entries[index - 1].IsControl || entries[index - 1].Adjustment != null);
+            row.Separator.gameObject.SetActive(index > 0 && separate && !consecutiveButtons);
             row.Separator.rectTransform.sizeDelta = new Vector2(contentWidth, 1f);
             row.Separator.rectTransform.anchoredPosition = new Vector2(0f, entry.Height + 2f);
             row.Label.rectTransform.gameObject.SetActive(true);
