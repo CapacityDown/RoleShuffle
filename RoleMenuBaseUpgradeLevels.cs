@@ -72,7 +72,7 @@ internal sealed partial class RoleMenu
                     $"{Localized("Configured")}: {upgrade.ConfiguredLevel}  {Localized("Truck Draw")}: {SignedValue(upgrade.TruckDrawBonus)}",
                     18, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
                 entries.Add(new RoleMenuEntry(string.Empty,
-                    18, FontStyles.Normal, 36, false, UseLanguageFont,
+                    18, FontStyles.Normal, 28, false, UseLanguageFont,
                     adjustment: new RoleMenuAdjustment(Adjust(-1), Adjust(1))));
                 entries.Add(new RoleMenuEntry(string.Empty, 18, FontStyles.Normal, 5, false));
             }

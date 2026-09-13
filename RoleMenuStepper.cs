@@ -8,8 +8,8 @@ namespace REPOJP.StageRoles;
 // Two independent native buttons, inside a single scroll row and its mask.
 internal sealed class RoleMenuStepper
 {
-    private const float ButtonSize = 36f;
-    private const float Gap = 8f;
+    private const float ButtonSize = 28f;
+    private const float Gap = 6f;
     private readonly REPOButton _minus;
     private readonly REPOButton _plus;
     private readonly RoleMenuButtonVisual _minusVisual;
@@ -67,7 +67,7 @@ internal sealed class RoleMenuStepper
         visibleLabel.rectTransform.sizeDelta = size;
         TMP_Text label = visibleLabel.labelTMP;
         label.font = font;
-        label.fontSize = 26f;
+        label.fontSize = 20f;
         label.enableAutoSizing = false;
         label.enableWordWrapping = false;
         label.alignment = TextAlignmentOptions.Center;
