@@ -111,6 +111,7 @@
   "Base Upgrade data is not available yet.": "尚無Base Upgrade資料。",
   "Shared targets used when a role does not replace an upgrade.": "角色未替換某項升級時使用的共享目標值。",
   "Configured": "設定值",
+  "Config {0}  Draw {1}": "設定 {0}  抽選 {1}",
   "Config {0}  Manual {1}  Draw {2}": "設定 {0}  手動 {1}  抽選 {2}",
   "Truck Draw": "卡車抽選",
   "HUD EDITOR — drag to move; Save to apply": "HUD編輯 — 拖曳以移動，儲存後生效",

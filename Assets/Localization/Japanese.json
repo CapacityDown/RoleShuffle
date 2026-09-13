@@ -27,6 +27,7 @@
   "Base Upgrade data is not available yet.": "Base Upgradeのデータをまだ受信していません。",
   "Shared targets used when a role does not replace an upgrade.": "役職による置き換えがないアップグレードに適用する共通の目標値です。",
   "Configured": "設定値",
+  "Config {0}  Draw {1}": "設定 {0}  抽選 {1}",
   "Config {0}  Manual {1}  Draw {2}": "設定 {0}  手動 {1}  抽選 {2}",
   "Truck Draw": "トラック抽選",
   "HUD EDITOR — drag to move; Save to apply": "HUD編集 — ドラッグで移動／保存で反映",

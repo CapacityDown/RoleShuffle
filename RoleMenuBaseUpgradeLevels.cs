@@ -78,8 +78,11 @@ internal sealed partial class RoleMenu
                     21, FontStyles.Bold, 30, false, UseLanguageFont,
                     adjustment: new RoleMenuAdjustment(upgrade.CurrentLevel, Adjust(-1), Adjust(1), showButtons: !manualDisabled)));
                 entries.Add(new RoleMenuEntry(
-                    string.Format(CultureInfo.InvariantCulture, Localized("Config {0}  Manual {1}  Draw {2}"),
-                        upgrade.ConfiguredLevel, SignedValue(upgrade.ManualAdjustment), SignedValue(upgrade.TruckDrawBonus)),
+                    manualDisabled
+                        ? string.Format(CultureInfo.InvariantCulture, Localized("Config {0}  Draw {1}"),
+                            upgrade.ConfiguredLevel, SignedValue(upgrade.TruckDrawBonus))
+                        : string.Format(CultureInfo.InvariantCulture, Localized("Config {0}  Manual {1}  Draw {2}"),
+                            upgrade.ConfiguredLevel, SignedValue(upgrade.ManualAdjustment), SignedValue(upgrade.TruckDrawBonus)),
                     18, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
             }
         }

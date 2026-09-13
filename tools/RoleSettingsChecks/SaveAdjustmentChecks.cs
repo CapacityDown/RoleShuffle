@@ -100,7 +100,7 @@ internal static class SaveAdjustmentChecks
         Check(Total() == 3 && BaseUpgradeManualStore.Get(health) == 2 && BaseUpgradeBonusStore.Get(health) == 1 &&
             config.BaseHealthLevels.Value == "1:2,5:7", "Off removes the applied manual level while retaining saved amounts, draw bonuses and rules");
         Check(RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 3) &&
-            RoleMenu.Entries.Any(e => e.Text == "Config 2  Manual 0  Draw +1"), "Off display adds up to configured and truck values only");
+            RoleMenu.Entries.Any(e => e.Text == "Config 2  Draw +1"), "Off breakdown shows configured and truck values only");
         var disabledReload = new StageRolesConfig(new ConfigFile(file.ConfigFilePath, false) { SaveOnConfigSet = false });
         Check(!disabledReload.BaseUpgradeManualAdjustmentEnabled.Value, "Disabled preference persists through real configuration reload");
         StatsManager.instance.SaveFileSave();
@@ -208,6 +208,7 @@ internal static class SaveAdjustmentChecks
         RoleMenu.RefreshLevelsIfChanged();
         Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => !e.Adjustment!.ShowButtons) &&
             RoleMenu.Entries.Any(e => e.Text == "Health" && e.Adjustment?.CurrentLevel == 200) &&
+            RoleMenu.Entries.Any(e => e.Text == "Config 200  Draw 0") &&
             BaseUpgradeSync.Read(config)[0].ManualAdjustment == 0, "Host-off hides guest buttons and syncs totals excluding manual amounts despite guest local on");
         foreach (object invalid in new object[] { "2|1", "1|x", "1|1|extra", 1 })
         {

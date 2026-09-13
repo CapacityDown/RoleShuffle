@@ -111,6 +111,7 @@
   "Base Upgrade data is not available yet.": "Dados de Base Upgrade ainda indisponíveis.",
   "Shared targets used when a role does not replace an upgrade.": "Valores-alvo compartilhados quando uma função não substitui uma melhoria.",
   "Configured": "Configurado",
+  "Config {0}  Draw {1}": "Config {0}  Sorteio {1}",
   "Config {0}  Manual {1}  Draw {2}": "Config {0}  Manual {1}  Sorteio {2}",
   "Truck Draw": "Sorteio do caminhão",
   "HUD EDITOR — drag to move; Save to apply": "EDITOR HUD — arraste para mover; salve para aplicar",
