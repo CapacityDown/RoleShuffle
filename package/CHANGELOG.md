@@ -1,4 +1,5 @@
 ## 4.4.7
+- Long translated messages on the empty Current Roles page now wrap within the menu instead of being cut off at the right edge.
 - The HUD now fits six players including the local player with multibyte names or role icons, when the page limit is at least six. Long names preserve role text, and taller layouts stay within the screen.
 - Fixed Mage and Trickster abilities activating when an expression ends, including when opening the Escape menu. The host's own menu expression restoration no longer activates abilities.
 - Added host-controlled role ON/OFF switches in Roles UI and Standard, Beginner, Cooperative, Chaos, and Challenge presets. Framed controls distinguish actions from descriptions: ON roles use orange, editable OFF roles use blue with grayscale icons, and unavailable controls use gray without hover feedback. Selections are saved to MOD settings for future assignments; existing roles, weights, and ability settings are preserved.

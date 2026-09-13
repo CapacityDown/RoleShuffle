@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 437;
+    private const int RoleUiBuildNumber = 438;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -420,12 +420,20 @@ internal sealed partial class RoleMenu : MonoBehaviour
         string localSteamId = PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal());
         if (assignments.Count == 0)
         {
-            entries.Add(new RoleMenuEntry(
-                Localized("No roles are currently assigned."),
-                24f,
-                FontStyles.Bold,
-                AssignmentRowHeight,
-                wrap: false));
+            foreach (string line in WrapGuideText(
+                         MeasurementText(page),
+                         Localized("No roles are currently assigned."),
+                         ContentWidth(page),
+                         _guideLanguage))
+            {
+                entries.Add(new RoleMenuEntry(
+                    line,
+                    GuideFontSize,
+                    FontStyles.Normal,
+                    GuideLineHeight,
+                    wrap: false,
+                    useLanguageFont: UseLanguageFont));
+            }
         }
         else
         {
