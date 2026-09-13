@@ -178,7 +178,7 @@ Each upgrade on `BASE UPGRADES` uses two lines: its name, current total and comp
 
 In REPOConfig, apply pending edits before leaving the settings page. Roles UI saves each switch or manual adjustment immediately.
 
-OFF excludes a type from both individual and `All Upgrades` results in future draws. It does not remove acquired bonuses or disable configured base levels. An in-progress draw keeps the selection it started with. Weight `0` excludes direct selection only; an enabled type can still receive an `All Upgrades` result. Turning OFF `All Upgrades` disables only the combined result. All-off selections produce no draw result.
+OFF excludes a type from both individual and `All Upgrades` results in future draws. It does not remove acquired bonuses or disable configured base levels. An in-progress draw keeps the selection it started with. `No individual draw` means the type cannot be selected on its own; when ON, it can still receive an `All Upgrades` result. `No draw` on `All Upgrades` means that combined result cannot be selected. These labels indicate a configured draw weight of `0`. Turning OFF `All Upgrades` disables only the combined result. All-off selections produce no draw result.
 
 | Key | Default | Range / values | Effect | Control |
 |---|---:|---|---|---|
@@ -630,7 +630,7 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 
 REPOConfigでは変更を適用してから設定画面を閉じてください。Roles UIのスイッチ変更と手動調整は、その場で保存されます。
 
-OFFの種類は、次回以降の個別抽選と`All Upgrades`の両方から除外します。獲得済みのボーナスや設定済みの基礎レベルは維持します。抽選アニメーション中に変更した場合、その抽選は開始時の選択内容を使用します。重み`0`は個別抽選のみを除外し、ONの種類は`All Upgrades`で強化される場合があります。`All Upgrades`のOFFは一括抽選だけを無効にします。すべてOFFの場合、抽選結果は発生しません。
+OFFの種類は、次回以降の個別抽選と`All Upgrades`の両方から除外します。獲得済みのボーナスや設定済みの基礎レベルは維持します。抽選アニメーション中に変更した場合、その抽選は開始時の選択内容を使用します。`個別抽選なし`は単独では抽選されない設定で、ONの種類は`All Upgrades`の一括強化に含まれます。`All Upgrades`の`抽選なし`は、一括抽選が選ばれない設定です。これらの表示は抽選重みが`0`の場合に付きます。`All Upgrades`のOFFは一括抽選だけを無効にします。すべてOFFの場合、抽選結果は発生しません。
 
 | キー | デフォルト | 範囲・値 | 内容 | 管理 |
 |---|---:|---|---|---|
