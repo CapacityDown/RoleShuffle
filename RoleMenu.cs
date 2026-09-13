@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 431;
+    private const int RoleUiBuildNumber = 432;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -958,7 +958,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 : row.DefaultFont;
             row.Button.onClick = entry.OnClick;
             row.Button.menuButton.enabled = clickable;
-            row.Visual.Configure(control, clickable, entry.EmblemRole.HasValue && entry.EmblemGrayedOut);
+            row.Visual.Configure(control, clickable, entry.IsOff);
             labelText.raycastTarget = false;
             Sprite? emblem = entry.EmblemRole.HasValue
                 ? RoleEmblems.Get(entry.EmblemRole.Value, entry.UnrevealedEmblem, entry.EmblemGrayedOut) : null;
@@ -1167,7 +1167,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         bool unrevealedEmblem = false,
         bool isControl = false,
         bool emblemGrayedOut = false,
-        RoleMenuAdjustment? adjustment = null)
+        RoleMenuAdjustment? adjustment = null,
+        bool isOff = false)
     {
         internal string Text { get; } = text;
         internal float FontSize { get; } = fontSize;
@@ -1181,6 +1182,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         internal bool IsControl { get; } = isControl;
         internal bool EmblemGrayedOut { get; } = emblemGrayedOut;
         internal RoleMenuAdjustment? Adjustment { get; } = adjustment;
+        internal bool IsOff { get; } = isOff;
     }
 
     private sealed class RoleMenuRow(

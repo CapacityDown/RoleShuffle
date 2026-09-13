@@ -48,7 +48,7 @@ internal sealed partial class RoleMenu
             } : null;
             entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, emblem.HasValue ? 56 : 40,
                 false, UseLanguageFont, click, emblem, emblem.HasValue && RoleCatalog.IsSecretRole(emblem.Value),
-                isControl: true, emblemGrayedOut: emblemGrayedOut));
+                isControl: true, emblemGrayedOut: emblemGrayedOut, isOff: emblemGrayedOut));
         }
         bool Enabled(StageRole role) => editable ? _config.RoleIsEnabled(role) : RoleGuideSync.IsVisible(role, _config);
 

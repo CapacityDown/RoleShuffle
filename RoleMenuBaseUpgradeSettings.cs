@@ -28,7 +28,7 @@ internal sealed partial class RoleMenu
             foreach (string line in WrapGuideText(MeasurementText(page), value, ContentWidth(page), _guideLanguage))
                 entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
         }
-        void Button(string label, Action action, bool enabled = true)
+        void Button(string label, Action action, bool enabled = true, bool off = false)
         {
             Action? click = enabled ? () =>
             {
@@ -41,7 +41,7 @@ internal sealed partial class RoleMenu
                 }
                 if (_openPage == page && _activeView == view) RefreshBaseUpgradeSettingsRows(page);
             } : null;
-            entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, 40, false, UseLanguageFont, click, isControl: true));
+            entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, 40, false, UseLanguageFont, click, isControl: true, isOff: off));
         }
 
         Text(Localized("Changes apply to future truck draws. Existing levels and configured base targets are kept."));
@@ -73,7 +73,7 @@ internal sealed partial class RoleMenu
             else
             {
                 Button(RoleText.Format("Truck draw: {0}", _guideLanguage, Localized(state.DrawEnabled ? "ON" : "OFF")),
-                    () => StageRolesPlugin.Instance.BaseUpgradeSettings.TrySetDrawEnabled(!_config.TruckUpgradeDrawEnabled.Value), editable);
+                    () => StageRolesPlugin.Instance.BaseUpgradeSettings.TrySetDrawEnabled(!_config.TruckUpgradeDrawEnabled.Value), editable, off: !state.DrawEnabled);
                 Text(RoleText.Format("Selection: {0}", _guideLanguage, Localized(BaseUpgradePresets.MatchingName(state.IsEnabled))));
                 int count = 0;
                 bool hasCandidate = false;
@@ -93,9 +93,10 @@ internal sealed partial class RoleMenu
                 foreach (string name in BaseUpgradePresets.UpgradeNames)
                 {
                     string displayName = name == "AllUpgrades" ? Localized("All Upgrades") : DisplayUpgradeName(name);
-                    string label = $"[{Localized(state.IsEnabled(name) ? "ON" : "OFF")}] {displayName}";
+                    bool upgradeEnabled = state.IsEnabled(name);
+                    string label = $"[{Localized(upgradeEnabled ? "ON" : "OFF")}] {displayName}";
                     if (editable && _config.TruckUpgradeDrawWeight(name) == 0) label += " — " + Localized("Weight 0");
-                    Button(label, () => StageRolesPlugin.Instance.BaseUpgradeSettings.TrySetEnabled(name, !_config.BaseUpgradeDrawIsEnabled(name)), editable);
+                    Button(label, () => StageRolesPlugin.Instance.BaseUpgradeSettings.TrySetEnabled(name, !_config.BaseUpgradeDrawIsEnabled(name)), editable, off: !upgradeEnabled);
                 }
             }
         }
