@@ -27,13 +27,31 @@ public sealed class StatsManager
     public bool ReadyForTests { get => saveFileReady; set => saveFileReady = value; }
     public static string DirectoryPath = "";
     public bool FailSave;
+    public bool FailCreate;
+    public int Creates;
     public int Saves;
+    public void ResetAllStats()
+    {
+        saveFileReady = false;
+        runStats.Clear();
+        runStats["level"] = 0;
+        REPOJP.StageRoles.GameSaveState.RecordRunReset(this);
+    }
+    public void SaveFileCreate(string saveFileName = "", bool saveIsDebug = false)
+    {
+        if (FailCreate) throw new IOException("Simulated native initialization failure");
+        saveFileCurrent = saveFileName.Length > 0 ? saveFileName : $"fresh-run-{++Creates}.json";
+        saveFileReady = true;
+        REPOJP.StageRoles.GameSaveState.RecordSaveReady(this);
+    }
     public void SaveFileSave()
     {
         if (FailSave) throw new IOException("Simulated disk failure");
         if (savedLobbyTypes.Contains(GameManager.instance!.LobbyForTests))
             File.WriteAllText(Path.Combine(DirectoryPath, saveFileCurrent), System.Text.Json.JsonSerializer.Serialize(runStats));
         Saves++;
+        saveFileReady = true;
+        REPOJP.StageRoles.GameSaveState.RecordSaveReady(this);
     }
     public void Load(string name)
     {
@@ -45,10 +63,24 @@ public sealed class StatsManager
             foreach (var pair in System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(File.ReadAllText(path))!)
                 runStats[pair.Key] = pair.Value;
         saveFileReady = true;
+        REPOJP.StageRoles.GameSaveState.RecordSaveReady(this);
     }
 }
-public sealed class RunManager { public static RunManager? instance = new(); public int levelsCompleted; }
-public static class SemiFunc { public static bool Multiplayer; public static bool IsMultiplayer() => Multiplayer; }
+public enum TestScene { LobbyMenu, Truck, Shop, Stage, Arena, Tutorial, MainMenu }
+public sealed class RunManager
+{
+    public static RunManager? instance = new();
+    public int levelsCompleted;
+    public TestScene? levelCurrent = TestScene.LobbyMenu;
+}
+public static class SemiFunc
+{
+    public static bool Multiplayer;
+    public static bool IsMultiplayer() => Multiplayer;
+    public static bool RunIsLobbyMenu() => RunManager.instance?.levelCurrent == TestScene.LobbyMenu;
+    public static bool RunIsLobby() => RunManager.instance?.levelCurrent == TestScene.Truck;
+    public static bool RunIsShop() => RunManager.instance?.levelCurrent == TestScene.Shop;
+}
 namespace ExitGames.Client.Photon { public sealed class Hashtable : Dictionary<string, object> { } }
 namespace Photon.Pun
 {

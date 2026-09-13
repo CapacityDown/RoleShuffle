@@ -8,8 +8,9 @@ internal static class BaseUpgradeManualStore
     private const string KeyPrefix = "RoleShuffle.BaseUpgradeManual.";
 
     // runStats belongs to the loaded save and is cleared by the game's reset.
-    // Do not offer a persistent edit when the native save operation would skip it.
-    internal static string SaveIdentity => GameSaveState.CanSave ? GameSaveState.CurrentName : string.Empty;
+    // A reset run can prepare its next native save on the first lobby edit.
+    internal static string SaveIdentity => GameSaveState.CanSave
+        ? GameSaveState.CurrentName : GameSaveState.PendingNewRunIdentity;
 
     internal static int Get(string dictionaryName) => StatsManager.instance == null
         ? 0 : StatsManager.instance.runStats.GetValueOrDefault(KeyPrefix + dictionaryName, 0);
@@ -17,6 +18,7 @@ internal static class BaseUpgradeManualStore
     internal static bool TrySave(string dictionaryName, int value, string saveIdentity)
     {
         if (string.IsNullOrEmpty(saveIdentity) || SaveIdentity != saveIdentity) return false;
+        if (!GameSaveState.CanSave && !GameSaveState.PrepareNewRun(saveIdentity)) return false;
         var stats = StatsManager.instance!;
         string key = KeyPrefix + dictionaryName;
         bool existed = stats.runStats.TryGetValue(key, out int previous);

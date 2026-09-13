@@ -13,6 +13,26 @@ internal static class LifecyclePatches
     private static readonly FieldInfo? HurtColliderPlayerField =
         AccessTools.Field(typeof(HurtCollider), "playerCausingHurt");
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.ResetAllStats))]
+    private static void StatsManagerResetAllStatsPostfix(StatsManager __instance) =>
+        GameSaveState.RecordRunReset(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.SaveFileCreate))]
+    private static void StatsManagerSaveFileCreatePostfix(StatsManager __instance) =>
+        GameSaveState.RecordSaveReady(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.SaveFileSave))]
+    private static void StatsManagerSaveFileSavePostfix(StatsManager __instance) =>
+        GameSaveState.RecordSaveReady(__instance);
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.LoadGame))]
+    private static void StatsManagerLoadGamePostfix(StatsManager __instance) =>
+        GameSaveState.RecordSaveReady(__instance);
+
     private sealed class EnemyHitOverrideState
     {
         internal EnemyHitOverrideState(float enemyStunTime, int enemyDamage)

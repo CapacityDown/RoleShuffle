@@ -267,6 +267,6 @@ internal static class SaveAdjustmentChecks
         Check(BaseUpgradeManualStore.Get(health) == 0 && !service.TryAdjustLevel("Health", 1, identity), "Missing StatsManager cannot edit");
         RunManager.instance = new() { levelsCompleted = int.MaxValue };
         Check(BaseUpgradeSelectionSettings.CurrentRunLevel == 999999, "Run level arithmetic does not overflow");
-        return checks;
+        return checks + ManualAdjustmentLifecycleChecks.Run(config, service);
     }
 }

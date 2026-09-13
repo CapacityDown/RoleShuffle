@@ -26,6 +26,7 @@ internal sealed partial class RoleMenu
         if (editable)
         {
             signature.Append('|').Append(BaseUpgradeSelectionSettings.CurrentRunLevel);
+            signature.Append('|').Append(BaseUpgradeSelectionSettings.CanAdjustInCurrentScene);
             signature.Append('|').Append(BaseUpgradeManualStore.SaveIdentity);
             foreach (var definition in RoleUpgradeScaling.Definitions)
                 signature.Append('|').Append(_config.BaseUpgradeLevelsEntry(definition.Name)!.Value);
@@ -52,6 +53,8 @@ internal sealed partial class RoleMenu
                 ? Localized("Manual adjustment is OFF in MOD settings.")
                 : Localized("+/- adjustments are saved with this game data."));
             if (!RoleSelectionSettings.CanEdit) Text(Localized("Only the host can change Base Upgrade settings."));
+            else if (!manualDisabled && !BaseUpgradeSelectionSettings.CanAdjustInCurrentScene)
+                Text(Localized("+/- is available only in the lobby, truck, or shop."));
             else if (!manualDisabled && BaseUpgradeManualStore.SaveIdentity.Length == 0)
                 Text(Localized("Load a saved game to use +/- adjustments."));
             if (_utilityMessage.Length > 0) Text(_utilityMessage);

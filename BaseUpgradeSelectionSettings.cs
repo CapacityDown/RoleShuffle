@@ -9,6 +9,10 @@ internal sealed class BaseUpgradeSelectionSettings(StageRolesConfig settings, Co
     internal static int CurrentRunLevel => (int)Math.Max(1L, Math.Min(999999L,
         RunManager.instance != null ? (long)RunManager.instance.levelsCompleted + 1 : 1));
 
+    internal static bool CanAdjustInCurrentScene => RunManager.instance != null &&
+        RunManager.instance.levelCurrent != null &&
+        (SemiFunc.RunIsLobbyMenu() || SemiFunc.RunIsLobby() || SemiFunc.RunIsShop());
+
     internal bool CanAdjustLevel(string name, int delta, string saveIdentity) =>
         RoleSelectionSettings.CanEdit && TryBuildLevelAdjustment(name, delta, saveIdentity, out _, out _);
 
@@ -25,7 +29,7 @@ internal sealed class BaseUpgradeSelectionSettings(StageRolesConfig settings, Co
         dictionaryName = string.Empty;
         adjustment = 0;
         var entry = settings.BaseUpgradeLevelsEntry(name);
-        if (!settings.BaseUpgradeManualAdjustmentEnabled.Value || entry == null ||
+        if (!settings.BaseUpgradeManualAdjustmentEnabled.Value || !CanAdjustInCurrentScene || entry == null ||
             delta is not (-1 or 1) || string.IsNullOrEmpty(saveIdentity) ||
             saveIdentity != BaseUpgradeManualStore.SaveIdentity) return false;
         int maximum = name == "MapPlayerCount" ? 1 : RoleUpgradeScaling.MaximumUpgradeLevel;

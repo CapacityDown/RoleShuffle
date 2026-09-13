@@ -120,6 +120,7 @@ internal sealed class StageRolesConfig
 
         BaseUpgradeManualAdjustmentEnabled = BindBool(config, "Base Upgrades", "ManualAdjustmentEnabled", false,
             "Allows the host to use the minus/plus buttons on BASE UPGRADES. Default: off. " +
+            "Adjustments are available in the lobby, truck, or shop, not during stages. " +
             "Turning this off hides the buttons and excludes saved manual adjustments from base targets. " +
             "Saved amounts are kept and apply again when enabled. " +
             "Configured base levels and truck draws are unaffected.");

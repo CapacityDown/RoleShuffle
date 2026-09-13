@@ -136,6 +136,7 @@
   "Base Upgrade data is not available yet.": "Base Upgrade data is not available yet.",
   "+/- adjustments are saved with this game data.": "+/- adjustments are saved with this game data.",
   "Load a saved game to use +/- adjustments.": "Load a saved game to use +/- adjustments.",
+  "+/- is available only in the lobby, truck, or shop.": "+/- is available only in the lobby, truck, or shop.",
   "Configured": "Configured",
   "Config {0}  Draw {1}": "Config {0}  Draw {1}",
   "Config {0}  Manual {1}  Draw {2}": "Config {0}  Manual {1}  Draw {2}",
