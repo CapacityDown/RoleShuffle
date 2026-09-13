@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 426;
+    private const int RoleUiBuildNumber = 427;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -1006,6 +1006,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
 
             RoleMenuEntry entry = entries[index];
             bool clickable = entry.OnClick != null;
+            bool control = clickable || entry.IsControl;
             row.Label.rectTransform.gameObject.SetActive(true);
             row.Button.labelTMP.gameObject.SetActive(false);
             TMP_Text labelText = row.Label.labelTMP;
@@ -1017,7 +1018,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             labelText.fontSize = entry.FontSize;
             labelText.fontStyle = entry.FontStyle;
             labelText.enableWordWrapping = entry.Wrap;
-            labelText.enableAutoSizing = clickable;
+            labelText.enableAutoSizing = control;
             labelText.fontSizeMin = 12f;
             labelText.fontSizeMax = entry.FontSize;
             labelText.overflowMode = TextOverflowModes.Overflow;
@@ -1026,25 +1027,27 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 : row.DefaultFont;
             row.Button.onClick = entry.OnClick;
             row.Button.menuButton.enabled = clickable;
+            row.Visual.Configure(control, clickable);
             labelText.raycastTarget = false;
             Sprite? emblem = entry.EmblemRole.HasValue
                 ? RoleEmblems.Get(entry.EmblemRole.Value, entry.UnrevealedEmblem) : null;
             row.Emblem.sprite = emblem;
             row.Emblem.gameObject.SetActive(emblem != null);
             float emblemSize = Mathf.Min(56f, entry.Height - 8f);
-            float textInset = emblem != null ? emblemSize + 10f : 0f;
+            float padding = control ? 12f : 0f;
+            float textInset = padding + (emblem != null ? emblemSize + 10f : 0f);
             row.Emblem.rectTransform.sizeDelta = new Vector2(emblemSize, emblemSize);
             row.Emblem.rectTransform.anchoredPosition =
-                new Vector2(0f, (entry.Height - emblemSize) * 0.5f);
+                new Vector2(padding, (entry.Height - emblemSize) * 0.5f);
             Vector2 size = new(contentWidth, entry.Height);
             row.Button.overrideButtonSize = size;
             row.Button.rectTransform.sizeDelta = size;
             row.Label.rectTransform.anchoredPosition = new Vector2(textInset, 0f);
-            Vector2 textSize = new(contentWidth - textInset, entry.Height);
+            Vector2 textSize = new(contentWidth - textInset - padding, entry.Height);
             row.Label.rectTransform.sizeDelta = textSize;
             labelText.rectTransform.sizeDelta = textSize;
             if (emblem != null) labelText.overflowMode = TextOverflowModes.Ellipsis;
-            float focusHeight = Mathf.Max(12f, entry.Height * 0.5f);
+            float focusHeight = control ? entry.Height : Mathf.Max(12f, entry.Height * 0.5f);
             row.FocusRect.sizeDelta = new Vector2(contentWidth, focusHeight);
             row.FocusRect.anchoredPosition = new Vector2(
                 0f,
@@ -1125,12 +1128,15 @@ internal sealed partial class RoleMenu : MonoBehaviour
         emblem.rectTransform.anchorMax = Vector2.zero;
         emblem.rectTransform.pivot = Vector2.zero;
         emblemObject.SetActive(false);
+        RoleMenuButtonVisual visual = createdButton.gameObject.AddComponent<RoleMenuButtonVisual>();
+        visual.Initialize(createdButton, createdLabel.labelTMP);
         return new RoleMenuRow(
             createdButton,
             createdLabel,
             element,
             focusRect,
-            emblem);
+            emblem,
+            visual);
     }
 
     private static string BuildSignature(IReadOnlyList<RoleSnapshot> assignments)
@@ -1221,7 +1227,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         bool useLanguageFont = false,
         Action? onClick = null,
         StageRole? emblemRole = null,
-        bool unrevealedEmblem = false)
+        bool unrevealedEmblem = false,
+        bool isControl = false)
     {
         internal string Text { get; } = text;
         internal float FontSize { get; } = fontSize;
@@ -1232,6 +1239,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         internal Action? OnClick { get; } = onClick;
         internal StageRole? EmblemRole { get; } = emblemRole;
         internal bool UnrevealedEmblem { get; } = unrevealedEmblem;
+        internal bool IsControl { get; } = isControl;
     }
 
     private sealed class RoleMenuRow(
@@ -1239,13 +1247,15 @@ internal sealed partial class RoleMenu : MonoBehaviour
         REPOLabel label,
         REPOScrollViewElement element,
         RectTransform focusRect,
-        Image emblem)
+        Image emblem,
+        RoleMenuButtonVisual visual)
     {
         internal REPOButton Button { get; } = button;
         internal REPOLabel Label { get; } = label;
         internal REPOScrollViewElement Element { get; } = element;
         internal RectTransform FocusRect { get; } = focusRect;
         internal Image Emblem { get; } = emblem;
+        internal RoleMenuButtonVisual Visual { get; } = visual;
         internal TMP_FontAsset DefaultFont { get; } = label.labelTMP.font;
     }
 

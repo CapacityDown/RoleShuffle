@@ -60,6 +60,7 @@
     <Compile Include="PlayerUtilitiesCore.cs" />
     <Compile Include="PlayerUtilitiesRuntime.cs" />
     <Compile Include="RoleMenu.cs" />
+    <Compile Include="RoleMenuButtonVisual.cs" />
     <Compile Include="RoleMenuSettings.cs" />
     <Compile Include="RoleMenuBaseUpgradeSettings.cs" />
     <Compile Include="RoleMenuScroll.cs" />

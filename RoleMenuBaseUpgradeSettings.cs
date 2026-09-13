@@ -41,7 +41,7 @@ internal sealed partial class RoleMenu
                 }
                 if (_openPage == page && _activeView == view) RefreshBaseUpgradeSettingsRows(page);
             } : null;
-            entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, 40, false, UseLanguageFont, click));
+            entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, 40, false, UseLanguageFont, click, isControl: true));
         }
 
         Text(Localized("Changes apply to future truck draws. Existing levels and configured base targets are kept."));
