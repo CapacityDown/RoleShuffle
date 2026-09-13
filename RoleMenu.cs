@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 448;
+    private const int RoleUiBuildNumber = 449;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -53,8 +53,10 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private static string _assignmentsSignature = string.Empty;
     private static bool _signatureTestingEnabled;
     private static string _signatureGuidePayload = string.Empty;
+    private static string _signatureLocalSteamId = string.Empty;
     private static RoleGuideLanguage _signatureGuideLanguage;
     private static string _selectedAssignmentKey = string.Empty;
+    private static bool _selectLocalAssignmentOnRefresh;
     private static RoleMenuView _activeView = RoleMenuView.Assignments;
     private static RoleGuideLanguage _guideLanguage = RoleGuideLanguage.English;
     private static bool _assignmentsEnabled = true;
@@ -207,6 +209,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _utilityMessage = string.Empty;
         _openSignature = string.Empty;
         _selectedAssignmentKey = string.Empty;
+        _selectLocalAssignmentOnRefresh = assignmentsEnabled;
 
         page.AddElement(parent =>
         {
@@ -320,6 +323,11 @@ internal sealed partial class RoleMenu : MonoBehaviour
             return;
         }
 
+        if (view == RoleMenuView.Assignments && _activeView != view)
+        {
+            _selectedAssignmentKey = string.Empty;
+            _selectLocalAssignmentOnRefresh = true;
+        }
         _activeView = view;
         _utilityMessage = string.Empty;
         UpdateNavigationLabels();
@@ -417,6 +425,21 @@ internal sealed partial class RoleMenu : MonoBehaviour
     {
         List<RoleMenuEntry> entries = new();
         string localSteamId = PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal());
+        int localIndex = -1;
+        if (!string.IsNullOrEmpty(localSteamId))
+        {
+            for (int index = 0; index < assignments.Count; index++)
+            {
+                if (!string.Equals(assignments[index].SteamId, localSteamId, StringComparison.Ordinal)) continue;
+                localIndex = index;
+                break;
+            }
+        }
+        if (_selectLocalAssignmentOnRefresh && localIndex >= 0)
+        {
+            _selectedAssignmentKey = AssignmentKey(assignments[localIndex], localIndex + 1);
+            _selectLocalAssignmentOnRefresh = false;
+        }
         if (assignments.Count == 0)
         {
             foreach (string line in WrapGuideText(
@@ -437,17 +460,19 @@ internal sealed partial class RoleMenu : MonoBehaviour
         else
         {
             bool selectedAssignmentFound = false;
-            int fallbackIndex = 1;
-            foreach (RoleSnapshot snapshot in assignments)
+            for (int rowIndex = 0; rowIndex < assignments.Count; rowIndex++)
             {
+                // Move only the local row. Preserve other players' order and
+                // original indices so fallback labels and command targets agree.
+                int sourceIndex = localIndex < 0 ? rowIndex
+                    : rowIndex == 0 ? localIndex
+                    : rowIndex <= localIndex ? rowIndex - 1 : rowIndex;
+                RoleSnapshot snapshot = assignments[sourceIndex];
+                int fallbackIndex = sourceIndex + 1;
                 string playerName = string.IsNullOrWhiteSpace(snapshot.PlayerName)
                     ? $"{Localized("Player")} {fallbackIndex}"
                     : snapshot.PlayerName.Trim();
-                bool isLocal = !string.IsNullOrEmpty(localSteamId) &&
-                               string.Equals(
-                                   snapshot.SteamId,
-                                   localSteamId,
-                                   StringComparison.Ordinal);
+                bool isLocal = sourceIndex == localIndex;
                 string assignmentKey = AssignmentKey(snapshot, fallbackIndex);
                 bool isSelected = string.Equals(
                     assignmentKey,
@@ -510,7 +535,6 @@ internal sealed partial class RoleMenu : MonoBehaviour
                         GuideRoleSpacing,
                         wrap: false));
                 }
-                fallbackIndex++;
             }
             if (!selectedAssignmentFound)
             {
@@ -532,6 +556,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             return;
         }
 
+        _selectLocalAssignmentOnRefresh = false;
         _selectedAssignmentKey = string.Equals(
             _selectedAssignmentKey,
             assignmentKey,
@@ -1107,14 +1132,17 @@ internal sealed partial class RoleMenu : MonoBehaviour
     {
         bool testingEnabled = _config.SetRoleCommandEnabled.Value;
         string guidePayload = RoleGuideSync.CurrentSignature(_config);
+        string localSteamId = PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal());
         if (ReferenceEquals(_signatureAssignments, assignments) &&
             _signatureTestingEnabled == testingEnabled &&
             _signatureGuidePayload == guidePayload &&
+            _signatureLocalSteamId == localSteamId &&
             _signatureGuideLanguage == _guideLanguage)
         {
             return _assignmentsSignature;
         }
         StringBuilder builder = new();
+        builder.Append(localSteamId).Append('|');
         builder.Append(testingEnabled ? "numbers:on|" : "numbers:off|");
         builder.Append((int)_guideLanguage).Append('|').Append(guidePayload).Append('|');
         foreach (RoleSnapshot assignment in assignments)
@@ -1133,6 +1161,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _signatureAssignments = assignments;
         _signatureTestingEnabled = testingEnabled;
         _signatureGuidePayload = guidePayload;
+        _signatureLocalSteamId = localSteamId;
         _signatureGuideLanguage = _guideLanguage;
         _assignmentsSignature = builder.ToString();
         return _assignmentsSignature;
@@ -1148,6 +1177,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _signatureAssignments = null;
         _assignmentsSignature = string.Empty;
         _signatureGuidePayload = string.Empty;
+        _signatureLocalSteamId = string.Empty;
         IsOpen = false;
         _openPage = null;
         _assignmentsButton = null;
@@ -1163,6 +1193,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _openSignature = string.Empty;
         _selectedAssignmentKey = string.Empty;
         _activeView = RoleMenuView.Assignments;
+        _selectLocalAssignmentOnRefresh = false;
         _guideLanguage = RoleGuideLanguage.English;
         _assignmentsEnabled = true;
     }
