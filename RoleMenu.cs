@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 430;
+    private const int RoleUiBuildNumber = 431;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -949,7 +949,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             labelText.fontSize = entry.FontSize;
             labelText.fontStyle = entry.FontStyle;
             labelText.enableWordWrapping = entry.Wrap;
-            labelText.enableAutoSizing = control || entry.Adjustment != null;
+            labelText.enableAutoSizing = control || _activeView == RoleMenuView.BaseUpgrades;
             labelText.fontSizeMin = 12f;
             labelText.fontSizeMax = entry.FontSize;
             labelText.overflowMode = TextOverflowModes.Overflow;
@@ -974,8 +974,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             row.Button.overrideButtonSize = size;
             row.Button.rectTransform.sizeDelta = size;
             row.Label.rectTransform.anchoredPosition = new Vector2(textInset, 0f);
-            float adjustmentWidth = entry.Adjustment != null ? RoleMenuStepper.ReservedWidth : 0f;
-            Vector2 textSize = new(contentWidth - textInset - padding - adjustmentWidth, entry.Height);
+            Vector2 textSize = new(contentWidth - textInset - padding, entry.Height);
             row.Label.rectTransform.sizeDelta = textSize;
             labelText.rectTransform.sizeDelta = textSize;
             if (emblem != null) labelText.overflowMode = TextOverflowModes.Ellipsis;
@@ -986,8 +985,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 (entry.Height - focusHeight) * 0.5f);
             if (entry.Adjustment != null)
             {
-                row.Stepper ??= new RoleMenuStepper(row.Button.rectTransform, row.DefaultFont);
-                row.Stepper.Configure(entry.Adjustment, contentWidth, entry.Height);
+                row.Stepper ??= new RoleMenuStepper(row.Button.rectTransform, page.menuScrollBox.scroller, row.DefaultFont);
+                row.Stepper.Configure(entry.Adjustment, entry.Height);
             }
             else row.Stepper?.Hide();
         }

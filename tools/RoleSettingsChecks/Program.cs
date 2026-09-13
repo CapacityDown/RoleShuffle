@@ -257,10 +257,10 @@ config.BaseHealthLevels.BoxedValue = "1:0,5:7";
 RoleMenu.ShowLevels(config);
 var adjustments = RoleMenu.Entries.Where(e => e.Adjustment != null).ToArray();
 Check(adjustments.Length == 12, "Each upgrade gets one row containing both controls");
-Check(adjustments[0].Text == "Configured: 0" && adjustments[0].Adjustment!.Decrease == null && adjustments[0].Adjustment!.Increase != null,
+Check(adjustments[0].Text == string.Empty && adjustments[0].Adjustment!.Decrease == null && adjustments[0].Adjustment!.Increase != null,
     "Lower-bound button disabled; increase remains actionable");
 adjustments[0].Adjustment!.Increase!();
-Check(config.BaseHealthLevels.Value == "1:0,3:1,5:7" && RoleMenu.Entries.Any(e => e.Adjustment != null && e.Text == "Configured: 1"), "Mouse callback saves and refreshes configured level");
+Check(config.BaseHealthLevels.Value == "1:0,3:1,5:7" && RoleMenu.Entries.Any(e => e.Text == "Configured: 1  Truck Draw: +3"), "Mouse callback saves and refreshes configured level and draw bonus on one line");
 config.BaseHealthLevels.BoxedValue = "1:200";
 RoleMenu.RefreshLevelsIfChanged();
 var healthControls = RoleMenu.Entries.First(e => e.Adjustment != null).Adjustment!;
@@ -281,7 +281,7 @@ Check(File.ReadAllText(path) == saved && !baseService.TryAdjustLevel("Health", -
 config.BaseHealthLevels.Value = "1:3";
 RoleMenu.ShowLevels(config);
 Check(RoleMenu.Entries.Where(e => e.Adjustment != null).All(e => e.Adjustment!.Decrease == null && e.Adjustment.Increase == null), "Guests cannot use either control");
-Check(RoleMenu.Entries.First(e => e.Adjustment != null).Text == "Configured: 200", "Guests see host configured level instead of local value");
+Check(RoleMenu.Entries.Any(e => e.Text == "Configured: 200  Truck Draw: +3"), "Guests see host configured level and draw bonus instead of local values");
 PhotonNetwork.CurrentRoom!.CustomProperties.Remove("RS.BaseUpgrades");
 RoleMenu.ShowLevels(config);
 Check(RoleMenu.Entries.All(e => e.Adjustment == null), "Missing host values do not create editable guesses");

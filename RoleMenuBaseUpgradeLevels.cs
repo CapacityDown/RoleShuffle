@@ -68,10 +68,12 @@ internal sealed partial class RoleMenu
                 entries.Add(new RoleMenuEntry(
                     $"{DisplayUpgradeName(upgrade.Name)}: {upgrade.CurrentLevel.ToString(CultureInfo.InvariantCulture)}",
                     21, FontStyles.Bold, 30, false, UseLanguageFont));
-                entries.Add(new RoleMenuEntry($"{Localized("Configured")}: {upgrade.ConfiguredLevel}",
+                entries.Add(new RoleMenuEntry(
+                    $"{Localized("Configured")}: {upgrade.ConfiguredLevel}  {Localized("Truck Draw")}: {SignedValue(upgrade.TruckDrawBonus)}",
+                    18, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
+                entries.Add(new RoleMenuEntry(string.Empty,
                     18, FontStyles.Normal, 36, false, UseLanguageFont,
                     adjustment: new RoleMenuAdjustment(Adjust(-1), Adjust(1))));
-                Text($"{Localized("Truck Draw")}: {SignedValue(upgrade.TruckDrawBonus)}");
                 entries.Add(new RoleMenuEntry(string.Empty, 18, FontStyles.Normal, 5, false));
             }
         }

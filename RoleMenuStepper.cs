@@ -8,7 +8,6 @@ namespace REPOJP.StageRoles;
 // Two independent native buttons, inside a single scroll row and its mask.
 internal sealed class RoleMenuStepper
 {
-    internal const float ReservedWidth = 92f;
     private const float ButtonSize = 36f;
     private const float Gap = 8f;
     private readonly REPOButton _minus;
@@ -16,10 +15,10 @@ internal sealed class RoleMenuStepper
     private readonly RoleMenuButtonVisual _minusVisual;
     private readonly RoleMenuButtonVisual _plusVisual;
 
-    internal RoleMenuStepper(Transform parent, TMP_FontAsset font)
+    internal RoleMenuStepper(Transform parent, Transform creationParent, TMP_FontAsset font)
     {
-        _minus = CreateButton("-", parent, font, out _minusVisual);
-        _plus = CreateButton("+", parent, font, out _plusVisual);
+        _minus = CreateButton("-", parent, creationParent, font, out _minusVisual);
+        _plus = CreateButton("+", parent, creationParent, font, out _plusVisual);
     }
 
     internal void Hide()
@@ -28,11 +27,10 @@ internal sealed class RoleMenuStepper
         _plus.gameObject.SetActive(false);
     }
 
-    internal void Configure(RoleMenuAdjustment adjustment, float width, float height)
+    internal void Configure(RoleMenuAdjustment adjustment, float height)
     {
-        ConfigureButton(_minus, _minusVisual, adjustment.Decrease,
-            width - ButtonSize * 2 - Gap, height);
-        ConfigureButton(_plus, _plusVisual, adjustment.Increase, width - ButtonSize, height);
+        ConfigureButton(_minus, _minusVisual, adjustment.Decrease, 0f, height);
+        ConfigureButton(_plus, _plusVisual, adjustment.Increase, ButtonSize + Gap, height);
     }
 
     private static void ConfigureButton(REPOButton button, RoleMenuButtonVisual visual,
@@ -45,10 +43,13 @@ internal sealed class RoleMenuStepper
         visual.Configure(true, click != null, false);
     }
 
-    private static REPOButton CreateButton(string text, Transform parent, TMP_FontAsset font,
+    private static REPOButton CreateButton(string text, Transform parent, Transform creationParent, TMP_FontAsset font,
         out RoleMenuButtonVisual visual)
     {
-        REPOButton button = MenuAPI.CreateREPOButton(text, () => { }, parent, Vector2.zero);
+        // MenuLib deactivates offscreen rows even while their visibility is true.
+        // Its factory reads fields initialized by Awake, so create under the active
+        // scroller first. An inactive parent leaves a failed "Quit game" clone.
+        REPOButton button = MenuAPI.CreateREPOButton(text, () => { }, creationParent, Vector2.zero);
         button.menuButton.customHoverArea = true;
         button.menuButton.resizeButton = false;
         button.labelTMP.gameObject.SetActive(false);
@@ -82,6 +83,7 @@ internal sealed class RoleMenuStepper
         button.menuButton.rectTransformSelection = focusRect;
         visual = button.gameObject.AddComponent<RoleMenuButtonVisual>();
         visual.Initialize(button, label);
+        rect.SetParent(parent, false);
         return button;
     }
 }
