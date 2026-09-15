@@ -394,7 +394,7 @@ internal sealed class UtilityRoleRuntime
         return battery.batteryLife > firstBarThreshold;
     }
 
-    private static bool IsHeldBy(
+    internal static bool IsHeldBy(
         PhysGrabObject physObject,
         RoleAssignment assignment)
     {

@@ -7,7 +7,7 @@
     <AssemblyName>RoleShuffle</AssemblyName>
     <RootNamespace>REPOJP.StageRoles</RootNamespace>
     <Authors>Codex</Authors>
-    <Version>4.4.8</Version>
+    <Version>4.5.0</Version>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
     <CopyFilesToPluginOutputDirectoryOnBuild>false</CopyFilesToPluginOutputDirectoryOnBuild>
@@ -47,6 +47,12 @@
     <Compile Include="RoleUpgradeScaling.cs" />
     <Compile Include="RoleConfigMigration.cs" />
     <Compile Include="RoleModels.cs" />
+    <Compile Include="RoleOverhaulRules.cs" />
+    <Compile Include="RoleOverhaulDescriptions.cs" />
+    <Compile Include="RoleOverhaulRuntime.cs" />
+    <Compile Include="RoleAbilityStatus.cs" />
+    <Compile Include="RoleAbilitySync.cs" />
+    <Compile Include="RoleAbilityRuntime.cs" />
     <Compile Include="AbilityExhaustionState.cs" />
     <Compile Include="RoleAssignmentPlanner.cs" />
     <Compile Include="RoleAssignmentSync.cs" />

@@ -1,3 +1,11 @@
+## 4.5.0
+
+- Changed Tank, Runner and Lifter to retain a capped upgrade bonus above Base Upgrades while preserving their configured minimum levels.
+- Added Jobless delivery contracts with an initial grace period, limited paid breaks and healing rewards.
+- Added a limited healing aura for King's nearby teammates.
+- Added remaining ability resources to the local HUD and `/roles`, including healing, revival uses and cooldowns. HUD data is shared with installed participants.
+- Added an overhaul setting to select the new behavior or legacy role rules. Bomber and Stinker keep their automatic movement-triggered hazards.
+
 ## 4.4.8
 
 ## 4.4.7

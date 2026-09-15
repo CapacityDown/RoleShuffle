@@ -18,6 +18,11 @@ internal sealed class TricksterRoleRuntime
     private readonly List<GameObject> _spawnedObjects = new();
     private int _generation;
 
+    internal AbilityValue Status(string steamId) => _active.TryGetValue(steamId, out ActiveDecoy decoy)
+        ? new AbilityValue(AbilityMetric.DecoyActive, Mathf.CeilToInt(Mathf.Max(0f, decoy.ExpiresAt - Time.time)), 0)
+        : new AbilityValue(AbilityMetric.DecoyCooldown, _nextPlacementAt.TryGetValue(steamId, out float at)
+            ? Mathf.CeilToInt(Mathf.Max(0f, at - Time.time)) : 0, 0);
+
     internal TricksterRoleRuntime(
         MonoBehaviour coroutineOwner,
         StageRolesConfig config,

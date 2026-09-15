@@ -26,6 +26,7 @@ internal sealed class RoleAssignment
     internal AbilityExhaustionState ExhaustionNotifications { get; } = new();
     internal StageRole AssignedRole { get; set; }
     internal StageRole Role { get; set; }
+    internal RoleOverhaulState Overhaul { get; } = new();
     internal Vector3 PreviousPosition { get; set; }
     internal Vector3 StinkerPreviousPosition { get; set; }
     internal Vector3 TunaPreviousPosition { get; set; }
@@ -176,6 +177,14 @@ internal static class RoleCatalog
         }
 
         IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config);
+        if (config.OverhaulEnabled.Value && RoleOverhaulRules.GrowsWithBase(role))
+        {
+            foreach (UpgradeGrant target in TargetUpgrades(role, config))
+                foreach (UpgradeGrant baseline in baseUpgrades)
+                    if (target.DictionaryName == baseline.DictionaryName && target.Level > baseline.Level)
+                        return false;
+            return true;
+        }
         foreach (UpgradeGrant roleUpgrade in RoleUpgrades(role, config))
         {
             foreach (UpgradeGrant baseUpgrade in baseUpgrades)
@@ -255,12 +264,27 @@ internal static class RoleCatalog
                 {
                     continue;
                 }
-                targets[index] = roleUpgrade;
+                int bonus = config.OverhaulEnabled.Value ? GrowthBonus(role, roleUpgrade.CommandName, config) : 0;
+                targets[index] = config.OverhaulEnabled.Value &&
+                    (RoleOverhaulRules.GrowsWithBase(role) || (role == StageRole.Superbot &&
+                        roleUpgrade.CommandName is "Health" or "Speed" or "Stamina" or "Strength"))
+                    ? new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
+                        RoleOverhaulRules.UpgradeTarget(targets[index].Level, roleUpgrade.Level, bonus))
+                    : roleUpgrade;
                 break;
             }
         }
         return targets;
     }
+
+    private static int GrowthBonus(StageRole role, string command, StageRolesConfig config) => command switch
+    {
+        "Health" when role is StageRole.Tank or StageRole.Superbot => config.TankBaseBonus.Value,
+        "Speed" when role is StageRole.Runner or StageRole.Superbot => config.RunnerSpeedBaseBonus.Value,
+        "Stamina" when role is StageRole.Runner or StageRole.Superbot => config.RunnerStaminaBaseBonus.Value,
+        "Strength" when role is StageRole.Lifter or StageRole.Superbot => config.LifterBaseBonus.Value,
+        _ => 0
+    };
 
     private static IReadOnlyList<UpgradeGrant> RoleUpgrades(
         StageRole role,

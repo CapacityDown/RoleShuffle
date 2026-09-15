@@ -39,6 +39,7 @@ internal sealed class StageRolesConfig
         RoleConfigMigration.Apply(config);
 
         Enabled = BindBool(config, "General", "Enabled", true, "Enables stage role assignment.");
+        OverhaulEnabled = BindBool(config, "General", "OverhaulEnabled", true, "Enables 4.5 role growth, Jobless contracts and King healing. Change between stages; upgrade grants update on the next assignment. Stinker and Bomber remain automatic.");
         UniqueRoles = BindBool(config, "General", "UniqueRoles", true, "Avoids duplicate roles until every enabled role has been assigned once.");
         ShopUpgradeItemCount = BindInt(config, "General", "ShopUpgradeItemCount", 0, 0, 30, "Number of upgrade items requested for each shop.");
 
@@ -86,6 +87,7 @@ internal sealed class StageRolesConfig
 
         HudFontSize = BindInt(config, "HUD", "FontSize", 28, 16, 48, "HUD text size before overall scaling.");
         HudEnabled = BindBool(config, "HUD", "Enabled", true, "Shows every player's assigned role during a stage.");
+        HudAbilityStatusEnabled = BindBool(config, "HUD", "AbilityStatusEnabled", true, "Shows your remaining ability resources below the role heading. Local display setting; requires a 4.5 host.");
         HudRoleDisplay = config.Bind("HUD", "RoleDisplay", "NameOnly",
             new ConfigDescription("Role display style. Player names remain visible in every mode.",
                 new AcceptableValueList<string>("IconAndName", "NameOnly", "IconOnly")));
@@ -188,11 +190,14 @@ internal sealed class StageRolesConfig
         TankEnabled = RoleEnabled(config, "Tank");
         TankWeight = RoleWeight(config, "Tank");
         TankHealthLevels = UpgradeLevel(config, "Tank", "HealthUpgradeLevels", 21);
+        TankBaseBonus = BindInt(config, "Tank", "BaseHealthBonus", 5, 0, 200, "Additional Health above Base Upgrades in overhaul mode; role level is the minimum, capped at 200.");
 
         RunnerEnabled = RoleEnabled(config, "Runner");
         RunnerWeight = RoleWeight(config, "Runner");
         RunnerSpeedLevels = UpgradeLevel(config, "Runner", "SpeedUpgradeLevels", 6);
         RunnerStaminaLevels = UpgradeLevel(config, "Runner", "StaminaUpgradeLevels", 46);
+        RunnerSpeedBaseBonus = BindInt(config, "Runner", "BaseSpeedBonus", 2, 0, 200, "Additional Speed above Base Upgrades in overhaul mode; role level is the minimum, capped at 200.");
+        RunnerStaminaBaseBonus = BindInt(config, "Runner", "BaseStaminaBonus", 10, 0, 200, "Additional Stamina above Base Upgrades in overhaul mode; role level is the minimum, capped at 200.");
 
         JumperEnabled = RoleEnabled(config, "Jumper");
         JumperWeight = RoleWeight(config, "Jumper");
@@ -201,6 +206,7 @@ internal sealed class StageRolesConfig
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
         LifterStrengthLevels = UpgradeLevel(config, "Lifter", "StrengthUpgradeLevels", 25);
+        LifterBaseBonus = BindInt(config, "Lifter", "BaseStrengthBonus", 5, 0, 200, "Additional Strength above Base Upgrades in overhaul mode; role level is the minimum, capped at 200.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");
@@ -250,6 +256,10 @@ internal sealed class StageRolesConfig
         JoblessWeight = RoleWeight(config, "Jobless", 20);
         JoblessDamage = BindInt(config, "Jobless", "Damage", 1, 1, 100, "Damage applied per tick outside the truck.");
         JoblessDamageIntervalSeconds = BindFloat(config, "Jobless", "DamageIntervalSeconds", 0.1f, 0.05f, 10f, "Seconds between damage ticks outside the truck.");
+        JoblessContractDistance = BindFloat(config, "Jobless", "ContractDistance", 5f, 1f, 50f, "Carry a different positive-value valuable this far outside the truck, then bring it into the truck. Overhaul mode only.");
+        JoblessContractGrace = BindFloat(config, "Jobless", "ContractGraceSeconds", 30f, 1f, 300f, "Initial and post-contract time without Jobless attrition. Overhaul mode only.");
+        JoblessContractLimit = BindInt(config, "Jobless", "ContractsPerStage", 3, 1, 30, "Maximum completed contracts per player per stage, retained through revival and rejoining.");
+        JoblessContractHeal = BindInt(config, "Jobless", "ContractHeal", 10, 0, 100, "Health restored to the worker on completing a contract, up to maximum health.");
 
         RescuerEnabled = RoleEnabled(config, "Rescuer");
         RescuerWeight = RoleWeight(config, "Rescuer", 80);
@@ -267,6 +277,10 @@ internal sealed class StageRolesConfig
 
         KingEnabled = RoleEnabled(config, "King");
         KingWeight = RoleWeight(config, "King");
+        KingHealAmount = BindInt(config, "King", "HealAmount", 2, 0, 100, "Health per aura tick for each nearby living teammate in overhaul mode; excludes King.");
+        KingHealInterval = BindFloat(config, "King", "HealIntervalSeconds", 5f, 0.5f, 60f, "Seconds between King aura ticks.");
+        KingHealRadius = BindFloat(config, "King", "HealRadius", 8f, 1f, 30f, "King healing aura radius in metres.");
+        KingHealLimit = BindInt(config, "King", "TotalHealingLimit", 60, 0, 10000, "King aura healing budget per player per stage, retained through revival and rejoining.");
 
         TunaEnabled = RoleEnabled(config, "Tuna");
         TunaWeight = RoleWeight(config, "Tuna", 50);
@@ -436,6 +450,20 @@ internal sealed class StageRolesConfig
 
     internal ConfigEntry<bool> Enabled { get; }
     internal ConfigEntry<bool> UniqueRoles { get; }
+    internal ConfigEntry<bool> OverhaulEnabled { get; }
+    internal ConfigEntry<bool> HudAbilityStatusEnabled { get; }
+    internal ConfigEntry<int> TankBaseBonus { get; }
+    internal ConfigEntry<int> RunnerSpeedBaseBonus { get; }
+    internal ConfigEntry<int> RunnerStaminaBaseBonus { get; }
+    internal ConfigEntry<int> LifterBaseBonus { get; }
+    internal ConfigEntry<float> JoblessContractDistance { get; }
+    internal ConfigEntry<float> JoblessContractGrace { get; }
+    internal ConfigEntry<int> JoblessContractLimit { get; }
+    internal ConfigEntry<int> JoblessContractHeal { get; }
+    internal ConfigEntry<int> KingHealAmount { get; }
+    internal ConfigEntry<float> KingHealInterval { get; }
+    internal ConfigEntry<float> KingHealRadius { get; }
+    internal ConfigEntry<int> KingHealLimit { get; }
     internal ConfigEntry<int> ShopUpgradeItemCount { get; }
     internal ConfigEntry<bool> EnhancedEnemyRewardsEnabled { get; }
     internal ConfigEntry<bool> ShowcaseGuaranteesEnabled { get; }

@@ -4,6 +4,18 @@ R.E.P.O.向け役職MODのソース管理用リポジトリです。
 プレイヤー向けの仕様・設定は[配布用README](package/README.md)、
 バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
 
+## v4.5.0開発
+
+`feature/roleshuffle-4.5.0-overhaul`ブランチを専用worktreeで開発しています。
+現行の`StageRoles`フォルダ、`main`、既存のDLL・ZIP・ゲーム導入先は保持します。
+仕様・分岐元・検証状況は[開発記録](docs/OVERHAUL_4.5.0.md)を参照してください。
+StinkerとBomberは移動による自動発生を維持し、任意停止操作は追加しません。
+
+```powershell
+dotnet run --project tools/OverhaulChecks/OverhaulChecks.csproj -c Release
+pwsh -NoProfile -File tools/Test-BaseUpgradeEligibility.ps1
+```
+
 ## お問い合わせ
 
 ご質問、不具合報告、ご意見は[GitHub Issues](https://github.com/CapacityDown/RoleShuffle/issues)へお寄せください。

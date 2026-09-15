@@ -4,7 +4,7 @@
 
 ### Overview
 
-RoleShuffle assigns every player a random role when a stage begins and clears all assigned roles when the stage ends. Each role specializes in a distinct gameplay theme built from vanilla upgrades or effects. Configurable base upgrade targets can scale with the current run level and remain active between stages. When a role specializes in an upgrade, the role's configured level replaces that base level for the stage; every other managed upgrade stays at its base level.
+RoleShuffle assigns every player a random role when a stage begins and clears all assigned roles when the stage ends. Each role specializes in a distinct gameplay theme built from vanilla upgrades or effects. Configurable base upgrade targets can scale with the current run level and remain active between stages. Role upgrades last for the stage. Tank, Runner and Lifter use the growth rules below; other roles replace their matching base targets.
 
 Only the host needs RoleShuffle for gameplay effects. Sessions of up to 30 players are supported. Players without the mod receive their role, upgrades, effects, and vanilla chat/TTS announcement normally. Participants who also install RoleShuffle can use the full role HUD.
 
@@ -64,7 +64,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 - By default, Showcase and Support minimums rise to four each at 24 players. Danger limits rise from one to two at 8 players and three at 16 players; Hardship limits rise from one to two at 12 players. Influencer is a Showcase role and is not treated as a Danger role. A party of four or fewer receives at most one role across both risk groups.
 - A role found among a player's five most recent assignments uses half of its normal selection weight for that player. Other players' histories do not affect that player's selection.
 - A player normally cannot receive the same role in consecutive stages. After receiving `Jobless` or `Tuna`, that player is excluded from both Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
-- `Tank`, `Runner`, `Jumper`, `Lifter`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws. Forced test-role assignment is unaffected.
+- `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws. Forced test-role assignment is unaffected.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades. Forced role assignment is unaffected.
 - `Tracker`, `Ghost`, `Medic`, `Jobless`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are not selected in single-player or a one-player session.
 - `Imitator` is selected only after another active player has received a role it can copy.
@@ -76,10 +76,10 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 | Role | Function and default effect | Important limitation or risk | Configurable values |
 |---|---|---|---|
-| Tank | Increases maximum health by setting Health to level 21. | Uses the vanilla Health upgrade and has no separate active ability. | Health target `0`–`100` |
-| Runner | Increases movement speed and stamina for faster, longer sprints. Speed is level 6 and Stamina is level 46. | Uses the two vanilla upgrades and has no separate active ability. | Speed and Stamina targets `0`–`100` |
+| Tank | Health target is max(21, Base + 5), capped at 200. | Temporary stage upgrade. | Health minimum and base bonus |
+| Runner | Speed target is max(6, Base + 2); Stamina is max(46, Base + 10), capped at 200. | Remains eligible while either upgrade can improve. | Speed/Stamina minimums and base bonuses |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Increases grab strength, making heavy objects easier to handle. Strength is level 25. | Uses the vanilla Strength upgrade and has no separate active ability. | Strength target `0`–`100` |
+| Lifter | Strength target is max(25, Base + 5), capped at 200. | Temporary stage upgrade. | Strength minimum and base bonus |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -88,10 +88,10 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Bomber | Drops a random armed grenade every 8 m traveled. Up to 30 generated grenades remain active per Bomber, and the oldest is removed at the limit. | Grenades can injure players and damage valuables. Only Bomber can hold generated grenades. Movement inside the truck does not count while truck placement is disabled. | Distance, limit, truck placement, grenade types |
 | Medic | Heals nearby teammates for 5 HP every 2 seconds within 5 m, up to 150 total HP per stage. | Never heals the Medic. Only living teammates within range are affected. Healing stops when that Medic's stage limit is exhausted. Never selected randomly when only one player is present. | Amount, interval, radius, total limit |
 | Phoenix | Automatically revives itself with 25 HP once per stage after dying. | One use per stage. Revival HP cannot exceed the player's maximum HP. | Revival HP, revival delay, failure grace |
-| Jobless | Takes 1 damage every 0.1 seconds while outside the truck. | Can kill the player. Never selected randomly when only one player is present. | Damage, interval |
+| Jobless | Carry a different positive-value valuable 5 m outside the truck, then bring it inside. Up to 3 contracts; each restores 10 HP and grants a 30-second break. Starts with the same grace. | Otherwise loses 1 HP every 0.1 seconds outside the truck. Can die. Drops/death reset carry progress; returns retain completed work. Not selected solo. | Attrition and contract settings |
 | Rescuer | While alive, approaching within 3 m of a dead teammate's Death Head revives the nearest eligible teammate with 25 HP. | Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present. | Revival HP, delay, radius, maximum revivals |
 | Vampire | Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50. | Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy. | Amount per tier, radius |
-| King | Receives the vanilla Crown for the stage. | Only one King can be assigned. The previous Crown holder is restored when the role ends. | Selection only |
+| King | Receives the Crown; heals living teammates within 8 m for 2 HP every 5 seconds, up to 60 HP per stage. | Excludes itself. One King per stage. Rejoining/revival does not replenish the allowance. | Aura amount, interval, radius and budget |
 | Tuna | After a 5-second grace period at stage start, standing still for 3 seconds causes 1 damage every 0.1 seconds until moving. | Can kill the player. The stationary timer starts after the initial grace period. Moving resets it immediately; lost health is not restored. | Delay, damage, interval |
 | Musician | Each instrument note played by the Musician heals the Musician and living players within 10 m for 5 HP. | Requires a vanilla musical valuable. By default, not randomly selected if none is present. | Amount, radius |
 | Mage | Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long. | Selecting a matching expression activates its spell; clearing it does not. Spells share a 3-second cooldown, cannot be cast if the cost would be fatal, and can harm players or valuables. The duration bonus does not apply to chat or expression casts, or the Star Wand's instantaneous attack. | Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit |
@@ -118,6 +118,31 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Brawler | Deals 1.25x damage with identifiable melee weapon attacks and 0.75x damage with identifiable guns, staff projectiles, and lasers. | Vehicle impacts, Tumble Attacks, grenades, and ordinary held-object collisions are unchanged. | Melee and ranged damage multipliers |
 | ???1 | ??? | ??? | ??? |
 | ???2 | ??? | ??? | ??? |
+
+### Overhaul settings
+
+Enabled by default. Tank, Runner and Lifter use max(role minimum, Base + bonus), capped at 200; they are excluded only when all their targets provide no benefit. Base includes configured, manual and draw values. Jobless contracts require continued direct holding; the same object cannot pay twice. King healing and completed contracts survive revival and rejoining. Bomber and Stinker remain automatic; neither has a manual pause. `General.OverhaulEnabled = false` uses legacy role behavior. Change this between stages; upgrade grants update on assignment.
+
+Host settings except the local HUD switch:
+
+| Key | Default | Range | Effect |
+|---|---|---|---|
+| `General.OverhaulEnabled` | `true` | Boolean | Enables growth, contracts and King's aura. |
+| `Tank.BaseHealthBonus` | `5` | 0–200 | Health above Base. |
+| `Runner.BaseSpeedBonus` | `2` | 0–200 | Speed above Base. |
+| `Runner.BaseStaminaBonus` | `10` | 0–200 | Stamina above Base. |
+| `Lifter.BaseStrengthBonus` | `5` | 0–200 | Strength above Base. |
+| `Jobless.ContractDistance` | `5` | 1–50 m | Required carried distance outside the truck. |
+| `Jobless.ContractGraceSeconds` | `30` | 1–300 s | Initial and post-delivery attrition break. |
+| `Jobless.ContractsPerStage` | `3` | 1–30 | Completed contract limit per player. |
+| `Jobless.ContractHeal` | `10` | 0–100 HP | One healing attempt per delivery, capped by missing HP; may be skipped if another heal is pending. |
+| `King.HealAmount` | `2` | 0–100 HP | Per teammate per tick. |
+| `King.HealIntervalSeconds` | `5` | 0.5–60 s | Aura interval. |
+| `King.HealRadius` | `8` | 1–30 m | Aura radius. |
+| `King.TotalHealingLimit` | `60` | 0–10000 HP | Shared stage healing budget. |
+| `HUD.AbilityStatusEnabled` | `true` | Boolean | Your ability resources below the HUD heading. |
+
+The ability line shows two resources at a time, rotating every 5 seconds when needed. `/roles` also reports resources. Display requires a 4.5 host; stale data is hidden. Cloud/grenade travel is distance progress, not a promise of immediate spawning.
 
 ### Configuration
 
@@ -462,7 +487,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 ### 概要
 
-RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役職を1つ割り当て、ステージ終了時に役職を解除します。各役職はバニラのアップグレードや効果を使った固有のゲームプレイテーマに特化しています。設定可能な基礎アップグレードは現在のランレベルに応じて変化させることができ、ステージ外でも維持します。役職が特化するアップグレードは、ステージ中だけ基礎値ではなく役職の設定値へ置き換え、それ以外は基礎値を維持します。
+RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役職を1つ割り当て、ステージ終了時に役職を解除します。各役職はバニラのアップグレードや効果を使った固有のゲームプレイテーマに特化しています。設定可能な基礎アップグレードは現在のランレベルに応じて変化させることができ、ステージ外でも維持します。役職強化はステージ限定です。Tank・Runner・Lifterは後述の成長ルールを使い、その他の役職は対応する基礎値を役職の設定値に置き換えます。
 
 ゲームプレイ効果はホストだけの導入で利用でき、最大30人のセッションをサポートします。MODを導入していない参加者にも、役職、アップグレード、効果、バニラのチャット／TTS通知が適用されます。RoleShuffleを導入している参加者は、すべての役職を確認できるHUDも利用できます。
 
@@ -522,7 +547,7 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 - デフォルトでは、24人以上でShowcaseとSupportをそれぞれ最低4人保証します。Danger上限は8人で2人、16人で3人へ増え、Hardship上限は12人で2人へ増えます。InfluencerはShowcase役であり、Danger役として扱いません。4人以下では両リスクグループを合わせて最大1人です。
 - 各プレイヤーが直近5回に割り当てられた役職は、そのプレイヤーの次回抽選時に通常の半分のWeightで扱います。他のプレイヤーの履歴は影響しません。
 - 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Jobless`または`Tuna`の後、2ステージはそのプレイヤーを両方から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
-- `Tank`、`Runner`、`Jumper`、`Lifter`、`Launcher`、`Climber`、`Flyer`、`Tracker`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。テストコマンドによる強制指定には影響しません。
+- `Jumper`、`Launcher`、`Climber`、`Flyer`、`Tracker`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。テストコマンドによる強制指定には影響しません。
 - `Influencer`は、現在の参加人数で到達可能なアップグレード目標値が現在のBase Upgradeを1項目も上回らない場合、ランダム抽選から除外されます。強制割り当てには影響しません。
 - `Tracker`、`Ghost`、`Medic`、`Jobless`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`はシングルプレイまたは1人のセッションでは抽選されません。
 - `Imitator`は、コピー可能な役職を持つ他の参加者が確保された場合だけ抽選されます。
@@ -534,10 +559,10 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 | 役職 | 機能とデフォルト効果 | 主な制限・危険性 | 調整可能な値 |
 |---|---|---|---|
-| Tank | 最大HPが増加し、Healthがレベル21になります。 | バニラのHealthアップグレードを使用し、別の能動的な能力はありません。 | Health目標値`0`～`100` |
-| Runner | 移動速度とスタミナが増加し、より速く長く走れます。Speedはレベル6、Staminaはレベル46です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | SpeedとStaminaの目標値`0`～`100` |
+| Tank | Healthは21とBase + 5の高い方。上限200。 | ステージ限定の強化。 | Health最低値・基礎値への追加量 |
+| Runner | Speedは6とBase + 2、Staminaは46とBase + 10の高い方。上限200。 | どちらかに強化の余地があれば抽選対象。 | Speed・Stamina最低値と追加量 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | 掴む力が増加し、重い物を扱いやすくなります。Strengthはレベル25です。 | バニラのStrengthアップグレードを使用し、別の能動的な能力はありません。 | Strength目標値`0`～`100` |
+| Lifter | Strengthは25とBase + 5の高い方。上限200。 | ステージ限定の強化。 | Strength最低値・基礎値への追加量 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -546,10 +571,10 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 | Bomber | 8 m移動するごとに起動済みグレネードをランダム設置します。Bomber 1人につき最大30個まで残り、上限では最も古いものを削除します。 | グレネードはプレイヤーやValuableにも危険です。生成されたグレネードを持てるのはBomberだけです。トラック内設置が無効な場合、トラック内の移動距離は加算されません。 | 距離、上限、トラック内設置、グレネード種類 |
 | Medic | 5 m以内の仲間を2秒ごとに5 HP回復し、1ステージにつき合計150 HPまで回復します。 | Medic自身は回復しません。範囲内で生存している仲間だけが対象です。そのMedicの上限を使い切ると回復を停止します。参加者が1人だけの場合はランダム抽選されません。 | 回復量、間隔、範囲、合計上限 |
 | Phoenix | 死亡すると、1ステージに1回だけデフォルト25 HPで自動復活します。 | 1ステージにつき1回です。復活後HPはプレイヤーの最大HPを超えません。 | 復活後HP、復活遅延、失敗時猶予 |
-| Jobless | トラック外にいる間、0.1秒ごとに1ダメージを受けます。 | 死亡する可能性があります。参加者が1人だけの場合はランダム抽選されません。 | ダメージ、間隔 |
+| Jobless | 異なる価格付き価値品をトラック外で5m運び、保持したまま戻ると契約達成。最大3件。達成ごとに10HP回復・30秒のダメージ免除。開始時も同じ猶予。 | それ以外はトラック外で0.1秒ごとに1ダメージ、死亡あり。手放す・死亡で運搬進捗を解除。再参加でも達成件数は保持。ソロ抽選なし。 | 継続ダメージ・契約設定 |
 | Rescuer | 生存中に、死亡した仲間のDeath Headから3 m以内へ近づくと、最も近い対象をデフォルト25 HPで復活させます。 | 1ステージにつき最大2回です。復活後HPは対象の最大HPを超えません。参加者が1人だけの場合はランダム抽選されません。 | 復活後HP、遅延、範囲、最大復活回数 |
 | Vampire | 10 m以内で敵が死亡すると、Tier 1は5、Tier 2は10、Tier 3は50回復します。 | 敵のバニラDanger Levelを使用します。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体を最大Tier 3まで1段階上として扱います。Vampireが生存し、死亡した敵の近くにいる必要があります。 | Tier別回復量、範囲 |
-| King | ステージ中、バニラのCrownを受け取ります。 | Kingは最大1人です。役職終了時に以前のCrown所有者へ戻します。 | 抽選設定のみ |
+| King | Crownを受け取り、8m内の生存中の仲間を5秒ごとに2HP回復。ステージ合計60HPまで。 | 自己回復なし。1ステージ1人。再参加・蘇生でも回復枠は補充されません。 | 回復量・間隔・半径・上限 |
 | Tuna | ステージ開始時の5秒間の猶予後、3秒間停止すると、移動するまで0.1秒ごとに1ダメージを受けます。 | 死亡する可能性があります。停止時間の計測は最初の猶予後に始まります。動くと即座にリセットし、失った体力は回復しません。 | 停止時間、ダメージ、間隔 |
 | Musician | Musicianが楽器で音を鳴らすたびに、本人を含む10 m以内の生存プレイヤーを5 HP回復します。 | バニラの楽器系貴重品が必要です。デフォルトでは存在しない場合に抽選されません。 | 回復量、範囲 |
 | Mage | チャットで`star`、`gravity`、`roll`、`void`、`laser`を入力するか、設定した表情を選択し、順に10、10、15、30、50 HPを消費してバニラ攻撃を発動します。10秒間ダメージを受けなければ、2秒ごとに1 HP回復します。自動回復は1ステージの累計120 HPまでです。保持した杖で発動する魔法の効果時間は1.3倍になります。 | 表情を解除して標準へ戻す操作では発動しません。全魔法で3秒のクールダウンを共有し、消費で死亡する場合は発動しません。攻撃はプレイヤーやValuableにも危険です。効果時間の延長はチャット・表情での魔法や、星杖の瞬間的な攻撃には適用しません。 | 魔法ごとの表情、発射クールダウン、魔法ごとのHP消費量、自動回復の有効化、待機時間、間隔、回復量、ステージごとの回復上限 |
@@ -576,6 +601,31 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 | Brawler | 攻撃者を特定できる近接武器のダメージが1.25倍になり、銃、杖の弾、レーザーによるダメージは0.75倍になります。 | 車両衝突、Tumble Attack、グレネード、通常の保持物による衝突は変化しません。 | 近接・遠隔ダメージ倍率 |
 | ???1 | ??? | ??? | ??? |
 | ???2 | ??? | ??? | ??? |
+
+### オーバーホール設定
+
+初期値は有効。Tank・Runner・Lifterは「役職最低値」と「Base＋追加量」の高い方を上限200で使用し、全対象に強化の余地がない場合だけ抽選対象外になります。Baseには設定・手動調整・抽選を含みます。Joblessは直接保持を継続して運搬し、同じ物で再報酬は得られません。達成件数とKingの回復消費量は蘇生・再参加でも保持します。Bomber・Stinkerは移動による自動発生を維持し、任意停止はありません。`General.OverhaulEnabled = false`で旧仕様になります。ステージ間で変更してください。強化値は役職適用時に更新します。
+
+HUD以外はホスト設定です。
+
+| キー | 初期値 | 範囲 | 効果 |
+|---|---|---|---|
+| `General.OverhaulEnabled` | `true` | 真偽値 | 成長・契約・King回復を有効化。 |
+| `Tank.BaseHealthBonus` | `5` | 0–200 | BaseへのHealth追加量。 |
+| `Runner.BaseSpeedBonus` | `2` | 0–200 | BaseへのSpeed追加量。 |
+| `Runner.BaseStaminaBonus` | `10` | 0–200 | BaseへのStamina追加量。 |
+| `Lifter.BaseStrengthBonus` | `5` | 0–200 | BaseへのStrength追加量。 |
+| `Jobless.ContractDistance` | `5` | 1–50m | トラック外での必要運搬距離。 |
+| `Jobless.ContractGraceSeconds` | `30` | 1–300秒 | 開始時・達成後のダメージ免除。 |
+| `Jobless.ContractsPerStage` | `3` | 1–30 | 各プレイヤーの達成上限。 |
+| `Jobless.ContractHeal` | `10` | 0–100HP | 達成時の回復。最大HPまで。他の回復が処理中なら省略される場合があります。 |
+| `King.HealAmount` | `2` | 0–100HP | 仲間1人への1回の回復量。 |
+| `King.HealIntervalSeconds` | `5` | 0.5–60秒 | 回復間隔。 |
+| `King.HealRadius` | `8` | 1–30m | 回復範囲。 |
+| `King.TotalHealingLimit` | `60` | 0–10000HP | ステージ全体の合計回復枠。 |
+| `HUD.AbilityStatusEnabled` | `true` | 真偽値 | 自分の能力残量をHUD見出し下に表示。 |
+
+能力情報は2項目ずつ、必要なら5秒ごとに切り替えます。`/roles`でも残量を確認できます。表示には4.5のホストが必要で、古くなったデータは非表示にします。雲・爆弾の移動量表示は、即時の発生を保証するものではありません。
 
 ### 設定
 

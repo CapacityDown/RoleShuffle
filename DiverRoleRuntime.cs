@@ -38,6 +38,13 @@ internal sealed class DiverRoleRuntime
     private static readonly int[] CountdownMilestones =
         { 30, 20, 10, 5, 4, 3, 2, 1, 0 };
 
+    internal AbilityValue Status(string steamId)
+    {
+        if (!_states.TryGetValue(steamId, out DiveState state)) return new AbilityValue(AbilityMetric.DiveCooldown, 0, 0);
+        return new AbilityValue(state.Underfloor ? AbilityMetric.DiveActive : AbilityMetric.DiveCooldown,
+            Mathf.CeilToInt(Mathf.Max(0f, (state.Underfloor ? state.ExpiresAt : state.CooldownUntil) - Time.time)), 0);
+    }
+
     private sealed class DiveState
     {
         internal DiveState(RoleAssignment assignment)

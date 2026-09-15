@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace REPOJP.StageRoles;
 
-internal sealed class StageRoleController : MonoBehaviour
+internal sealed partial class StageRoleController : MonoBehaviour
 {
     private static readonly FieldInfo? EnemyHealthEnemyField =
         AccessTools.Field(typeof(EnemyHealth), "enemy");
@@ -74,6 +74,7 @@ internal sealed class StageRoleController : MonoBehaviour
     private UtilityRoleRuntime _utilityRoles = null!;
     private EventRoleRuntime _eventRoles = null!;
     private DiverRoleRuntime _diver = null!;
+    private RoleOverhaulRuntime _overhaul = null!;
     private RoleNotifier _notifier = null!;
     private bool _stageReady;
     private bool _assignmentsInitialized;
@@ -120,6 +121,7 @@ internal sealed class StageRoleController : MonoBehaviour
         _utilityRoles = new UtilityRoleRuntime(config, gameObject);
         _eventRoles = new EventRoleRuntime(this, config);
         _diver = new DiverRoleRuntime(config);
+        _overhaul = new RoleOverhaulRuntime(config);
         _notifier = new RoleNotifier(this, config);
         gameObject.SetActive(false);
     }
@@ -401,6 +403,11 @@ internal sealed class StageRoleController : MonoBehaviour
         }
 
         int objectId = grabbedObject.GetInstanceID();
+        if (_stageReady && IsAuthority())
+            foreach (RoleAssignment assignment in _assignments)
+                if (assignment.Player != null && assignment.Player.photonView != null &&
+                    assignment.Player.photonView.ViewID == playerViewId && assignment.Overhaul.CargoId == objectId)
+                    assignment.Overhaul.ResetCargo();
         if (_engineerSuppressedTrapIds.Contains(objectId) ||
             (EngineerEffectCatalog.IsEffectValuable(grabbedObject) &&
              IsAssignedRole(playerViewId, StageRole.Engineer)))
@@ -881,6 +888,7 @@ internal sealed class StageRoleController : MonoBehaviour
     private void ResetAssignmentForRoleChange(RoleAssignment assignment)
     {
         assignment.ExhaustionNotifications.Rearm();
+        assignment.Overhaul.ResetCargo();
         Vector3 position = assignment.Player.transform.position;
         assignment.PreviousPosition = position;
         assignment.StinkerPreviousPosition = position;
@@ -1143,6 +1151,11 @@ internal sealed class StageRoleController : MonoBehaviour
         string response = requesterAssignment != null
             ? $"YourRole:{RoleCatalog.AssignmentName(requesterAssignment.AssignedRole, requesterAssignment.Role)}"
             : "YourRole:Unavailable";
+        if (requesterAssignment != null)
+        {
+            string status = RoleAbilityText.Format(BuildAbilityStatus(requesterAssignment).Values, RoleGuideLanguage.English);
+            if (status.Length > 0) response += " | " + status;
+        }
         _notifier.NotifyResponse(requester, response);
         StageRolesPlugin.ModLogger.LogInfo(
             $"Queued a role query response for player {requesterId}.");
@@ -1284,6 +1297,7 @@ internal sealed class StageRoleController : MonoBehaviour
         }
 
         _eventRoles.Tick(_assignments);
+        _overhaul.Tick(_assignments, _notifier);
         _mage.MaintainSpawnedObjects();
         RefreshRescueDeaths();
         foreach (RoleAssignment assignment in _assignments)
@@ -1330,6 +1344,7 @@ internal sealed class StageRoleController : MonoBehaviour
         _utilityRoles.Tick(_assignments);
         _diver.Tick(_assignments, _notifier);
         NotifyExhaustedAbilities();
+        PublishAbilityStatus();
     }
 
     private void NotifyExhaustedAbilities()
@@ -1398,6 +1413,13 @@ internal sealed class StageRoleController : MonoBehaviour
         {
             assignment.JoblessDamageTimer = 0f;
             return;
+        }
+
+        if (_config.OverhaulEnabled.Value)
+        {
+            assignment.Overhaul.Start(Time.time, _config.JoblessContractGrace.Value);
+            if (Time.time < assignment.Overhaul.PaidUntil)
+            { assignment.JoblessDamageTimer = 0f; return; }
         }
 
         assignment.JoblessDamageTimer += Time.deltaTime;
@@ -3156,6 +3178,7 @@ internal sealed class StageRoleController : MonoBehaviour
         _utilityRoles?.Stop();
         _eventRoles?.Stop();
         _diver?.Stop();
+        _overhaul?.Stop();
         HunterBatteryRuntime.Clear();
         RestoreKingCrown();
         RoleAssignmentSync.ClearPreview();
@@ -3163,6 +3186,8 @@ internal sealed class StageRoleController : MonoBehaviour
         {
             RoleAssignmentSync.Clear();
         }
+        RoleAbilitySync.Clear();
+        _nextAbilityPublishAt = 0;
         if (restoreBaseUpgrades && IsAuthority())
         {
             HashSet<string> steamIds = new(StringComparer.Ordinal);

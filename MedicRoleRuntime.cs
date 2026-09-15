@@ -37,6 +37,8 @@ internal sealed class MedicRoleRuntime
     private readonly HashSet<string> _exhaustionLogged = new(StringComparer.Ordinal);
     private bool _active;
 
+    internal int HealingUsed(string steamId) => _healingUsed.TryGetValue(steamId, out int used) ? used : 0;
+
     internal bool IsExhausted(string steamId) =>
         _healingUsed.TryGetValue(steamId, out int used) &&
         used >= Mathf.Clamp(_config.MedicTotalHealingLimit.Value, 1, 10000);

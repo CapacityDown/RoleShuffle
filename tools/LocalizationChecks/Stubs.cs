@@ -47,6 +47,19 @@ internal enum StageRole
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal Entry<bool> OverhaulEnabled { get; } = new(true);
+    internal Entry<int> TankBaseBonus { get; } = new(17);
+    internal Entry<int> RunnerSpeedBaseBonus { get; } = new(17);
+    internal Entry<int> RunnerStaminaBaseBonus { get; } = new(17);
+    internal Entry<int> LifterBaseBonus { get; } = new(17);
+    internal Entry<float> JoblessContractDistance { get; } = new(7.25f);
+    internal Entry<float> JoblessContractGrace { get; } = new(7.25f);
+    internal Entry<int> JoblessContractLimit { get; } = new(17);
+    internal Entry<int> JoblessContractHeal { get; } = new(17);
+    internal Entry<int> KingHealAmount { get; } = new(17);
+    internal Entry<float> KingHealInterval { get; } = new(7.25f);
+    internal Entry<float> KingHealRadius { get; } = new(7.25f);
+    internal Entry<int> KingHealLimit { get; } = new(17);
     internal Entry<float> AvengerDamageMultiplier { get; } = new(7.25f);
     internal Entry<float> AvengerDurationSeconds { get; } = new(7.25f);
     internal Entry<float> AvengerTriggerRadius { get; } = new(7.25f);

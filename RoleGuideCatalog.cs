@@ -136,7 +136,7 @@ internal static class RoleGuideCatalog
             : RoleText.Description(Description(role, config), language);
 
     internal static string Description(StageRole role, StageRolesConfig config) =>
-        role switch
+        RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.English) ?? role switch
         {
             StageRole.Tank =>
                 $"Increases maximum health by setting the Health upgrade to level {config.TankHealthLevels.Value}.",
@@ -261,7 +261,7 @@ internal static class RoleGuideCatalog
     private static string DescriptionJapanese(
         StageRole role,
         StageRolesConfig config) =>
-        role switch
+        RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.Japanese) ?? role switch
         {
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",
