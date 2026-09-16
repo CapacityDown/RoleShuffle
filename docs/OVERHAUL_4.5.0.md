@@ -6,7 +6,7 @@
 - Separate worktree: `RoleShuffle-4.5.0`; the original `StageRoles` checkout remains on `main`.
 - Starting commit: `06f54e467a43f50f06b53c342dbf9d4b37b9a27e`.
 - Keep the package name, assembly name and plugin GUID unchanged.
-- Do not deploy this worktree over the existing game/profile or replace the original package/ZIP.
+- Keep the existing Default profile and original package/ZIP intact. The user authorized deployment to the separate `RSO_TEST` profile on 2026-09-16.
 - Original package DLL SHA-256: `6BD1FC2D8D21570A52BCC9E7E2250DF88F7D4540915E94A9B31CB1AB52A9A5F4`.
 - Original ZIP SHA-256: `F275B92D50696D06236AF2B5ECA4B53A2040C7D3B4EDC22D48A8F8368CB5778F`.
 
@@ -47,4 +47,12 @@ Build and deterministic checks are required before packaging. Live host/guest, r
 
 ### Pending live acceptance
 
-No game installation or profile has been changed. The new DLL/ZIP is a development build. Actual HUD layout, host-only multiplayer, live transport timing, Stage Flux and Elite Enemy Variants combinations have not been exercised. Use [the acceptance checklist](../tools/OverhaulChecks/README.md) in an isolated test profile before a public release.
+The new DLL/ZIP is a development build, deployed only to the user-authorized `RSO_TEST` profile. Actual HUD layout, host-only multiplayer, live transport timing, Stage Flux and Elite Enemy Variants combinations have not been exercised. Use [the acceptance checklist](../tools/OverhaulChecks/README.md) in the isolated test profile before a public release.
+
+### Lobby loading investigation — 2026-09-16, build 459
+
+- The user reproduced a lobby loading stall with build 458. A temporary local diagnostic plugin observed Photon remaining in `Disconnecting` for at least 50 seconds, with the message queue enabled and the password page not yet created. The game's `NetworkConnect.CreateLobby` coroutine waits for disconnection before proceeding.
+- Ability-status cleanup previously accessed Photon even before this instance had published anything. It now records the room it published to and avoids all Photon access when there is nothing to remove. Cleanup also checks room identity and current host authority, without depending on a live GameManager.
+- Added a regression that fails against the previous implementation when startup cleanup touches Photon. The updated OverhaulChecks suite passes 8,095 checks, including repeated cleanup, shutdown, room changes and host migration.
+- Release build 459: zero warnings/errors. Deployed to RSO_TEST with previous DLLs/logs backed up and configuration preserved. No gameplay role changes.
+- The loading stall's root cause and recovery still require the user's retry; the cleanup regression alone does not prove the full live issue is resolved. Temporary diagnostics remain in RSO_TEST for that retry and are excluded from the release package and Git.

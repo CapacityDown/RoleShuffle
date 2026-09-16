@@ -7,6 +7,14 @@ int checks = 0;
 void Check(bool condition, string name) { checks++; if (!condition) throw new Exception(name); }
 void Clock(float value) { Time.time = Time.unscaledTime = value; PhotonNetwork.Time = value; }
 
+SemiFunc.GameReady = false;
+PhotonAccess.FailOnRead = true;
+RoleAbilitySync.Clear();
+RoleAbilitySync.Clear();
+Check(PhotonAccess.Reads == 0, "Startup cleanup never initializes Photon or accesses GameManager");
+PhotonAccess.FailOnRead = false;
+SemiFunc.GameReady = true;
+
 foreach (int baseline in Enumerable.Range(0, 201))
 foreach (int minimum in new[] { 0, 21, 46, 200 })
 foreach (int bonus in new[] { 0, 2, 5, 10, 200 })
@@ -150,4 +158,30 @@ Check(RoleAbilitySync.Read(role) == null, "Stage cleanup clears ability data");
 SemiFunc.GameReady = false;
 RoleAbilitySync.Clear();
 Check(PhotonNetwork.CurrentRoom.CustomProperties.Count == 0, "Shutdown cleanup does not access a destroyed GameManager");
+SemiFunc.GameReady = true;
+var publishedRoom = new Room();
+PhotonNetwork.CurrentRoom = publishedRoom;
+Clock(60); RoleAbilitySync.Publish(new[] { snapshot });
+Check(publishedRoom.CustomProperties.Count == 1, "Host has published ability state before cleanup");
+SemiFunc.GameReady = false;
+RoleAbilitySync.Clear();
+Check(publishedRoom.CustomProperties.Count == 0 && publishedRoom.Publications == 2,
+    "Shutdown clears only the room where this host published, without GameManager");
+PhotonAccess.FailOnRead = true;
+RoleAbilitySync.Clear();
+PhotonAccess.FailOnRead = false;
+Check(publishedRoom.Publications == 2, "Repeated cleanup cannot access Photon or resend removal");
+SemiFunc.GameReady = true;
+Clock(70); RoleAbilitySync.Publish(new[] { snapshot });
+var nextRoom = new Room();
+nextRoom.CustomProperties["RS.Ability.v1"] = "next host's state";
+PhotonNetwork.CurrentRoom = nextRoom;
+RoleAbilitySync.Clear();
+Check(nextRoom.Publications == 0 && nextRoom.CustomProperties.Count == 1,
+    "Cleanup after changing rooms cannot clear another host's state");
+Clock(80); RoleAbilitySync.Publish(new[] { snapshot });
+PhotonNetwork.IsMasterClient = false;
+RoleAbilitySync.Clear();
+Check(nextRoom.Publications == 1 && nextRoom.CustomProperties.Count == 1,
+    "Former host cannot clear state after authority has changed");
 Console.WriteLine($"PASS: {checks} overhaul growth, contract runtime, healing budget, codec and synchronization checks.");

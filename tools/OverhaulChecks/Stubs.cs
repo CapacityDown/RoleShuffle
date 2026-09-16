@@ -36,9 +36,22 @@ namespace Photon.Pun
     }
     public static class PhotonNetwork
     {
-        public static bool IsMasterClient = true;
-        public static Room? CurrentRoom;
-        public static double Time;
+        private static bool _master = true;
+        private static Room? _room;
+        private static double _time;
+        public static bool IsMasterClient { get { PhotonAccess.Read(); return _master; } set => _master = value; }
+        public static Room? CurrentRoom { get { PhotonAccess.Read(); return _room; } set => _room = value; }
+        public static double Time { get { PhotonAccess.Read(); return _time; } set => _time = value; }
+    }
+}
+public static class PhotonAccess
+{
+    public static bool FailOnRead;
+    public static int Reads;
+    public static void Read()
+    {
+        Reads++;
+        if (FailOnRead) throw new InvalidOperationException("Cleanup initialized Photon before gameplay.");
     }
 }
 public static class SemiFunc

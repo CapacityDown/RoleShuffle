@@ -13,6 +13,7 @@ internal static class RoleAbilitySync
     private static string _published = string.Empty;
     private static string _cached = string.Empty;
     private static object? _publishedRoom;
+    private static object? _networkPublishedRoom;
     private static double _publishedAt;
     private static IReadOnlyDictionary<string, AbilitySnapshot> _snapshots = RoleAbilityCodec.Decode("");
 
@@ -26,7 +27,10 @@ internal static class RoleAbilitySync
         string payload = now.ToString("R", CultureInfo.InvariantCulture) + "\n" + body;
         _local = payload;
         if (SemiFunc.IsMultiplayer() && PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom != null)
+        {
             PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { [Key] = payload });
+            _networkPublishedRoom = room;
+        }
         _published = body;
         _publishedRoom = room;
         _publishedAt = now;
@@ -57,12 +61,18 @@ internal static class RoleAbilitySync
 
     internal static void Clear()
     {
+        object? networkPublishedRoom = _networkPublishedRoom;
         _local = _published = _cached = string.Empty;
         _publishedAt = 0;
         _publishedRoom = null;
+        _networkPublishedRoom = null;
         _snapshots = RoleAbilityCodec.Decode("");
-        // Scene teardown can run after GameManager has been destroyed.
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom != null)
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { [Key] = null });
+        // Startup scene cleanup must not initialize Photon. Only remove data
+        // from a room this instance actually published to; GameManager may
+        // already be gone during shutdown.
+        if (networkPublishedRoom == null) return;
+        var currentRoom = PhotonNetwork.CurrentRoom;
+        if (currentRoom != null && ReferenceEquals(currentRoom, networkPublishedRoom) && PhotonNetwork.IsMasterClient)
+            currentRoom.SetCustomProperties(new Hashtable { [Key] = null });
     }
 }

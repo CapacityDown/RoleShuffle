@@ -1,5 +1,6 @@
 ## 4.5.0
 
+- Limited ability-status cleanup to the room this host published to, avoiding Photon initialization during startup and changes to another room after reconnecting.
 - Changed Tank, Runner and Lifter to retain a capped upgrade bonus above Base Upgrades while preserving their configured minimum levels.
 - Added Jobless delivery contracts with an initial grace period, limited paid breaks and healing rewards.
 - Added a limited healing aura for King's nearby teammates.
