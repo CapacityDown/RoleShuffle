@@ -49,10 +49,11 @@ Build and deterministic checks are required before packaging. Live host/guest, r
 
 The new DLL/ZIP is a development build, deployed only to the user-authorized `RSO_TEST` profile. Actual HUD layout, host-only multiplayer, live transport timing, Stage Flux and Elite Enemy Variants combinations have not been exercised. Use [the acceptance checklist](../tools/OverhaulChecks/README.md) in the isolated test profile before a public release.
 
-### Lobby loading investigation — 2026-09-16, build 459
+### Lobby loading resolved — 2026-09-16, build 459
 
 - The user reproduced a lobby loading stall with build 458. A temporary local diagnostic plugin observed Photon remaining in `Disconnecting` for at least 50 seconds, with the message queue enabled and the password page not yet created. The game's `NetworkConnect.CreateLobby` coroutine waits for disconnection before proceeding.
 - Ability-status cleanup previously accessed Photon even before this instance had published anything. It now records the room it published to and avoids all Photon access when there is nothing to remove. Cleanup also checks room identity and current host authority, without depending on a live GameManager.
 - Added a regression that fails against the previous implementation when startup cleanup touches Photon. The updated OverhaulChecks suite passes 8,095 checks, including repeated cleanup, shutdown, room changes and host migration.
 - Release build 459: zero warnings/errors. Deployed to RSO_TEST with previous DLLs/logs backed up and configuration preserved. No gameplay role changes.
-- The loading stall's root cause and recovery still require the user's retry; the cleanup regression alone does not prove the full live issue is resolved. Temporary diagnostics remain in RSO_TEST for that retry and are excluded from the release package and Git.
+- The user confirmed the loading stall is resolved with build 459. The retry log records disconnection completing, the password page appearing, connection to the master server, successful room creation/join in region `jp`, and the lobby unlocking. This verifies this host's lobby-entry recovery; broader multiplayer/stage acceptance remains pending.
+- The successful log and temporary diagnostic DLL were archived locally. The diagnostic DLL was renamed out of the `.dll` extension so it is not loaded on the next launch; the running game was not stopped. Diagnostics remain excluded from the release package and Git.
