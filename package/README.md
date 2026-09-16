@@ -79,7 +79,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Tank | Health target is max(21, Base + 5), capped at 200. | Temporary stage upgrade. | Health minimum and base bonus |
 | Runner | Speed target is max(6, Base + 2); Stamina is max(46, Base + 10), capped at 200. | Remains eligible while either upgrade can improve. | Speed/Stamina minimums and base bonuses |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Strength up to max(25, Base + 5), capped at 200; avoids weaker grip from vanilla penalties. | No safe gain: keep Base and exclude from the draw. | Strength target and base bonus |
+| Lifter | Strength minimum 25 takes priority. Growth toward Base + 5 respects grip/rotation penalties; cap 200. | Keep the higher of Base and the configured minimum. | Strength minimum and base bonus |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -121,7 +121,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Overhaul settings
 
-Enabled by default. Tank and Runner use max(role minimum, Base + bonus), capped at 200. Lifter uses this as a requested limit, reducing it until neither light nor heavy object grip is weaker than Base. If no safe gain exists, Base is kept and Lifter is excluded. This also applies to copied Lifter and Superbot Strength. Roles with no benefit are excluded. Base includes configured, manual and draw values. Jobless contracts require continued direct holding; the same object cannot pay twice. King healing and completed contracts survive revival and rejoining. Bomber and Stinker remain automatic; neither has a manual pause. `General.OverhaulEnabled = false` uses legacy role behavior. Change this between stages; upgrade grants update on assignment.
+Enabled by default. Tank and Runner use max(role minimum, Base + bonus), capped at 200. Lifter guarantees max(Base, configured minimum), even where vanilla penalties reduce force. Only growth above this floor toward Base + bonus is limited to avoid weaker grip or rotation. Lifter is excluded only if the final level does not exceed Base. This also applies to copied Lifter and Superbot Strength. Roles with no benefit are excluded. Base includes configured, manual and draw values. Jobless contracts require continued direct holding; the same object cannot pay twice. King healing and completed contracts survive revival and rejoining. Bomber and Stinker remain automatic; neither has a manual pause. `General.OverhaulEnabled = false` uses legacy role behavior. Change this between stages; upgrade grants update on assignment.
 
 Host settings except the local HUD switch:
 
@@ -131,7 +131,7 @@ Host settings except the local HUD switch:
 | `Tank.BaseHealthBonus` | `5` | 0–200 | Health above Base. |
 | `Runner.BaseSpeedBonus` | `2` | 0–200 | Speed above Base. |
 | `Runner.BaseStaminaBonus` | `10` | 0–200 | Stamina above Base. |
-| `Lifter.BaseStrengthBonus` | `5` | 0–200 | Requested Strength above Base; grip penalties can reduce it. |
+| `Lifter.BaseStrengthBonus` | `5` | 0–200 | Growth above Base; penalties limit only the portion above the configured minimum. |
 | `Jobless.ContractDistance` | `5` | 1–50 m | Required carried distance outside the truck. |
 | `Jobless.ContractGraceSeconds` | `30` | 1–300 s | Initial and post-delivery attrition break. |
 | `Jobless.ContractsPerStage` | `3` | 1–30 | Completed contract limit per player. |
@@ -318,7 +318,7 @@ All entries in this table are host-controlled.
 | `Runner.SpeedUpgradeLevels` | `6` | `0`–`200` | Speed levels granted to Runner. |
 | `Runner.StaminaUpgradeLevels` | `46` | `0`–`200` | Stamina levels granted to Runner. |
 | `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`–`200` | Extra Jump levels granted to Jumper. |
-| `Lifter.StrengthUpgradeLevels` | `25` | `0`–`200` | Strength target; overhaul mode may reduce it to avoid weaker grip. |
+| `Lifter.StrengthUpgradeLevels` | `25` | `0`–`200` | Guaranteed Strength minimum; takes priority over vanilla penalties. |
 | `Launcher.LaunchUpgradeLevels` | `10` | `0`–`200` | Launch levels granted to Launcher. |
 | `Climber.ClimbUpgradeLevels` | `50` | `0`–`200` | Tumble Climb levels granted to Climber. |
 | `Climber.RangeUpgradeLevels` | `20` | `0`–`200` | Range levels granted to Climber. |
@@ -562,7 +562,7 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 | Tank | Healthは21とBase + 5の高い方。上限200。 | ステージ限定の強化。 | Health最低値・基礎値への追加量 |
 | Runner | Speedは6とBase + 2、Staminaは46とBase + 10の高い方。上限200。 | どちらかに強化の余地があれば抽選対象。 | Speed・Stamina最低値と追加量 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | Strengthはmax(25, Base + 5)まで。上限200。バニラ補正による掴む力の低下を回避。 | 安全な強化がなければBaseを維持し抽選対象外。 | Strength目標値・追加量 |
+| Lifter | 設定値25を優先。Base + 5への超過分に掴む力・回転力の補正を考慮。上限200。 | Baseと設定値の高い方を保証。 | Strength最低値・追加量 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -604,7 +604,7 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 ### オーバーホール設定
 
-初期値は有効。Tank・Runnerは「役職最低値」と「Base＋追加量」の高い方を上限200で使用します。Lifterはこの値を候補の上限とし、軽量物・重量物のどちらもBase時より掴む力が下がらない値まで抑えます。強化できなければBaseを維持し抽選対象外。コピー能力・SuperbotのStrengthにも適用します。Baseには設定・手動調整・抽選を含みます。Joblessは直接保持を継続して運搬し、同じ物で再報酬は得られません。達成件数とKingの回復消費量は蘇生・再参加でも保持します。Bomber・Stinkerは移動による自動発生を維持し、任意停止はありません。`General.OverhaulEnabled = false`で旧仕様になります。ステージ間で変更してください。強化値は役職適用時に更新します。
+初期値は有効。Tank・Runnerは「役職最低値」と「Base＋追加量」の高い方を上限200で使用します。Lifterは補正による力の低下があっても設定値を優先し、Baseと設定値の高い方を保証します。その値を超えてBase＋追加量へ伸ばす部分だけ、掴む力・回転力の減衰を考慮。最終レベルがBaseを超えない場合に抽選対象外になります。コピー能力・SuperbotのStrengthにも適用します。Baseには設定・手動調整・抽選を含みます。Joblessは直接保持を継続して運搬し、同じ物で再報酬は得られません。達成件数とKingの回復消費量は蘇生・再参加でも保持します。Bomber・Stinkerは移動による自動発生を維持し、任意停止はありません。`General.OverhaulEnabled = false`で旧仕様になります。ステージ間で変更してください。強化値は役職適用時に更新します。
 
 HUD以外はホスト設定です。
 
@@ -614,7 +614,7 @@ HUD以外はホスト設定です。
 | `Tank.BaseHealthBonus` | `5` | 0–200 | BaseへのHealth追加量。 |
 | `Runner.BaseSpeedBonus` | `2` | 0–200 | BaseへのSpeed追加量。 |
 | `Runner.BaseStaminaBonus` | `10` | 0–200 | BaseへのStamina追加量。 |
-| `Lifter.BaseStrengthBonus` | `5` | 0–200 | BaseへのStrength追加候補。重量別補正で抑える場合があります。 |
+| `Lifter.BaseStrengthBonus` | `5` | 0–200 | BaseへのStrength追加量。設定値を超える部分だけ減衰を考慮。 |
 | `Jobless.ContractDistance` | `5` | 1–50m | トラック外での必要運搬距離。 |
 | `Jobless.ContractGraceSeconds` | `30` | 1–300秒 | 開始時・達成後のダメージ免除。 |
 | `Jobless.ContractsPerStage` | `3` | 1–30 | 各プレイヤーの達成上限。 |
@@ -801,7 +801,7 @@ Weightのデフォルト値はバニラのショップ最大出現数を反映�
 | `Runner.SpeedUpgradeLevels` | `6` | `0`～`200` | Runnerへ付与するSpeedレベルです。 |
 | `Runner.StaminaUpgradeLevels` | `46` | `0`～`200` | Runnerへ付与するStaminaレベルです。 |
 | `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`～`200` | Jumperへ付与するExtra Jumpレベルです。 |
-| `Lifter.StrengthUpgradeLevels` | `25` | `0`～`200` | Strength目標値。新仕様では掴む力の低下を避けるため抑える場合があります。 |
+| `Lifter.StrengthUpgradeLevels` | `25` | `0`～`200` | 保証するStrength最低値。バニラ補正より優先します。 |
 | `Launcher.LaunchUpgradeLevels` | `10` | `0`～`200` | Launcherへ付与するLaunchレベルです。 |
 | `Climber.ClimbUpgradeLevels` | `50` | `0`～`200` | Climberへ付与するTumble Climbレベルです。 |
 | `Climber.RangeUpgradeLevels` | `20` | `0`～`200` | Climberへ付与するRangeレベルです。 |

@@ -237,5 +237,5 @@
   "Dive": "潜行",
   "Wagers": "赌注",
   "Revenge": "复仇",
-  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Strength目标不超过max({0}, Base + {1})，上限200。若原版的握力衰减会削弱抓取轻物或重物的力量，则降低目标；没有安全增益时保持Base。"
+  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "优先保证Strength最低值{0}，上限200。以Base和最低值中较高者为基准，仅在原版衰减不会削弱轻物或重物的抓取力及旋转力时，向Base + {1}提升。"
 }

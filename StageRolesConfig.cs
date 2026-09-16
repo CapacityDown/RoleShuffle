@@ -206,7 +206,7 @@ internal sealed class StageRolesConfig
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
         LifterStrengthLevels = UpgradeLevel(config, "Lifter", "StrengthUpgradeLevels", 25);
-        LifterBaseBonus = BindInt(config, "Lifter", "BaseStrengthBonus", 5, 0, 200, "Requested Strength above Base Upgrades in overhaul mode, capped at 200. The target is reduced below the role setting if vanilla grip penalties would weaken light or heavy objects; Base is preserved when no safe gain exists.");
+        LifterBaseBonus = BindInt(config, "Lifter", "BaseStrengthBonus", 5, 0, 200, "Requested Strength above Base Upgrades in overhaul mode, capped at 200. The configured role level is always guaranteed. Only growth above max(Base, role level) is limited by vanilla grip and rotation penalties.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");

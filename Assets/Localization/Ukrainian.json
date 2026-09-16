@@ -237,5 +237,5 @@
   "Dive": "Занурення",
   "Wagers": "Ставки",
   "Revenge": "Помста",
-  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Ціль Strength: до max({0}, Base + {1}), межа 200. Знижується, якщо штрафи гри послаблюють захоплення легких або важких предметів; без безпечного посилення зберігається Base."
+  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "Мінімум Strength {0} гарантовано, межа 200. Вище max(Base, мінімум) посилення до Base + {1} дозволене, лише якщо штрафи гри не послаблюють захоплення та обертання легких або важких предметів."
 }

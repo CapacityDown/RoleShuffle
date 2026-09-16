@@ -1,6 +1,6 @@
 ## 4.5.0
 
-- Made Lifter's Strength growth account for vanilla weight-dependent grip penalties. Unsafe gains are reduced or skipped; the same rule applies to copied Lifter and Superbot abilities.
+- Made Lifter's Strength growth account for vanilla weight-dependent grip and rotation penalties. The configured minimum takes priority; only bonus growth above max(Base, minimum) is reduced or skipped. Applies to copied Lifter and Superbot too.
 - Limited ability-status cleanup to the room this host published to, avoiding Photon initialization during startup and changes to another room after reconnecting.
 - Changed Tank, Runner and Lifter to retain a capped upgrade bonus above Base Upgrades while preserving their configured minimum levels.
 - Added Jobless delivery contracts with an initial grace period, limited paid breaks and healing rewards.

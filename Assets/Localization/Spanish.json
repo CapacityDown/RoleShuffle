@@ -237,5 +237,5 @@
   "Dive": "Inmersión",
   "Wagers": "Apuestas",
   "Revenge": "Venganza",
-  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Objetivo de Strength: hasta max({0}, Base + {1}), límite 200. Se reduce si las penalizaciones del juego debilitan el agarre de objetos ligeros o pesados; se mantiene Base si no hay una mejora segura."
+  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "Mínimo de Strength {0} garantizado, límite 200. Por encima de max(Base, mínimo), aumenta hacia Base + {1} solo si las penalizaciones del juego no debilitan el agarre ni la rotación de objetos ligeros o pesados."
 }

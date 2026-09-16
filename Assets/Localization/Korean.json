@@ -237,5 +237,5 @@
   "Dive": "잠수",
   "Wagers": "도박",
   "Revenge": "복수",
-  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Strength 목표: 최대 max({0}, Base + {1}), 상한 200. 기본 게임의 보정으로 가벼운 물체나 무거운 물체를 잡는 힘이 약해지면 목표를 낮춥니다. 안전한 강화가 없으면 Base를 유지합니다."
+  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "Strength 최솟값 {0}을 우선 적용하며 상한은 200입니다. Base와 최솟값 중 큰 값부터, 기본 게임의 보정으로 가벼운 물체와 무거운 물체의 잡기나 회전력이 약해지지 않는 범위에서 Base + {1}까지 강화합니다."
 }

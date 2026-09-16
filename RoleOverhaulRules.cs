@@ -16,22 +16,25 @@ internal static class RoleOverhaulRules
     {
         baseline = Math.Clamp(baseline, 0, maximum);
         int requested = UpgradeTarget(baseline, minimum, bonus, maximum);
-        double lightBase = EffectiveGrabStrength(baseline, lightObject: true);
-        double heavyBase = EffectiveGrabStrength(baseline, lightObject: false);
-        double lightRotationBase = EffectiveGrabStrength(baseline, lightObject: true, rotation: true);
-        double heavyRotationBase = EffectiveGrabStrength(baseline, lightObject: false, rotation: true);
-        for (int target = requested; target > baseline; target--)
+        // The configured role level is guaranteed even where vanilla force
+        // decreases. Only bonus growth above that floor is penalty-limited.
+        int floor = Math.Max(baseline, Math.Clamp(minimum, 0, maximum));
+        double lightFloor = EffectiveGrabStrength(floor, lightObject: true);
+        double heavyFloor = EffectiveGrabStrength(floor, lightObject: false);
+        double lightRotationFloor = EffectiveGrabStrength(floor, lightObject: true, rotation: true);
+        double heavyRotationFloor = EffectiveGrabStrength(floor, lightObject: false, rotation: true);
+        for (int target = requested; target > floor; target--)
         {
             double light = EffectiveGrabStrength(target, lightObject: true);
             double heavy = EffectiveGrabStrength(target, lightObject: false);
             double lightRotation = EffectiveGrabStrength(target, lightObject: true, rotation: true);
             double heavyRotation = EffectiveGrabStrength(target, lightObject: false, rotation: true);
-            if (light >= lightBase && heavy >= heavyBase &&
-                lightRotation >= lightRotationBase && heavyRotation >= heavyRotationBase &&
-                (light > lightBase || heavy > heavyBase || lightRotation > lightRotationBase || heavyRotation > heavyRotationBase))
+            if (light >= lightFloor && heavy >= heavyFloor &&
+                lightRotation >= lightRotationFloor && heavyRotation >= heavyRotationFloor &&
+                (light > lightFloor || heavy > heavyFloor || lightRotation > lightRotationFloor || heavyRotation > heavyRotationFloor))
                 return target;
         }
-        return baseline;
+        return floor;
     }
 
     // R.E.P.O. 0.4.4.3 PhysGrabObject reduces both translation and rotation,

@@ -237,5 +237,5 @@
   "Dive": "Zanurzenie",
   "Wagers": "Zakłady",
   "Revenge": "Zemsta",
-  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Cel Strength: do max({0}, Base + {1}), limit 200. Obniżany, jeśli kary gry osłabiają chwyt lekkich lub ciężkich przedmiotów; bez bezpiecznej poprawy pozostaje Base."
+  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "Gwarantowane minimum Strength {0}, limit 200. Powyżej max(Base, minimum) wzrasta do Base + {1} tylko wtedy, gdy kary gry nie osłabiają chwytu ani obracania lekkich lub ciężkich przedmiotów."
 }

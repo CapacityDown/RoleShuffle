@@ -237,5 +237,5 @@
   "Dive": "Plongée",
   "Wagers": "Paris",
   "Revenge": "Vengeance",
-  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Cible Strength : jusqu'à max({0}, Base + {1}), plafond 200. Réduite si les pénalités du jeu affaiblissent la prise des objets légers ou lourds ; reste à Base sans gain sûr."
+  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "Minimum Strength {0} garanti, plafond 200. Au-delà de max(Base, minimum), augmente vers Base + {1} seulement si les pénalités du jeu ne réduisent ni la prise ni la rotation des objets légers ou lourds."
 }

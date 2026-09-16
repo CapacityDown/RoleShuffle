@@ -42,18 +42,19 @@ foreach (int bonus in new[] { 0, 1, 5, 20, 200 })
 {
     int target = RoleOverhaulRules.StrengthTarget(baseline, minimum, bonus);
     int requested = RoleOverhaulRules.UpgradeTarget(baseline, minimum, bonus);
-    Check(target >= baseline && target <= requested && target <= 200,
-        "Lifter never lowers raw Strength or exceeds the requested level");
-    Check(RoleOverhaulRules.EffectiveGrabStrength(target, true) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, true) &&
-        RoleOverhaulRules.EffectiveGrabStrength(target, false) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, false) &&
-        RoleOverhaulRules.EffectiveGrabStrength(target, true, true) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, true, true) &&
-        RoleOverhaulRules.EffectiveGrabStrength(target, false, true) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, false, true),
-        "Lifter never weakens ordinary light/heavy object translation or rotation");
+    int floor = Math.Max(baseline, minimum);
+    Check(target >= floor && target <= requested && target <= 200,
+        "Lifter preserves Base and the configured floor without exceeding the requested level");
+    Check(RoleOverhaulRules.EffectiveGrabStrength(target, true) >= RoleOverhaulRules.EffectiveGrabStrength(floor, true) &&
+        RoleOverhaulRules.EffectiveGrabStrength(target, false) >= RoleOverhaulRules.EffectiveGrabStrength(floor, false) &&
+        RoleOverhaulRules.EffectiveGrabStrength(target, true, true) >= RoleOverhaulRules.EffectiveGrabStrength(floor, true, true) &&
+        RoleOverhaulRules.EffectiveGrabStrength(target, false, true) >= RoleOverhaulRules.EffectiveGrabStrength(floor, false, true),
+        "Growth above the floor never weakens ordinary light/heavy translation or rotation");
     Check(RoleOverhaulRules.StrengthTarget(baseline, minimum, bonus) == target,
         "Lifter reassignment cannot accumulate Strength bonuses");
 }
-Check(RoleOverhaulRules.StrengthTarget(15, 25, 5) == 19, "Use a smaller safe gain when the requested minimum would weaken grip");
-Check(RoleOverhaulRules.StrengthTarget(20, 25, 5) == 20, "Do not grant a weakening bonus on light objects");
+Check(RoleOverhaulRules.StrengthTarget(15, 25, 5) == 25, "Configured minimum takes priority over light-object penalties");
+Check(RoleOverhaulRules.StrengthTarget(20, 25, 5) == 25, "Preserve the configured floor even if its force is below Base");
 Check(RoleOverhaulRules.StrengthTarget(50, 25, 5) == 50, "Do not grant a weakening bonus on heavy objects");
 Check(RoleOverhaulRules.StrengthTarget(90, 25, 5) == 95, "Growth resumes beyond the declining region");
 Check(RoleOverhaulRules.StrengthTarget(-50, 25, -1) == 25, "Invalid negative inputs are clamped");
@@ -61,7 +62,11 @@ Check(RoleOverhaulRules.StrengthTarget(250, 500, 500) == 200, "Oversized inputs 
 Check(RoleOverhaulRules.EffectiveGrabStrength(200, false) > RoleOverhaulRules.EffectiveGrabStrength(70, false) &&
     RoleOverhaulRules.EffectiveGrabStrength(200, false, true) < RoleOverhaulRules.EffectiveGrabStrength(70, false, true),
     "High Strength can improve translation while weakening rotation");
-Check(RoleOverhaulRules.StrengthTarget(70, 200, 5) == 70, "Reject high configured targets that weaken rotation");
+Check(RoleOverhaulRules.StrengthTarget(70, 200, 5) == 200, "Even a high configured floor takes priority over rotation penalties");
+Check(RoleOverhaulRules.StrengthTarget(70, 25, 130) == 70, "High bonus growth still respects rotation penalties above the floor");
+Check(RoleOverhaulRules.StrengthTarget(15, 25, 0) == 25, "Zero bonus does not disable the configured floor");
+Check(RoleOverhaulRules.StrengthTarget(24, 25, 5) == 25, "Unsafe growth stops at the configured floor, not below it");
+Check(RoleOverhaulRules.StrengthTarget(32, 25, 5) == 37, "Safe growth above the configured floor remains enabled");
 
 var state = new RoleOverhaulState();
 state.Start(10, 30); state.Start(20, 30);

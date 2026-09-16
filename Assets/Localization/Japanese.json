@@ -153,5 +153,5 @@
   "Dive": "潜行",
   "Wagers": "賭け",
   "Revenge": "復讐",
-  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Strengthはmax({0}, Base + {1})までを候補とし、上限200。バニラの補正で軽い物や重い物を掴む力が下がる場合は値を抑え、有効な強化がなければBaseを維持します。"
+  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "Strengthは設定値{0}を優先（上限200）。Baseと設定値の高い方を基準に、軽量物・重量物の掴む力や回転力が下がらない範囲でBase + {1}まで強化します。"
 }
