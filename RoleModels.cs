@@ -269,7 +269,9 @@ internal static class RoleCatalog
                     (RoleOverhaulRules.GrowsWithBase(role) || (role == StageRole.Superbot &&
                         roleUpgrade.CommandName is "Health" or "Speed" or "Stamina" or "Strength"))
                     ? new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
-                        RoleOverhaulRules.UpgradeTarget(targets[index].Level, roleUpgrade.Level, bonus))
+                        roleUpgrade.CommandName == "Strength"
+                            ? RoleOverhaulRules.StrengthTarget(targets[index].Level, roleUpgrade.Level, bonus)
+                            : RoleOverhaulRules.UpgradeTarget(targets[index].Level, roleUpgrade.Level, bonus))
                     : roleUpgrade;
                 break;
             }

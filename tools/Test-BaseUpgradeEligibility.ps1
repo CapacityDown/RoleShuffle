@@ -77,7 +77,34 @@ __TARGETS__
         superbot.OverhaulEnabled.Value = true;
         superbot.TankBaseBonus.Value = 0;
         if (TargetUpgrades(StageRole.Superbot, superbot)[0].Level != 100) throw new Exception("Zero bonus cannot lower Superbot below Base");
-        Console.WriteLine("PASS: " + (count + 10) + " production eligibility and upgrade-target checks (stubbed base/role inputs).");
+        count += 10;
+        var lifter = new StageRolesConfig {
+            Bases = new[] { new UpgradeGrant("Strength", 20) }, Targets = new[] { new UpgradeGrant("Strength", 25) }
+        };
+        lifter.OverhaulEnabled.Value = true;
+        foreach (var example in new[] { (0,25), (15,19), (17,17), (20,20), (32,37), (48,51), (50,50), (85,85), (90,95), (198,200), (200,200) }) {
+            lifter.Bases[0].Level = example.Item1;
+            int target = TargetUpgrades(StageRole.Lifter, lifter)[0].Level;
+            if (target != example.Item2) throw new Exception("Lifter corrected Strength target: Base " + example.Item1 + " expected " + example.Item2 + " got " + target);
+            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (example.Item1 == example.Item2))
+                throw new Exception("Lifter must be excluded only when no safe Strength gain exists");
+            if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != example.Item2) throw new Exception("Superbot inherits safe Lifter Strength");
+            count += 3;
+        }
+        lifter.Bases[0].Level = 70;
+        lifter.Targets[0].Level = 200;
+        if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 70 ||
+            !BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) ||
+            TargetUpgrades(StageRole.Superbot, lifter)[0].Level != 70)
+            throw new Exception("Lifter and Superbot must reject a high target that weakens heavy-object rotation");
+        count += 3;
+        lifter.Targets[0].Level = 25;
+        lifter.OverhaulEnabled.Value = false;
+        lifter.Bases[0].Level = 20;
+        if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 25 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
+            throw new Exception("Legacy Lifter target and eligibility must remain intact");
+        count++;
+        Console.WriteLine("PASS: " + count + " production eligibility and upgrade-target checks (stubbed base/role inputs).");
     }
 }
 '@

@@ -236,5 +236,6 @@
   "Dive remaining": "Tauchzeit übrig",
   "Dive": "Tauchen",
   "Wagers": "Wetten",
-  "Revenge": "Rache"
+  "Revenge": "Rache",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Strength-Ziel: bis zu max({0}, Base + {1}), höchstens 200. Wird gesenkt, wenn die Abzüge des Grundspiels den Griff bei leichten oder schweren Objekten schwächen; ohne sicheren Vorteil bleibt Base erhalten."
 }

@@ -28,6 +28,41 @@ Check(RoleOverhaulRules.UpgradeTarget(1, 21, 5) == 21, "Early-run Tank minimum")
 Check(RoleOverhaulRules.UpgradeTarget(199, 21, 5) == 200, "Cap");
 Check(!RoleOverhaulRules.GrowsWithBase(StageRole.Rammer), "Rammer locks are outside growth rules");
 
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(20, true) - 2.619047619d) < 1e-8,
+    "Vanilla light-object Strength 20 reference");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(25, true) - 2.326530612d) < 1e-8,
+    "Vanilla light-object Strength 25 is weaker despite the higher level");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(50, false) - 5.958333333d) < 1e-8,
+    "Vanilla heavy-object Strength 50 reference");
+Check(RoleOverhaulRules.EffectiveGrabStrength(55, false) < RoleOverhaulRules.EffectiveGrabStrength(50, false),
+    "Vanilla heavy-object Strength can also decrease");
+foreach (int baseline in Enumerable.Range(0, 201))
+foreach (int minimum in new[] { 0, 17, 25, 50, 200 })
+foreach (int bonus in new[] { 0, 1, 5, 20, 200 })
+{
+    int target = RoleOverhaulRules.StrengthTarget(baseline, minimum, bonus);
+    int requested = RoleOverhaulRules.UpgradeTarget(baseline, minimum, bonus);
+    Check(target >= baseline && target <= requested && target <= 200,
+        "Lifter never lowers raw Strength or exceeds the requested level");
+    Check(RoleOverhaulRules.EffectiveGrabStrength(target, true) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, true) &&
+        RoleOverhaulRules.EffectiveGrabStrength(target, false) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, false) &&
+        RoleOverhaulRules.EffectiveGrabStrength(target, true, true) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, true, true) &&
+        RoleOverhaulRules.EffectiveGrabStrength(target, false, true) >= RoleOverhaulRules.EffectiveGrabStrength(baseline, false, true),
+        "Lifter never weakens ordinary light/heavy object translation or rotation");
+    Check(RoleOverhaulRules.StrengthTarget(baseline, minimum, bonus) == target,
+        "Lifter reassignment cannot accumulate Strength bonuses");
+}
+Check(RoleOverhaulRules.StrengthTarget(15, 25, 5) == 19, "Use a smaller safe gain when the requested minimum would weaken grip");
+Check(RoleOverhaulRules.StrengthTarget(20, 25, 5) == 20, "Do not grant a weakening bonus on light objects");
+Check(RoleOverhaulRules.StrengthTarget(50, 25, 5) == 50, "Do not grant a weakening bonus on heavy objects");
+Check(RoleOverhaulRules.StrengthTarget(90, 25, 5) == 95, "Growth resumes beyond the declining region");
+Check(RoleOverhaulRules.StrengthTarget(-50, 25, -1) == 25, "Invalid negative inputs are clamped");
+Check(RoleOverhaulRules.StrengthTarget(250, 500, 500) == 200, "Oversized inputs remain capped");
+Check(RoleOverhaulRules.EffectiveGrabStrength(200, false) > RoleOverhaulRules.EffectiveGrabStrength(70, false) &&
+    RoleOverhaulRules.EffectiveGrabStrength(200, false, true) < RoleOverhaulRules.EffectiveGrabStrength(70, false, true),
+    "High Strength can improve translation while weakening rotation");
+Check(RoleOverhaulRules.StrengthTarget(70, 200, 5) == 70, "Reject high configured targets that weaken rotation");
+
 var state = new RoleOverhaulState();
 state.Start(10, 30); state.Start(20, 30);
 Check(state.PaidUntil == 40, "Initial grace cannot be refreshed by repeated setup");

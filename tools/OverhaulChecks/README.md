@@ -10,6 +10,8 @@ This harness links the production growth rules, contract/aura runtime, capped-he
 
 - New and existing settings, overhaul on/off, low/high/capped Base Upgrades.
 - Tank/Runner/Lifter assignment, Imitator copy, Superbot and stage cleanup.
+- Lifter: test Base Strength 15 (target 19), 20 (no safe gain), 50 (no safe gain), and 90 (target 95) with default settings. Compare both light (mass < 2) and heavier objects before/after assignment. No safe gain excludes Lifter from normal assignment; forced assignment and copied/Superbot abilities preserve Base. Verify legacy mode still uses the configured fixed level.
+- Also compare rotation: at Base Strength 70, setting the Lifter target to 200 must preserve Base because 200 would weaken heavy-object rotation despite improving translation.
 - Jobless: initial grace; different nonzero valuables; no contract after a drop, death, teleport or duplicate delivery; limit retained after reconnect.
 - King: self-exclusion, radius, injured/full/dead targets, overlapping Medic/Mage healing, delayed acknowledgements, final budget and reconnect.
 - Stinker/Bomber: existing automatic hazards, truck restrictions and stage cleanup. No manual pause command.

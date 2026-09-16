@@ -152,5 +152,6 @@
   "Dive remaining": "潜行残り",
   "Dive": "潜行",
   "Wagers": "賭け",
-  "Revenge": "復讐"
+  "Revenge": "復讐",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Strengthはmax({0}, Base + {1})までを候補とし、上限200。バニラの補正で軽い物や重い物を掴む力が下がる場合は値を抑え、有効な強化がなければBaseを維持します。"
 }

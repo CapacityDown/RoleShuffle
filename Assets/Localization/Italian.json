@@ -236,5 +236,6 @@
   "Dive remaining": "Immersione rimasta",
   "Dive": "Immersione",
   "Wagers": "Scommesse",
-  "Revenge": "Vendetta"
+  "Revenge": "Vendetta",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Obiettivo Strength: fino a max({0}, Base + {1}), limite 200. Ridotto se le penalità del gioco indeboliscono la presa su oggetti leggeri o pesanti; resta a Base senza un aumento sicuro."
 }

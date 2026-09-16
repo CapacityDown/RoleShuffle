@@ -236,5 +236,6 @@
   "Dive remaining": "Plongée restante",
   "Dive": "Plongée",
   "Wagers": "Paris",
-  "Revenge": "Vengeance"
+  "Revenge": "Vengeance",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Cible Strength : jusqu'à max({0}, Base + {1}), plafond 200. Réduite si les pénalités du jeu affaiblissent la prise des objets légers ou lourds ; reste à Base sans gain sûr."
 }

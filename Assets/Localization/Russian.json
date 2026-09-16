@@ -236,5 +236,6 @@
   "Dive remaining": "Осталось погружения",
   "Dive": "Погружение",
   "Wagers": "Ставки",
-  "Revenge": "Месть"
+  "Revenge": "Месть",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Цель Strength: до max({0}, Base + {1}), предел 200. Снижается, если штрафы игры ослабляют захват лёгких или тяжёлых предметов; без безопасного усиления сохраняется Base."
 }

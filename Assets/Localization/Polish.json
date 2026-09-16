@@ -236,5 +236,6 @@
   "Dive remaining": "Czas zanurzenia",
   "Dive": "Zanurzenie",
   "Wagers": "Zakłady",
-  "Revenge": "Zemsta"
+  "Revenge": "Zemsta",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Cel Strength: do max({0}, Base + {1}), limit 200. Obniżany, jeśli kary gry osłabiają chwyt lekkich lub ciężkich przedmiotów; bez bezpiecznej poprawy pozostaje Base."
 }

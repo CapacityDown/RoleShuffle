@@ -11,6 +11,40 @@ internal static class RoleOverhaulRules
     internal static int UpgradeTarget(int baseline, int minimum, int bonus, int maximum = 200) =>
         Math.Min(maximum, Math.Max(Math.Clamp(minimum, 0, maximum),
             Math.Clamp(baseline, 0, maximum) + Math.Clamp(bonus, 0, maximum)));
+
+    internal static int StrengthTarget(int baseline, int minimum, int bonus, int maximum = 200)
+    {
+        baseline = Math.Clamp(baseline, 0, maximum);
+        int requested = UpgradeTarget(baseline, minimum, bonus, maximum);
+        double lightBase = EffectiveGrabStrength(baseline, lightObject: true);
+        double heavyBase = EffectiveGrabStrength(baseline, lightObject: false);
+        double lightRotationBase = EffectiveGrabStrength(baseline, lightObject: true, rotation: true);
+        double heavyRotationBase = EffectiveGrabStrength(baseline, lightObject: false, rotation: true);
+        for (int target = requested; target > baseline; target--)
+        {
+            double light = EffectiveGrabStrength(target, lightObject: true);
+            double heavy = EffectiveGrabStrength(target, lightObject: false);
+            double lightRotation = EffectiveGrabStrength(target, lightObject: true, rotation: true);
+            double heavyRotation = EffectiveGrabStrength(target, lightObject: false, rotation: true);
+            if (light >= lightBase && heavy >= heavyBase &&
+                lightRotation >= lightRotationBase && heavyRotation >= heavyRotationBase &&
+                (light > lightBase || heavy > heavyBase || lightRotation > lightRotationBase || heavyRotation > heavyRotationBase))
+                return target;
+        }
+        return baseline;
+    }
+
+    // R.E.P.O. 0.4.4.3 PhysGrabObject reduces both translation and rotation,
+    // with denominator 7 below mass 2 and 20 otherwise. Rotation omits the
+    // strength-30 cap in the reduced value. Both curves are non-monotonic.
+    // Raw levels also stay at least Base to preserve PhysGrabber rotation input.
+    internal static double EffectiveGrabStrength(int level, bool lightObject, bool rotation = false)
+    {
+        double strength = 1d + 0.2d * Math.Clamp(level, 0, 200);
+        double reduced = strength / (1d + (rotation ? strength : Math.Min(strength, 30d)));
+        double blend = Math.Min((strength - 1d) / (lightObject ? 7d : 20d), 0.9d);
+        return strength + (reduced - strength) * blend;
+    }
 }
 
 // Owned by the stage assignment, so death, avatar replacement and rejoining

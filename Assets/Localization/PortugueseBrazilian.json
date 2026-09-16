@@ -236,5 +236,6 @@
   "Dive remaining": "Mergulho restante",
   "Dive": "Mergulho",
   "Wagers": "Apostas",
-  "Revenge": "Vingança"
+  "Revenge": "Vingança",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Meta de Strength: até max({0}, Base + {1}), limite 200. Reduzida se as penalidades do jogo enfraquecerem a força ao segurar objetos leves ou pesados; mantém Base quando não há ganho seguro."
 }

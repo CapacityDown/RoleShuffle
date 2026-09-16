@@ -236,5 +236,6 @@
   "Dive remaining": "Dive remaining",
   "Dive": "Dive",
   "Wagers": "Wagers",
-  "Revenge": "Revenge"
+  "Revenge": "Revenge",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists."
 }

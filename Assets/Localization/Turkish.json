@@ -236,5 +236,6 @@
   "Dive remaining": "Kalan dalış",
   "Dive": "Dalış",
   "Wagers": "Bahisler",
-  "Revenge": "İntikam"
+  "Revenge": "İntikam",
+  "Strength target: up to max({0}, Base + {1}), capped at 200. Reduced when vanilla grip penalties would weaken light or heavy objects; stays at Base if no safe gain exists.": "Strength hedefi: en fazla max({0}, Base + {1}), üst sınır 200. Oyunun kavrama cezaları hafif veya ağır nesneleri tutma gücünü azaltacaksa hedef düşürülür; güvenli artış yoksa Base korunur."
 }
