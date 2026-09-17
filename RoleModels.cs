@@ -264,14 +264,11 @@ internal static class RoleCatalog
                 {
                     continue;
                 }
-                int bonus = config.OverhaulEnabled.Value ? GrowthBonus(role, roleUpgrade.CommandName, config) : 0;
                 targets[index] = config.OverhaulEnabled.Value &&
                     (RoleOverhaulRules.GrowsWithBase(role) || (role == StageRole.Superbot &&
                         roleUpgrade.CommandName is "Health" or "Speed" or "Stamina" or "Strength"))
                     ? new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
-                        roleUpgrade.CommandName == "Strength"
-                            ? RoleOverhaulRules.StrengthTarget(targets[index].Level, roleUpgrade.Level, bonus)
-                            : RoleOverhaulRules.UpgradeTarget(targets[index].Level, roleUpgrade.Level, bonus))
+                        GrowthTarget(roleUpgrade.CommandName, targets[index].Level, roleUpgrade.Level, config))
                     : roleUpgrade;
                 break;
             }
@@ -279,13 +276,13 @@ internal static class RoleCatalog
         return targets;
     }
 
-    private static int GrowthBonus(StageRole role, string command, StageRolesConfig config) => command switch
+    private static int GrowthTarget(string command, int baseline, int minimum, StageRolesConfig config) => command switch
     {
-        "Health" when role is StageRole.Tank or StageRole.Superbot => config.TankBaseBonus.Value,
-        "Speed" when role is StageRole.Runner or StageRole.Superbot => config.RunnerSpeedBaseBonus.Value,
-        "Stamina" when role is StageRole.Runner or StageRole.Superbot => config.RunnerStaminaBaseBonus.Value,
-        "Strength" when role is StageRole.Lifter or StageRole.Superbot => config.LifterBaseBonus.Value,
-        _ => 0
+        "Health" => RoleOverhaulRules.UpgradeTarget(command, baseline, minimum, config.TankHealthMultiplier.Value, config.TankMaximumHealth.Value),
+        "Speed" => RoleOverhaulRules.UpgradeTarget(command, baseline, minimum, config.RunnerSpeedMultiplier.Value, config.RunnerMaximumSpeed.Value),
+        "Stamina" => RoleOverhaulRules.UpgradeTarget(command, baseline, minimum, config.RunnerStaminaMultiplier.Value, config.RunnerMaximumStamina.Value),
+        "Strength" => RoleOverhaulRules.StrengthTarget(baseline, minimum, config.LifterStrengthMultiplier.Value, config.LifterMaximumStrength.Value),
+        _ => Math.Max(baseline, minimum)
     };
 
     private static IReadOnlyList<UpgradeGrant> RoleUpgrades(

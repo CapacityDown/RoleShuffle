@@ -4,14 +4,15 @@ Run `dotnet run --project tools/OverhaulChecks/OverhaulChecks.csproj -c Release`
 
 This harness links the production growth rules, contract/aura runtime, capped-healing logic, status codec and status transport. Unity, player health and Photon are deterministic substitutes. It checks cap boundaries, idempotent targets, contract delivery and duplicate prevention, grace preservation, dead/replaced avatars, zero-value exclusions, King self-exclusion and shared budget, inactive scan cost, malformed and stale data, copied roles, guest reads, room changes and host-only publication.
 
-`tools/Test-BaseUpgradeEligibility.ps1` additionally extracts the actual production eligibility and target-composition methods, using stubbed base/role inputs. It covers legacy eligibility, one useful Runner upgrade, both upgrades at the cap and Superbot with zero bonus.
+`tools/Test-BaseUpgradeEligibility.ps1` additionally extracts the actual production eligibility and target-composition methods, using stubbed base/role inputs. It covers legacy eligibility, one useful Runner upgrade, both upgrades at the cap and Superbot with multiplier 1.
 
 ## In-game acceptance checks
 
 - New and existing settings, overhaul on/off, low/high/capped Base Upgrades.
 - Tank/Runner/Lifter assignment, Imitator copy, Superbot and stage cleanup.
-- Lifter: with configured minimum 25, test Base Strength 15, 20 and 24 (target 25, eligible), 25 and 50 (no extra gain, excluded), and 90 (target 95). The configured minimum takes priority even if normal light/heavy grip or rotation weakens. Only growth above max(Base, minimum) must preserve those forces. Copied/Superbot abilities share the rule. Verify legacy mode still uses the fixed configured level.
-- At Base Strength 70, configured minimum 200 must apply 200. By contrast, minimum 25 plus bonus 130 must preserve 70 because this extra growth would weaken heavy-object rotation.
+- Tank: Base Health 100 with minimum 21 and multiplier 1.5 gives level 153 (3160 HP); cap 4100 HP. Runner: Base Speed 6 gives 12; Base Stamina 46 gives 71. Confirm serialized vanilla defaults 5/40 and speed-dependent stamina drain.
+- Lifter: default minimum 25, multiplier 1.5 and effective cap 6. Test Base 0→25, 25→200, 50→50 (excluded), 70→70 (rotation protection), 90→156, 198→200. Configured minimum takes priority; growth above it must preserve grip and rotation in both weight classes. Verify copied roles, Superbot, multiplier 1, effective caps, level 200 and legacy mode.
+- Schema 32 migration: back up old Base*Bonus settings; preserve minimums and existing new settings; expose four multipliers and four effective caps. Confirm no fractional upgrade grants.
 - Jobless: initial grace; different nonzero valuables; no contract after a drop, death, teleport or duplicate delivery; limit retained after reconnect.
 - King: self-exclusion, radius, injured/full/dead targets, overlapping Medic/Mage healing, delayed acknowledgements, final budget and reconnect.
 - Stinker/Bomber: existing automatic hazards, truck restrictions and stage cleanup. No manual pause command.

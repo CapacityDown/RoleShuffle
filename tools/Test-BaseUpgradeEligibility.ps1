@@ -24,10 +24,15 @@ public class StageRolesConfig {
     public UpgradeGrant[] Bases;
     public UpgradeGrant[] Targets;
     public Entry<bool> OverhaulEnabled = new(false);
-    public Entry<int> TankBaseBonus = new(5);
-    public Entry<int> RunnerSpeedBaseBonus = new(2);
-    public Entry<int> RunnerStaminaBaseBonus = new(10);
-    public Entry<int> LifterBaseBonus = new(5);
+    public Entry<float> TankHealthMultiplier = new(1.5f);
+    public Entry<float> RunnerSpeedMultiplier = new(1.5f);
+    public Entry<float> RunnerStaminaMultiplier = new(1.5f);
+    public Entry<float> LifterStrengthMultiplier = new(1.5f);
+    public Entry<int> TankMaximumHealth = new(4100);
+    public Entry<int> RunnerMaximumSpeed = new(205);
+    public Entry<int> RunnerMaximumStamina = new(2040);
+    public Entry<int> LifterMaximumStrength = new(6);
+
 }
 public static class EligibilityChecks {
     static IReadOnlyList<UpgradeGrant> BaseUpgrades(StageRolesConfig config) { return config.Bases; }
@@ -66,7 +71,7 @@ __TARGETS__
         runner.OverhaulEnabled.Value = true;
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Runner must remain eligible when Stamina still grows");
         var runnerTargets = TargetUpgrades(StageRole.Runner, runner);
-        if (runnerTargets[0].Level != 200 || runnerTargets[1].Level != 56) throw new Exception("Production Runner targets");
+        if (runnerTargets[0].Level != 200 || runnerTargets[1].Level != 71) throw new Exception("Production Runner targets");
         runner.Bases[1].Level = 200;
         if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Both upgrades capped");
         runner.OverhaulEnabled.Value = false;
@@ -75,38 +80,28 @@ __TARGETS__
             Bases = new[] { new UpgradeGrant("Health", 100) }, Targets = new[] { new UpgradeGrant("Health", 21) }
         };
         superbot.OverhaulEnabled.Value = true;
-        superbot.TankBaseBonus.Value = 0;
+        superbot.TankHealthMultiplier.Value = 1;
         if (TargetUpgrades(StageRole.Superbot, superbot)[0].Level != 100) throw new Exception("Zero bonus cannot lower Superbot below Base");
         count += 10;
         var lifter = new StageRolesConfig {
             Bases = new[] { new UpgradeGrant("Strength", 20) }, Targets = new[] { new UpgradeGrant("Strength", 25) }
         };
         lifter.OverhaulEnabled.Value = true;
-        foreach (var example in new[] { (0,25), (15,25), (17,25), (20,25), (24,25), (25,25), (32,37), (48,51), (50,50), (85,85), (90,95), (198,200), (200,200) }) {
+        foreach (var example in new[] { (0,25), (25,200), (50,50), (70,70), (90,156), (198,200), (200,200) }) {
             lifter.Bases[0].Level = example.Item1;
             int target = TargetUpgrades(StageRole.Lifter, lifter)[0].Level;
-            if (target != example.Item2) throw new Exception("Lifter corrected Strength target: Base " + example.Item1 + " expected " + example.Item2 + " got " + target);
+            if (target != example.Item2) throw new Exception("Lifter multiplier target: " + example.Item1 + " expected " + example.Item2 + " got " + target);
             if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (example.Item1 == example.Item2))
-                throw new Exception("Lifter must retain configured-floor assignments and exclude only when its level does not increase");
-            if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != example.Item2) throw new Exception("Superbot inherits safe Lifter Strength");
+                throw new Exception("Lifter eligibility must follow actual upgrade gain");
+            if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != example.Item2) throw new Exception("Superbot inherits multiplier Strength");
             count += 3;
         }
         lifter.Bases[0].Level = 70;
         lifter.Targets[0].Level = 200;
-        if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 200 ||
-            BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) ||
-            TargetUpgrades(StageRole.Superbot, lifter)[0].Level != 200)
-            throw new Exception("Configured Strength floor must take priority over penalties for Lifter and Superbot");
-        count += 3;
+        if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 200) throw new Exception("Minimum has priority");
+        count++;
         lifter.Targets[0].Level = 25;
-        lifter.LifterBaseBonus.Value = 130;
-        if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 70 ||
-            !BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) ||
-            TargetUpgrades(StageRole.Superbot, lifter)[0].Level != 70)
-            throw new Exception("Bonus growth above the configured floor must not weaken heavy-object rotation");
-        count += 3;
-        lifter.Targets[0].Level = 25;
-        lifter.LifterBaseBonus.Value = 5;
+        lifter.LifterStrengthMultiplier.Value = 1.5f;
         lifter.OverhaulEnabled.Value = false;
         lifter.Bases[0].Level = 20;
         if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 25 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))

@@ -214,8 +214,8 @@
   "Base Upgrade Settings": "Réglages des améliorations de base",
   "+/- adjustments are saved with this game data.": "Les ajustements +/- sont conservés dans cette sauvegarde.",
   "Load a saved game to use +/- adjustments.": "Chargez une sauvegarde pour utiliser +/-.",
-  "Target {0}: max({1}, Base + {2}), capped at 200.": "Cible {0} : maximum de {1} et Base + {2}, plafonné à 200.",
-  "Targets: Speed max({0}, Base + {1}); Stamina max({2}, Base + {3}), capped at 200.": "Cibles : Speed max({0}, Base + {1}) ; Stamina max({2}, Base + {3}), plafonnées à 200.",
+  "Health minimum level {0}. Target Base maximum HP x{1}, growth cap {2} HP. Round up to an upgrade level; preserve Base and the minimum.": "Health : niveau minimum {0}. Vise les PV maximums de Base x{1}, plafond de croissance {2} PV. Arrondit au niveau supérieur ; conserve Base et le minimum.",
+  "Minimum levels: Speed {0}, Stamina {1}. Target Base sprint speed x{2} (cap {3}) and stamina capacity x{4} (cap {5}). Round up to upgrade levels; preserve Base and minimums.": "Niveaux minimums : Speed {0}, Stamina {1}. Vise la vitesse de sprint de Base x{2} (plafond {3}) et la capacité d’endurance x{4} (plafond {5}). Arrondit au niveau supérieur ; conserve Base et les minimums.",
   "Carry a different valuable {0} m outside the truck, then bring it into the truck. Up to {1} contracts per stage. Each restores {2} HP and pauses attrition for {3} seconds, also granted at stage start. Otherwise, lose {4} HP every {5} seconds outside the truck.": "Transportez un autre objet de valeur sur {0} m hors du camion, puis ramenez-le dans le camion. Maximum {1} contrats par niveau. Chaque contrat rend {2} PV et suspend les dégâts continus pendant {3} secondes, également accordées au départ. Sinon, perdez {4} PV toutes les {5} secondes hors du camion.",
   "Receives the Crown and heals living teammates within {0} m for {1} HP every {2} seconds, up to {3} HP per stage. Excludes the King. Only one King can be assigned.": "Reçoit la Crown et soigne les alliés vivants dans un rayon de {0} m de {1} PV toutes les {2} secondes, pour un total de {3} PV par niveau. Le King est exclu. Un seul King peut être attribué.",
   "Healing": "Soins",
@@ -237,5 +237,5 @@
   "Dive": "Plongée",
   "Wagers": "Paris",
   "Revenge": "Vengeance",
-  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "Minimum Strength {0} garanti, plafond 200. Au-delà de max(Base, minimum), augmente vers Base + {1} seulement si les pénalités du jeu ne réduisent ni la prise ni la rotation des objets légers ou lourds."
+  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength : minimum {0}. Vise la prise légère/lourde de Base x{1}, plafond {2} par rapport au niveau 0. Choisit le premier niveau sûr atteignant les deux objectifs, sinon le meilleur gain équilibré. Conserve Base et le minimum ; la croissance ne réduit pas la rotation."
 }

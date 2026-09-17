@@ -214,8 +214,8 @@
   "Base Upgrade Settings": "基礎升級設定",
   "+/- adjustments are saved with this game data.": "+/- 調整會儲存在目前存檔中。",
   "Load a saved game to use +/- adjustments.": "請載入存檔以使用 +/- 調整。",
-  "Target {0}: max({1}, Base + {2}), capped at 200.": "{0}目標：取{1}與Base + {2}中的較大值，上限200。",
-  "Targets: Speed max({0}, Base + {1}); Stamina max({2}, Base + {3}), capped at 200.": "目標：Speed取{0}與Base + {1}中的較大值；Stamina取{2}與Base + {3}中的較大值，上限200。",
+  "Health minimum level {0}. Target Base maximum HP x{1}, growth cap {2} HP. Round up to an upgrade level; preserve Base and the minimum.": "Health最低等級{0}。目標為Base最大生命值的{1}倍，成長上限{2}HP。向上取整為升級等級，保留Base及最低值。",
+  "Minimum levels: Speed {0}, Stamina {1}. Target Base sprint speed x{2} (cap {3}) and stamina capacity x{4} (cap {5}). Round up to upgrade levels; preserve Base and minimums.": "最低等級：Speed {0}、Stamina {1}。目標為Base奔跑速度的{2}倍（上限{3}）及耐力容量的{4}倍（上限{5}）。向上取整為等級，保留Base及最低值。",
   "Carry a different valuable {0} m outside the truck, then bring it into the truck. Up to {1} contracts per stage. Each restores {2} HP and pauses attrition for {3} seconds, also granted at stage start. Otherwise, lose {4} HP every {5} seconds outside the truck.": "將另一件貴重物品在卡車外搬運{0}公尺，再手持帶回卡車即可完成合約。每關最多{1}份。每次恢復{2}HP，並免除持續傷害{3}秒；關卡開始時也有相同寬限。其他時間在卡車外每{5}秒損失{4}HP。",
   "Receives the Crown and heals living teammates within {0} m for {1} HP every {2} seconds, up to {3} HP per stage. Excludes the King. Only one King can be assigned.": "獲得Crown，每{2}秒為{0}公尺內存活的隊友恢復{1}HP，每關合計最多{3}HP。不會治療King本人。每關最多一名King。",
   "Healing": "治療",
@@ -237,5 +237,5 @@
   "Dive": "潛行",
   "Wagers": "賭注",
   "Revenge": "復仇",
-  "Strength minimum {0}, capped at 200. Above max(Base, minimum), grow toward Base + {1} only if vanilla penalties do not weaken light/heavy object grip or rotation.": "優先保證Strength最低值{0}，上限200。以Base和最低值中較高者為基準，僅在原版衰減不會削弱輕物或重物的抓取力及旋轉力時，向Base + {1}提升。"
+  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength最低等級{0}。目標為Base輕物和重物抓取力的{1}倍，相對等級0的成長上限為{2}。選擇滿足兩個目標的最低安全等級，否則選擇最均衡的提升。保留Base及最低值，額外成長不降低旋轉力。"
 }

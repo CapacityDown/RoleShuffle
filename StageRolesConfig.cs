@@ -190,14 +190,17 @@ internal sealed class StageRolesConfig
         TankEnabled = RoleEnabled(config, "Tank");
         TankWeight = RoleWeight(config, "Tank");
         TankHealthLevels = UpgradeLevel(config, "Tank", "HealthUpgradeLevels", 21);
-        TankBaseBonus = BindInt(config, "Tank", "BaseHealthBonus", 5, 0, 200, "Additional Health above Base Upgrades in overhaul mode; role level is the minimum, capped at 200.");
+        TankHealthMultiplier = BindFloat(config, "Tank", "HealthMultiplier", 1.5f, 1f, 10f, "Multiply Base maximum HP (100 + 20 per level), then round up to an upgrade level. Overhaul mode only.");
+        TankMaximumHealth = BindInt(config, "Tank", "MaximumHealth", 4100, 100, 4100, "Maximum HP for multiplier growth: ceil(maximum over vanilla levels 0-200). Existing Base and configured role minimum remain guaranteed.");
 
         RunnerEnabled = RoleEnabled(config, "Runner");
         RunnerWeight = RoleWeight(config, "Runner");
         RunnerSpeedLevels = UpgradeLevel(config, "Runner", "SpeedUpgradeLevels", 6);
         RunnerStaminaLevels = UpgradeLevel(config, "Runner", "StaminaUpgradeLevels", 46);
-        RunnerSpeedBaseBonus = BindInt(config, "Runner", "BaseSpeedBonus", 2, 0, 200, "Additional Speed above Base Upgrades in overhaul mode; role level is the minimum, capped at 200.");
-        RunnerStaminaBaseBonus = BindInt(config, "Runner", "BaseStaminaBonus", 10, 0, 200, "Additional Stamina above Base Upgrades in overhaul mode; role level is the minimum, capped at 200.");
+        RunnerSpeedMultiplier = BindFloat(config, "Runner", "SpeedMultiplier", 1.5f, 1f, 10f, "Multiply Base sprint speed (5 + level), then round up to an upgrade level. Overhaul mode only.");
+        RunnerStaminaMultiplier = BindFloat(config, "Runner", "StaminaMultiplier", 1.5f, 1f, 10f, "Multiply Base stamina capacity (40 + 10 per level), then round up to an upgrade level. Sprint duration also depends on speed. Overhaul mode only.");
+        RunnerMaximumSpeed = BindInt(config, "Runner", "MaximumSprintSpeed", 205, 5, 205, "Maximum sprint speed for multiplier growth: ceil(maximum over vanilla levels 0-200). Existing Base and configured role minimum remain guaranteed.");
+        RunnerMaximumStamina = BindInt(config, "Runner", "MaximumStamina", 2040, 40, 2040, "Maximum stamina capacity for multiplier growth: ceil(maximum over vanilla levels 0-200). Existing Base and configured role minimum remain guaranteed.");
 
         JumperEnabled = RoleEnabled(config, "Jumper");
         JumperWeight = RoleWeight(config, "Jumper");
@@ -206,7 +209,8 @@ internal sealed class StageRolesConfig
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
         LifterStrengthLevels = UpgradeLevel(config, "Lifter", "StrengthUpgradeLevels", 25);
-        LifterBaseBonus = BindInt(config, "Lifter", "BaseStrengthBonus", 5, 0, 200, "Requested Strength above Base Upgrades in overhaul mode, capped at 200. The configured role level is always guaranteed. Only growth above max(Base, role level) is limited by vanilla grip and rotation penalties.");
+        LifterStrengthMultiplier = BindFloat(config, "Lifter", "StrengthMultiplier", 1.5f, 1f, 10f, "Target multiplier for Base light/heavy grip after vanilla penalties. Choose the lowest safe level meeting both goals, or the best balanced gain within the cap. Growth cannot weaken grip or rotation relative to max(Base, role minimum). 1 disables extra growth. Overhaul mode only.");
+        LifterMaximumStrength = BindInt(config, "Lifter", "MaximumEffectiveStrength", 6, 1, 6, "Maximum normal light/heavy grip coefficient for multiplier growth, relative to Strength 0. Ceil(maximum over levels 0-200) = ceil(5.958333) = 6. Existing Base and configured role minimum remain guaranteed.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");
@@ -452,10 +456,14 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> UniqueRoles { get; }
     internal ConfigEntry<bool> OverhaulEnabled { get; }
     internal ConfigEntry<bool> HudAbilityStatusEnabled { get; }
-    internal ConfigEntry<int> TankBaseBonus { get; }
-    internal ConfigEntry<int> RunnerSpeedBaseBonus { get; }
-    internal ConfigEntry<int> RunnerStaminaBaseBonus { get; }
-    internal ConfigEntry<int> LifterBaseBonus { get; }
+    internal ConfigEntry<float> TankHealthMultiplier { get; }
+    internal ConfigEntry<float> RunnerSpeedMultiplier { get; }
+    internal ConfigEntry<float> RunnerStaminaMultiplier { get; }
+    internal ConfigEntry<float> LifterStrengthMultiplier { get; }
+    internal ConfigEntry<int> TankMaximumHealth { get; }
+    internal ConfigEntry<int> RunnerMaximumSpeed { get; }
+    internal ConfigEntry<int> RunnerMaximumStamina { get; }
+    internal ConfigEntry<int> LifterMaximumStrength { get; }
     internal ConfigEntry<float> JoblessContractDistance { get; }
     internal ConfigEntry<float> JoblessContractGrace { get; }
     internal ConfigEntry<int> JoblessContractLimit { get; }

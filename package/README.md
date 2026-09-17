@@ -76,10 +76,10 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 | Role | Function and default effect | Important limitation or risk | Configurable values |
 |---|---|---|---|
-| Tank | Health target is max(21, Base + 5), capped at 200. | Temporary stage upgrade. | Health minimum and base bonus |
-| Runner | Speed target is max(6, Base + 2); Stamina is max(46, Base + 10), capped at 200. | Remains eligible while either upgrade can improve. | Speed/Stamina minimums and base bonuses |
+| Tank | Convert Base maximum HP x1.5 to levels; growth cap 4,100 HP. | Health minimum 21. | Minimum, multiplier, cap |
+| Runner | Convert Base sprint speed/stamina capacity x1.5 to levels; growth caps 205/2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Strength minimum 25 takes priority. Growth toward Base + 5 respects grip/rotation penalties; cap 200. | Keep the higher of Base and the configured minimum. | Strength minimum and base bonus |
+| Lifter | Target Base effective grip x1.5 through safe upgrade levels; growth cap 6. | Strength minimum 25; protect rotation. | Minimum, multiplier, cap |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -121,17 +121,17 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Overhaul settings
 
-Enabled by default. Tank and Runner use max(role minimum, Base + bonus), capped at 200. Lifter guarantees max(Base, configured minimum), even where vanilla penalties reduce force. Only growth above this floor toward Base + bonus is limited to avoid weaker grip or rotation. Lifter is excluded only if the final level does not exceed Base. This also applies to copied Lifter and Superbot Strength. Roles with no benefit are excluded. Base includes configured, manual and draw values. Jobless contracts require continued direct holding; the same object cannot pay twice. King healing and completed contracts survive revival and rejoining. Bomber and Stinker remain automatic; neither has a manual pause. `General.OverhaulEnabled = false` uses legacy role behavior. Change this between stages; upgrade grants update on assignment.
+Enabled by default. Tank/Runner multiply actual Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Lifter seeks the lowest level meeting both light/heavy grip goals without weakening grip or rotation above max(Base, minimum); otherwise it maximizes the weaker relative grip gain. Caps are rounded-up maxima over vanilla levels 0–200. All grants remain within level 200; Base and role minimums take priority over lower growth caps. No gain excludes the role. Base includes manual/draw changes. Copied roles and Superbot inherit growth. Jobless contracts and King healing budgets survive revival/rejoining. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
 
 Host settings except the local HUD switch:
 
 | Key | Default | Range | Effect |
 |---|---|---|---|
 | `General.OverhaulEnabled` | `true` | Boolean | Enables growth, contracts and King's aura. |
-| `Tank.BaseHealthBonus` | `5` | 0–200 | Health above Base. |
-| `Runner.BaseSpeedBonus` | `2` | 0–200 | Speed above Base. |
-| `Runner.BaseStaminaBonus` | `10` | 0–200 | Stamina above Base. |
-| `Lifter.BaseStrengthBonus` | `5` | 0–200 | Growth above Base; penalties limit only the portion above the configured minimum. |
+| `Tank.HealthMultiplier` / `Tank.MaximumHealth` | `1.5` / `4100` | 1–10 / 100–4100 | Maximum HP |
+| `Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed` | `1.5` / `205` | 1–10 / 5–205 | Sprint speed |
+| `Runner.StaminaMultiplier` / `Runner.MaximumStamina` | `1.5` / `2040` | 1–10 / 40–2040 | Stamina capacity |
+| `Lifter.StrengthMultiplier` / `Lifter.MaximumEffectiveStrength` | `1.5` / `6` | 1–10 / 1–6 | Effective light/heavy grip |
 | `Jobless.ContractDistance` | `5` | 1–50 m | Required carried distance outside the truck. |
 | `Jobless.ContractGraceSeconds` | `30` | 1–300 s | Initial and post-delivery attrition break. |
 | `Jobless.ContractsPerStage` | `3` | 1–30 | Completed contract limit per player. |
@@ -559,10 +559,10 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 | 役職 | 機能とデフォルト効果 | 主な制限・危険性 | 調整可能な値 |
 |---|---|---|---|
-| Tank | Healthは21とBase + 5の高い方。上限200。 | ステージ限定の強化。 | Health最低値・基礎値への追加量 |
-| Runner | Speedは6とBase + 2、Staminaは46とBase + 10の高い方。上限200。 | どちらかに強化の余地があれば抽選対象。 | Speed・Stamina最低値と追加量 |
+| Tank | Base最大HP×1.5をレベルへ換算。成長上限4,100HP。 | 最低Health 21。 | 最低値・倍率・上限 |
+| Runner | Base走行速度・スタミナ容量×1.5をレベルへ換算。成長上限205・2,040。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | 設定値25を優先。Base + 5への超過分に掴む力・回転力の補正を考慮。上限200。 | Baseと設定値の高い方を保証。 | Strength最低値・追加量 |
+| Lifter | Baseの実効的な掴む力×1.5を目標に安全なレベルを選択。成長上限6倍。 | 最低Strength 25。回転力低下を防止。 | 最低値・倍率・上限 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -604,17 +604,17 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 ### オーバーホール設定
 
-初期値は有効。Tank・Runnerは「役職最低値」と「Base＋追加量」の高い方を上限200で使用します。Lifterは補正による力の低下があっても設定値を優先し、Baseと設定値の高い方を保証します。その値を超えてBase＋追加量へ伸ばす部分だけ、掴む力・回転力の減衰を考慮。最終レベルがBaseを超えない場合に抽選対象外になります。コピー能力・SuperbotのStrengthにも適用します。Baseには設定・手動調整・抽選を含みます。Joblessは直接保持を継続して運搬し、同じ物で再報酬は得られません。達成件数とKingの回復消費量は蘇生・再参加でも保持します。Bomber・Stinkerは移動による自動発生を維持し、任意停止はありません。`General.OverhaulEnabled = false`で旧仕様になります。ステージ間で変更してください。強化値は役職適用時に更新します。
+初期値は有効。Tank・RunnerはBaseの実際のHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。Lifterは軽量・重量の両方の掴む力の目標を満たす最小の安全なレベルを選び、届かなければ伸びが小さい側の増加率を最大化します。追加強化で掴む力・回転力を下げません。上限はレベル0〜200の実効最大値を切り上げた値。レベル上限200を維持し、Base・役職最低値は低い成長上限より優先します。強化なしなら抽選対象外。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数とKing回復消費量は蘇生・再参加でも保持。Bomber・Stinkerは自動発動を維持します。`General.OverhaulEnabled = false`で旧仕様。ステージ間で変更してください。
 
 HUD以外はホスト設定です。
 
 | キー | 初期値 | 範囲 | 効果 |
 |---|---|---|---|
 | `General.OverhaulEnabled` | `true` | 真偽値 | 成長・契約・King回復を有効化。 |
-| `Tank.BaseHealthBonus` | `5` | 0–200 | BaseへのHealth追加量。 |
-| `Runner.BaseSpeedBonus` | `2` | 0–200 | BaseへのSpeed追加量。 |
-| `Runner.BaseStaminaBonus` | `10` | 0–200 | BaseへのStamina追加量。 |
-| `Lifter.BaseStrengthBonus` | `5` | 0–200 | BaseへのStrength追加量。設定値を超える部分だけ減衰を考慮。 |
+| `Tank.HealthMultiplier` / `Tank.MaximumHealth` | `1.5` / `4100` | 1–10 / 100–4100 | 最大HP |
+| `Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed` | `1.5` / `205` | 1–10 / 5–205 | 走行速度 |
+| `Runner.StaminaMultiplier` / `Runner.MaximumStamina` | `1.5` / `2040` | 1–10 / 40–2040 | スタミナ容量 |
+| `Lifter.StrengthMultiplier` / `Lifter.MaximumEffectiveStrength` | `1.5` / `6` | 1–10 / 1–6 | 軽量・重量の実効的な掴む力 |
 | `Jobless.ContractDistance` | `5` | 1–50m | トラック外での必要運搬距離。 |
 | `Jobless.ContractGraceSeconds` | `30` | 1–300秒 | 開始時・達成後のダメージ免除。 |
 | `Jobless.ContractsPerStage` | `3` | 1–30 | 各プレイヤーの達成上限。 |

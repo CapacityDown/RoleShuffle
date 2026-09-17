@@ -15,58 +15,68 @@ Check(PhotonAccess.Reads == 0, "Startup cleanup never initializes Photon or acce
 PhotonAccess.FailOnRead = false;
 SemiFunc.GameReady = true;
 
-foreach (int baseline in Enumerable.Range(0, 201))
-foreach (int minimum in new[] { 0, 21, 46, 200 })
-foreach (int bonus in new[] { 0, 2, 5, 10, 200 })
+foreach (string command in new[] { "Health", "Speed", "Stamina" })
 {
-    int target = RoleOverhaulRules.UpgradeTarget(baseline, minimum, bonus);
-    Check(target >= baseline && target >= minimum && target <= 200, "Bounded growth preserves base and role minimum");
-    Check(RoleOverhaulRules.UpgradeTarget(baseline, minimum, bonus) == target, "Reapplication does not accumulate bonuses");
+    double fullCap = RoleOverhaulRules.MaximumValue(command);
+    Check(Math.Ceiling(Enumerable.Range(0, 201).Max(n => RoleOverhaulRules.UpgradeValue(command, n))) == fullCap,
+        "Effective cap is the ceiling of the maximum over ALL levels 0-200");
+    foreach (int baseline in Enumerable.Range(0, 201))
+    foreach (int minimum in new[] { 0, 21, 46, 200 })
+    foreach (double multiplier in new[] { 1d, 1.3d, 1.5d, 2d, 10d })
+    foreach (double cap in new[] { fullCap, RoleOverhaulRules.UpgradeValue(command, 50) })
+    {
+        int floor = Math.Max(baseline, minimum);
+        int target = RoleOverhaulRules.UpgradeTarget(command, baseline, minimum, multiplier, cap);
+        double limit = Math.Max(cap, RoleOverhaulRules.UpgradeValue(command, floor));
+        double goal = Math.Min(limit, RoleOverhaulRules.UpgradeValue(command, baseline) * multiplier);
+        Check(target >= floor && target <= 200 && RoleOverhaulRules.UpgradeValue(command, target) <= limit,
+            "Linear growth preserves Base/minimum and obeys the effective growth cap");
+        Check(RoleOverhaulRules.UpgradeValue(command, target) + 1e-8 >= goal,
+            "Integer upgrades reach the multiplied actual value when cap is level-aligned");
+        Check(target == floor || RoleOverhaulRules.UpgradeValue(command, target - 1) < goal,
+            "Select the first adequate integer level");
+    }
 }
-Check(RoleOverhaulRules.UpgradeTarget(100, 21, 5) == 105, "Late-run Tank growth");
-Check(RoleOverhaulRules.UpgradeTarget(1, 21, 5) == 21, "Early-run Tank minimum");
-Check(RoleOverhaulRules.UpgradeTarget(199, 21, 5) == 200, "Cap");
-Check(!RoleOverhaulRules.GrowsWithBase(StageRole.Rammer), "Rammer locks are outside growth rules");
+Check(RoleOverhaulRules.UpgradeValue("Health", 0) == 100, "Vanilla base HP");
+Check(RoleOverhaulRules.UpgradeValue("Speed", 0) == 5, "Serialized sprint speed, not C# initializer 1");
+Check(RoleOverhaulRules.UpgradeValue("Stamina", 0) == 40, "Serialized stamina, not C# initializer 100");
+Check(RoleOverhaulRules.UpgradeTarget("Health", 100, 21, 1.5, 4100) == 153, "HP multiplication includes initial 100 HP");
+Check(RoleOverhaulRules.UpgradeTarget("Speed", 6, 6, 1.5, 205) == 12, "Sprint-speed multiplication includes initial speed 5");
+Check(RoleOverhaulRules.UpgradeTarget("Stamina", 46, 46, 1.5, 2040) == 71, "Stamina multiplication includes initial capacity 40");
+Check(RoleOverhaulRules.UpgradeTarget("Health", 100, 21, 1.5, 3101) == 150, "Rounding never crosses a non-level-aligned cap");
+Check(RoleOverhaulRules.UpgradeTarget("Health", 10, 21, double.NaN, 4100) == 21, "Invalid multiplier preserves floor");
+Check(!RoleOverhaulRules.GrowsWithBase(StageRole.Rammer), "Rammer locks stay outside growth rules");
 
-Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(20, true) - 2.619047619d) < 1e-8,
-    "Vanilla light-object Strength 20 reference");
-Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(25, true) - 2.326530612d) < 1e-8,
-    "Vanilla light-object Strength 25 is weaker despite the higher level");
-Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(50, false) - 5.958333333d) < 1e-8,
-    "Vanilla heavy-object Strength 50 reference");
-Check(RoleOverhaulRules.EffectiveGrabStrength(55, false) < RoleOverhaulRules.EffectiveGrabStrength(50, false),
-    "Vanilla heavy-object Strength can also decrease");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(20, true) - 2.619047619d) < 1e-8, "Light-force reference");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(50, false) - 5.958333333d) < 1e-8, "Heavy-force peak at 50");
+Check(Math.Ceiling(Enumerable.Range(0, 201).Max(n => Math.Max(
+    RoleOverhaulRules.EffectiveGrabStrength(n, true), RoleOverhaulRules.EffectiveGrabStrength(n, false)))) ==
+    RoleOverhaulRules.MaximumValue("Strength"), "Strength cap uses the entire level range");
+double[] Forces(int level) => new[] {
+    RoleOverhaulRules.EffectiveGrabStrength(level, true), RoleOverhaulRules.EffectiveGrabStrength(level, false),
+    RoleOverhaulRules.EffectiveGrabStrength(level, true, true), RoleOverhaulRules.EffectiveGrabStrength(level, false, true) };
 foreach (int baseline in Enumerable.Range(0, 201))
 foreach (int minimum in new[] { 0, 17, 25, 50, 200 })
-foreach (int bonus in new[] { 0, 1, 5, 20, 200 })
+foreach (double multiplier in new[] { 1d, 1.3d, 1.5d, 2d, 10d })
+foreach (double cap in new[] { 3d, 6d })
 {
-    int target = RoleOverhaulRules.StrengthTarget(baseline, minimum, bonus);
-    int requested = RoleOverhaulRules.UpgradeTarget(baseline, minimum, bonus);
     int floor = Math.Max(baseline, minimum);
-    Check(target >= floor && target <= requested && target <= 200,
-        "Lifter preserves Base and the configured floor without exceeding the requested level");
-    Check(RoleOverhaulRules.EffectiveGrabStrength(target, true) >= RoleOverhaulRules.EffectiveGrabStrength(floor, true) &&
-        RoleOverhaulRules.EffectiveGrabStrength(target, false) >= RoleOverhaulRules.EffectiveGrabStrength(floor, false) &&
-        RoleOverhaulRules.EffectiveGrabStrength(target, true, true) >= RoleOverhaulRules.EffectiveGrabStrength(floor, true, true) &&
-        RoleOverhaulRules.EffectiveGrabStrength(target, false, true) >= RoleOverhaulRules.EffectiveGrabStrength(floor, false, true),
-        "Growth above the floor never weakens ordinary light/heavy translation or rotation");
-    Check(RoleOverhaulRules.StrengthTarget(baseline, minimum, bonus) == target,
-        "Lifter reassignment cannot accumulate Strength bonuses");
+    int target = RoleOverhaulRules.StrengthTarget(baseline, minimum, multiplier, cap);
+    var f = Forces(floor); var t = Forces(target); var b = Forces(baseline);
+    double limit = Math.Max(cap, Math.Max(f[0], f[1]));
+    Check(target >= floor && target <= 200, "Lifter preserves Base and configured minimum");
+    Check(Enumerable.Range(0, 4).All(i => t[i] >= f[i]), "Extra growth preserves all grip and rotation coefficients");
+    Check(t[0] <= limit && t[1] <= limit, "Both weight classes obey effective growth cap");
+    if (multiplier == 1) Check(target == floor, "Multiplier 1 disables extra growth");
 }
-Check(RoleOverhaulRules.StrengthTarget(15, 25, 5) == 25, "Configured minimum takes priority over light-object penalties");
-Check(RoleOverhaulRules.StrengthTarget(20, 25, 5) == 25, "Preserve the configured floor even if its force is below Base");
-Check(RoleOverhaulRules.StrengthTarget(50, 25, 5) == 50, "Do not grant a weakening bonus on heavy objects");
-Check(RoleOverhaulRules.StrengthTarget(90, 25, 5) == 95, "Growth resumes beyond the declining region");
-Check(RoleOverhaulRules.StrengthTarget(-50, 25, -1) == 25, "Invalid negative inputs are clamped");
-Check(RoleOverhaulRules.StrengthTarget(250, 500, 500) == 200, "Oversized inputs remain capped");
-Check(RoleOverhaulRules.EffectiveGrabStrength(200, false) > RoleOverhaulRules.EffectiveGrabStrength(70, false) &&
-    RoleOverhaulRules.EffectiveGrabStrength(200, false, true) < RoleOverhaulRules.EffectiveGrabStrength(70, false, true),
-    "High Strength can improve translation while weakening rotation");
-Check(RoleOverhaulRules.StrengthTarget(70, 200, 5) == 200, "Even a high configured floor takes priority over rotation penalties");
-Check(RoleOverhaulRules.StrengthTarget(70, 25, 130) == 70, "High bonus growth still respects rotation penalties above the floor");
-Check(RoleOverhaulRules.StrengthTarget(15, 25, 0) == 25, "Zero bonus does not disable the configured floor");
-Check(RoleOverhaulRules.StrengthTarget(24, 25, 5) == 25, "Unsafe growth stops at the configured floor, not below it");
-Check(RoleOverhaulRules.StrengthTarget(32, 25, 5) == 37, "Safe growth above the configured floor remains enabled");
+Check(RoleOverhaulRules.StrengthTarget(15, 25, 1) == 25, "Minimum priority even with growth disabled");
+Check(RoleOverhaulRules.StrengthTarget(50, 25, 1.5) == 50, "No safe gain at heavy-force peak");
+Check(RoleOverhaulRules.StrengthTarget(70, 25, 10) == 70, "Rotation blocks a superficially stronger high target");
+Check(RoleOverhaulRules.StrengthTarget(70, 200, 1.5) == 200, "Configured floor still wins over penalties");
+Check(RoleOverhaulRules.StrengthTarget(90, 25, 1.5) == 156, "Lowest target meeting both multiplied grip goals");
+Check(RoleOverhaulRules.StrengthTarget(90, 25, 10) == 200, "Unreachable goal chooses best safe gain");
+Check(RoleOverhaulRules.StrengthTarget(0, 25, 1.5) == 25, "Minimum already meets both goals");
+Check(RoleOverhaulRules.StrengthTarget(250, 500, 2) == 200, "Global upgrade limit");
 
 var state = new RoleOverhaulState();
 state.Start(10, 30); state.Start(20, 30);

@@ -1,8 +1,8 @@
 ## 4.5.0
 
-- Made Lifter's Strength growth account for vanilla weight-dependent grip and rotation penalties. The configured minimum takes priority; only bonus growth above max(Base, minimum) is reduced or skipped. Applies to copied Lifter and Superbot too.
-- Limited ability-status cleanup to the room this host published to, avoiding Photon initialization during startup and changes to another room after reconnecting.
-- Changed Tank, Runner and Lifter to retain a capped upgrade bonus above Base Upgrades while preserving their configured minimum levels.
+- Replaced Tank/Runner/Lifter fixed bonuses with effective-value multipliers (default 1.5), converted to vanilla upgrade levels. Growth caps are rounded-up maxima over levels 0-200: HP 4100, sprint speed 205, stamina 2040, grip 6. Base and configured minimums remain guaranteed.
+- Lifter searches safe levels for both weight classes and preserves rotation; if the target is unreachable, it selects the best balanced grip gain. Copied roles and Superbot inherit the rules. Added multiplier/cap settings and backed-up migration from additive settings.
+- Fixed ability-status cleanup initializing Photon during lobby startup.
 - Added Jobless delivery contracts with an initial grace period, limited paid breaks and healing rewards.
 - Added a limited healing aura for King's nearby teammates.
 - Added remaining ability resources to the local HUD and `/roles`, including healing, revival uses and cooldowns. HUD data is shared with installed participants.

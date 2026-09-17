@@ -9,6 +9,24 @@ Directory.CreateDirectory(directory);
 string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
+Check(config.TankHealthMultiplier.Value == 1.5f && config.RunnerSpeedMultiplier.Value == 1.5f &&
+    config.RunnerStaminaMultiplier.Value == 1.5f && config.LifterStrengthMultiplier.Value == 1.5f,
+    "Effective-value multiplier defaults");
+Check(config.TankMaximumHealth.Value == 4100 && config.RunnerMaximumSpeed.Value == 205 &&
+    config.RunnerMaximumStamina.Value == 2040 && config.LifterMaximumStrength.Value == 6,
+    "Caps are ceilings of vanilla maxima across levels 0-200");
+string oldConfigPath = Path.Combine(directory, "before-multipliers.cfg");
+File.WriteAllText(oldConfigPath, "[Migration]\nConfigVersion = 32\n[Tank]\nBaseHealthBonus = 17\nHealthUpgradeLevels = 30\nHealthMultiplier = 1.8\n[Runner]\nBaseSpeedBonus = 2\nBaseStaminaBonus = 10\n[Lifter]\nBaseStrengthBonus = 5\nStrengthUpgradeLevels = 40\n");
+var migratedFile = new ConfigFile(oldConfigPath, false) { SaveOnConfigSet = false };
+var migrated = new StageRolesConfig(migratedFile);
+migratedFile.Save();
+string migratedText = File.ReadAllText(oldConfigPath);
+Check(migrated.TankHealthLevels.Value == 30 && migrated.LifterStrengthLevels.Value == 40 && migrated.TankHealthMultiplier.Value == 1.8f,
+    "Migration preserves configured minimums and existing multiplier choice");
+Check(new[] { "BaseHealthBonus", "BaseSpeedBonus", "BaseStaminaBonus", "BaseStrengthBonus" }.All(key => !migratedText.Contains(key)),
+    "Migration removes obsolete additive settings");
+Check(File.ReadAllText(oldConfigPath + ".pre-v4.5.0-multipliers.bak").Contains("BaseHealthBonus = 17"),
+    "Migration backs up the previous configuration");
 var service = new RoleSelectionSettings(config, file);
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();
