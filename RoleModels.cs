@@ -179,6 +179,21 @@ internal static class RoleCatalog
         IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config);
         if (config.OverhaulEnabled.Value && RoleOverhaulRules.GrowsWithBase(role))
         {
+            // Random eligibility uses Base before role multipliers/minimums.
+            // Any capped stat excludes Runner, even if its other stat can grow.
+            foreach (UpgradeGrant baseline in baseUpgrades)
+            {
+                double maximum = (role, baseline.CommandName) switch
+                {
+                    (StageRole.Tank, "Health") => config.TankMaximumHealth.Value,
+                    (StageRole.Runner, "Speed") => config.RunnerMaximumSpeed.Value,
+                    (StageRole.Runner, "Stamina") => config.RunnerMaximumStamina.Value,
+                    (StageRole.Lifter, "Strength") => config.LifterMaximumStrength.Value,
+                    _ => -1d
+                };
+                if (maximum >= 0d && RoleOverhaulRules.ReachesMaximum(baseline.CommandName, baseline.Level, maximum))
+                    return true;
+            }
             foreach (UpgradeGrant target in TargetUpgrades(role, config))
                 foreach (UpgradeGrant baseline in baseUpgrades)
                     if (target.DictionaryName == baseline.DictionaryName && target.Level > baseline.Level)

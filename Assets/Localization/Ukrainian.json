@@ -238,5 +238,6 @@
   "Wagers": "Ставки",
   "Revenge": "Помста",
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Мінімальний рівень Strength {0}. Ціль: сила захоплення легких/важких предметів Base x{1}, межа {2} відносно рівня 0. Обирається найнижчий безпечний рівень для обох цілей або найкращий збалансований приріст. Base та мінімум зберігаються; зростання не послаблює обертання.",
-  "Supported allies": "Посилені союзники"
+  "Supported allies": "Посилені союзники",
+  " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " Виключається з випадкового призначення, якщо хоча б одне відповідне ефективне значення Base досягає своєї межі або перевищує її."
 }

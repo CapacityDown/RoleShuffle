@@ -238,5 +238,6 @@
   "Wagers": "Apuestas",
   "Revenge": "Venganza",
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Nivel mínimo de Strength {0}. Objetivo: fuerza de agarre Base ligera/pesada x{1}, límite {2} respecto al nivel 0. Elige el menor nivel seguro para ambos objetivos o la mejor mejora equilibrada. Conserva Base y mínimo; el crecimiento no reduce la rotación.",
-  "Supported allies": "Aliados potenciados"
+  "Supported allies": "Aliados potenciados",
+  " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " Se excluye de la asignación aleatoria si cualquier valor efectivo de Base correspondiente alcanza o supera su límite."
 }

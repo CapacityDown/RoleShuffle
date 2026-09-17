@@ -238,5 +238,6 @@
   "Wagers": "Bahisler",
   "Revenge": "İntikam",
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength asgari seviyesi {0}. Hedef: Base hafif/ağır nesne kavrama gücü x{1}, seviye 0’a göre gelişim sınırı {2}. İki hedefi karşılayan en düşük güvenli seviye veya en iyi dengeli artış seçilir. Base ve asgari değer korunur; ek gelişim dönüş gücünü azaltmaz.",
-  "Supported allies": "Güçlendirilen müttefikler"
+  "Supported allies": "Güçlendirilen müttefikler",
+  " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " İlgili etkin Base değerlerinden herhangi biri sınırına ulaşır veya sınırını aşarsa rastgele atamadan çıkarılır."
 }

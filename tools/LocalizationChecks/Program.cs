@@ -46,6 +46,9 @@ foreach (var language in languages.Where(RoleLanguage.NeedsTranslation))
     {
         string english = RoleGuideCatalog.Description(role, config);
         string translated = RoleGuideCatalog.Description(role, config, language);
+        if (RoleOverhaulRules.GrowsWithBase(role))
+            Check(RoleText.Description(english, language) == translated,
+                "Guest translates the complete growth description and cap exclusion: " + language + "/" + role);
         if (english == "???") Check(translated == "???", "Secret leaked: " + role);
         else
         {

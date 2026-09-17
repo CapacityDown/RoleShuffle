@@ -28,6 +28,14 @@ internal static class RoleOverhaulRules
         _ => throw new ArgumentException("Unsupported upgrade.", nameof(command))
     };
 
+    internal static bool ReachesMaximum(string command, int level, double maximum)
+    {
+        double value = command == "Strength"
+            ? Math.Max(EffectiveGrabStrength(level, true), EffectiveGrabStrength(level, false))
+            : UpgradeValue(command, level);
+        return value + 1e-9 >= Math.Clamp(maximum, 0d, MaximumValue(command));
+    }
+
     private static double Multiplier(double value) =>
         double.IsNaN(value) || double.IsInfinity(value) ? 1d : Math.Clamp(Math.Round(value, 6), 1d, 10d);
 

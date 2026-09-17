@@ -4,7 +4,7 @@
 
 ### Overview
 
-RoleShuffle assigns every player a random role when a stage begins and clears all assigned roles when the stage ends. Each role specializes in a distinct gameplay theme built from vanilla upgrades or effects. Configurable base upgrade targets can scale with the current run level and remain active between stages. Role upgrades last for the stage. Tank, Runner and Lifter use the growth rules below; other roles replace their matching base targets.
+RoleShuffle assigns random roles for each stage using vanilla upgrades and effects. Base upgrades can scale with run level and persist between stages. Tank, Runner and Lifter use the growth rules below; other roles replace matching base targets.
 
 Only the host needs RoleShuffle for gameplay effects. Sessions of up to 30 players are supported. Players without the mod receive their role, upgrades, effects, and vanilla chat/TTS announcement normally. Participants who also install RoleShuffle can use the full role HUD.
 
@@ -121,7 +121,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Overhaul settings
 
-Enabled by default. Tank/Runner multiply actual Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Lifter seeks the lowest level meeting both light/heavy grip goals without weakening grip or rotation above max(Base, minimum); otherwise it maximizes the weaker relative grip gain. Caps are rounded-up maxima over vanilla levels 0–200. All grants remain within level 200; Base and role minimums take priority over lower growth caps. No gain excludes the role. Base includes manual/draw changes. Copied roles and Superbot inherit growth. Jobless contracts survive revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills at aura crossings. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
+Enabled by default. Tank/Runner multiply actual Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Lifter seeks the lowest level meeting both light/heavy grip goals without weakening grip or rotation above max(Base, minimum); otherwise it maximizes the weaker relative grip gain. Caps are rounded-up maxima over vanilla levels 0–200. All grants remain within level 200; Base and role minimums take priority over lower growth caps. Any corresponding Base effective value at/above its cap, or no upgrade gain, excludes Tank/Runner/Lifter from random assignment. Runner checks either stat. Forced assignment is unchanged. Base includes manual/draw changes. Copied roles and Superbot inherit growth. Jobless contracts survive revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills at aura crossings. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
 
 Host settings except the local HUD switch:
 
@@ -487,7 +487,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 ### 概要
 
-RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役職を1つ割り当て、ステージ終了時に役職を解除します。各役職はバニラのアップグレードや効果を使った固有のゲームプレイテーマに特化しています。設定可能な基礎アップグレードは現在のランレベルに応じて変化させることができ、ステージ外でも維持します。役職強化はステージ限定です。Tank・Runner・Lifterは後述の成長ルールを使い、その他の役職は対応する基礎値を役職の設定値に置き換えます。
+RoleShuffleはステージごとに役職を抽選し、バニラのアップグレードや効果を付与します。基礎アップグレードはランレベルに応じて設定でき、ステージ外でも維持されます。Tank・Runner・Lifterは後述の成長ルールを使い、その他の役職は対応する基礎値を置き換えます。
 
 ゲームプレイ効果はホストだけの導入で利用でき、最大30人のセッションをサポートします。MODを導入していない参加者にも、役職、アップグレード、効果、バニラのチャット／TTS通知が適用されます。RoleShuffleを導入している参加者は、すべての役職を確認できるHUDも利用できます。
 
@@ -604,7 +604,7 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 ### オーバーホール設定
 
-初期値は有効。Tank・RunnerはBaseの実際のHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。Lifterは軽量・重量の両方の掴む力の目標を満たす最小の安全なレベルを選び、届かなければ伸びが小さい側の増加率を最大化します。追加強化で掴む力・回転力を下げません。上限はレベル0〜200の実効最大値を切り上げた値。レベル上限200を維持し、Base・役職最低値は低い成長上限より優先します。強化なしなら抽選対象外。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数は蘇生・再参加でも保持。Kingは一時アップグレードを付与。出入りによるHP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持します。`General.OverhaulEnabled = false`で旧仕様。ステージ間で変更してください。
+初期値は有効。Tank・RunnerはBaseの実際のHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。Lifterは軽量・重量の両方の掴む力の目標を満たす最小の安全なレベルを選び、届かなければ伸びが小さい側の増加率を最大化します。追加強化で掴む力・回転力を下げません。上限はレベル0〜200の実効最大値を切り上げた値。レベル上限200を維持し、Base・役職最低値は低い成長上限より優先します。Tank・Runner・Lifterは対象のBase実効値が1つでも上限以上、または強化なしなら抽選対象外。Runnerは片方の上限到達で除外。強制割り当ては従来どおり。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数は蘇生・再参加でも保持。Kingは一時アップグレードを付与。出入りによるHP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持します。`General.OverhaulEnabled = false`で旧仕様。ステージ間で変更してください。
 
 HUD以外はホスト設定です。
 

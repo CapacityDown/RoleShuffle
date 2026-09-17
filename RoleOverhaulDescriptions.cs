@@ -9,13 +9,14 @@ internal static class RoleOverhaulDescriptions
     internal const string LifterGrowth = "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.";
     internal const string Contract = "Carry a different valuable {0} m outside the truck, then bring it into the truck. Up to {1} contracts per stage. Each restores {2} HP and pauses attrition for {3} seconds, also granted at stage start. Otherwise, lose {4} HP every {5} seconds outside the truck.";
     internal const string Aura = "Receives the Crown. Living allies within {0} m gain Speed +{1}, Range +{2}, and up to Strength +{3}, capped at level 200. Strength must not weaken grip or rotation. Only King bonuses are removed outside the aura. Excludes Kings; does not stack.";
+    internal const string DrawLimit = " Excluded from random assignment if any corresponding Base effective value is at or above its cap.";
 
     internal static string? For(StageRole role, StageRolesConfig config, RoleGuideLanguage language)
     {
         if (!config.OverhaulEnabled.Value) return null;
         string Format(string text, params object[] args) =>
             string.Format(CultureInfo.InvariantCulture, RoleText.Get(text, language), args);
-        return role switch
+        string? description = role switch
         {
             StageRole.Tank => Format(Growth, config.TankHealthLevels.Value, config.TankHealthMultiplier.Value, config.TankMaximumHealth.Value),
             StageRole.Runner => Format(RunnerGrowth, config.RunnerSpeedLevels.Value, config.RunnerStaminaLevels.Value,
@@ -26,5 +27,8 @@ internal static class RoleOverhaulDescriptions
             StageRole.King => Format(Aura, config.KingUpgradeRadius.Value, config.KingSpeedBonus.Value, config.KingRangeBonus.Value, config.KingStrengthBonus.Value),
             _ => null
         };
+        return description != null && RoleOverhaulRules.GrowsWithBase(role)
+            ? description + RoleText.Get(DrawLimit, language)
+            : description;
     }
 }

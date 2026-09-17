@@ -238,5 +238,6 @@
   "Wagers": "Zakłady",
   "Revenge": "Zemsta",
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Minimalny poziom Strength {0}. Cel: siła chwytu Base lekkich/ciężkich obiektów x{1}, limit {2} względem poziomu 0. Wybiera najniższy bezpieczny poziom dla obu celów lub najlepszy zrównoważony przyrost. Zachowuje Base i minimum; wzrost nie osłabia obrotu.",
-  "Supported allies": "Wzmocnieni sojusznicy"
+  "Supported allies": "Wzmocnieni sojusznicy",
+  " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " Wykluczony z losowania, gdy którakolwiek odpowiadająca mu efektywna wartość Base osiąga lub przekracza swój limit."
 }

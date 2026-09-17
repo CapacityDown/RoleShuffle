@@ -238,5 +238,6 @@
   "Wagers": "도박",
   "Revenge": "복수",
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength 최소 레벨 {0}. Base의 경량/중량 물체 잡는 힘 {1}배, 레벨 0 대비 성장 상한 {2}. 두 목표를 만족하는 가장 낮은 안전 레벨을 선택하거나 균형 잡힌 최대 증가를 적용합니다. Base와 최소값을 보장하고 추가 성장으로 회전력이 감소하지 않습니다.",
-  "Supported allies": "강화 중인 아군"
+  "Supported allies": "강화 중인 아군",
+  " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " 해당 Base 실효값 중 하나라도 상한 이상이면 무작위 배정에서 제외됩니다."
 }

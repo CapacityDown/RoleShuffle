@@ -1,5 +1,7 @@
 ## 4.5.0
 
+- Tank/Runner/Lifter are excluded from random assignment when any corresponding Base effective value reaches or exceeds its configured cap. Runner is excluded when either speed or stamina reaches its cap. Existing no-gain exclusions and forced assignments are preserved.
+
 - Replaced Tank/Runner/Lifter fixed bonuses with effective-value multipliers (default 1.5), converted to vanilla upgrade levels. Growth caps are rounded-up maxima over levels 0-200: HP 4100, sprint speed 205, stamina 2040, grip 6. Base and configured minimums remain guaranteed.
 - Lifter searches safe levels for both weight classes and preserves rotation; if the target is unreachable, it selects the best balanced grip gain. Copied roles and Superbot inherit the rules. Added multiplier/cap settings and backed-up migration from additive settings.
 - Fixed ability-status cleanup initializing Photon during lobby startup.

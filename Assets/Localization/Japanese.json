@@ -154,5 +154,6 @@
   "Wagers": "賭け",
   "Revenge": "復讐",
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength最低レベル{0}。Baseの軽量物・重量物の掴む力を{1}倍（レベル0比の成長上限{2}）にする最小の安全なレベルへ。届かない場合は両方の伸びを最大化。Base・最低値を保証し、追加強化で回転力を下げません。",
-  "Supported allies": "強化中の味方"
+  "Supported allies": "強化中の味方",
+  " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " 対象となるBase実効値のいずれかが上限以上なら、ランダム抽選から除外されます。"
 }

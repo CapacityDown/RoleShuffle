@@ -9,6 +9,7 @@
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
     <Compile Include="../../RoleGuideCatalog.cs" Link="RoleGuideCatalog.cs" />
     <Compile Include="../../RoleOverhaulDescriptions.cs" Link="RoleOverhaulDescriptions.cs" />
+    <Compile Include="../../RoleOverhaulRules.cs" Link="RoleOverhaulRules.cs" />
     <EmbeddedResource Include="../../Assets/Localization/*.json" LogicalName="REPOJP.StageRoles.Localization.%(Filename)%(Extension)" />
     <PackageReference Include="BepInEx.BaseLib" Version="5.4.20" />
   </ItemGroup>

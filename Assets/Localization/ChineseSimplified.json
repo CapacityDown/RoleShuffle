@@ -238,5 +238,6 @@
   "Wagers": "赌注",
   "Revenge": "复仇",
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength最低等级{0}。目标为Base轻物和重物抓取力的{1}倍，相对等级0的成长上限为{2}。选择满足两个目标的最低安全等级，否则选择最均衡的提升。保留Base及最低值，额外成长不降低旋转力。",
-  "Supported allies": "受强化的队友"
+  "Supported allies": "受强化的队友",
+  " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " 对应的任一Base实际值达到或超过上限时，将从随机分配中排除。"
 }

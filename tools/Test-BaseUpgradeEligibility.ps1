@@ -69,7 +69,7 @@ __TARGETS__
             Targets = new[] { new UpgradeGrant("Speed", 6), new UpgradeGrant("Stamina", 46) }
         };
         runner.OverhaulEnabled.Value = true;
-        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Runner must remain eligible when Stamina still grows");
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Capped Speed excludes Runner even when Stamina still grows");
         var runnerTargets = TargetUpgrades(StageRole.Runner, runner);
         if (runnerTargets[0].Level != 200 || runnerTargets[1].Level != 71) throw new Exception("Production Runner targets");
         runner.Bases[1].Level = 200;
@@ -107,6 +107,55 @@ __TARGETS__
         if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 25 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
             throw new Exception("Legacy Lifter target and eligibility must remain intact");
         count++;
+        var tank = new StageRolesConfig {
+            Bases = new[] { new UpgradeGrant("Health", 199) }, Targets = new[] { new UpgradeGrant("Health", 21) }
+        };
+        tank.OverhaulEnabled.Value = true;
+        if (TargetUpgrades(StageRole.Tank, tank)[0].Level != 200 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tank, tank))
+            throw new Exception("Base below cap remains eligible even when role would reach cap");
+        tank.Bases[0].Level = 200;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tank, tank)) throw new Exception("Tank at 4100 HP excluded");
+        tank.TankMaximumHealth.Value = 1000;
+        tank.Targets[0].Level = 60;
+        foreach (int level in new[] { 44, 45, 46 }) {
+            tank.Bases[0].Level = level;
+            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tank, tank) != (level >= 45))
+                throw new Exception("Custom HP cap uses Base regardless of configured role minimum");
+            if (TargetUpgrades(StageRole.Tank, tank)[0].Level != 60) throw new Exception("Forced assignment still preserves role minimum");
+            count += 2;
+        }
+        runner.OverhaulEnabled.Value = true;
+        runner.Bases[0].Level = 6; runner.Bases[1].Level = 200;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Capped Stamina alone excludes Runner");
+        runner.Bases[1].Level = 46;
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Runner below both caps still grows");
+        runner.RunnerMaximumSpeed.Value = 11;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Custom Speed cap equality");
+        runner.RunnerMaximumSpeed.Value = 12; runner.RunnerMaximumStamina.Value = 500;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Custom Stamina cap equality");
+        runner.RunnerMaximumStamina.Value = 501;
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Below both custom caps with Speed gain stays eligible");
+        count += 7;
+        lifter.OverhaulEnabled.Value = true;
+        lifter.LifterMaximumStrength.Value = 5;
+        lifter.Targets[0].Level = 200; // Ensure gain-only filtering cannot mask the cap comparison.
+        foreach (int level in new[] { 31, 32, 50, 75, 76, 186, 187, 199 }) {
+            lifter.Bases[0].Level = level;
+            double value = Math.Max(RoleOverhaulRules.EffectiveGrabStrength(level, true), RoleOverhaulRules.EffectiveGrabStrength(level, false));
+            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (value >= 5d))
+                throw new Exception("Lifter eligibility follows non-monotonic effective strength, not level threshold: " + level);
+            count++;
+        }
+        foreach (string command in new[] { "Health", "Speed", "Stamina", "Strength" })
+        foreach (int level in System.Linq.Enumerable.Range(0, 201)) {
+            double value = command == "Strength"
+                ? Math.Max(RoleOverhaulRules.EffectiveGrabStrength(level, true), RoleOverhaulRules.EffectiveGrabStrength(level, false))
+                : RoleOverhaulRules.UpgradeValue(command, level);
+            double cap = RoleOverhaulRules.MaximumValue(command);
+            if (RoleOverhaulRules.ReachesMaximum(command, level, cap) != (value >= cap)) throw new Exception("Full cap over all 201 levels");
+            if (command == "Strength" && RoleOverhaulRules.ReachesMaximum(command, level, 6)) throw new Exception("Rounded Strength cap 6 is unattainable through level 200");
+            count++;
+        }
         Console.WriteLine("PASS: " + count + " production eligibility and upgrade-target checks (stubbed base/role inputs).");
     }
 }

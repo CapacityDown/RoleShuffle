@@ -90,3 +90,13 @@ The new DLL/ZIP is a development build, deployed only to the user-authorized `RS
 
 - Verification: Release build 464 passed with zero warnings/errors; OverhaulChecks 106,224; localization 11,275; role/settings migration 250, Base settings 128, save adjustments 248; all 437 compiled game field references valid. CJK font coverage verified.
 - Deployed to RSO_TEST at 2026-09-17 11:38 JST. Previous build 463, configuration and profile metadata saved to `tmp/deployments/RSO_TEST-before-build464-20260917-113817`. All five deployed package files matched their sources; config was unchanged. Schema 34 applies on next startup. Game was not launched. DLL SHA-256: `1E801437AF95D7A3F8B2F9331C7248D43E1D593E1A7B1DCECD30ACD6B5D22F1D`.
+
+### Growth role eligibility at effective caps — UI build 465
+
+- Random selection checks Base effective values before role minimums and multipliers. Tank uses HP; Runner is excluded if either sprint speed or stamina capacity reaches its cap; Lifter compares both mass classes and excludes when either grip value reaches its cap. Equality and values above a custom cap are excluded.
+- The common candidate filter covers stage starts, late joins and every history/uniqueness/risk relaxation pass. Forced test assignments retain the existing targets and minimum priority. Roles whose upgrades do not grow remain excluded even below the effective cap.
+- Default limits remain HP 4100, sprint speed 205, stamina 2040 and grip 6. Grip 6 is rounded up from the level-0–200 maximum 5.958333; it is not reached by vanilla upgrades in that range, so Lifter's no-gain/penalty constraints still matter. Custom grip caps use the actual non-monotonic curve, not an upgrade-level threshold.
+- Role descriptions in all 14 languages state the exclusion. No configuration keys or schema changes.
+
+- Verification: build 465 passed with zero warnings/errors; 11,160 production target/eligibility checks, 106,224 overhaul checks and 11,347 localization checks passed. All 437 compiled game field references validated against the installed game. CJK glyph coverage verified.
+- Deployed to RSO_TEST at 2026-09-17 12:46 JST. Build 464, config and profile metadata backed up to `tmp/deployments/RSO_TEST-before-build465-20260917-124645`; all five package files hash-verified. Config unchanged; original StageRoles DLL/ZIP unchanged. Game not launched; live multiplayer remains unverified. DLL SHA-256: `BFFD6E3F2C2FB51D6EFEB0B5ED9B0E6537659743311DE534820F84E585DBE935`.
