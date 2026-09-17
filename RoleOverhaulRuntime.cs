@@ -14,12 +14,13 @@ internal sealed class RoleOverhaulRuntime
     private float _nextTick;
 
     internal RoleOverhaulRuntime(StageRolesConfig config) => _config = config;
-    internal void Stop() { _cargoPositions.Clear(); _nextTick = 0; }
+    internal void Stop() { KingUpgradeAura.Stop(); _cargoPositions.Clear(); _nextTick = 0; }
 
     internal void Tick(IReadOnlyList<RoleAssignment> assignments, RoleNotifier notifier)
     {
         if (Time.time < _nextTick) return;
         _nextTick = Time.time + 0.25f;
+        KingUpgradeAura.Tick(_config, assignments);
         PhysGrabObject[]? candidates = null;
         foreach (RoleAssignment assignment in assignments)
         {
@@ -40,7 +41,6 @@ internal sealed class RoleOverhaulRuntime
                 }
             }
             else state.ResetCargo();
-            if (assignment.Role == StageRole.King) TickKing(assignment, assignments);
         }
     }
 
@@ -80,36 +80,4 @@ internal sealed class RoleOverhaulRuntime
         catch (Exception error) { StageRolesPlugin.ModLogger.LogDebug($"Contract healing skipped: {error.Message}"); }
     }
 
-    private void TickKing(RoleAssignment king, IReadOnlyList<RoleAssignment> assignments)
-    {
-        RoleOverhaulState state = king.Overhaul;
-        if (Time.time < state.NextKingHealAt) return;
-        state.NextKingHealAt = Time.time + _config.KingHealInterval.Value;
-        float radiusSquared = _config.KingHealRadius.Value * _config.KingHealRadius.Value;
-        int count = assignments.Count;
-        int start = state.NextKingTarget;
-        for (int offset = 0; offset < count; offset++)
-        {
-            int remaining = Math.Max(0, _config.KingHealLimit.Value - state.KingHealingUsed);
-            if (remaining == 0) break;
-            RoleAssignment target = assignments[(start + offset) % count];
-            if (target.SteamId == king.SteamId || !PlayerState.IsLiving(target.Player) ||
-                (target.Player.transform.position - king.Player.transform.position).sqrMagnitude > radiusSquared ||
-                !PlayerState.TryGetCurrentHealth(target.Player, out int health) ||
-                !PlayerState.TryGetMaximumHealth(target.Player, out int maximum)) continue;
-            int amount = Math.Min(remaining, Math.Min(_config.KingHealAmount.Value, Math.Max(0, maximum - health)));
-            if (amount <= 0) continue;
-            // Reserve before invoking vanilla healing, including synchronous callbacks.
-            state.KingHealingUsed += amount;
-            try
-            {
-                if (!RoleHealingRuntime.TryHeal(target.Player, amount,
-                    restored => state.KingHealingUsed = Math.Max(0, state.KingHealingUsed - amount + restored)))
-                    state.KingHealingUsed -= amount;
-            }
-            catch (Exception error)
-            { StageRolesPlugin.ModLogger.LogDebug($"King healing skipped: {error.Message}"); }
-        }
-        state.NextKingTarget = count > 0 ? (start + 1) % count : 0;
-    }
 }

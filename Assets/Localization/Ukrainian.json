@@ -217,7 +217,7 @@
   "Health minimum level {0}. Target Base maximum HP x{1}, growth cap {2} HP. Round up to an upgrade level; preserve Base and the minimum.": "Мінімальний рівень Health {0}. Ціль: максимальне здоров’я Base x{1}, межа зростання {2} HP. Рівень округлюється вгору; Base та мінімум зберігаються.",
   "Minimum levels: Speed {0}, Stamina {1}. Target Base sprint speed x{2} (cap {3}) and stamina capacity x{4} (cap {5}). Round up to upgrade levels; preserve Base and minimums.": "Мінімальні рівні: Speed {0}, Stamina {1}. Ціль: швидкість спринту Base x{2} (межа {3}) та запас витривалості x{4} (межа {5}). Рівні округлюються вгору; Base та мінімуми зберігаються.",
   "Carry a different valuable {0} m outside the truck, then bring it into the truck. Up to {1} contracts per stage. Each restores {2} HP and pauses attrition for {3} seconds, also granted at stage start. Otherwise, lose {4} HP every {5} seconds outside the truck.": "Пронесіть інший цінний предмет {0} м поза вантажівкою й занесіть усередину. До {1} контрактів за етап. Кожен відновлює {2} HP і зупиняє постійну шкоду на {3} секунд; така сама відстрочка надається на початку. Інакше поза вантажівкою втрачається {4} HP кожні {5} секунд.",
-  "Receives the Crown and heals living teammates within {0} m for {1} HP every {2} seconds, up to {3} HP per stage. Excludes the King. Only one King can be assigned.": "Отримує Crown і лікує живих союзників у радіусі {0} м на {1} HP кожні {2} секунд, загалом до {3} HP за етап. Сам King не лікується. Призначається не більше одного King.",
+  "Receives the Crown. Living allies within {0} m gain Speed +{1}, Range +{2}, and up to Strength +{3}, capped at level 200. Strength must not weaken grip or rotation. Only King bonuses are removed outside the aura. Excludes Kings; does not stack.": "Отримує корону. Живі союзники в радіусі {0} м отримують Speed +{1}, Range +{2} і до Strength +{3}, щонайбільше до рівня 200. Strength не має послаблювати захоплення чи обертання. Поза аурою знімаються лише бонуси King. Не діє на Kings; не накопичується.",
   "Healing": "Лікування",
   "Revives": "Відродження",
   "Self revive": "Самовідродження",
@@ -237,5 +237,6 @@
   "Dive": "Занурення",
   "Wagers": "Ставки",
   "Revenge": "Помста",
-  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Мінімальний рівень Strength {0}. Ціль: сила захоплення легких/важких предметів Base x{1}, межа {2} відносно рівня 0. Обирається найнижчий безпечний рівень для обох цілей або найкращий збалансований приріст. Base та мінімум зберігаються; зростання не послаблює обертання."
+  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Мінімальний рівень Strength {0}. Ціль: сила захоплення легких/важких предметів Base x{1}, межа {2} відносно рівня 0. Обирається найнижчий безпечний рівень для обох цілей або найкращий збалансований приріст. Base та мінімум зберігаються; зростання не послаблює обертання.",
+  "Supported allies": "Посилені союзники"
 }

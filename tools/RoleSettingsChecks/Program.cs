@@ -27,6 +27,15 @@ Check(new[] { "BaseHealthBonus", "BaseSpeedBonus", "BaseStaminaBonus", "BaseStre
     "Migration removes obsolete additive settings");
 Check(File.ReadAllText(oldConfigPath + ".pre-v4.5.0-multipliers.bak").Contains("BaseHealthBonus = 17"),
     "Migration backs up the previous configuration");
+Check(config.KingSpeedBonus.Value == 1 && config.KingRangeBonus.Value == 1 && config.KingStrengthBonus.Value == 1 && config.KingUpgradeRadius.Value == 8, "King support defaults");
+string oldKingPath = Path.Combine(directory, "before-king.cfg");
+File.WriteAllText(oldKingPath, "[Migration]\nConfigVersion = 33\n[King]\nHealRadius = 12\nHealAmount = 9\nHealIntervalSeconds = 2\nTotalHealingLimit = 90\nStrengthBonusLevels = 3\n");
+var kingFile = new ConfigFile(oldKingPath, false) { SaveOnConfigSet = false };
+var kingConfig = new StageRolesConfig(kingFile); kingFile.Save();
+Check(kingConfig.KingUpgradeRadius.Value == 12 && kingConfig.KingStrengthBonus.Value == 3, "King migration preserves radius and explicit upgrade configuration");
+string kingText = File.ReadAllText(oldKingPath).Split("[King]")[1].Split("\n[")[0];
+Check(!kingText.Contains("HealAmount") && !kingText.Contains("HealRadius") && !kingText.Contains("TotalHealingLimit") && !kingText.Contains("HealIntervalSeconds"), "King migration removes healing settings");
+Check(File.ReadAllText(oldKingPath + ".pre-v4.5.0-king-upgrades.bak").Contains("HealAmount = 9"), "King migration retains exact old config backup");
 var service = new RoleSelectionSettings(config, file);
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();

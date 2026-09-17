@@ -217,7 +217,7 @@
   "Health minimum level {0}. Target Base maximum HP x{1}, growth cap {2} HP. Round up to an upgrade level; preserve Base and the minimum.": "Health最低等級{0}。目標為Base最大生命值的{1}倍，成長上限{2}HP。向上取整為升級等級，保留Base及最低值。",
   "Minimum levels: Speed {0}, Stamina {1}. Target Base sprint speed x{2} (cap {3}) and stamina capacity x{4} (cap {5}). Round up to upgrade levels; preserve Base and minimums.": "最低等級：Speed {0}、Stamina {1}。目標為Base奔跑速度的{2}倍（上限{3}）及耐力容量的{4}倍（上限{5}）。向上取整為等級，保留Base及最低值。",
   "Carry a different valuable {0} m outside the truck, then bring it into the truck. Up to {1} contracts per stage. Each restores {2} HP and pauses attrition for {3} seconds, also granted at stage start. Otherwise, lose {4} HP every {5} seconds outside the truck.": "將另一件貴重物品在卡車外搬運{0}公尺，再手持帶回卡車即可完成合約。每關最多{1}份。每次恢復{2}HP，並免除持續傷害{3}秒；關卡開始時也有相同寬限。其他時間在卡車外每{5}秒損失{4}HP。",
-  "Receives the Crown and heals living teammates within {0} m for {1} HP every {2} seconds, up to {3} HP per stage. Excludes the King. Only one King can be assigned.": "獲得Crown，每{2}秒為{0}公尺內存活的隊友恢復{1}HP，每關合計最多{3}HP。不會治療King本人。每關最多一名King。",
+  "Receives the Crown. Living allies within {0} m gain Speed +{1}, Range +{2}, and up to Strength +{3}, capped at level 200. Strength must not weaken grip or rotation. Only King bonuses are removed outside the aura. Excludes Kings; does not stack.": "獲得王冠。為{0}公尺內存活的隊友提供Speed +{1}、Range +{2}、Strength最多+{3}，等級上限200。Strength不得降低抓取力或旋轉力。離開範圍時僅移除King的加成。King不受益，效果不疊加。",
   "Healing": "治療",
   "Revives": "復活",
   "Self revive": "自我復活",
@@ -237,5 +237,6 @@
   "Dive": "潛行",
   "Wagers": "賭注",
   "Revenge": "復仇",
-  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength最低等級{0}。目標為Base輕物和重物抓取力的{1}倍，相對等級0的成長上限為{2}。選擇滿足兩個目標的最低安全等級，否則選擇最均衡的提升。保留Base及最低值，額外成長不降低旋轉力。"
+  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength最低等級{0}。目標為Base輕物和重物抓取力的{1}倍，相對等級0的成長上限為{2}。選擇滿足兩個目標的最低安全等級，否則選擇最均衡的提升。保留Base及最低值，額外成長不降低旋轉力。",
+  "Supported allies": "受強化的隊友"
 }

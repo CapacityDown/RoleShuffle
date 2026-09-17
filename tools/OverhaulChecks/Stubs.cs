@@ -26,7 +26,19 @@ namespace HarmonyLib
 namespace ExitGames.Client.Photon { public class Hashtable : Dictionary<object, object?> { } }
 namespace Photon.Pun
 {
-    public class PhotonView { public bool IsMine = true; }
+    public enum RpcTarget { All, Others }
+    public class PhotonView
+    {
+        public bool IsMine = true;
+        public static bool FailSend;
+        public static int Sends;
+        public void RPC(string method, RpcTarget target, params object[] args)
+        {
+            Sends++;
+            if (FailSend) throw new InvalidOperationException("Simulated peer send failure");
+            if (target == RpcTarget.All) PunManager.instance.TesterUpgradeCommandRPC((string)args[0], (string)args[1], (int)args[2]);
+        }
+    }
     public class Room
     {
         public ExitGames.Client.Photon.Hashtable CustomProperties = new();
@@ -105,10 +117,10 @@ namespace REPOJP.StageRoles
         internal Entry<int> JoblessContractLimit = new(3);
         internal Entry<float> JoblessContractDistance = new(5);
         internal Entry<int> JoblessContractHeal = new(10);
-        internal Entry<float> KingHealInterval = new(5);
-        internal Entry<float> KingHealRadius = new(8);
-        internal Entry<int> KingHealLimit = new(60);
-        internal Entry<int> KingHealAmount = new(2);
+        internal Entry<float> KingUpgradeRadius = new(8);
+        internal Entry<int> KingSpeedBonus = new(1);
+        internal Entry<int> KingRangeBonus = new(1);
+        internal Entry<int> KingStrengthBonus = new(1);
     }
     internal sealed class RoleAssignment
     {
@@ -133,6 +145,39 @@ namespace REPOJP.StageRoles
     }
     internal static class UtilityRoleRuntime
     { internal static bool IsHeldBy(PhysGrabObject item, RoleAssignment assignment) => item.HeldBy == assignment.SteamId; }
-    internal sealed class TestLog { internal void LogDebug(string message) { } }
+    internal sealed class TestLog { internal void LogDebug(string message) { } internal void LogWarning(string message) { } }
     internal static class StageRolesPlugin { internal static TestLog ModLogger = new(); }
 }
+
+public sealed class StatsManager
+{
+    public static StatsManager instance = new();
+    public Dictionary<string, Dictionary<string, int>> Players = new();
+    public Dictionary<string, int> FetchPlayerUpgrades(string id) => Players.TryGetValue(id, out var levels) ? new(levels) : new();
+    public int Add(string id, string command, int delta)
+    {
+        if (!Players.TryGetValue(id, out var levels)) Players[id] = levels = new();
+        string key = "playerUpgrade" + command;
+        return levels[key] = Math.Max(0, levels.GetValueOrDefault(key, 0) + delta);
+    }
+}
+public sealed class PunManager
+{
+    public static PunManager instance = new();
+    public T GetComponent<T>() where T : new() => new();
+    public void TesterUpgradeCommandRPC(string id, string command, int delta) => StatsManager.instance.Add(id, command, delta);
+    public int UpgradePlayerCrouchRest(string id, int delta) => StatsManager.instance.Add(id, "CrouchRest", delta);
+    public int UpgradePlayerExtraJump(string id, int delta) => StatsManager.instance.Add(id, "ExtraJump", delta);
+    public int UpgradePlayerHealth(string id, int delta) => StatsManager.instance.Add(id, "Health", delta);
+    public int UpgradePlayerTumbleLaunch(string id, int delta) => StatsManager.instance.Add(id, "Launch", delta);
+    public int UpgradeMapPlayerCount(string id, int delta) => StatsManager.instance.Add(id, "MapPlayerCount", delta);
+    public int UpgradePlayerGrabRange(string id, int delta) => StatsManager.instance.Add(id, "Range", delta);
+    public int UpgradePlayerSprintSpeed(string id, int delta) => StatsManager.instance.Add(id, "Speed", delta);
+    public int UpgradePlayerEnergy(string id, int delta) => StatsManager.instance.Add(id, "Stamina", delta);
+    public int UpgradePlayerGrabStrength(string id, int delta) => StatsManager.instance.Add(id, "Strength", delta);
+    public int UpgradePlayerThrowStrength(string id, int delta) => StatsManager.instance.Add(id, "Throw", delta);
+    public int UpgradePlayerTumbleWings(string id, int delta) => StatsManager.instance.Add(id, "TumbleWings", delta);
+    public int UpgradePlayerTumbleClimb(string id, int delta) => StatsManager.instance.Add(id, "TumbleClimb", delta);
+    public int UpgradeDeathHeadBattery(string id, int delta) => StatsManager.instance.Add(id, "DeathHeadBattery", delta);
+}
+namespace REPOJP.StageRoles { internal readonly record struct UpgradeGrant(string CommandName, string DictionaryName, int Level); }

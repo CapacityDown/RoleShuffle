@@ -5,7 +5,7 @@ using System.Text;
 
 namespace REPOJP.StageRoles;
 
-internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance }
+internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport }
 
 internal readonly struct AbilityValue(AbilityMetric metric, int remaining, int limit)
 {
@@ -34,7 +34,7 @@ internal static class RoleAbilityCodec
             List<string> values = new();
             foreach (AbilityValue value in snapshot.Values)
             {
-                if (values.Count >= 19) break;
+                if (values.Count >= 20) break;
                 values.Add(FormattableString.Invariant($"{(int)value.Metric},{value.Remaining},{value.Limit}"));
             }
             string id = Convert.ToBase64String(Encoding.UTF8.GetBytes(snapshot.SteamId));
@@ -60,7 +60,7 @@ internal static class RoleAbilityCodec
             catch (FormatException) { continue; }
             if (string.IsNullOrWhiteSpace(id) || result.ContainsKey(id)) continue;
             string[] encodedValues = fields[3].Length == 0 ? Array.Empty<string>() : fields[3].Split(';');
-            if (encodedValues.Length > 19) continue;
+            if (encodedValues.Length > 20) continue;
             List<AbilityValue> values = new();
             HashSet<AbilityMetric> seen = new();
             bool valid = true;
@@ -85,7 +85,7 @@ internal static class RoleAbilityCodec
 
 internal static class RoleAbilityText
 {
-    internal static string Format(IReadOnlyList<AbilityValue> values, RoleGuideLanguage language, int start = 0, int count = 19)
+    internal static string Format(IReadOnlyList<AbilityValue> values, RoleGuideLanguage language, int start = 0, int count = 20)
     {
         List<string> parts = new();
         for (int i = start; i < Math.Min(values.Count, start + count); i++)
@@ -101,6 +101,7 @@ internal static class RoleAbilityText
                 AbilityMetric.Repair => ("Repair", "修理"),
                 AbilityMetric.Charge => ("Charge", "充電"),
                 AbilityMetric.King => ("Aura", "王の回復"),
+                AbilityMetric.RoyalSupport => ("Supported allies", "強化中の味方"),
                 AbilityMetric.Contracts => ("Jobs left", "残り契約"),
                 AbilityMetric.Grace => ("Grace", "免除"),
                 AbilityMetric.Carry => ("Carry", "運搬"),
@@ -118,6 +119,7 @@ internal static class RoleAbilityText
                 AbilityMetric.DecoyActive or AbilityMetric.DecoyCooldown or AbilityMetric.DiveActive or
                 AbilityMetric.DiveCooldown or AbilityMetric.Avenger;
             string amount = seconds ? $"{value.Remaining}s" : $"{value.Remaining}/{value.Limit}";
+            if (value.Metric == AbilityMetric.RoyalSupport) amount = value.Remaining.ToString(CultureInfo.InvariantCulture);
             if (value.Metric is AbilityMetric.Carry or AbilityMetric.CloudDistance or AbilityMetric.GrenadeDistance) amount += "m";
             if (value.Metric is AbilityMetric.Repair or AbilityMetric.Charge) amount += "%";
             parts.Add($"{label} {amount}");

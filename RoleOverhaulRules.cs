@@ -101,7 +101,7 @@ internal static class RoleOverhaulRules
 }
 
 // Owned by the stage assignment, so death, avatar replacement and rejoining
-// cannot replenish completed contracts or the King's healing allowance.
+// cannot replenish completed contracts.
 internal sealed class RoleOverhaulState
 {
     private readonly HashSet<int> _delivered = new();
@@ -110,9 +110,7 @@ internal sealed class RoleOverhaulState
     internal int ContractsCompleted => _delivered.Count;
     internal int CargoId { get; private set; }
     internal float CarryDistance { get; private set; }
-    internal int KingHealingUsed { get; set; }
-    internal float NextKingHealAt { get; set; }
-    internal int NextKingTarget { get; set; }
+    internal int KingSupportedAllies { get; set; }
 
     internal void Start(float now, float grace)
     {

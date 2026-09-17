@@ -134,39 +134,85 @@ runtime.Stop(); RoleHealingRuntime.Clear();
 var king = new RoleAssignment { Role = StageRole.King, Player = new PlayerAvatar { Id = "king" } };
 var ally1 = new RoleAssignment { Role = StageRole.Tank, Player = new PlayerAvatar { Id = "a" } };
 var ally2 = new RoleAssignment { Role = StageRole.Tank, Player = new PlayerAvatar { Id = "b" } };
-config.KingHealLimit.Value = 5;
 var party = new[] { king, ally1, ally2 };
+int Level(string id, string command) => StatsManager.instance.FetchPlayerUpgrades(id).GetValueOrDefault("playerUpgrade" + command, 0);
+void Set(string id, string command, int level) => UpgradeService.SetLevels(id, new[] { new UpgradeGrant(command, "playerUpgrade" + command, level) });
+void Aura() => KingUpgradeAura.Tick(config, party);
 UnityEngine.Object.Scans = 0;
 Clock(10); runtime.Tick(party, notifier);
-Check(king.Player.playerHealth.Health == 50 && ally1.Player.playerHealth.Health == 52 && ally2.Player.playerHealth.Health == 52,
-    "King heals living allies but not itself");
-Clock(15); runtime.Tick(party, notifier); Clock(20); runtime.Tick(party, notifier);
-Check(king.Overhaul.KingHealingUsed == 5 && ally1.Player.playerHealth.Health + ally2.Player.playerHealth.Health == 105,
-    "King's last tick cannot exceed the shared stage allowance");
-Check(UnityEngine.Object.Scans == 0, "No valuable scan without an eligible Jobless");
-config.OverhaulEnabled.Value = false;
+Check(king.Player.playerHealth.Health == 50 && ally1.Player.playerHealth.Health == 50 && Level("king", "Speed") == 0,
+    "King neither heals nor buffs itself");
+Check(Level("a", "Speed") == 1 && Level("a", "Range") == 1 && Level("a", "Strength") == 1 && king.Overhaul.KingSupportedAllies == 2,
+    "Nearby allies receive native upgrades and King sees supported ally count");
+for (int i = 0; i < 10; i++) Aura();
+Check(Level("a", "Speed") == 1 && UnityEngine.Object.Scans == 0, "Aura never accumulates or scans valuables");
+UpgradeService.AddLevels("a", "Speed", 4); // Purchased/event upgrade while buffed.
+ally1.Player.transform.position = new Vector3(9,0,0); Aura();
+Check(Level("a", "Speed") == 4 && Level("a", "Range") == 0 && king.Overhaul.KingSupportedAllies == 1,
+    "Leaving range removes only King's addition and preserves external upgrades");
+ally1.Player.transform.position = new Vector3(8,0,0); Aura();
+Check(Level("a", "Speed") == 5, "Exact radius is included");
+Set("a", "Speed", 10); Aura();
+Check(Level("a", "Speed") == 11, "Role reset replaces old aura ownership before reapplying it");
+Set("a", "Speed", 11); Aura();
+Check(Level("a", "Speed") == 12, "An absolute no-op still replaces the previous aura contribution");
+UpgradeService.EnsureAtLeastLevels("a", new[] { new UpgradeGrant("Speed", "playerUpgradeSpeed", 12) }); Aura();
+Check(Level("a", "Speed") == 13, "Returning-role minimum is evaluated without aura");
+Check(KingUpgradeAura.WithoutBonus("a", "playerUpgradeSpeed", 13) == 12, "Dynamic roles snapshot baseline without temporary aura");
+Set("a", "Speed", 200); Set("a", "Range", 199); Set("a", "Strength", 50); Aura();
+Check(Level("a", "Speed") == 200 && Level("a", "Range") == 200 && Level("a", "Strength") == 50,
+    "Level cap and non-monotonic Strength peak are respected");
+foreach (int baseline in Enumerable.Range(0, 201))
+foreach (int request in new[] { 0, 1, 5, 200 })
+{
+    int bonus = KingUpgradeAura.DesiredBonus("Strength", baseline, request);
+    Check(bonus >= 0 && bonus <= request && baseline + bonus <= 200, "Bounded King Strength bonus");
+    Check(Forces(baseline + bonus).Zip(Forces(baseline)).All(pair => pair.First >= pair.Second), "Aura never weakens any grip/rotation coefficient");
+}
+ally2.Player.Living = false; Aura();
+Check(Level("b", "Speed") == 0 && Level("b", "Range") == 0, "Death removes recipient aura");
+ally2.Player = new PlayerAvatar { Id = "b" }; Aura();
+Check(Level("b", "Speed") == 1, "Replacement avatar receives one aura");
+king.Player.Living = false; Aura();
+Check(Level("b", "Speed") == 0 && Level("a", "Range") == 199, "King death removes all support");
+king.Player.Living = true; Aura();
+king.Role = StageRole.Medic; Aura();
+Check(Level("b", "Speed") == 0, "King role change removes support");
+king.Role = StageRole.King; Aura();
+KingUpgradeAura.Tick(config, new[] { king, ally1 });
+Check(Level("b", "Speed") == 0, "Disconnected ally's addition is removed from host stats");
+Aura(); Check(Level("b", "Speed") == 1, "Rejoin receives one copy");
+var otherKing = new RoleAssignment { Role = StageRole.King, Player = new PlayerAvatar { Id = "king2" } };
+KingUpgradeAura.Tick(config, new[] { king, otherKing, ally2 });
+Check(Level("b", "Speed") == 1 && Level("king2", "Speed") == 0, "Overlapping Kings never stack or buff Kings");
+config.OverhaulEnabled.Value = false; Aura();
+Check(Level("b", "Speed") == 0, "Legacy toggle removes existing additions");
 Clock(25); runtime.Tick(new[] { worker }, notifier);
 Check(UnityEngine.Object.Scans == 0, "Legacy mode does not scan contracts");
-
-runtime.Stop(); RoleHealingRuntime.Clear();
 config.OverhaulEnabled.Value = true;
-config.KingHealInterval.Value = 0.5f;
-king.Overhaul = new RoleOverhaulState();
-SemiFunc.Multiplayer = true;
+SemiFunc.Multiplayer = true; PhotonNetwork.IsMasterClient = false; Aura();
+Check(Level("b", "Speed") == 0, "Guest cannot grant upgrades");
+PhotonNetwork.IsMasterClient = true; int sendsBefore = PhotonView.Sends; Aura();
+Check(Level("b", "Speed") == 1 && PhotonView.Sends > sendsBefore, "Host applies locally and sends vanilla RPCs to guests");
+runtime.Stop();
+Check(Level("b", "Speed") == 0 && Level("a", "Range") == 199, "Stage cleanup removes only aura");
+PhotonView.FailSend = true; Aura(); Aura();
+Check(Level("b", "Speed") == 1, "Send failure after local application cannot stack grants on retry");
+PhotonView.FailSend = false; runtime.Stop();
+PhotonAccess.FailOnRead = true; KingUpgradeAura.Stop(); PhotonAccess.FailOnRead = false;
+SemiFunc.Multiplayer = false;
+
+// Preserve coverage of shared remote healing locks, independent of King's removed healing.
+RoleHealingRuntime.Clear(); SemiFunc.Multiplayer = true;
 ally1.Player.photonView.IsMine = false;
-ally1.Player.playerHealth.OnHeal = _ => { }; // A delayed remote acknowledgement.
-ally2.Player.Living = false;
+ally1.Player.playerHealth.OnHeal = _ => { };
 int beforeRequests = ally1.Player.playerHealth.Requests;
-Clock(26); runtime.Tick(party, notifier);
-Clock(27); runtime.Tick(party, notifier);
-Check(king.Overhaul.KingHealingUsed == 2 && ally1.Player.playerHealth.Requests == beforeRequests + 1,
-    "Unacknowledged remote heal reserves budget and locks the recipient");
-Clock(32); runtime.Tick(party, notifier);
-Clock(38); runtime.Tick(party, notifier);
-Clock(44); runtime.Tick(party, notifier);
-Check(king.Overhaul.KingHealingUsed == 5 && ally1.Player.playerHealth.Requests == beforeRequests + 3,
-    "Expired recipient locks never refund unacknowledged remote healing or exceed King's cap");
+Clock(26); Check(RoleHealingRuntime.TryHeal(ally1.Player, 2, _ => { }), "Remote heal accepted");
+Clock(27); Check(!RoleHealingRuntime.TryHeal(ally1.Player, 2, _ => { }), "Unacknowledged heal locks recipient");
+Check(ally1.Player.playerHealth.Requests == beforeRequests + 1, "Pending remote heal is not duplicated");
+Clock(32); Check(RoleHealingRuntime.TryHeal(ally1.Player, 2, _ => { }), "Remote lock expires");
 SemiFunc.Multiplayer = false; RoleHealingRuntime.Clear();
+Check(RoleAbilityText.Format(new[] { new AbilityValue(AbilityMetric.RoyalSupport, 2, 0) }, RoleGuideLanguage.Japanese).Contains("強化中の味方 2"), "King HUD counts supported allies");
 
 var metrics = new[] { new AbilityValue(AbilityMetric.Medic, 90, 150), new AbilityValue(AbilityMetric.MageCooldown, 2, 0) };
 var snapshot = new AbilitySnapshot("p|日本語", StageRole.Imitator, StageRole.Medic, metrics);
@@ -234,4 +280,4 @@ PhotonNetwork.IsMasterClient = false;
 RoleAbilitySync.Clear();
 Check(nextRoom.Publications == 1 && nextRoom.CustomProperties.Count == 1,
     "Former host cannot clear state after authority has changed");
-Console.WriteLine($"PASS: {checks} overhaul growth, contract runtime, healing budget, codec and synchronization checks.");
+Console.WriteLine($"PASS: {checks} overhaul growth, contract runtime, King aura, healing locks, codec and synchronization checks.");

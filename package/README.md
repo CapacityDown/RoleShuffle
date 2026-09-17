@@ -91,7 +91,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Jobless | Carry a different positive-value valuable 5 m outside the truck, then bring it inside. Up to 3 contracts; each restores 10 HP and grants a 30-second break. Starts with the same grace. | Otherwise loses 1 HP every 0.1 seconds outside the truck. Can die. Drops/death reset carry progress; returns retain completed work. Not selected solo. | Attrition and contract settings |
 | Rescuer | While alive, approaching within 3 m of a dead teammate's Death Head revives the nearest eligible teammate with 25 HP. | Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present. | Revival HP, delay, radius, maximum revivals |
 | Vampire | Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50. | Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy. | Amount per tier, radius |
-| King | Receives the Crown; heals living teammates within 8 m for 2 HP every 5 seconds, up to 60 HP per stage. | Excludes itself. One King per stage. Rejoining/revival does not replenish the allowance. | Aura amount, interval, radius and budget |
+| King | Crown; grants nearby allies Speed/Range +1 and up to Strength +1 within 8 m. | No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage. | Radius and bonus levels |
 | Tuna | After a 5-second grace period at stage start, standing still for 3 seconds causes 1 damage every 0.1 seconds until moving. | Can kill the player. The stationary timer starts after the initial grace period. Moving resets it immediately; lost health is not restored. | Delay, damage, interval |
 | Musician | Each instrument note played by the Musician heals the Musician and living players within 10 m for 5 HP. | Requires a vanilla musical valuable. By default, not randomly selected if none is present. | Amount, radius |
 | Mage | Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long. | Selecting a matching expression activates its spell; clearing it does not. Spells share a 3-second cooldown, cannot be cast if the cost would be fatal, and can harm players or valuables. The duration bonus does not apply to chat or expression casts, or the Star Wand's instantaneous attack. | Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit |
@@ -121,7 +121,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Overhaul settings
 
-Enabled by default. Tank/Runner multiply actual Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Lifter seeks the lowest level meeting both light/heavy grip goals without weakening grip or rotation above max(Base, minimum); otherwise it maximizes the weaker relative grip gain. Caps are rounded-up maxima over vanilla levels 0–200. All grants remain within level 200; Base and role minimums take priority over lower growth caps. No gain excludes the role. Base includes manual/draw changes. Copied roles and Superbot inherit growth. Jobless contracts and King healing budgets survive revival/rejoining. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
+Enabled by default. Tank/Runner multiply actual Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Lifter seeks the lowest level meeting both light/heavy grip goals without weakening grip or rotation above max(Base, minimum); otherwise it maximizes the weaker relative grip gain. Caps are rounded-up maxima over vanilla levels 0–200. All grants remain within level 200; Base and role minimums take priority over lower growth caps. No gain excludes the role. Base includes manual/draw changes. Copied roles and Superbot inherit growth. Jobless contracts survive revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills at aura crossings. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
 
 Host settings except the local HUD switch:
 
@@ -136,10 +136,10 @@ Host settings except the local HUD switch:
 | `Jobless.ContractGraceSeconds` | `30` | 1–300 s | Initial and post-delivery attrition break. |
 | `Jobless.ContractsPerStage` | `3` | 1–30 | Completed contract limit per player. |
 | `Jobless.ContractHeal` | `10` | 0–100 HP | One healing attempt per delivery, capped by missing HP; may be skipped if another heal is pending. |
-| `King.HealAmount` | `2` | 0–100 HP | Per teammate per tick. |
-| `King.HealIntervalSeconds` | `5` | 0.5–60 s | Aura interval. |
-| `King.HealRadius` | `8` | 1–30 m | Aura radius. |
-| `King.TotalHealingLimit` | `60` | 0–10000 HP | Shared stage healing budget. |
+| `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed / Range bonus levels. |
+| `King.StrengthBonusLevels` | `1` | 0–200 | Maximum safe Strength bonus levels. |
+| `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
+
 | `HUD.AbilityStatusEnabled` | `true` | Boolean | Your ability resources below the HUD heading. |
 
 The ability line shows two resources at a time, rotating every 5 seconds when needed. `/roles` also reports resources. Display requires a 4.5 host; stale data is hidden. Cloud/grenade travel is distance progress, not a promise of immediate spawning.
@@ -424,7 +424,7 @@ All entries in this table are host-controlled.
 | `Brawler.MeleeDamageMultiplier` | `1.25` | `0`–`10` | Damage multiplier for identifiable melee weapon attacks against enemies and players. |
 | `Brawler.RangedDamageMultiplier` | `0.75` | `0`–`10` | Damage multiplier for identifiable gun, staff-projectile, and laser attacks against enemies and players. |
 
-The default base is Health 1 from run level 1 and 0 for every other managed upgrade. A static role-specific upgrade is an absolute target, not a bonus added to the base. When that role ends, RoleShuffle restores the configured base target; upgrades not overridden by the role stay at their base targets. Influencer and Berserker instead treat each dynamic target as a minimum and never lower the level captured when the role was assigned. Static-role levels change only with assignment or session state, while Influencer and Berserker re-evaluate their configured conditions at the Influencer check interval. `Tracker` always targets Map Player Count 1, while its Health target is configurable. `Rammer` always overrides Launch, Tumble Climb, and Tumble Wings to 0 during the stage. Throw is not managed. `King` has no effect-strength setting.
+The default base is Health 1 from run level 1 and 0 for every other managed upgrade. A static role-specific upgrade is an absolute target, not a bonus added to the base. When that role ends, RoleShuffle restores the configured base target; upgrades not overridden by the role stay at their base targets. Influencer and Berserker instead treat each dynamic target as a minimum and never lower the level captured when the role was assigned. Static-role levels change only with assignment or session state, while Influencer and Berserker re-evaluate their configured conditions at the Influencer check interval. `Tracker` always targets Map Player Count 1, while its Health target is configurable. `Rammer` always overrides Launch, Tumble Climb, and Tumble Wings to 0 during the stage. Throw is not managed.
 
 Influencer and Berserker scaling accepts comma- or semicolon-separated `condition:level` pairs. Influencer applies the last target whose player-count condition has been reached. Berserker applies the target belonging to the lowest configured HP threshold currently reached. Default expressions omit pairs whose target level would be `0`; add a `condition:0` pair manually when an explicit zero override is needed. Levels are limited to `0`–`100`, except Map Player Count which is limited to `0`–`1`. Entries in the wrong format are ignored.
 
@@ -574,7 +574,7 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 | Jobless | 異なる価格付き価値品をトラック外で5m運び、保持したまま戻ると契約達成。最大3件。達成ごとに10HP回復・30秒のダメージ免除。開始時も同じ猶予。 | それ以外はトラック外で0.1秒ごとに1ダメージ、死亡あり。手放す・死亡で運搬進捗を解除。再参加でも達成件数は保持。ソロ抽選なし。 | 継続ダメージ・契約設定 |
 | Rescuer | 生存中に、死亡した仲間のDeath Headから3 m以内へ近づくと、最も近い対象をデフォルト25 HPで復活させます。 | 1ステージにつき最大2回です。復活後HPは対象の最大HPを超えません。参加者が1人だけの場合はランダム抽選されません。 | 復活後HP、遅延、範囲、最大復活回数 |
 | Vampire | 10 m以内で敵が死亡すると、Tier 1は5、Tier 2は10、Tier 3は50回復します。 | 敵のバニラDanger Levelを使用します。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体を最大Tier 3まで1段階上として扱います。Vampireが生存し、死亡した敵の近くにいる必要があります。 | Tier別回復量、範囲 |
-| King | Crownを受け取り、8m内の生存中の仲間を5秒ごとに2HP回復。ステージ合計60HPまで。 | 自己回復なし。1ステージ1人。再参加・蘇生でも回復枠は補充されません。 | 回復量・間隔・半径・上限 |
+| King | Crownと8mの強化範囲。味方へSpeed・Range各＋1、Strength最大＋1。 | 自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。 | 半径・追加レベル |
 | Tuna | ステージ開始時の5秒間の猶予後、3秒間停止すると、移動するまで0.1秒ごとに1ダメージを受けます。 | 死亡する可能性があります。停止時間の計測は最初の猶予後に始まります。動くと即座にリセットし、失った体力は回復しません。 | 停止時間、ダメージ、間隔 |
 | Musician | Musicianが楽器で音を鳴らすたびに、本人を含む10 m以内の生存プレイヤーを5 HP回復します。 | バニラの楽器系貴重品が必要です。デフォルトでは存在しない場合に抽選されません。 | 回復量、範囲 |
 | Mage | チャットで`star`、`gravity`、`roll`、`void`、`laser`を入力するか、設定した表情を選択し、順に10、10、15、30、50 HPを消費してバニラ攻撃を発動します。10秒間ダメージを受けなければ、2秒ごとに1 HP回復します。自動回復は1ステージの累計120 HPまでです。保持した杖で発動する魔法の効果時間は1.3倍になります。 | 表情を解除して標準へ戻す操作では発動しません。全魔法で3秒のクールダウンを共有し、消費で死亡する場合は発動しません。攻撃はプレイヤーやValuableにも危険です。効果時間の延長はチャット・表情での魔法や、星杖の瞬間的な攻撃には適用しません。 | 魔法ごとの表情、発射クールダウン、魔法ごとのHP消費量、自動回復の有効化、待機時間、間隔、回復量、ステージごとの回復上限 |
@@ -604,13 +604,13 @@ RoleShuffleは、ステージ開始時に各プレイヤーへランダムな役
 
 ### オーバーホール設定
 
-初期値は有効。Tank・RunnerはBaseの実際のHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。Lifterは軽量・重量の両方の掴む力の目標を満たす最小の安全なレベルを選び、届かなければ伸びが小さい側の増加率を最大化します。追加強化で掴む力・回転力を下げません。上限はレベル0〜200の実効最大値を切り上げた値。レベル上限200を維持し、Base・役職最低値は低い成長上限より優先します。強化なしなら抽選対象外。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数とKing回復消費量は蘇生・再参加でも保持。Bomber・Stinkerは自動発動を維持します。`General.OverhaulEnabled = false`で旧仕様。ステージ間で変更してください。
+初期値は有効。Tank・RunnerはBaseの実際のHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。Lifterは軽量・重量の両方の掴む力の目標を満たす最小の安全なレベルを選び、届かなければ伸びが小さい側の増加率を最大化します。追加強化で掴む力・回転力を下げません。上限はレベル0〜200の実効最大値を切り上げた値。レベル上限200を維持し、Base・役職最低値は低い成長上限より優先します。強化なしなら抽選対象外。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数は蘇生・再参加でも保持。Kingは一時アップグレードを付与。出入りによるHP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持します。`General.OverhaulEnabled = false`で旧仕様。ステージ間で変更してください。
 
 HUD以外はホスト設定です。
 
 | キー | 初期値 | 範囲 | 効果 |
 |---|---|---|---|
-| `General.OverhaulEnabled` | `true` | 真偽値 | 成長・契約・King回復を有効化。 |
+| `General.OverhaulEnabled` | `true` | 真偽値 | 成長・契約・King強化を有効化。 |
 | `Tank.HealthMultiplier` / `Tank.MaximumHealth` | `1.5` / `4100` | 1–10 / 100–4100 | 最大HP |
 | `Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed` | `1.5` / `205` | 1–10 / 5–205 | 走行速度 |
 | `Runner.StaminaMultiplier` / `Runner.MaximumStamina` | `1.5` / `2040` | 1–10 / 40–2040 | スタミナ容量 |
@@ -619,10 +619,10 @@ HUD以外はホスト設定です。
 | `Jobless.ContractGraceSeconds` | `30` | 1–300秒 | 開始時・達成後のダメージ免除。 |
 | `Jobless.ContractsPerStage` | `3` | 1–30 | 各プレイヤーの達成上限。 |
 | `Jobless.ContractHeal` | `10` | 0–100HP | 達成時の回復。最大HPまで。他の回復が処理中なら省略される場合があります。 |
-| `King.HealAmount` | `2` | 0–100HP | 仲間1人への1回の回復量。 |
-| `King.HealIntervalSeconds` | `5` | 0.5–60秒 | 回復間隔。 |
-| `King.HealRadius` | `8` | 1–30m | 回復範囲。 |
-| `King.TotalHealingLimit` | `60` | 0–10000HP | ステージ全体の合計回復枠。 |
+| `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed・Range追加レベル。 |
+| `King.StrengthBonusLevels` | `1` | 0–200 | 悪化しないStrengthの追加上限。 |
+| `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
+
 | `HUD.AbilityStatusEnabled` | `true` | 真偽値 | 自分の能力残量をHUD見出し下に表示。 |
 
 能力情報は2項目ずつ、必要なら5秒ごとに切り替えます。`/roles`でも残量を確認できます。表示には4.5のホストが必要で、古くなったデータは非表示にします。雲・爆弾の移動量表示は、即時の発生を保証するものではありません。
@@ -907,7 +907,7 @@ Weightのデフォルト値はバニラのショップ最大出現数を反映�
 | `Brawler.MeleeDamageMultiplier` | `1.25` | `0`～`10` | 攻撃者を特定できる近接武器が敵とプレイヤーへ与えるダメージ倍率です。 |
 | `Brawler.RangedDamageMultiplier` | `0.75` | `0`～`10` | 攻撃者を特定できる銃、杖の弾、レーザーが敵とプレイヤーへ与えるダメージ倍率です。 |
 
-デフォルトの基礎値はランレベル1からHealthが`1`、その他の管理対象アップグレードが`0`です。固定役職のアップグレード値は基礎値への加算ではなく、ステージ中の絶対的な目標値です。役職終了時は設定された基礎値へ戻し、役職が置き換えないアップグレードは基礎値を維持します。InfluencerとBerserkerは動的目標値を最低値として扱い、役職付与時に記録したレベル未満へ下げません。固定効果の役職は割り当てやセッション状態が変化した場合だけ変更し、InfluencerとBerserkerはInfluencerの確認間隔ごとに設定条件を再評価します。`Tracker`はMap Player Countを常に`1`へ設定し、Health目標値のみ変更できます。`Rammer`はステージ中、Launch、Tumble Climb、Tumble Wingsを常に0へ上書きします。Throwは管理対象外です。`King`には効果強度の設定がありません。
+デフォルトの基礎値はランレベル1からHealthが`1`、その他の管理対象アップグレードが`0`です。固定役職のアップグレード値は基礎値への加算ではなく、ステージ中の絶対的な目標値です。役職終了時は設定された基礎値へ戻し、役職が置き換えないアップグレードは基礎値を維持します。InfluencerとBerserkerは動的目標値を最低値として扱い、役職付与時に記録したレベル未満へ下げません。固定効果の役職は割り当てやセッション状態が変化した場合だけ変更し、InfluencerとBerserkerはInfluencerの確認間隔ごとに設定条件を再評価します。`Tracker`はMap Player Countを常に`1`へ設定し、Health目標値のみ変更できます。`Rammer`はステージ中、Launch、Tumble Climb、Tumble Wingsを常に0へ上書きします。Throwは管理対象外です。
 
 InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたはセミコロンで区切ります。Influencerは到達した人数条件のうち最後の目標値、Berserkerは現在到達している最も低いHP境界の目標値を適用します。目標値が`0`になる組はデフォルトの記述から省略し、明示的に0へ上書きしたい場合だけ`条件:0`を手動で追加します。レベルはMap Player Countだけ`0`～`1`、ほかは`0`～`100`です。形式が正しくない項目は無視されます。
 

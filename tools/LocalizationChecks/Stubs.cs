@@ -60,10 +60,10 @@ internal sealed class StageRolesConfig
     internal Entry<float> JoblessContractGrace { get; } = new(7.25f);
     internal Entry<int> JoblessContractLimit { get; } = new(17);
     internal Entry<int> JoblessContractHeal { get; } = new(17);
-    internal Entry<int> KingHealAmount { get; } = new(17);
-    internal Entry<float> KingHealInterval { get; } = new(7.25f);
-    internal Entry<float> KingHealRadius { get; } = new(7.25f);
-    internal Entry<int> KingHealLimit { get; } = new(17);
+    internal Entry<int> KingSpeedBonus { get; } = new(17);
+    internal Entry<int> KingRangeBonus { get; } = new(17);
+    internal Entry<int> KingStrengthBonus { get; } = new(17);
+    internal Entry<float> KingUpgradeRadius { get; } = new(7.25f);
     internal Entry<float> AvengerDamageMultiplier { get; } = new(7.25f);
     internal Entry<float> AvengerDurationSeconds { get; } = new(7.25f);
     internal Entry<float> AvengerTriggerRadius { get; } = new(7.25f);

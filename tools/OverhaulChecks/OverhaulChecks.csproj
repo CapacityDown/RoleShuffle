@@ -7,6 +7,8 @@
     <Compile Include="../../StageRole.cs" Link="StageRole.cs" />
     <Compile Include="../../RoleOverhaulRules.cs" Link="RoleOverhaulRules.cs" />
     <Compile Include="../../RoleOverhaulRuntime.cs" Link="RoleOverhaulRuntime.cs" />
+    <Compile Include="../../KingUpgradeAura.cs" Link="KingUpgradeAura.cs" />
+    <Compile Include="../../UpgradeService.cs" Link="UpgradeService.cs" />
     <Compile Include="../../RoleHealingRuntime.cs" Link="RoleHealingRuntime.cs" />
     <Compile Include="../../RoleAbilityStatus.cs" Link="RoleAbilityStatus.cs" />
     <Compile Include="../../RoleAbilitySync.cs" Link="RoleAbilitySync.cs" />

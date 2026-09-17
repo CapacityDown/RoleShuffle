@@ -217,7 +217,7 @@
   "Health minimum level {0}. Target Base maximum HP x{1}, growth cap {2} HP. Round up to an upgrade level; preserve Base and the minimum.": "Minimalny poziom Health {0}. Cel: maksymalne HP Base x{1}, limit wzrostu {2} HP. Zaokrągla poziom w górę; zachowuje Base i minimum.",
   "Minimum levels: Speed {0}, Stamina {1}. Target Base sprint speed x{2} (cap {3}) and stamina capacity x{4} (cap {5}). Round up to upgrade levels; preserve Base and minimums.": "Minimalne poziomy: Speed {0}, Stamina {1}. Cel: prędkość sprintu Base x{2} (limit {3}) i pojemność wytrzymałości x{4} (limit {5}). Zaokrągla poziomy w górę; zachowuje Base i minima.",
   "Carry a different valuable {0} m outside the truck, then bring it into the truck. Up to {1} contracts per stage. Each restores {2} HP and pauses attrition for {3} seconds, also granted at stage start. Otherwise, lose {4} HP every {5} seconds outside the truck.": "Przenieś inny cenny przedmiot o {0} m poza ciężarówką, a następnie wnieś go do środka. Do {1} zleceń na etap. Każde przywraca {2} HP i wstrzymuje ciągłe obrażenia na {3} sekund; ten sam czas ochrony przysługuje na początku. Poza tym tracisz {4} HP co {5} sekund poza ciężarówką.",
-  "Receives the Crown and heals living teammates within {0} m for {1} HP every {2} seconds, up to {3} HP per stage. Excludes the King. Only one King can be assigned.": "Otrzymuje Crown i leczy żywych sojuszników w promieniu {0} m o {1} HP co {2} sekund, do {3} HP na etap. Nie leczy Kinga. Można przydzielić tylko jednego Kinga.",
+  "Receives the Crown. Living allies within {0} m gain Speed +{1}, Range +{2}, and up to Strength +{3}, capped at level 200. Strength must not weaken grip or rotation. Only King bonuses are removed outside the aura. Excludes Kings; does not stack.": "Otrzymuje koronę. Żywi sojusznicy w promieniu {0} m zyskują Speed +{1}, Range +{2} i do Strength +{3}, maksymalnie do poziomu 200. Strength nie może osłabiać chwytu ani obrotu. Poza aurą znikają tylko bonusy Kinga. Nie obejmuje Kingów; nie kumuluje się.",
   "Healing": "Leczenie",
   "Revives": "Wskrzeszenia",
   "Self revive": "Samowskrzeszenie",
@@ -237,5 +237,6 @@
   "Dive": "Zanurzenie",
   "Wagers": "Zakłady",
   "Revenge": "Zemsta",
-  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Minimalny poziom Strength {0}. Cel: siła chwytu Base lekkich/ciężkich obiektów x{1}, limit {2} względem poziomu 0. Wybiera najniższy bezpieczny poziom dla obu celów lub najlepszy zrównoważony przyrost. Zachowuje Base i minimum; wzrost nie osłabia obrotu."
+  "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Minimalny poziom Strength {0}. Cel: siła chwytu Base lekkich/ciężkich obiektów x{1}, limit {2} względem poziomu 0. Wybiera najniższy bezpieczny poziom dla obu celów lub najlepszy zrównoważony przyrost. Zachowuje Base i minimum; wzrost nie osłabia obrotu.",
+  "Supported allies": "Wzmocnieni sojusznicy"
 }

@@ -133,18 +133,20 @@ internal static class UpgradeService
         {
             int targetLevel = Math.Max(0, target.Level);
             int currentLevel = currentUpgrades.GetValueOrDefault(target.DictionaryName, 0);
-            if (preserveHigherLevels && currentLevel >= targetLevel)
+            if (preserveHigherLevels && KingUpgradeAura.WithoutBonus(steamId, target.DictionaryName, currentLevel) >= targetLevel)
             {
                 continue;
             }
             int delta = targetLevel - currentLevel;
             if (delta == 0)
             {
+                KingUpgradeAura.Forget(steamId, target.DictionaryName);
                 continue;
             }
             try
             {
                 SendUpgradeDelta(steamId, target.CommandName, delta);
+                KingUpgradeAura.Forget(steamId, target.DictionaryName);
             }
             catch (Exception exception)
             {

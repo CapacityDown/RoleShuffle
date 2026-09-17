@@ -687,7 +687,8 @@ internal sealed class EventRoleRuntime
             foreach (string dictionaryName in DynamicDictionaryNames())
             {
                 state.Baseline[dictionaryName] =
-                    current.GetValueOrDefault(dictionaryName, 0);
+                    KingUpgradeAura.WithoutBonus(assignment.SteamId, dictionaryName,
+                        current.GetValueOrDefault(dictionaryName, 0));
                 state.Granted[dictionaryName] = 0;
             }
             state.Initialized = true;

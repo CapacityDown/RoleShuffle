@@ -281,10 +281,10 @@ internal sealed class StageRolesConfig
 
         KingEnabled = RoleEnabled(config, "King");
         KingWeight = RoleWeight(config, "King");
-        KingHealAmount = BindInt(config, "King", "HealAmount", 2, 0, 100, "Health per aura tick for each nearby living teammate in overhaul mode; excludes King.");
-        KingHealInterval = BindFloat(config, "King", "HealIntervalSeconds", 5f, 0.5f, 60f, "Seconds between King aura ticks.");
-        KingHealRadius = BindFloat(config, "King", "HealRadius", 8f, 1f, 30f, "King healing aura radius in metres.");
-        KingHealLimit = BindInt(config, "King", "TotalHealingLimit", 60, 0, 10000, "King aura healing budget per player per stage, retained through revival and rejoining.");
+        KingUpgradeRadius = BindFloat(config, "King", "UpgradeRadius", 8f, 1f, 30f, "Radius in metres for temporary upgrade support to living allies in overhaul mode; excludes King.");
+        KingSpeedBonus = BindInt(config, "King", "SpeedBonusLevels", 1, 0, 200, "Temporary Speed levels for allies in range, capped at level 200. Removed on leaving the aura.");
+        KingRangeBonus = BindInt(config, "King", "RangeBonusLevels", 1, 0, 200, "Temporary Range levels for allies in range, capped at level 200. Removed on leaving the aura.");
+        KingStrengthBonus = BindInt(config, "King", "StrengthBonusLevels", 1, 0, 200, "Maximum temporary Strength levels for allies in range. Selects a non-weakening level within this bonus and level 200; otherwise grants none.");
 
         TunaEnabled = RoleEnabled(config, "Tuna");
         TunaWeight = RoleWeight(config, "Tuna", 50);
@@ -468,10 +468,10 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> JoblessContractGrace { get; }
     internal ConfigEntry<int> JoblessContractLimit { get; }
     internal ConfigEntry<int> JoblessContractHeal { get; }
-    internal ConfigEntry<int> KingHealAmount { get; }
-    internal ConfigEntry<float> KingHealInterval { get; }
-    internal ConfigEntry<float> KingHealRadius { get; }
-    internal ConfigEntry<int> KingHealLimit { get; }
+    internal ConfigEntry<float> KingUpgradeRadius { get; }
+    internal ConfigEntry<int> KingSpeedBonus { get; }
+    internal ConfigEntry<int> KingRangeBonus { get; }
+    internal ConfigEntry<int> KingStrengthBonus { get; }
     internal ConfigEntry<int> ShopUpgradeItemCount { get; }
     internal ConfigEntry<bool> EnhancedEnemyRewardsEnabled { get; }
     internal ConfigEntry<bool> ShowcaseGuaranteesEnabled { get; }

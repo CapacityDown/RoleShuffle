@@ -14,7 +14,7 @@
 
 1. Tank, Runner and Lifter use configurable multipliers of Base effective values, converted into vanilla upgrade levels. Effective growth caps are the rounded-up maxima across levels 0–200: 4100 HP, sprint speed 205, stamina capacity 2040 and normal grip 6. Configured role minimums and Base are preserved. Lifter also protects both weight classes and rotation; see the multiplier section below. Copied roles and Superbot inherit growth.
 2. Jobless receives a starting grace period. Carry a different, positive-value valuable at least the configured distance and bring it into the truck to complete a contract. A contract pauses attrition and restores the worker's health. Completions are limited per player per stage; drops, death and teleports do not accumulate work.
-3. King keeps the crown and provides a small, budgeted healing aura to living teammates, excluding itself. Healing shares the existing recipient lock with Medic and Mage.
+3. King keeps the crown and grants temporary native Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Excludes Kings and never stacks. King bonuses are removed on leaving, death, departure or role change.
 4. Stinker and Bomber remain movement-triggered automatic hazards. Neither has a manual pause, activation switch or charge-and-release operation. This is an explicit user requirement.
 5. The host publishes a separate, versioned ability-status snapshot for installed participants. The local HUD and `/roles` show remaining resources. Existing assignment synchronization is preserved.
 
@@ -78,3 +78,15 @@ The new DLL/ZIP is a development build, deployed only to the user-authorized `RS
 - Configuration schema 33 removes the four obsolete Base*Bonus entries and creates a separate `.pre-v4.5.0-multipliers.bak` backup for schema-32 upgrades. Existing minima and any already-set new multiplier values are retained. Descriptions updated in all 14 languages.
 - Build 463: zero warnings/errors; 104,594 overhaul checks; 10,335 production target/eligibility checks; 246 role settings + 128 Base settings + 248 save-adjustment checks; 11,239 localization checks; 437 installed-game field references. Updated CJK subsets and verified Japanese coverage. Live multiplayer/carrying checks remain unperformed for this build.
 - Packaged and deployed all five files to RSO_TEST with hash verification. DLL SHA-256: `AAE189A6C1EB6D1A240A106A642743A31A4FF2581FB89E0723D48F6F7CE136EA`. Build 462 and the profile settings were backed up; settings migration runs on the next launch. The game was not launched. Original StageRoles DLL/ZIP hashes remain unchanged.
+
+### King upgrade support — UI build 464
+
+- Replaces the healing aura with configurable Speed, Range and Strength upgrade bonuses (default +1 each; radius 8 m). Health and Stamina are excluded because vanilla changes also heal/hurt or refill stamina on the owning client. This keeps range crossings free of those resource effects with host-only installation.
+- Strength selects the highest non-weakening level within the requested bonus; tests cover both mass classes, grip and rotation across levels 0–200. Existing levels are preserved, new grants stop at 200.
+- A separate host ledger removes only its own additions. Absolute role resets invalidate replaced contributions; dynamic roles record baselines without King bonuses. Native RPCs synchronize the changes to guests. No manual ability activation.
+- HUD reports supported allies. Metric 19 is appended without changing existing metric IDs; old healing metric 7 remains decodable. Fourteen locale catalogs updated.
+- Schema 34 removes King's healing settings, carries HealRadius to UpgradeRadius, preserves explicit new settings and backs up schema-33 configs as `.pre-v4.5.0-king-upgrades.bak`.
+- Deterministic checks include range boundaries, repeated ticks, purchases, role resets, dynamic baselines, caps, deaths, rejoining, overlapping Kings, guest authority, partial RPC failure and stage cleanup. Live multiplayer verification remains outstanding.
+
+- Verification: Release build 464 passed with zero warnings/errors; OverhaulChecks 106,224; localization 11,275; role/settings migration 250, Base settings 128, save adjustments 248; all 437 compiled game field references valid. CJK font coverage verified.
+- Deployed to RSO_TEST at 2026-09-17 11:38 JST. Previous build 463, configuration and profile metadata saved to `tmp/deployments/RSO_TEST-before-build464-20260917-113817`. All five deployed package files matched their sources; config was unchanged. Schema 34 applies on next startup. Game was not launched. DLL SHA-256: `1E801437AF95D7A3F8B2F9331C7248D43E1D593E1A7B1DCECD30ACD6B5D22F1D`.

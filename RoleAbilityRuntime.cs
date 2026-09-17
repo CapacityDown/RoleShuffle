@@ -44,7 +44,7 @@ internal sealed partial class StageRoleController
         if (Has(StageRole.Bomber)) values.Add(new AbilityValue(AbilityMetric.GrenadeDistance,
             Mathf.FloorToInt(assignment.TravelDistance), Mathf.CeilToInt(_config.BomberDistance.Value)));
         if (_config.OverhaulEnabled.Value && assignment.Role == StageRole.King)
-            Budget(AbilityMetric.King, assignment.Overhaul.KingHealingUsed, _config.KingHealLimit.Value);
+            values.Add(new AbilityValue(AbilityMetric.RoyalSupport, assignment.Overhaul.KingSupportedAllies, 0));
         if (_config.OverhaulEnabled.Value && assignment.Role == StageRole.Jobless)
         {
             Budget(AbilityMetric.Contracts, assignment.Overhaul.ContractsCompleted, _config.JoblessContractLimit.Value);

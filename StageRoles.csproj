@@ -50,6 +50,7 @@
     <Compile Include="RoleOverhaulRules.cs" />
     <Compile Include="RoleOverhaulDescriptions.cs" />
     <Compile Include="RoleOverhaulRuntime.cs" />
+    <Compile Include="KingUpgradeAura.cs" />
     <Compile Include="RoleAbilityStatus.cs" />
     <Compile Include="RoleAbilitySync.cs" />
     <Compile Include="RoleAbilityRuntime.cs" />

@@ -4,7 +4,7 @@
 - Lifter searches safe levels for both weight classes and preserves rotation; if the target is unreachable, it selects the best balanced grip gain. Copied roles and Superbot inherit the rules. Added multiplier/cap settings and backed-up migration from additive settings.
 - Fixed ability-status cleanup initializing Photon during lobby startup.
 - Added Jobless delivery contracts with an initial grace period, limited paid breaks and healing rewards.
-- Added a limited healing aura for King's nearby teammates.
+- King grants temporary Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Leaving, death or role changes remove only King's bonuses. Native upgrades support unmodded guests; HUD shows supported allies. Config schema 34 preserves the old radius and backs up healing settings.
 - Added remaining ability resources to the local HUD and `/roles`, including healing, revival uses and cooldowns. HUD data is shared with installed participants.
 - Added an overhaul setting to select the new behavior or legacy role rules. Bomber and Stinker keep their automatic movement-triggered hazards.
 
