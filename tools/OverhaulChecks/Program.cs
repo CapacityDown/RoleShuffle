@@ -55,28 +55,17 @@ Check(Math.Ceiling(Enumerable.Range(0, 201).Max(n => Math.Max(
 double[] Forces(int level) => new[] {
     RoleOverhaulRules.EffectiveGrabStrength(level, true), RoleOverhaulRules.EffectiveGrabStrength(level, false),
     RoleOverhaulRules.EffectiveGrabStrength(level, true, true), RoleOverhaulRules.EffectiveGrabStrength(level, false, true) };
-foreach (int baseline in Enumerable.Range(0, 201))
-foreach (int minimum in new[] { 0, 17, 25, 50, 200 })
-foreach (double multiplier in new[] { 1d, 1.3d, 1.5d, 2d, 10d })
-foreach (double cap in new[] { 3d, 6d })
-{
-    int floor = Math.Max(baseline, minimum);
-    int target = RoleOverhaulRules.StrengthTarget(baseline, minimum, multiplier, cap);
-    var f = Forces(floor); var t = Forces(target); var b = Forces(baseline);
-    double limit = Math.Max(cap, Math.Max(f[0], f[1]));
-    Check(target >= floor && target <= 200, "Lifter preserves Base and configured minimum");
-    Check(Enumerable.Range(0, 4).All(i => t[i] >= f[i]), "Extra growth preserves all grip and rotation coefficients");
-    Check(t[0] <= limit && t[1] <= limit, "Both weight classes obey effective growth cap");
-    if (multiplier == 1) Check(target == floor, "Multiplier 1 disables extra growth");
-}
-Check(RoleOverhaulRules.StrengthTarget(15, 25, 1) == 25, "Minimum priority even with growth disabled");
-Check(RoleOverhaulRules.StrengthTarget(50, 25, 1.5) == 50, "No safe gain at heavy-force peak");
-Check(RoleOverhaulRules.StrengthTarget(70, 25, 10) == 70, "Rotation blocks a superficially stronger high target");
-Check(RoleOverhaulRules.StrengthTarget(70, 200, 1.5) == 200, "Configured floor still wins over penalties");
-Check(RoleOverhaulRules.StrengthTarget(90, 25, 1.5) == 156, "Lowest target meeting both multiplied grip goals");
-Check(RoleOverhaulRules.StrengthTarget(90, 25, 10) == 200, "Unreachable goal chooses best safe gain");
-Check(RoleOverhaulRules.StrengthTarget(0, 25, 1.5) == 25, "Minimum already meets both goals");
-Check(RoleOverhaulRules.StrengthTarget(250, 500, 2) == 200, "Global upgrade limit");
+Check(!RoleOverhaulRules.GrowsWithBase(StageRole.Lifter), "Lifter no longer uses Base multipliers");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false) - 5.290322580645d) < 1e-8,
+    "Fixed Strength 200 keeps vanilla heavy grip, without physical correction");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false, true) - 4.978571428571d) < 1e-8,
+    "Fixed Strength 200 keeps vanilla rotation coefficient");
+Check(Enumerable.Range(0, 201).Where(n => RoleOverhaulRules.EffectiveGrabStrength(n, false) >
+    RoleOverhaulRules.EffectiveGrabStrength(200, false)).SequenceEqual(Enumerable.Range(32, 37)),
+    "Vanilla Strength 200 reduces heavy grip from Base 32 through 68");
+Check(Enumerable.Range(0, 201).Where(n => RoleOverhaulRules.EffectiveGrabStrength(n, false, true) >
+    RoleOverhaulRules.EffectiveGrabStrength(200, false, true)).SequenceEqual(Enumerable.Range(28, 45)),
+    "Vanilla Strength 200 reduces heavy rotation coefficient from Base 28 through 72");
 
 var state = new RoleOverhaulState();
 state.Start(10, 30); state.Start(20, 30);

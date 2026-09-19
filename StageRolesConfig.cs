@@ -208,9 +208,8 @@ internal sealed class StageRolesConfig
 
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
-        LifterStrengthLevels = UpgradeLevel(config, "Lifter", "StrengthUpgradeLevels", 25);
-        LifterStrengthMultiplier = BindFloat(config, "Lifter", "StrengthMultiplier", 1.5f, 1f, 10f, "Target multiplier for Base light/heavy grip after vanilla penalties. Choose the lowest safe level meeting both goals, or the best balanced gain within the cap. Growth cannot weaken grip or rotation relative to max(Base, role minimum). 1 disables extra growth. Overhaul mode only.");
-        LifterMaximumStrength = BindInt(config, "Lifter", "MaximumEffectiveStrength", 6, 1, 6, "Maximum normal light/heavy grip coefficient for multiplier growth, relative to Strength 0. Ceil(maximum over levels 0-200) = ceil(5.958333) = 6. Existing Base and configured role minimum remain guaranteed.");
+        LifterStrengthLevels = BindInt(config, "Lifter", "StrengthUpgradeLevels", 25, 0, RoleUpgradeScaling.MaximumUpgradeLevel,
+            "Legacy mode Strength target. Overhaul mode always sets Strength to level 200 using vanilla upgrades, without additional physics correction.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");
@@ -459,11 +458,9 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> TankHealthMultiplier { get; }
     internal ConfigEntry<float> RunnerSpeedMultiplier { get; }
     internal ConfigEntry<float> RunnerStaminaMultiplier { get; }
-    internal ConfigEntry<float> LifterStrengthMultiplier { get; }
     internal ConfigEntry<int> TankMaximumHealth { get; }
     internal ConfigEntry<int> RunnerMaximumSpeed { get; }
     internal ConfigEntry<int> RunnerMaximumStamina { get; }
-    internal ConfigEntry<int> LifterMaximumStrength { get; }
     internal ConfigEntry<float> JoblessContractDistance { get; }
     internal ConfigEntry<float> JoblessContractGrace { get; }
     internal ConfigEntry<int> JoblessContractLimit { get; }

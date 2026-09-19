@@ -5,8 +5,9 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleOverhaulRules
 {
+    internal const int LifterStrengthLevel = 200;
     internal static bool GrowsWithBase(StageRole role) =>
-        role is StageRole.Tank or StageRole.Runner or StageRole.Lifter;
+        role is StageRole.Tank or StageRole.Runner;
 
     // Vanilla 0.4.4.3: Health starts at 100 (+20/level). The serialized
     // PlayerController in level0 starts at speed 5 and stamina 40 (+1/+10).
@@ -57,48 +58,10 @@ internal static class RoleOverhaulRules
         return ceiling;
     }
 
-    internal static int StrengthTarget(int baseline, int minimum, double multiplier, double maximum = 6d)
-    {
-        baseline = Math.Clamp(baseline, 0, 200);
-        multiplier = Multiplier(multiplier);
-        // The configured role level is guaranteed even where vanilla force
-        // decreases. Only bonus growth above that floor is penalty-limited.
-        int floor = Floor(baseline, minimum);
-        if (multiplier == 1d) return floor;
-        double lightBase = EffectiveGrabStrength(baseline, lightObject: true);
-        double heavyBase = EffectiveGrabStrength(baseline, lightObject: false);
-        double lightFloor = EffectiveGrabStrength(floor, lightObject: true);
-        double heavyFloor = EffectiveGrabStrength(floor, lightObject: false);
-        double cap = Math.Max(Math.Max(lightFloor, heavyFloor), Math.Clamp(maximum, 0d, MaximumValue("Strength")));
-        double lightGoal = Math.Min(cap, lightBase * multiplier);
-        double heavyGoal = Math.Min(cap, heavyBase * multiplier);
-        double lightRotationFloor = EffectiveGrabStrength(floor, lightObject: true, rotation: true);
-        double heavyRotationFloor = EffectiveGrabStrength(floor, lightObject: false, rotation: true);
-        int best = floor;
-        double bestGain = Math.Min(lightFloor / lightBase, heavyFloor / heavyBase);
-        for (int target = floor; target <= 200; target++)
-        {
-            double light = EffectiveGrabStrength(target, lightObject: true);
-            double heavy = EffectiveGrabStrength(target, lightObject: false);
-            double lightRotation = EffectiveGrabStrength(target, lightObject: true, rotation: true);
-            double heavyRotation = EffectiveGrabStrength(target, lightObject: false, rotation: true);
-            if (light > cap || heavy > cap || light < lightFloor || heavy < heavyFloor ||
-                lightRotation < lightRotationFloor || heavyRotation < heavyRotationFloor) continue;
-            // Find the lowest level meeting both grip goals. Rotation is a
-            // safety constraint: its final torque is monotonic in this coefficient.
-            if (light + 1e-9 >= lightGoal && heavy + 1e-9 >= heavyGoal) return target;
-            double gain = Math.Min(light / lightBase, heavy / heavyBase);
-            if (gain > bestGain + 1e-9) { best = target; bestGain = gain; }
-        }
-        // Unreachable goal: maximize the weaker relative grip improvement;
-        // equal scores keep the lower level, avoiding arbitrary level inflation.
-        return best;
-    }
-
     // R.E.P.O. 0.4.4.3 PhysGrabObject reduces both translation and rotation,
     // with denominator 7 below mass 2 and 20 otherwise. Rotation omits the
     // strength-30 cap in the reduced value. Both curves are non-monotonic.
-    // Raw levels also stay at least Base to preserve PhysGrabber rotation input.
+    // Used by King's non-weakening bonus selection; Lifter grants level 200.
     internal static double EffectiveGrabStrength(int level, bool lightObject, bool rotation = false)
     {
         double strength = 1d + 0.2d * Math.Clamp(level, 0, 200);

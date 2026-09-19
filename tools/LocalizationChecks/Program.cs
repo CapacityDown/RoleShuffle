@@ -46,14 +46,14 @@ foreach (var language in languages.Where(RoleLanguage.NeedsTranslation))
     {
         string english = RoleGuideCatalog.Description(role, config);
         string translated = RoleGuideCatalog.Description(role, config, language);
-        if (RoleOverhaulRules.GrowsWithBase(role))
+        if (RoleOverhaulRules.GrowsWithBase(role) || role == StageRole.Lifter)
             Check(RoleText.Description(english, language) == translated,
                 "Guest translates the complete growth description and cap exclusion: " + language + "/" + role);
         if (english == "???") Check(translated == "???", "Secret leaked: " + role);
         else
         {
             Check(translated != english, $"Untranslated configured role: {language}/{role}");
-            foreach (string value in new[] { "17", "7.25", "Expression_token" })
+            foreach (string value in new[] { "17", "7.25", "200", "Expression_token" })
                 Check(Regex.Matches(english, Regex.Escape(value)).Count == Regex.Matches(translated, Regex.Escape(value)).Count,
                     $"Host values changed: {language}/{role}/{value}");
         }

@@ -10,10 +10,10 @@ string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
 Check(config.TankHealthMultiplier.Value == 1.5f && config.RunnerSpeedMultiplier.Value == 1.5f &&
-    config.RunnerStaminaMultiplier.Value == 1.5f && config.LifterStrengthMultiplier.Value == 1.5f,
+    config.RunnerStaminaMultiplier.Value == 1.5f,
     "Effective-value multiplier defaults");
 Check(config.TankMaximumHealth.Value == 4100 && config.RunnerMaximumSpeed.Value == 205 &&
-    config.RunnerMaximumStamina.Value == 2040 && config.LifterMaximumStrength.Value == 6,
+    config.RunnerMaximumStamina.Value == 2040,
     "Caps are ceilings of vanilla maxima across levels 0-200");
 string oldConfigPath = Path.Combine(directory, "before-multipliers.cfg");
 File.WriteAllText(oldConfigPath, "[Migration]\nConfigVersion = 32\n[Tank]\nBaseHealthBonus = 17\nHealthUpgradeLevels = 30\nHealthMultiplier = 1.8\n[Runner]\nBaseSpeedBonus = 2\nBaseStaminaBonus = 10\n[Lifter]\nBaseStrengthBonus = 5\nStrengthUpgradeLevels = 40\n");
@@ -36,6 +36,20 @@ Check(kingConfig.KingUpgradeRadius.Value == 12 && kingConfig.KingStrengthBonus.V
 string kingText = File.ReadAllText(oldKingPath).Split("[King]")[1].Split("\n[")[0];
 Check(!kingText.Contains("HealAmount") && !kingText.Contains("HealRadius") && !kingText.Contains("TotalHealingLimit") && !kingText.Contains("HealIntervalSeconds"), "King migration removes healing settings");
 Check(File.ReadAllText(oldKingPath + ".pre-v4.5.0-king-upgrades.bak").Contains("HealAmount = 9"), "King migration retains exact old config backup");
+string oldLifterPath = Path.Combine(directory, "before-lifter-200.cfg");
+const string oldLifterText = "[Migration]\nConfigVersion = 34\n[Lifter]\nStrengthMultiplier = 2.5\nMaximumEffectiveStrength = 4\nStrengthUpgradeLevels = 40\nEnabled = false\nWeight = 75\n";
+File.WriteAllText(oldLifterPath, oldLifterText);
+var lifterFile = new ConfigFile(oldLifterPath, false) { SaveOnConfigSet = false };
+var lifterConfig = new StageRolesConfig(lifterFile); lifterFile.Save();
+string lifterText = File.ReadAllText(oldLifterPath);
+Check(!lifterText.Contains("StrengthMultiplier") && !lifterText.Contains("MaximumEffectiveStrength"), "Remove unused Lifter growth settings");
+Check(lifterConfig.LifterStrengthLevels.Value == 40 && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
+    "Fixed Lifter migration preserves legacy levels and selection preferences");
+Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
+Check(lifterText.Contains("ConfigVersion = 35"), "Fixed Lifter config uses schema 35");
+RoleConfigMigration.Apply(lifterFile);
+Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
+    "Repeated migration preserves settings and rollback backup");
 var service = new RoleSelectionSettings(config, file);
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();

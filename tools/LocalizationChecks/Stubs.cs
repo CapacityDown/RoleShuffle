@@ -51,11 +51,9 @@ internal sealed class StageRolesConfig
     internal Entry<float> TankHealthMultiplier { get; } = new(7.25f);
     internal Entry<float> RunnerSpeedMultiplier { get; } = new(7.25f);
     internal Entry<float> RunnerStaminaMultiplier { get; } = new(7.25f);
-    internal Entry<float> LifterStrengthMultiplier { get; } = new(7.25f);
     internal Entry<int> TankMaximumHealth { get; } = new(17);
     internal Entry<int> RunnerMaximumSpeed { get; } = new(17);
     internal Entry<int> RunnerMaximumStamina { get; } = new(17);
-    internal Entry<int> LifterMaximumStrength { get; } = new(17);
     internal Entry<float> JoblessContractDistance { get; } = new(7.25f);
     internal Entry<float> JoblessContractGrace { get; } = new(7.25f);
     internal Entry<int> JoblessContractLimit { get; } = new(17);

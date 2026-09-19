@@ -10,7 +10,7 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleConfigMigration
 {
-    private const int CurrentSchemaVersion = 34;
+    private const int CurrentSchemaVersion = 35;
     private static readonly ConfigDefinition SchemaDefinition =
         new("Migration", "ConfigVersion");
 
@@ -524,6 +524,8 @@ internal static class RoleConfigMigration
             removed += RemoveKey(values, "Runner", "BaseSpeedBonus");
             removed += RemoveKey(values, "Runner", "BaseStaminaBonus");
             removed += RemoveKey(values, "Lifter", "BaseStrengthBonus");
+            removed += RemoveKey(values, "Lifter", "StrengthMultiplier");
+            removed += RemoveKey(values, "Lifter", "MaximumEffectiveStrength");
             removed += RemoveLegacyDynamicUpgradeSettings(values);
 
             bool schemaChanged = sourceVersion != CurrentSchemaVersion;
@@ -537,7 +539,7 @@ internal static class RoleConfigMigration
             if (sourceVersion < CurrentSchemaVersion && values.Count > 1 &&
                 File.Exists(path))
             {
-                string backupPath = path + (sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
+                string backupPath = path + (sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
                 if (!File.Exists(backupPath))
                 {
                     File.Copy(path, backupPath, overwrite: false);

@@ -27,11 +27,9 @@ public class StageRolesConfig {
     public Entry<float> TankHealthMultiplier = new(1.5f);
     public Entry<float> RunnerSpeedMultiplier = new(1.5f);
     public Entry<float> RunnerStaminaMultiplier = new(1.5f);
-    public Entry<float> LifterStrengthMultiplier = new(1.5f);
     public Entry<int> TankMaximumHealth = new(4100);
     public Entry<int> RunnerMaximumSpeed = new(205);
     public Entry<int> RunnerMaximumStamina = new(2040);
-    public Entry<int> LifterMaximumStrength = new(6);
 
 }
 public static class EligibilityChecks {
@@ -87,21 +85,21 @@ __TARGETS__
             Bases = new[] { new UpgradeGrant("Strength", 20) }, Targets = new[] { new UpgradeGrant("Strength", 25) }
         };
         lifter.OverhaulEnabled.Value = true;
-        foreach (var example in new[] { (0,25), (25,200), (50,50), (70,70), (90,156), (198,200), (200,200) }) {
-            lifter.Bases[0].Level = example.Item1;
-            int target = TargetUpgrades(StageRole.Lifter, lifter)[0].Level;
-            if (target != example.Item2) throw new Exception("Lifter multiplier target: " + example.Item1 + " expected " + example.Item2 + " got " + target);
-            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (example.Item1 == example.Item2))
-                throw new Exception("Lifter eligibility must follow actual upgrade gain");
-            if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != example.Item2) throw new Exception("Superbot inherits multiplier Strength");
+        // Execute actual target composition and eligibility over the whole Base range,
+        // including old configured minima that overhaul mode must now ignore.
+        foreach (int minimum in new[] { 0, 25, 50, 200 })
+        for (int baseline = 0; baseline <= 200; baseline++) {
+            lifter.Bases[0].Level = baseline;
+            lifter.Targets[0].Level = minimum;
+            if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 200)
+                throw new Exception("Lifter must grant fixed Strength 200 regardless of Base/minimum");
+            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (baseline >= 200))
+                throw new Exception("Only Base Strength 200 excludes fixed Lifter");
+            if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != 200)
+                throw new Exception("Superbot inherits fixed Strength 200");
             count += 3;
         }
-        lifter.Bases[0].Level = 70;
-        lifter.Targets[0].Level = 200;
-        if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 200) throw new Exception("Minimum has priority");
-        count++;
         lifter.Targets[0].Level = 25;
-        lifter.LifterStrengthMultiplier.Value = 1.5f;
         lifter.OverhaulEnabled.Value = false;
         lifter.Bases[0].Level = 20;
         if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 25 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
@@ -136,14 +134,13 @@ __TARGETS__
         runner.RunnerMaximumStamina.Value = 501;
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Below both custom caps with Speed gain stays eligible");
         count += 7;
-        lifter.OverhaulEnabled.Value = true;
-        lifter.LifterMaximumStrength.Value = 5;
-        lifter.Targets[0].Level = 200; // Ensure gain-only filtering cannot mask the cap comparison.
-        foreach (int level in new[] { 31, 32, 50, 75, 76, 186, 187, 199 }) {
-            lifter.Bases[0].Level = level;
-            double value = Math.Max(RoleOverhaulRules.EffectiveGrabStrength(level, true), RoleOverhaulRules.EffectiveGrabStrength(level, false));
-            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (value >= 5d))
-                throw new Exception("Lifter eligibility follows non-monotonic effective strength, not level threshold: " + level);
+        foreach (int minimum in new[] { 0, 25, 50, 200 })
+        for (int baseline = 0; baseline <= 200; baseline++) {
+            lifter.Bases[0].Level = baseline;
+            lifter.Targets[0].Level = minimum;
+            if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != minimum ||
+                BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (baseline >= minimum))
+                throw new Exception("Legacy target and eligibility must still honor configured Strength");
             count++;
         }
         foreach (string command in new[] { "Health", "Speed", "Stamina", "Strength" })
