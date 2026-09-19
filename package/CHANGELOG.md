@@ -1,5 +1,6 @@
 ## 4.5.0
 
+- Rewrote the Tank, Runner, Lifter, Jobless and King guide entries to explain the ability first, followed by practical instructions and settings. Added paragraph breaks and refreshed all 14 languages; gameplay is unchanged.
 - Tank/Runner are excluded from random assignment when any corresponding Base effective value reaches or exceeds its configured cap. Runner is excluded when either speed or stamina reaches its cap. Existing no-gain exclusions and forced assignments are preserved.
 
 - Replaced Tank/Runner fixed bonuses with effective-value multipliers (default 1.5), converted to vanilla upgrade levels. Growth caps are rounded-up maxima over levels 0-200: HP 4100, sprint speed 205, stamina 2040. Base and configured minimums remain guaranteed.
