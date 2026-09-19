@@ -11,7 +11,7 @@ This harness links the production growth rules, contract/aura runtime, capped-he
 - New and existing settings, overhaul on/off, low/high/capped Base Upgrades.
 - Tank/Runner/Lifter assignment, Imitator copy, Superbot and stage cleanup.
 - Tank: Base Health 100 with minimum 21 and multiplier 1.5 gives level 153 (3160 HP); cap 4100 HP. Runner: Base Speed 6 gives 12; Base Stamina 46 gives 71. Confirm serialized vanilla defaults 5/40 and speed-dependent stamina drain.
-- Lifter: Base 0, 25, 50, 70, 90 and 199 all target native Strength 200; Base 200 excludes it. Test copied roles, Superbot, stage cleanup and legacy mode. No physics patch is installed; the heavy-grip decrease at Base 32–68 and rotation-coefficient decrease at 28–72 are expected vanilla behavior.
+- Lifter: native display remains 200; host grip/rotation coefficients are fixed at six times vanilla level-1 values for each mass class. All Base levels 0–200 remain eligible. Verify copied roles, Superbot, mixed grabbers, stage cleanup, special overrides and legacy mode. See `tools/LifterChecks` for emitted-IL and installed-game checks.
 - Schema 35 migration: exact config backup, removal of Lifter multiplier/cap settings, retention of legacy Strength level and role selection preferences, repeat migration.
 - Jobless: initial grace; different nonzero valuables; no contract after a drop, death, teleport or duplicate delivery; limit retained after reconnect.
 - King: self-exclusion, radius, injured/full/dead targets, overlapping Medic/Mage healing, delayed acknowledgements, final budget and reconnect.

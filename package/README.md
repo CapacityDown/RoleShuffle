@@ -4,7 +4,7 @@
 
 ### Overview
 
-RoleShuffle assigns random roles for each stage using vanilla upgrades and effects. Base upgrades can scale with run level and persist between stages. Tank and Runner use the growth rules below; Lifter sets Strength to 200. Other roles replace matching base targets.
+RoleShuffle assigns random roles for each stage using vanilla upgrades and effects. Base upgrades can scale with run level and persist between stages. Tank and Runner use the growth rules below; Lifter fixes effective grip/rotation coefficients at six times level 1 (display level 200). Other roles replace matching base targets.
 
 Only the host needs RoleShuffle for gameplay effects. Sessions of up to 30 players are supported. Players without the mod receive their role, upgrades, effects, and vanilla chat/TTS announcement normally. Participants who also install RoleShuffle can use the full role HUD.
 
@@ -79,7 +79,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Tank | Convert Base maximum HP x1.5 to levels; growth cap 4,100 HP. | Health minimum 21. | Minimum, multiplier, cap |
 | Runner | Convert Base sprint speed/stamina capacity x1.5 to levels; growth caps 205/2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Sets Strength to level 200. | Vanilla penalties apply; excluded at Base 200. | Legacy mode only: Strength level |
+| Lifter | Fixes grip/rotation coefficients at 6× level 1. | Display level 200; Base 0–200 eligible. | Legacy mode only: Strength level |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -121,7 +121,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Overhaul settings
 
-Enabled by default. Tank/Runner multiply Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Caps are rounded-up maxima over levels 0–200; Base and role minimums take priority. Tank/Runner are excluded if any corresponding Base effective value reaches its cap or there is no upgrade gain. Lifter always sets Strength to 200, without extra physics correction, and is excluded at Base Strength 200. Vanilla penalties can reduce heavy grip from Base 32–68 and the heavy rotation coefficient from Base 28–72. Forced assignments use the same targets. Base includes manual/draw changes. Copies and Superbot inherit these targets. Jobless contracts survive revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
+Enabled by default. Tank/Runner multiply Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Caps are rounded-up maxima over levels 0–200; Base and role minimums take priority. Tank/Runner are excluded if any corresponding Base effective value reaches its cap or there is no upgrade gain. Lifter keeps display level 200 and fixes normal grip/rotation coefficients at six times vanilla level 1 via host physics: 7.087792 below mass 2, 7.160727 otherwise. This is an absolute value, independent of Base; levels 0–200 remain eligible. Temporary overrides retain priority. Final torque is nonlinear, not a sixfold guarantee. Forced assignments use the same targets. Base includes manual/draw changes. Copies and Superbot inherit these targets. Jobless contracts survive revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
 
 Host settings except the local HUD switch:
 
@@ -317,7 +317,7 @@ All entries in this table are host-controlled.
 | `Runner.SpeedUpgradeLevels` | `6` | `0`–`200` | Speed levels granted to Runner. |
 | `Runner.StaminaUpgradeLevels` | `46` | `0`–`200` | Stamina levels granted to Runner. |
 | `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`–`200` | Extra Jump levels granted to Jumper. |
-| `Lifter.StrengthUpgradeLevels` | `25` | `0`–`200` | Legacy mode only. Overhaul mode always sets Strength to 200. |
+| `Lifter.StrengthUpgradeLevels` | `25` | `0`–`200` | Legacy mode only. Overhaul displays 200 and fixes effective grip/rotation at 6× level 1. |
 | `Launcher.LaunchUpgradeLevels` | `10` | `0`–`200` | Launch levels granted to Launcher. |
 | `Climber.ClimbUpgradeLevels` | `50` | `0`–`200` | Tumble Climb levels granted to Climber. |
 | `Climber.RangeUpgradeLevels` | `20` | `0`–`200` | Range levels granted to Climber. |
@@ -486,7 +486,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 ### 概要
 
-RoleShuffleはステージごとに役職を抽選し、バニラのアップグレードや効果を付与します。基礎アップグレードはランレベルに応じて設定でき、ステージ外でも維持されます。Tank・Runnerは後述の成長ルールを使い、LifterはStrengthを200にします。その他の役職は対応する基礎値を置き換えます。
+RoleShuffleはステージごとに役職を抽選し、バニラのアップグレードや効果を付与します。基礎アップグレードはランレベルに応じて設定でき、ステージ外でも維持されます。Tank・Runnerは後述の成長ルールを使い、Lifterは掴む力・回転係数をLv1の実質値の6倍に固定します（表示Lv200）。その他の役職は対応する基礎値を置き換えます。
 
 ゲームプレイ効果はホストだけの導入で利用でき、最大30人のセッションをサポートします。MODを導入していない参加者にも、役職、アップグレード、効果、バニラのチャット／TTS通知が適用されます。RoleShuffleを導入している参加者は、すべての役職を確認できるHUDも利用できます。
 
@@ -561,7 +561,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 | Tank | Base最大HP×1.5をレベルへ換算。成長上限4,100HP。 | 最低Health 21。 | 最低値・倍率・上限 |
 | Runner | Base走行速度・スタミナ容量×1.5をレベルへ換算。成長上限205・2,040。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | Strengthをレベル200にする。 | バニラ補正を適用。Base 200なら抽選対象外。 | 旧仕様のみ：Strengthレベル |
+| Lifter | 掴む力・回転係数をLv1の実質値の6倍に固定。 | 表示Lv200。Base 0〜200は抽選対象。 | 旧仕様のみ：Strengthレベル |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -603,7 +603,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 
 ### オーバーホール設定
 
-初期値は有効。Tank・RunnerはBaseのHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。上限はレベル0〜200の実効最大値を切り上げた値で、Base・役職最低値を優先します。対象のBase実効値が1つでも上限以上、または強化なしなら抽選対象外。LifterはStrengthを200に固定し、物理補正は追加しません。Base Strengthが200なら抽選対象外。バニラの仕様により、Base 32〜68では重量物の掴む力、Base 28〜72では重量物の回転係数が低下します。強制割り当ても同じ目標値を使用します。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数は蘇生・再参加でも保持。Kingは一時アップグレードを付与し、HP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持。`General.OverhaulEnabled = false`で旧仕様。ステージ間で変更してください。
+初期値は有効。Tank・RunnerはBaseのHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。上限はレベル0〜200の実効最大値を切り上げた値で、Base・役職最低値を優先します。対象のBase実効値が1つでも上限以上、または強化なしなら抽選対象外。Lifterは表示Lv200を維持し、ホスト側で通常の掴む力・回転係数をバニラLv1の実質値の6倍に固定します。質量2未満は7.087792、それ以上は7.160727。Baseに依存しない固定値で、Base 0〜200は抽選対象です。一時的な上書き効果は優先。回転係数は最終回転力の6倍を意味しません。強制割り当ても同じ目標値を使用します。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数は蘇生・再参加でも保持。Kingは一時アップグレードを付与し、HP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持。`General.OverhaulEnabled = false`で旧仕様。ステージ間で変更してください。
 
 HUD以外はホスト設定です。
 
@@ -799,7 +799,7 @@ Weightのデフォルト値はバニラのショップ最大出現数を反映�
 | `Runner.SpeedUpgradeLevels` | `6` | `0`～`200` | Runnerへ付与するSpeedレベルです。 |
 | `Runner.StaminaUpgradeLevels` | `46` | `0`～`200` | Runnerへ付与するStaminaレベルです。 |
 | `Jumper.ExtraJumpUpgradeLevels` | `10` | `0`～`200` | Jumperへ付与するExtra Jumpレベルです。 |
-| `Lifter.StrengthUpgradeLevels` | `25` | `0`～`200` | 旧仕様のみ使用。オーバーホール時は常にStrength 200。 |
+| `Lifter.StrengthUpgradeLevels` | `25` | `0`～`200` | 旧仕様のみ使用。オーバーホールは表示200、掴む力・回転係数はLv1実質値の6倍。 |
 | `Launcher.LaunchUpgradeLevels` | `10` | `0`～`200` | Launcherへ付与するLaunchレベルです。 |
 | `Climber.ClimbUpgradeLevels` | `50` | `0`～`200` | Climberへ付与するTumble Climbレベルです。 |
 | `Climber.RangeUpgradeLevels` | `20` | `0`～`200` | Climberへ付与するRangeレベルです。 |

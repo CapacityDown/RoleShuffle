@@ -57,9 +57,9 @@ double[] Forces(int level) => new[] {
     RoleOverhaulRules.EffectiveGrabStrength(level, true, true), RoleOverhaulRules.EffectiveGrabStrength(level, false, true) };
 Check(!RoleOverhaulRules.GrowsWithBase(StageRole.Lifter), "Lifter no longer uses Base multipliers");
 Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false) - 5.290322580645d) < 1e-8,
-    "Fixed Strength 200 keeps vanilla heavy grip, without physical correction");
+    "Vanilla level-200 grip reference before Lifter correction");
 Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false, true) - 4.978571428571d) < 1e-8,
-    "Fixed Strength 200 keeps vanilla rotation coefficient");
+    "Vanilla level-200 rotation reference before Lifter correction");
 Check(Enumerable.Range(0, 201).Where(n => RoleOverhaulRules.EffectiveGrabStrength(n, false) >
     RoleOverhaulRules.EffectiveGrabStrength(200, false)).SequenceEqual(Enumerable.Range(32, 37)),
     "Vanilla Strength 200 reduces heavy grip from Base 32 through 68");

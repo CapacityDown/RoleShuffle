@@ -85,6 +85,7 @@ __TARGETS__
             Bases = new[] { new UpgradeGrant("Strength", 20) }, Targets = new[] { new UpgradeGrant("Strength", 25) }
         };
         lifter.OverhaulEnabled.Value = true;
+        RoleOverhaulRules.LifterPhysicsAvailable = true;
         // Execute actual target composition and eligibility over the whole Base range,
         // including old configured minima that overhaul mode must now ignore.
         foreach (int minimum in new[] { 0, 25, 50, 200 })
@@ -93,13 +94,18 @@ __TARGETS__
             lifter.Targets[0].Level = minimum;
             if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 200)
                 throw new Exception("Lifter must grant fixed Strength 200 regardless of Base/minimum");
-            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (baseline >= 200))
-                throw new Exception("Only Base Strength 200 excludes fixed Lifter");
+            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
+                throw new Exception("All Base levels 0-200 remain below the fixed effective target");
             if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != 200)
                 throw new Exception("Superbot inherits fixed Strength 200");
             count += 3;
         }
         lifter.Targets[0].Level = 25;
+        RoleOverhaulRules.LifterPhysicsAvailable = false;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
+            throw new Exception("Missing physics patch excludes ineffective random Lifter");
+        RoleOverhaulRules.LifterPhysicsAvailable = true;
+        count++;
         lifter.OverhaulEnabled.Value = false;
         lifter.Bases[0].Level = 20;
         if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 25 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))

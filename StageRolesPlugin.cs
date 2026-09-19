@@ -95,6 +95,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             _harmony.PatchAll(typeof(MageStaffVoidDurationPatch));
             _harmony.PatchAll(typeof(MageStaffBeamDurationPatch));
             _harmony.PatchAll(typeof(RoleGuideScrollPatch));
+            LifterStrengthPatch.Install(_harmony);
             SceneManager.activeSceneChanged += ActiveSceneChanged;
             Logger.LogInfo($"{PluginName} {PluginVersion} loaded.");
         }

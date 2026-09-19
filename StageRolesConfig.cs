@@ -209,7 +209,7 @@ internal sealed class StageRolesConfig
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
         LifterStrengthLevels = BindInt(config, "Lifter", "StrengthUpgradeLevels", 25, 0, RoleUpgradeScaling.MaximumUpgradeLevel,
-            "Legacy mode Strength target. Overhaul mode always sets Strength to level 200 using vanilla upgrades, without additional physics correction.");
+            "Legacy mode Strength target. Overhaul displays level 200 and fixes normal grip/rotation coefficients at six times their vanilla level-1 values on the host. Temporary overrides retain priority.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");

@@ -3,7 +3,7 @@
 - Tank/Runner are excluded from random assignment when any corresponding Base effective value reaches or exceeds its configured cap. Runner is excluded when either speed or stamina reaches its cap. Existing no-gain exclusions and forced assignments are preserved.
 
 - Replaced Tank/Runner fixed bonuses with effective-value multipliers (default 1.5), converted to vanilla upgrade levels. Growth caps are rounded-up maxima over levels 0-200: HP 4100, sprint speed 205, stamina 2040. Base and configured minimums remain guaranteed.
-- Lifter sets Strength to level 200 using vanilla upgrades only. Base Strength 200 excludes it from random assignment. Vanilla grip and rotation penalties remain. Copied roles and Superbot inherit the target. Schema 35 backs up and removes obsolete Lifter multiplier/cap settings; the configured Strength level remains available in legacy mode.
+- Lifter displays Strength 200 and fixes normal grip/rotation coefficients at six times vanilla level-1 values through host physics. Base 0–200 remains eligible. Temporary overrides retain priority. Copied roles and Superbot inherit the effect. The legacy Strength setting is preserved; obsolete multiplier/cap settings are removed with backup (schema 35).
 - Fixed ability-status cleanup initializing Photon during lobby startup.
 - Added Jobless delivery contracts with an initial grace period, limited paid breaks and healing rewards.
 - King grants temporary Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Leaving, death or role changes remove only King's bonuses. Native upgrades support unmodded guests; HUD shows supported allies. Config schema 34 preserves the old radius and backs up healing settings.

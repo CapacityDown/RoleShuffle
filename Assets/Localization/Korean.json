@@ -240,5 +240,6 @@
   "Strength minimum level {0}. Target Base light/heavy grip x{1}, growth cap {2} relative to level 0. Choose the lowest safe level meeting both goals, or the best balanced gain. Preserve Base, the minimum and rotation strength.": "Strength 최소 레벨 {0}. Base의 경량/중량 물체 잡는 힘 {1}배, 레벨 0 대비 성장 상한 {2}. 두 목표를 만족하는 가장 낮은 안전 레벨을 선택하거나 균형 잡힌 최대 증가를 적용합니다. Base와 최소값을 보장하고 추가 성장으로 회전력이 감소하지 않습니다.",
   "Supported allies": "강화 중인 아군",
   " Excluded from random assignment if any corresponding Base effective value is at or above its cap.": " 해당 Base 실효값 중 하나라도 상한 이상이면 무작위 배정에서 제외됩니다.",
-  "Sets Strength to level {0}. Vanilla strength penalties still apply. Excluded from random assignment when Base Strength is already level {0}.": "Strength를 레벨 {0}으로 설정합니다. 기본 게임의 힘 감소 보정은 그대로 적용됩니다. Base Strength가 이미 레벨 {0}이면 무작위 배정에서 제외됩니다."
+  "Sets Strength to level {0}. Vanilla strength penalties still apply. Excluded from random assignment when Base Strength is already level {0}.": "Strength를 레벨 {0}으로 설정합니다. 기본 게임의 힘 감소 보정은 그대로 적용됩니다. Base Strength가 이미 레벨 {0}이면 무작위 배정에서 제외됩니다.",
+  "Displays Strength level {0}. Normal grip and rotation coefficients are fixed at {1} times their level-{2} values, independent of Base. Temporary overrides still apply. Base levels 0-200 remain eligible.": "표시되는 Strength는 레벨 {0}입니다. 기본 잡기 및 회전 계수는 Base와 관계없이 레벨 {2} 실질값의 {1}배로 고정됩니다. 일시적인 덮어쓰기 효과는 우선 적용됩니다. Base 레벨 0–200 모두 무작위 배정 대상입니다."
 }

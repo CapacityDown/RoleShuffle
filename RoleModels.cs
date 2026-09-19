@@ -179,9 +179,10 @@ internal static class RoleCatalog
         IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config);
         if (config.OverhaulEnabled.Value && role == StageRole.Lifter)
         {
+            if (!RoleOverhaulRules.LifterPhysicsAvailable) return true;
             foreach (UpgradeGrant baseline in baseUpgrades)
                 if (baseline.CommandName == "Strength")
-                    return baseline.Level >= RoleOverhaulRules.LifterStrengthLevel;
+                    return RoleOverhaulRules.LifterBaseReachesTarget(baseline.Level);
             return false;
         }
         if (config.OverhaulEnabled.Value && RoleOverhaulRules.GrowsWithBase(role))
