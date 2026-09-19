@@ -12,6 +12,7 @@
     <Compile Include="../../RoleHealingRuntime.cs" Link="RoleHealingRuntime.cs" />
     <Compile Include="../../RoleAbilityStatus.cs" Link="RoleAbilityStatus.cs" />
     <Compile Include="../../RoleResourceLayout.cs" Link="RoleResourceLayout.cs" />
+    <Compile Include="../../RoleResourceSymbols.cs" Link="RoleResourceSymbols.cs" />
     <Compile Include="../../RoleAbilitySync.cs" Link="RoleAbilitySync.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />

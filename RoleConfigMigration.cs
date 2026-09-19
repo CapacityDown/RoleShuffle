@@ -10,7 +10,7 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleConfigMigration
 {
-    private const int CurrentSchemaVersion = 35;
+    private const int CurrentSchemaVersion = 36;
     private static readonly ConfigDefinition SchemaDefinition =
         new("Migration", "ConfigVersion");
 
@@ -500,6 +500,12 @@ internal static class RoleConfigMigration
                 migrated += ReplaceValueIfEqual(values, "HUD", "OffsetY", "10", "80");
             }
 
+            if (sourceVersion < 36)
+            {
+                migrated += ReplaceValueIfEqual(values, "HUD", "ResourceHudOffsetX", "16", "0");
+                migrated += ReplaceValueIfEqual(values, "HUD", "ResourceHudOffsetY", "24", "0");
+            }
+
             foreach (string section in RemovedSections)
             {
                 removed += RemoveSection(values, section);
@@ -539,7 +545,7 @@ internal static class RoleConfigMigration
             if (sourceVersion < CurrentSchemaVersion && values.Count > 1 &&
                 File.Exists(path))
             {
-                string backupPath = path + (sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
+                string backupPath = path + (sourceVersion >= 35 ? ".pre-v4.5.0-native-hud.bak" : sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
                 if (!File.Exists(backupPath))
                 {
                     File.Copy(path, backupPath, overwrite: false);

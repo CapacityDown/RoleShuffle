@@ -46,10 +46,27 @@ Check(!lifterText.Contains("StrengthMultiplier") && !lifterText.Contains("Maximu
 Check(lifterConfig.LifterStrengthLevels.Value == 40 && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
     "Fixed Lifter migration preserves legacy levels and selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
-Check(lifterText.Contains("ConfigVersion = 35"), "Fixed Lifter config uses schema 35");
+Check(lifterText.Contains("ConfigVersion = 36"), "Config uses current native HUD schema");
 RoleConfigMigration.Apply(lifterFile);
 Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
     "Repeated migration preserves settings and rollback backup");
+Check(config.HudResourceOffsetX.Value == 0 && config.HudResourceOffsetY.Value == 0 && config.HudResourceScale.Value == 100,
+    "New resource HUD uses native alignment and scale");
+foreach (bool custom in new[] { false, true })
+{
+    string hudPath = Path.Combine(directory, custom ? "custom-hud.cfg" : "default-hud.cfg");
+    string before = "[Migration]\nConfigVersion = 35\n[HUD]\nResourceHudOffsetX = " + (custom ? "40" : "16") +
+        "\nResourceHudOffsetY = " + (custom ? "60" : "24") + "\nResourceHudScalePercent = 125\nResourceHudEnabled = false\n";
+    File.WriteAllText(hudPath, before);
+    var hudFile = new ConfigFile(hudPath, false) { SaveOnConfigSet = false };
+    var hudConfig = new StageRolesConfig(hudFile); hudFile.Save();
+    Check(hudConfig.HudResourceOffsetX.Value == (custom ? 40 : 0) && hudConfig.HudResourceOffsetY.Value == (custom ? 60 : 0),
+        "Native HUD migration replaces old defaults and preserves custom offsets");
+    Check(hudConfig.HudResourceScale.Value == 125 && !hudConfig.HudResourcesEnabled.Value, "Preserve HUD scale and visibility preferences");
+    Check(File.ReadAllText(hudPath + ".pre-v4.5.0-native-hud.bak") == before, "Exact pre-migration HUD backup");
+    string after = File.ReadAllText(hudPath); RoleConfigMigration.Apply(hudFile);
+    Check(File.ReadAllText(hudPath) == after, "Native HUD migration is idempotent");
+}
 var service = new RoleSelectionSettings(config, file);
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();

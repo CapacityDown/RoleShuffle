@@ -227,19 +227,32 @@ foreach (AbilityMetric metric in resources)
 }
 Check(RoleAbilityResources.Unit(AbilityMetric.Repair) == "%" && RoleAbilityResources.Unit(AbilityMetric.MageRecovery) == " HP" &&
     RoleAbilityResources.Unit(AbilityMetric.Phoenix) == "", "Percent, HP and count units remain distinct");
-foreach (var screen in new[] { (640f, 480f), (1280f, 720f), (1920f, 1080f), (2560f, 1080f), (3840f, 2160f) })
+foreach (var screen in new[] { (480f, 370f), (680f, 370f), (920f, 370f), (680f, 400f), (680f, 250f) })
 foreach (int rows in Enumerable.Range(1, 8))
 foreach (int scale in new[] { 50, 100, 200 })
 foreach (int offset in new[] { 0, 24, 3840 })
 {
-    var layout = RoleResourceLayout.Fit(screen.Item1, screen.Item2, rows, scale, offset, offset);
-    Check(layout.Scale > 0 && layout.Left >= 0 && layout.Top >= 0 &&
-        layout.Left + RoleResourceLayout.Width * layout.Scale <= screen.Item1 + 0.01f &&
-        layout.Top + rows * RoleResourceLayout.RowHeight * layout.Scale <= screen.Item2 - 110 * screen.Item2 / 540 + 0.01f,
-        "All budgets fit inside the viewport and above vanilla HP/stamina at every supported scale/offset");
+    var layout = RoleResourceLayout.Fit(screen.Item1, screen.Item2, rows, 190, 50, 31, 0.6f, 62, scale, offset, offset);
+    int columns = (rows + layout.Rows - 1) / layout.Rows;
+    Check(layout.Scale > 0 && layout.Left >= 0 && layout.Top >= 62 &&
+        layout.Left + (190 + (columns-1) * layout.ColumnPitch) * layout.Scale <= screen.Item1 + 0.01f &&
+        layout.Top + (50 + (layout.Rows-1) * 31) * layout.Scale <= screen.Item2 * 0.6f + 0.01f,
+        "Resource rows stay below native stamina, above the role-list area, and within the native canvas");
 }
-var defaultHud = RoleResourceLayout.Fit(960, 540, 7, 100, 16, 24);
-Check(defaultHud == (1f, 16f, 24f), "Default Superbot displays all seven budgets simultaneously at full size");
+var defaultHud = RoleResourceLayout.Fit(680, 370, 7, 148.1f, 50, 31, 0.6f, 62, 100, 0, 0);
+Check(defaultHud.Scale == 1 && defaultHud.Left == 0.6f && defaultHud.Top == 62 && defaultHud.Rows == 4,
+    "Actual vanilla Game Hud dimensions preserve full native size for seven Superbot resources in two columns");
+Check(RoleResourceLayout.MaximumOffset(99, 50) == 50 && RoleResourceLayout.MaximumOffset(10000, 50) == 90,
+    "Maximum text follows vanilla's twenty-unit shift per extra digit");
+foreach (var metric in resources)
+{
+    var glyph = RoleResourceSymbols.Get(metric);
+    Check(glyph.Count > 0 && glyph.Count % 3 == 0 && glyph.All(p => p.X >= 0 && p.X <= 25 && p.Y >= 0 && p.Y <= 25),
+        "Every budget has a bounded, nonempty native-size pictogram");
+    Check(ReferenceEquals(glyph, RoleResourceSymbols.Get(metric)), "Pictograms are reused without per-frame allocations");
+}
+if (args.Length == 2 && args[0] == "--export-hud-icons")
+    File.WriteAllText(args[1], System.Text.Json.JsonSerializer.Serialize(resources.ToDictionary(m => m.ToString(), m => RoleResourceSymbols.Get(m))));
 var snapshot = new AbilitySnapshot("p|日本語", StageRole.Imitator, StageRole.Medic, metrics);
 string encoded = RoleAbilityCodec.Encode(new[] { snapshot });
 var decoded = RoleAbilityCodec.Decode(encoded);

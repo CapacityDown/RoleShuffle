@@ -141,7 +141,7 @@ Host settings except HUD:
 | `HUD.AbilityStatusEnabled` | `true` | Boolean | Cooldowns/progress below the role heading; also budgets if the resource HUD is off. |
 | `HUD.ResourceHudEnabled` | `true` | Boolean | Personal resource HUD at the top left, independent of the role list. |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | Resource HUD scale; fits the screen automatically. |
-| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `16` / `24` | `0`–`3840` / `0`–`2160` | Distance from the left/top edge in 540-height reference pixels. |
+| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | Extra right/down offset from below native stamina, in native HUD units. |
 
 The role-heading line cycles two cooldown/progress metrics every 5 seconds. `/roles` also reports resources. Requires a 4.5 host; stale data is hidden. Cloud/grenade distance does not guarantee immediate spawning.
 
@@ -443,7 +443,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 
 ### Notifications and HUD
 
-- **Resources:** vanilla-style remaining/limit numbers at the top left for healing, revives, repair, charge, wagers and contracts. Copies and Superbot show all budgets together; zero stays red and fractions round up. Shown to installed players while alive in a stage. Configure with `HUD.ResourceHud*`.
+- **Resources:** native HP/stamina typography and monochrome symbols below stamina. Healing, revives, repair, charge, wagers and contracts support copies/Superbot (4 rows per column). Zero stays red; fractions round up. Visible to installed living players. Configure with `HUD.ResourceHud*`.
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
@@ -627,7 +627,7 @@ HUD以外はホスト設定です。
 | `HUD.AbilityStatusEnabled` | `true` | 真偽値 | 役職欄にクールダウン・進捗を表示。残量HUDがOFFなら残量も表示。 |
 | `HUD.ResourceHudEnabled` | `true` | 真偽値 | 左上に自分の能力残量を表示。役職一覧とは独立。 |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | 残量HUDの大きさ。画面内に収まるよう自動調整。 |
-| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `16` / `24` | `0`–`3840` / `0`–`2160` | 左端／上端からの距離。画面高さ540を基準としたピクセル。 |
+| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | スタミナ直下から右／下への追加距離。バニラHUD単位。 |
 
 役職欄のクールダウン・進捗は2項目ずつ5秒ごとに切り替えます。`/roles`でも残量を確認できます。4.5のホストが必要で、古いデータは非表示にします。雲・爆弾の距離表示は即時発生の保証ではありません。
 
@@ -929,7 +929,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 
 ### 通知とHUD
 
-- **残量HUD：** バニラ風の残量／上限を左上に表示。回復・蘇生・修理・充電・賭け・契約が対象で、コピー能力とSuperbotにも対応します。0は赤く残り、小数は切り上げます。MOD導入者がステージ中に生存している間だけ表示。調整は`HUD.ResourceHud*`で行えます。
+- **残量HUD：** バニラと同じ書体・サイズと単色記号をスタミナ直下に表示。回復・蘇生・修理・充電・賭け・契約が対象。コピー・Superbotは4行ずつ列分けし、0は赤、小数は切り上げ表示。ステージ中の生存者に表示し、`HUD.ResourceHud*`で調整できます。
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示できます。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
 - ステージ開始時、各プレイヤーは割り当てられた英語の役職名をバニラのチャット／TTSで発言します。
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持します。

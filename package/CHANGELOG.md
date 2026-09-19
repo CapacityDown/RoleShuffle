@@ -1,5 +1,6 @@
 ## 4.5.0
 
+- Matched resource HUD text to native HP/stamina font, material, sizes (40/20) and spacing. Replaced role emblems with monochrome ability symbols and positioned rows below stamina; four rows per column keep Superbot compact. Schema 36 resets only the old default offsets, with a backup.
 - Added a top-left resource HUD with vanilla HP/stamina-style numbers and role emblems for Medic, Rescuer, Phoenix, Mage recovery, Mechanic, Electrician, Gambler and Jobless. Copied abilities and Superbot are supported; all budgets stay visible, including zero. Local position, scale and visibility are independent of the role list. Fractional budgets round up so a usable remainder does not display zero.
 - Rewrote the Tank, Runner, Lifter, Jobless and King guide entries to explain the ability first, followed by practical instructions and settings. Added paragraph breaks and refreshed all 14 languages; gameplay is unchanged.
 - Tank/Runner are excluded from random assignment when any corresponding Base effective value reaches or exceeds its configured cap. Runner is excluded when either speed or stamina reaches its cap. Existing no-gain exclusions and forced assignments are preserved.

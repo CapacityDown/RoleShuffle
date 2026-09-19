@@ -69,6 +69,8 @@
     <Compile Include="RoleHud.cs" />
     <Compile Include="RoleResourceHud.cs" />
     <Compile Include="RoleResourceLayout.cs" />
+    <Compile Include="RoleResourceIcon.cs" />
+    <Compile Include="RoleResourceSymbols.cs" />
     <Compile Include="RoleHudTestPreview.cs" />
     <Compile Include="RoleHudEditor.cs" />
     <Compile Include="PlayerUtilitiesCore.cs" />

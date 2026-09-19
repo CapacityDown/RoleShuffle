@@ -90,8 +90,8 @@ internal sealed class StageRolesConfig
         HudAbilityStatusEnabled = BindBool(config, "HUD", "AbilityStatusEnabled", true, "Shows cooldowns and progress below the role heading; includes budgets when ResourceHudEnabled is off. Local display setting; requires a 4.5 host.");
         HudResourcesEnabled = BindBool(config, "HUD", "ResourceHudEnabled", true, "Shows your finite ability resources at the top left, independently of the role list. Requires RoleShuffle on this player and a 4.5 host.");
         HudResourceScale = BindInt(config, "HUD", "ResourceHudScalePercent", 100, 50, 200, "Ability resource HUD scale; automatically reduced to fit the screen.");
-        HudResourceOffsetX = BindInt(config, "HUD", "ResourceHudOffsetX", 16, 0, 3840, "Ability resource HUD distance from the left edge, in 540-height reference pixels.");
-        HudResourceOffsetY = BindInt(config, "HUD", "ResourceHudOffsetY", 24, 0, 2160, "Ability resource HUD distance from the top edge, in 540-height reference pixels.");
+        HudResourceOffsetX = BindInt(config, "HUD", "ResourceHudOffsetX", 0, 0, 3840, "Additional rightward offset from vanilla HP/stamina, in native HUD units. Zero aligns the icons and numbers.");
+        HudResourceOffsetY = BindInt(config, "HUD", "ResourceHudOffsetY", 0, 0, 2160, "Additional downward offset below vanilla stamina, in native HUD units. Zero uses the native row spacing.");
         HudRoleDisplay = config.Bind("HUD", "RoleDisplay", "NameOnly",
             new ConfigDescription("Role display style. Player names remain visible in every mode.",
                 new AcceptableValueList<string>("IconAndName", "NameOnly", "IconOnly")));
