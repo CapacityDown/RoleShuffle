@@ -47,7 +47,6 @@ internal enum StageRole
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
-    internal Entry<bool> OverhaulEnabled { get; } = new(true);
     internal Entry<float> TankHealthMultiplier { get; } = new(7.25f);
     internal Entry<float> RunnerSpeedMultiplier { get; } = new(7.25f);
     internal Entry<float> RunnerStaminaMultiplier { get; } = new(7.25f);
@@ -95,7 +94,6 @@ internal sealed class StageRolesConfig
     internal Entry<float> JoblessDamageIntervalSeconds { get; } = new(7.25f);
     internal Entry<int> JumperExtraJumpLevels { get; } = new(17);
     internal Entry<int> LauncherLaunchLevels { get; } = new(17);
-    internal Entry<int> LifterStrengthLevels { get; } = new(17);
     internal Entry<int> MageAutoRecoveryAmount { get; } = new(17);
     internal Entry<float> MageAutoRecoveryDelaySeconds { get; } = new(7.25f);
     internal Entry<bool> MageAutoRecoveryEnabled { get; } = new(true);

@@ -50,7 +50,7 @@ internal static class KingUpgradeAura
         foreach (var assignment in assignments)
         {
             assignment.Overhaul.KingSupportedAllies = 0;
-            if (config.OverhaulEnabled.Value && assignment.Role == StageRole.King && PlayerState.IsLiving(assignment.Player))
+            if (assignment.Role == StageRole.King && PlayerState.IsLiving(assignment.Player))
                 kings.Add(assignment);
         }
         float radiusSquared = config.KingUpgradeRadius.Value * config.KingUpgradeRadius.Value;

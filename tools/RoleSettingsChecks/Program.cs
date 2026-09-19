@@ -21,7 +21,7 @@ var migratedFile = new ConfigFile(oldConfigPath, false) { SaveOnConfigSet = fals
 var migrated = new StageRolesConfig(migratedFile);
 migratedFile.Save();
 string migratedText = File.ReadAllText(oldConfigPath);
-Check(migrated.TankHealthLevels.Value == 30 && migrated.LifterStrengthLevels.Value == 40 && migrated.TankHealthMultiplier.Value == 1.8f,
+Check(migrated.TankHealthLevels.Value == 30 && migrated.TankHealthMultiplier.Value == 1.8f,
     "Migration preserves configured minimums and existing multiplier choice");
 Check(new[] { "BaseHealthBonus", "BaseSpeedBonus", "BaseStaminaBonus", "BaseStrengthBonus" }.All(key => !migratedText.Contains(key)),
     "Migration removes obsolete additive settings");
@@ -43,10 +43,10 @@ var lifterFile = new ConfigFile(oldLifterPath, false) { SaveOnConfigSet = false 
 var lifterConfig = new StageRolesConfig(lifterFile); lifterFile.Save();
 string lifterText = File.ReadAllText(oldLifterPath);
 Check(!lifterText.Contains("StrengthMultiplier") && !lifterText.Contains("MaximumEffectiveStrength"), "Remove unused Lifter growth settings");
-Check(lifterConfig.LifterStrengthLevels.Value == 40 && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
-    "Fixed Lifter migration preserves legacy levels and selection preferences");
+Check(!lifterText.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
+    "Fixed Lifter migration removes the unused level setting and preserves selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
-Check(lifterText.Contains("ConfigVersion = 36"), "Config uses current native HUD schema");
+Check(lifterText.Contains("ConfigVersion = 37"), "Config uses the standard v4.5 role schema");
 RoleConfigMigration.Apply(lifterFile);
 Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
     "Repeated migration preserves settings and rollback backup");
@@ -66,6 +66,42 @@ foreach (bool custom in new[] { false, true })
     Check(File.ReadAllText(hudPath + ".pre-v4.5.0-native-hud.bak") == before, "Exact pre-migration HUD backup");
     string after = File.ReadAllText(hudPath); RoleConfigMigration.Apply(hudFile);
     Check(File.ReadAllText(hudPath) == after, "Native HUD migration is idempotent");
+}
+foreach (bool wasEnabled in new[] { false, true })
+{
+    string standardPath = Path.Combine(directory, $"standard-roles-{wasEnabled}.cfg");
+    string before = "[Migration]\nConfigVersion = 36\n[General]\nEnabled = false\nOverhaulEnabled = " + wasEnabled +
+        "\n[Tank]\nHealthUpgradeLevels = 30\nHealthMultiplier = 2.3\nMaximumHealth = 2000\n" +
+        "[Runner]\nSpeedMultiplier = 1.7\nMaximumSprintSpeed = 99\nStaminaMultiplier = 1.8\nMaximumStamina = 1200\n" +
+        "[Lifter]\nStrengthUpgradeLevels = 17\nEnabled = false\nWeight = 75\n" +
+        "[Jobless]\nContractDistance = 7\nContractGraceSeconds = 45\nContractsPerStage = 5\nContractHeal = 12\n" +
+        "[King]\nUpgradeRadius = 12\nStrengthBonusLevels = 2\n" +
+        "[HUD]\nAbilityStatusEnabled = true\nResourceHudEnabled = false\nResourceHudOffsetX = 40\nResourceHudScalePercent = 125\n";
+    File.WriteAllText(standardPath, before);
+    var standardFile = new ConfigFile(standardPath, false) { SaveOnConfigSet = false };
+    var standard = new StageRolesConfig(standardFile); standardFile.Save();
+    string after = File.ReadAllText(standardPath);
+    Check(!after.Contains("OverhaulEnabled") && !after.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !after.Contains("AbilityStatusEnabled"),
+        "Both saved toggle values migrate without obsolete mode, Lifter or status settings");
+    Check(!standardFile.Any(entry => entry.Key.Key is "OverhaulEnabled" or "AbilityStatusEnabled" ||
+        (entry.Key.Section == "Lifter" && entry.Key.Key == "StrengthUpgradeLevels")),
+        "Obsolete entries are not exposed to the settings UI");
+    Check(!standard.Enabled.Value && !standard.LifterEnabled.Value && standard.LifterWeight.Value == 75,
+        "Standard rules preserve the mod and per-role selection switches");
+    Check(standard.TankHealthLevels.Value == 30 && standard.TankHealthMultiplier.Value == 2.3f && standard.TankMaximumHealth.Value == 2000 &&
+        standard.RunnerSpeedMultiplier.Value == 1.7f && standard.RunnerMaximumSpeed.Value == 99 &&
+        standard.RunnerStaminaMultiplier.Value == 1.8f && standard.RunnerMaximumStamina.Value == 1200,
+        "Standard rules preserve growth tuning");
+    Check(standard.JoblessContractDistance.Value == 7 && standard.JoblessContractGrace.Value == 45 &&
+        standard.JoblessContractLimit.Value == 5 && standard.JoblessContractHeal.Value == 12 &&
+        standard.KingUpgradeRadius.Value == 12 && standard.KingStrengthBonus.Value == 2,
+        "Standard rules preserve contract and King tuning");
+    Check(!standard.HudResourcesEnabled.Value && standard.HudResourceOffsetX.Value == 40 && standard.HudResourceScale.Value == 125,
+        "Standard rules preserve resource HUD preferences");
+    string backup = standardPath + ".pre-v4.5.0-standard-roles.bak";
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 37"), "Exact rollback backup and schema upgrade");
+    RoleConfigMigration.Apply(standardFile);
+    Check(File.ReadAllText(standardPath) == after && File.ReadAllText(backup) == before, "Standard migration is idempotent");
 }
 var service = new RoleSelectionSettings(config, file);
 StageRolesPlugin.Instance.RoleSettings = service;

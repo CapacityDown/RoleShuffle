@@ -112,7 +112,6 @@ namespace REPOJP.StageRoles
     internal sealed class Entry<T>(T value) { internal T Value { get; set; } = value; }
     internal sealed class StageRolesConfig
     {
-        internal Entry<bool> OverhaulEnabled = new(true);
         internal Entry<float> JoblessContractGrace = new(30);
         internal Entry<int> JoblessContractLimit = new(3);
         internal Entry<float> JoblessContractDistance = new(5);

@@ -12,7 +12,6 @@ internal static class RoleOverhaulDescriptions
 
     internal static string? For(StageRole role, StageRolesConfig config, RoleGuideLanguage language)
     {
-        if (!config.OverhaulEnabled.Value) return null;
         string Format(string text, params object[] args) =>
             string.Format(CultureInfo.InvariantCulture, RoleText.Get(text, language), args);
         return role switch

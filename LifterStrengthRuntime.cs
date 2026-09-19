@@ -8,7 +8,7 @@ namespace REPOJP.StageRoles;
 internal sealed partial class StageRoleController
 {
     internal bool UsesFixedLifterStrength(PlayerAvatar player) =>
-        RoleAssignmentsReady && _config.Enabled.Value && _config.OverhaulEnabled.Value &&
+        RoleAssignmentsReady && _config.Enabled.Value &&
         PlayerState.IsLiving(player) && PlayerHasRole(player, StageRole.Lifter);
 }
 

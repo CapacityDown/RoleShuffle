@@ -25,7 +25,7 @@ internal sealed class RoleOverhaulRuntime
         foreach (RoleAssignment assignment in assignments)
         {
             RoleOverhaulState state = assignment.Overhaul;
-            if (!_config.OverhaulEnabled.Value || !PlayerState.IsLiving(assignment.Player))
+            if (!PlayerState.IsLiving(assignment.Player))
             {
                 state.ResetCargo();
                 _cargoPositions.Remove(assignment.SteamId);

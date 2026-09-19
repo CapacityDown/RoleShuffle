@@ -23,7 +23,6 @@ public class Entry<T> { public T Value; public Entry(T value) { Value = value; }
 public class StageRolesConfig {
     public UpgradeGrant[] Bases;
     public UpgradeGrant[] Targets;
-    public Entry<bool> OverhaulEnabled = new(false);
     public Entry<float> TankHealthMultiplier = new(1.5f);
     public Entry<float> RunnerSpeedMultiplier = new(1.5f);
     public Entry<float> RunnerStaminaMultiplier = new(1.5f);
@@ -43,10 +42,11 @@ __TARGETS__
             for (int baseline = 0; baseline <= 101; baseline++) {
                 var config = new StageRolesConfig {
                     Bases = new[] { new UpgradeGrant("Health", baseline) },
-                    Targets = new[] { new UpgradeGrant("Health", target) }
+                    Targets = new[] { new UpgradeGrant("Health", target) },
+                    TankHealthMultiplier = new(1f)
                 };
                 if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tank, config) != (baseline >= target))
-                    throw new Exception("Boundary comparison failed");
+                    throw new Exception("With multiplier one, only the configured minimum can provide a gain");
                 count++;
             }
         }
@@ -66,28 +66,23 @@ __TARGETS__
             Bases = new[] { new UpgradeGrant("Speed", 200), new UpgradeGrant("Stamina", 46) },
             Targets = new[] { new UpgradeGrant("Speed", 6), new UpgradeGrant("Stamina", 46) }
         };
-        runner.OverhaulEnabled.Value = true;
         if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Capped Speed excludes Runner even when Stamina still grows");
         var runnerTargets = TargetUpgrades(StageRole.Runner, runner);
         if (runnerTargets[0].Level != 200 || runnerTargets[1].Level != 71) throw new Exception("Production Runner targets");
         runner.Bases[1].Level = 200;
         if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Both upgrades capped");
-        runner.OverhaulEnabled.Value = false;
-        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Legacy eligibility remains intact");
         var superbot = new StageRolesConfig {
             Bases = new[] { new UpgradeGrant("Health", 100) }, Targets = new[] { new UpgradeGrant("Health", 21) }
         };
-        superbot.OverhaulEnabled.Value = true;
         superbot.TankHealthMultiplier.Value = 1;
         if (TargetUpgrades(StageRole.Superbot, superbot)[0].Level != 100) throw new Exception("Zero bonus cannot lower Superbot below Base");
-        count += 10;
+        count += 9;
         var lifter = new StageRolesConfig {
             Bases = new[] { new UpgradeGrant("Strength", 20) }, Targets = new[] { new UpgradeGrant("Strength", 25) }
         };
-        lifter.OverhaulEnabled.Value = true;
         RoleOverhaulRules.LifterPhysicsAvailable = true;
         // Execute actual target composition and eligibility over the whole Base range,
-        // including old configured minima that overhaul mode must now ignore.
+        // including old role inputs that the fixed Strength target must ignore.
         foreach (int minimum in new[] { 0, 25, 50, 200 })
         for (int baseline = 0; baseline <= 200; baseline++) {
             lifter.Bases[0].Level = baseline;
@@ -106,15 +101,9 @@ __TARGETS__
             throw new Exception("Missing physics patch excludes ineffective random Lifter");
         RoleOverhaulRules.LifterPhysicsAvailable = true;
         count++;
-        lifter.OverhaulEnabled.Value = false;
-        lifter.Bases[0].Level = 20;
-        if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 25 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
-            throw new Exception("Legacy Lifter target and eligibility must remain intact");
-        count++;
         var tank = new StageRolesConfig {
             Bases = new[] { new UpgradeGrant("Health", 199) }, Targets = new[] { new UpgradeGrant("Health", 21) }
         };
-        tank.OverhaulEnabled.Value = true;
         if (TargetUpgrades(StageRole.Tank, tank)[0].Level != 200 || BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tank, tank))
             throw new Exception("Base below cap remains eligible even when role would reach cap");
         tank.Bases[0].Level = 200;
@@ -128,7 +117,6 @@ __TARGETS__
             if (TargetUpgrades(StageRole.Tank, tank)[0].Level != 60) throw new Exception("Forced assignment still preserves role minimum");
             count += 2;
         }
-        runner.OverhaulEnabled.Value = true;
         runner.Bases[0].Level = 6; runner.Bases[1].Level = 200;
         if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Capped Stamina alone excludes Runner");
         runner.Bases[1].Level = 46;
@@ -140,15 +128,6 @@ __TARGETS__
         runner.RunnerMaximumStamina.Value = 501;
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Runner, runner)) throw new Exception("Below both custom caps with Speed gain stays eligible");
         count += 7;
-        foreach (int minimum in new[] { 0, 25, 50, 200 })
-        for (int baseline = 0; baseline <= 200; baseline++) {
-            lifter.Bases[0].Level = baseline;
-            lifter.Targets[0].Level = minimum;
-            if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != minimum ||
-                BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (baseline >= minimum))
-                throw new Exception("Legacy target and eligibility must still honor configured Strength");
-            count++;
-        }
         foreach (string command in new[] { "Health", "Speed", "Stamina", "Strength" })
         foreach (int level in System.Linq.Enumerable.Range(0, 201)) {
             double value = command == "Strength"

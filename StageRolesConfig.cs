@@ -39,7 +39,6 @@ internal sealed class StageRolesConfig
         RoleConfigMigration.Apply(config);
 
         Enabled = BindBool(config, "General", "Enabled", true, "Enables stage role assignment.");
-        OverhaulEnabled = BindBool(config, "General", "OverhaulEnabled", true, "Enables 4.5 role growth, Jobless contracts and King healing. Change between stages; upgrade grants update on the next assignment. Stinker and Bomber remain automatic.");
         UniqueRoles = BindBool(config, "General", "UniqueRoles", true, "Avoids duplicate roles until every enabled role has been assigned once.");
         ShopUpgradeItemCount = BindInt(config, "General", "ShopUpgradeItemCount", 0, 0, 30, "Number of upgrade items requested for each shop.");
 
@@ -192,16 +191,16 @@ internal sealed class StageRolesConfig
 
         TankEnabled = RoleEnabled(config, "Tank");
         TankWeight = RoleWeight(config, "Tank");
-        TankHealthLevels = UpgradeLevel(config, "Tank", "HealthUpgradeLevels", 21);
-        TankHealthMultiplier = BindFloat(config, "Tank", "HealthMultiplier", 1.5f, 1f, 10f, "Multiply Base maximum HP (100 + 20 per level), then round up to an upgrade level. Overhaul mode only.");
+        TankHealthLevels = BindInt(config, "Tank", "HealthUpgradeLevels", 21, 0, RoleUpgradeScaling.MaximumUpgradeLevel, "Minimum Health upgrade level guaranteed to Tank; higher Base and multiplier targets take priority.");
+        TankHealthMultiplier = BindFloat(config, "Tank", "HealthMultiplier", 1.5f, 1f, 10f, "Multiply Base maximum HP (100 + 20 per level), then round up to an upgrade level.");
         TankMaximumHealth = BindInt(config, "Tank", "MaximumHealth", 4100, 100, 4100, "Maximum HP for multiplier growth: ceil(maximum over vanilla levels 0-200). Existing Base and configured role minimum remain guaranteed.");
 
         RunnerEnabled = RoleEnabled(config, "Runner");
         RunnerWeight = RoleWeight(config, "Runner");
-        RunnerSpeedLevels = UpgradeLevel(config, "Runner", "SpeedUpgradeLevels", 6);
-        RunnerStaminaLevels = UpgradeLevel(config, "Runner", "StaminaUpgradeLevels", 46);
-        RunnerSpeedMultiplier = BindFloat(config, "Runner", "SpeedMultiplier", 1.5f, 1f, 10f, "Multiply Base sprint speed (5 + level), then round up to an upgrade level. Overhaul mode only.");
-        RunnerStaminaMultiplier = BindFloat(config, "Runner", "StaminaMultiplier", 1.5f, 1f, 10f, "Multiply Base stamina capacity (40 + 10 per level), then round up to an upgrade level. Sprint duration also depends on speed. Overhaul mode only.");
+        RunnerSpeedLevels = BindInt(config, "Runner", "SpeedUpgradeLevels", 6, 0, RoleUpgradeScaling.MaximumUpgradeLevel, "Minimum Speed upgrade level guaranteed to Runner; higher Base and multiplier targets take priority.");
+        RunnerStaminaLevels = BindInt(config, "Runner", "StaminaUpgradeLevels", 46, 0, RoleUpgradeScaling.MaximumUpgradeLevel, "Minimum Stamina upgrade level guaranteed to Runner; higher Base and multiplier targets take priority.");
+        RunnerSpeedMultiplier = BindFloat(config, "Runner", "SpeedMultiplier", 1.5f, 1f, 10f, "Multiply Base sprint speed (5 + level), then round up to an upgrade level.");
+        RunnerStaminaMultiplier = BindFloat(config, "Runner", "StaminaMultiplier", 1.5f, 1f, 10f, "Multiply Base stamina capacity (40 + 10 per level), then round up to an upgrade level. Sprint duration also depends on speed.");
         RunnerMaximumSpeed = BindInt(config, "Runner", "MaximumSprintSpeed", 205, 5, 205, "Maximum sprint speed for multiplier growth: ceil(maximum over vanilla levels 0-200). Existing Base and configured role minimum remain guaranteed.");
         RunnerMaximumStamina = BindInt(config, "Runner", "MaximumStamina", 2040, 40, 2040, "Maximum stamina capacity for multiplier growth: ceil(maximum over vanilla levels 0-200). Existing Base and configured role minimum remain guaranteed.");
 
@@ -211,8 +210,6 @@ internal sealed class StageRolesConfig
 
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
-        LifterStrengthLevels = BindInt(config, "Lifter", "StrengthUpgradeLevels", 25, 0, RoleUpgradeScaling.MaximumUpgradeLevel,
-            "Legacy mode Strength target. Overhaul displays level 200 and fixes normal grip/rotation coefficients at six times their vanilla level-1 values on the host. Temporary overrides retain priority.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");
@@ -262,8 +259,8 @@ internal sealed class StageRolesConfig
         JoblessWeight = RoleWeight(config, "Jobless", 20);
         JoblessDamage = BindInt(config, "Jobless", "Damage", 1, 1, 100, "Damage applied per tick outside the truck.");
         JoblessDamageIntervalSeconds = BindFloat(config, "Jobless", "DamageIntervalSeconds", 0.1f, 0.05f, 10f, "Seconds between damage ticks outside the truck.");
-        JoblessContractDistance = BindFloat(config, "Jobless", "ContractDistance", 5f, 1f, 50f, "Carry a different positive-value valuable this far outside the truck, then bring it into the truck. Overhaul mode only.");
-        JoblessContractGrace = BindFloat(config, "Jobless", "ContractGraceSeconds", 30f, 1f, 300f, "Initial and post-contract time without Jobless attrition. Overhaul mode only.");
+        JoblessContractDistance = BindFloat(config, "Jobless", "ContractDistance", 5f, 1f, 50f, "Carry a different positive-value valuable this far outside the truck, then bring it into the truck.");
+        JoblessContractGrace = BindFloat(config, "Jobless", "ContractGraceSeconds", 30f, 1f, 300f, "Initial and post-contract time without Jobless attrition.");
         JoblessContractLimit = BindInt(config, "Jobless", "ContractsPerStage", 3, 1, 30, "Maximum completed contracts per player per stage, retained through revival and rejoining.");
         JoblessContractHeal = BindInt(config, "Jobless", "ContractHeal", 10, 0, 100, "Health restored to the worker on completing a contract, up to maximum health.");
 
@@ -283,7 +280,7 @@ internal sealed class StageRolesConfig
 
         KingEnabled = RoleEnabled(config, "King");
         KingWeight = RoleWeight(config, "King");
-        KingUpgradeRadius = BindFloat(config, "King", "UpgradeRadius", 8f, 1f, 30f, "Radius in metres for temporary upgrade support to living allies in overhaul mode; excludes King.");
+        KingUpgradeRadius = BindFloat(config, "King", "UpgradeRadius", 8f, 1f, 30f, "Radius in metres for temporary upgrade support to living allies; excludes King.");
         KingSpeedBonus = BindInt(config, "King", "SpeedBonusLevels", 1, 0, 200, "Temporary Speed levels for allies in range, capped at level 200. Removed on leaving the aura.");
         KingRangeBonus = BindInt(config, "King", "RangeBonusLevels", 1, 0, 200, "Temporary Range levels for allies in range, capped at level 200. Removed on leaving the aura.");
         KingStrengthBonus = BindInt(config, "King", "StrengthBonusLevels", 1, 0, 200, "Maximum temporary Strength levels for allies in range. Selects a non-weakening level within this bonus and level 200; otherwise grants none.");
@@ -456,7 +453,6 @@ internal sealed class StageRolesConfig
 
     internal ConfigEntry<bool> Enabled { get; }
     internal ConfigEntry<bool> UniqueRoles { get; }
-    internal ConfigEntry<bool> OverhaulEnabled { get; }
     internal ConfigEntry<bool> HudResourcesEnabled { get; }
     internal ConfigEntry<int> HudResourceScale { get; }
     internal ConfigEntry<int> HudResourceOffsetX { get; }
@@ -546,7 +542,6 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> JumperExtraJumpLevels { get; }
     internal ConfigEntry<bool> LifterEnabled { get; }
     internal ConfigEntry<int> LifterWeight { get; }
-    internal ConfigEntry<int> LifterStrengthLevels { get; }
     internal ConfigEntry<bool> LauncherEnabled { get; }
     internal ConfigEntry<int> LauncherWeight { get; }
     internal ConfigEntry<int> LauncherLaunchLevels { get; }

@@ -10,7 +10,7 @@
 - Original package DLL SHA-256: `6BD1FC2D8D21570A52BCC9E7E2250DF88F7D4540915E94A9B31CB1AB52A9A5F4`.
 - Original ZIP SHA-256: `F275B92D50696D06236AF2B5ECA4B53A2040C7D3B4EDC22D48A8F8368CB5778F`.
 
-## Initial playable slice
+## Standard v4.5.0 rules
 
 1. Tank and Runner multiply Base effective values and convert them to vanilla upgrade levels, capped at HP 4100, sprint speed 205 and stamina 2040. Base and configured minimums are preserved. Lifter keeps native display level 200 and fixes normal grip/rotation coefficients at six times vanilla level-1 values. Base 0–200 remains eligible. Copied roles and Superbot inherit these targets.
 2. Jobless receives a starting grace period. Carry a different, positive-value valuable at least the configured distance and bring it into the truck to complete a contract. A contract pauses attrition and restores the worker's health. Completions are limited per player per stage; drops, death and teleports do not accumulate work.
@@ -18,7 +18,14 @@
 4. Stinker and Bomber remain movement-triggered automatic hazards. Neither has a manual pause, activation switch or charge-and-release operation. This is an explicit user requirement.
 5. The host publishes a separate, versioned ability-status snapshot for installed participants. The local resource HUD shows remaining resources in one vertical column. The role list has no auxiliary status line; `/roles` announces only the assigned role name. Existing assignment synchronization is preserved.
 
-`General.OverhaulEnabled = false` restores legacy behavior for the five changed roles. Resource display has a separate local HUD toggle.
+These five role updates are the standard v4.5.0 behavior. Schema 37 removes the old mode switch, unused Lifter Strength level and obsolete ability-status line setting after backing up the configuration. Role selection and current tuning are preserved. Resource display has a separate local HUD toggle. The older build remains available in the preserved checkout and deployment backups.
+
+## Standard role integration — UI build 475
+
+- Removed the optional mode and all runtime branches to the old Tank/Runner/Lifter/Jobless/King behavior. Lifter's unused level setting and obsolete status-line setting are removed by schema 37; an exact pre-migration backup is retained. Tests cover both saved mode-switch values, preserved tuning/selection/HUD preferences and repeat migration.
+- Release README/CHANGELOG and both Japanese role-list PDFs describe the standard v4.5.0 rules. The public PDF still masks both secret roles; all 20 PDF pages were rendered and inspected.
+- Verification: 75,596 growth/contract/aura/resource/sync checks; 13,541 production target/eligibility checks; 7,354 Lifter physics/IL checks; 12,079 localization checks; 280 role settings/migration, 128 Base settings and 248 save-adjustment checks. Build 475 has zero warnings/errors; 461 compiled game-field references pass against the installed game assembly.
+- This integration has not been exercised in live Unity or multiplayer. Older verification entries below are historical and may describe superseded settings.
 
 ## Host-only constraint
 

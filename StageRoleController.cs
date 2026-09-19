@@ -1410,11 +1410,11 @@ internal sealed partial class StageRoleController : MonoBehaviour
             return;
         }
 
-        if (_config.OverhaulEnabled.Value)
+        assignment.Overhaul.Start(Time.time, _config.JoblessContractGrace.Value);
+        if (Time.time < assignment.Overhaul.PaidUntil)
         {
-            assignment.Overhaul.Start(Time.time, _config.JoblessContractGrace.Value);
-            if (Time.time < assignment.Overhaul.PaidUntil)
-            { assignment.JoblessDamageTimer = 0f; return; }
+            assignment.JoblessDamageTimer = 0f;
+            return;
         }
 
         assignment.JoblessDamageTimer += Time.deltaTime;

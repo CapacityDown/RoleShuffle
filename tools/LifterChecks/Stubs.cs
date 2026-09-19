@@ -49,7 +49,7 @@ namespace REPOJP.StageRoles
     internal sealed class Entry<T>(T value) { internal T Value = value; }
     internal sealed class StageRolesConfig
     {
-        internal Entry<bool> Enabled = new(true), OverhaulEnabled = new(true);
+        internal Entry<bool> Enabled = new(true);
     }
     internal sealed partial class StageRoleController
     {

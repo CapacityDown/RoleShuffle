@@ -138,15 +138,8 @@ internal static class RoleGuideCatalog
     internal static string Description(StageRole role, StageRolesConfig config) =>
         RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.English) ?? role switch
         {
-            StageRole.Tank =>
-                $"Increases maximum health by setting the Health upgrade to level {config.TankHealthLevels.Value}.",
-            StageRole.Runner =>
-                $"Increases movement speed and stamina for faster, longer sprints. " +
-                $"Speed is set to level {config.RunnerSpeedLevels.Value} and Stamina to level {config.RunnerStaminaLevels.Value}.",
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
-            StageRole.Lifter =>
-                $"Increases grab strength, making heavy objects easier to handle. Strength is set to level {config.LifterStrengthLevels.Value}.",
             StageRole.Launcher =>
                 $"Launches the player farther forward when starting a Tumble. Launch is set to level {config.LauncherLaunchLevels.Value}.",
             StageRole.Climber =>
@@ -168,9 +161,6 @@ internal static class RoleGuideCatalog
                 $"The Medic cannot heal itself and stops after restoring {config.MedicTotalHealingLimit.Value} total HP during the stage."),
             StageRole.Phoenix =>
                 $"Automatically revives itself once per stage after dying, returning with up to {config.PhoenixRevivalHealth.Value} HP.",
-            StageRole.Jobless => (
-                $"Takes {config.JoblessDamage.Value} damage every {Number(config.JoblessDamageIntervalSeconds.Value)} seconds while outside the truck. " +
-                "The damage stops inside the truck and can be fatal."),
             StageRole.Rescuer => (
                 $"Approaching within {Number(config.RescuerRadius.Value)} m of a dead teammate's Death Head revives them with up to {config.RescuerRevivalHealth.Value} HP. " +
                 $"It can revive {config.RescuerMaximumRevives.Value} times per stage."),
@@ -178,8 +168,6 @@ internal static class RoleGuideCatalog
                 $"Recovers health when an enemy dies within {Number(config.VampireRadius.Value)} m. Danger Level 1 restores " +
                 $"{config.VampireTier1HealAmount.Value} HP, Level 2 restores {config.VampireTier2HealAmount.Value} HP, and Level 3 restores " +
                 $"{config.VampireTier3HealAmount.Value} HP."),
-            StageRole.King =>
-                "Receives the vanilla Crown for the stage. Only one King can be assigned.",
             StageRole.Tuna => (
                 $"After a 5-second grace period, standing still for {Number(config.TunaStationaryDelaySeconds.Value)} seconds causes {config.TunaDamage.Value} damage every {Number(config.TunaDamageIntervalSeconds.Value)} seconds. " +
                 "Moving resets the timer and stops the damage, but does not restore lost health."),
@@ -279,14 +267,8 @@ internal static class RoleGuideCatalog
                 $"Tumble Attackで敵へ{config.RammerTumbleDamage.Value}ダメージを与え、命中後にRammer自身が{config.RammerSelfDamage.Value}ダメージを受けます。ステージ中はBase Upgradeにかかわらず、Launch、Tumble Climb、Tumble Wingsがレベル0に固定されます。",
             StageRole.Diver =>
                 $"固定された床で下を向いたままタンブルすると、最大{Number(config.DiverUnderfloorDurationSeconds.Value)}秒間の床下移動を開始します。時間内に床を抜けて戻れないと死亡します。床上へ戻ると通常移動へ復帰し、直前に床下へ潜っていた時間の1.5倍のクールダウンが始まります。",
-            StageRole.Tank =>
-                $"最大HPが増加し、倒されにくくなります。Healthはレベル{config.TankHealthLevels.Value}になります。",
-            StageRole.Runner =>
-                $"移動速度とスタミナが増加し、より速く長く走れます。Speedはレベル{config.RunnerSpeedLevels.Value}、Staminaはレベル{config.RunnerStaminaLevels.Value}になります。",
             StageRole.Jumper =>
                 $"着地するまでに使える追加ジャンプが増えます。Extra Jumpはレベル{config.JumperExtraJumpLevels.Value}になります。",
-            StageRole.Lifter =>
-                $"つかむ力が強くなり、重い物を扱いやすくなります。Strengthはレベル{config.LifterStrengthLevels.Value}になります。",
             StageRole.Launcher =>
                 $"Tumble開始時に、より遠くまで前方へ飛び出します。Launchはレベル{config.LauncherLaunchLevels.Value}になります。",
             StageRole.Climber =>
@@ -306,17 +288,12 @@ internal static class RoleGuideCatalog
                 $"Medic自身は回復せず、ステージ中に合計{config.MedicTotalHealingLimit.Value}HPを回復すると効果が終了します。",
             StageRole.Phoenix =>
                 $"死亡すると、ステージ中に一度だけ自動で復活します。復活時のHPは最大{config.PhoenixRevivalHealth.Value}です。",
-            StageRole.Jobless =>
-                $"トラックの外にいる間、{Number(config.JoblessDamageIntervalSeconds.Value)}秒ごとに{config.JoblessDamage.Value}ダメージを受け続けます。" +
-                "トラック内では停止しますが、このダメージで死亡する可能性があります。",
             StageRole.Rescuer =>
                 $"死亡した仲間のDeath Headから{Number(config.RescuerRadius.Value)}m以内へ近づくと、最大{config.RescuerRevivalHealth.Value}HPで復活させます。" +
                 $"ステージごとに{config.RescuerMaximumRevives.Value}回まで使用できます。",
             StageRole.Vampire =>
                 $"半径{Number(config.VampireRadius.Value)}m以内で敵が死亡するとHPを回復します。Danger Level 1では{config.VampireTier1HealAmount.Value}HP、" +
                 $"Level 2では{config.VampireTier2HealAmount.Value}HP、Level 3では{config.VampireTier3HealAmount.Value}HP回復します。",
-            StageRole.King =>
-                "ステージ中、バニラのCrownを受け取ります。Kingは一人だけ割り当てられます。",
             StageRole.Tuna =>
                 $"ステージ開始から5秒の猶予後、{Number(config.TunaStationaryDelaySeconds.Value)}秒間静止すると、{Number(config.TunaDamageIntervalSeconds.Value)}秒ごとに{config.TunaDamage.Value}ダメージを受けます。" +
                 "移動するとタイマーとダメージが止まりますが、失ったHPは戻りません。",

@@ -177,7 +177,7 @@ internal static class RoleCatalog
         }
 
         IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config);
-        if (config.OverhaulEnabled.Value && role == StageRole.Lifter)
+        if (role == StageRole.Lifter)
         {
             if (!RoleOverhaulRules.LifterPhysicsAvailable) return true;
             foreach (UpgradeGrant baseline in baseUpgrades)
@@ -185,7 +185,7 @@ internal static class RoleCatalog
                     return RoleOverhaulRules.LifterBaseReachesTarget(baseline.Level);
             return false;
         }
-        if (config.OverhaulEnabled.Value && RoleOverhaulRules.GrowsWithBase(role))
+        if (RoleOverhaulRules.GrowsWithBase(role))
         {
             // Random eligibility uses Base before role multipliers/minimums.
             // Any capped stat excludes Runner, even if its other stat can grow.
@@ -286,16 +286,15 @@ internal static class RoleCatalog
                 {
                     continue;
                 }
-                if (config.OverhaulEnabled.Value && roleUpgrade.CommandName == "Strength" &&
+                if (roleUpgrade.CommandName == "Strength" &&
                     role is StageRole.Lifter or StageRole.Superbot)
                 {
                     targets[index] = new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
                         RoleOverhaulRules.LifterStrengthLevel);
                     break;
                 }
-                targets[index] = config.OverhaulEnabled.Value &&
-                    (RoleOverhaulRules.GrowsWithBase(role) || (role == StageRole.Superbot &&
-                        roleUpgrade.CommandName is "Health" or "Speed" or "Stamina"))
+                targets[index] = RoleOverhaulRules.GrowsWithBase(role) || (role == StageRole.Superbot &&
+                        roleUpgrade.CommandName is "Health" or "Speed" or "Stamina")
                     ? new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
                         GrowthTarget(roleUpgrade.CommandName, targets[index].Level, roleUpgrade.Level, config))
                     : roleUpgrade;
@@ -330,7 +329,7 @@ internal static class RoleCatalog
                 new UpgradeGrant("Stamina", "playerUpgradeStamina", config.RunnerStaminaLevels.Value)
             },
             StageRole.Jumper => Grant("ExtraJump", "playerUpgradeExtraJump", config.JumperExtraJumpLevels.Value),
-            StageRole.Lifter => Grant("Strength", "playerUpgradeStrength", config.LifterStrengthLevels.Value),
+            StageRole.Lifter => Grant("Strength", "playerUpgradeStrength", RoleOverhaulRules.LifterStrengthLevel),
             StageRole.Launcher => Grant("Launch", "playerUpgradeLaunch", config.LauncherLaunchLevels.Value),
             StageRole.Climber => new[]
             {

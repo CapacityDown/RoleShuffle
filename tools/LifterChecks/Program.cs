@@ -105,7 +105,6 @@ var controller = StageRolesPlugin.Instance.Controller;
 controller.Authority = false; Vanilla("Guests do not apply physics"); controller.Authority = true;
 controller.Ready = false; Vanilla("Stage cleanup stops correction"); controller.Ready = true;
 controller._config.Enabled.Value = false; Vanilla("Disabled mod"); controller._config.Enabled.Value = true;
-controller._config.OverhaulEnabled.Value = false; Vanilla("Legacy mode"); controller._config.OverhaulEnabled.Value = true;
 lifter.playerAvatar.Living = false; Vanilla("Dead player"); lifter.playerAvatar.Living = true;
 lifter.playerAvatar.isTumbling = true; Vanilla("Tumbling override"); lifter.playerAvatar.isTumbling = false;
 lifter.overrideGrabStrength = 0; Vanilla("Player override"); lifter.overrideGrabStrength = -1;
