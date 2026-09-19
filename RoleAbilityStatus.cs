@@ -85,36 +85,41 @@ internal static class RoleAbilityCodec
 
 internal static class RoleAbilityText
 {
+    internal static string Label(AbilityMetric metric, RoleGuideLanguage language)
+    {
+        (string en, string ja) = metric switch
+        {
+            AbilityMetric.Medic => ("Healing", "回復"),
+            AbilityMetric.Rescuer => ("Revives", "蘇生"),
+            AbilityMetric.Phoenix => ("Self revive", "自己蘇生"),
+            AbilityMetric.MageRecovery => ("Recovery", "自動回復"),
+            AbilityMetric.MageCooldown => ("Cast", "魔法"),
+            AbilityMetric.Repair => ("Repair", "修理"),
+            AbilityMetric.Charge => ("Charge", "充電"),
+            AbilityMetric.King => ("Aura", "王の回復"),
+            AbilityMetric.RoyalSupport => ("Supported allies", "強化中の味方"),
+            AbilityMetric.Contracts => ("Jobs left", "残り契約"),
+            AbilityMetric.Grace => ("Grace", "免除"),
+            AbilityMetric.Carry => ("Carry", "運搬"),
+            AbilityMetric.CloudDistance => ("Cloud travel", "ウラン雲の移動量"),
+            AbilityMetric.GrenadeDistance => ("Grenade travel", "爆弾の移動量"),
+            AbilityMetric.DecoyActive => ("Decoy active", "デコイ稼働"),
+            AbilityMetric.DecoyCooldown => ("Decoy", "デコイ"),
+            AbilityMetric.DiveActive => ("Dive remaining", "潜行残り"),
+            AbilityMetric.DiveCooldown => ("Dive", "潜行"),
+            AbilityMetric.Wager => ("Wagers", "賭け"),
+            _ => ("Revenge", "復讐")
+        };
+        return RoleText.Get(en, language, ja);
+    }
+
     internal static string Format(IReadOnlyList<AbilityValue> values, RoleGuideLanguage language, int start = 0, int count = 20)
     {
         List<string> parts = new();
         for (int i = start; i < Math.Min(values.Count, start + count); i++)
         {
             AbilityValue value = values[i];
-            (string en, string ja) = value.Metric switch
-            {
-                AbilityMetric.Medic => ("Healing", "回復"),
-                AbilityMetric.Rescuer => ("Revives", "蘇生"),
-                AbilityMetric.Phoenix => ("Self revive", "自己蘇生"),
-                AbilityMetric.MageRecovery => ("Recovery", "自動回復"),
-                AbilityMetric.MageCooldown => ("Cast", "魔法"),
-                AbilityMetric.Repair => ("Repair", "修理"),
-                AbilityMetric.Charge => ("Charge", "充電"),
-                AbilityMetric.King => ("Aura", "王の回復"),
-                AbilityMetric.RoyalSupport => ("Supported allies", "強化中の味方"),
-                AbilityMetric.Contracts => ("Jobs left", "残り契約"),
-                AbilityMetric.Grace => ("Grace", "免除"),
-                AbilityMetric.Carry => ("Carry", "運搬"),
-                AbilityMetric.CloudDistance => ("Cloud travel", "ウラン雲の移動量"),
-                AbilityMetric.GrenadeDistance => ("Grenade travel", "爆弾の移動量"),
-                AbilityMetric.DecoyActive => ("Decoy active", "デコイ稼働"),
-                AbilityMetric.DecoyCooldown => ("Decoy", "デコイ"),
-                AbilityMetric.DiveActive => ("Dive remaining", "潜行残り"),
-                AbilityMetric.DiveCooldown => ("Dive", "潜行"),
-                AbilityMetric.Wager => ("Wagers", "賭け"),
-                _ => ("Revenge", "復讐")
-            };
-            string label = RoleText.Get(en, language, ja);
+            string label = Label(value.Metric, language);
             bool seconds = value.Metric is AbilityMetric.MageCooldown or AbilityMetric.Grace or
                 AbilityMetric.DecoyActive or AbilityMetric.DecoyCooldown or AbilityMetric.DiveActive or
                 AbilityMetric.DiveCooldown or AbilityMetric.Avenger;
@@ -126,4 +131,43 @@ internal static class RoleAbilityText
         }
         return string.Join("  |  ", parts);
     }
+}
+
+internal static class RoleAbilityResources
+{
+    // Explicit membership: a distance target or cooldown is not a spendable budget.
+    internal static bool IsResource(AbilityMetric metric) => metric is
+        AbilityMetric.Medic or AbilityMetric.Rescuer or AbilityMetric.Phoenix or
+        AbilityMetric.MageRecovery or AbilityMetric.Repair or AbilityMetric.Charge or
+        AbilityMetric.Wager or AbilityMetric.Contracts;
+
+    internal static IReadOnlyList<AbilityValue> Select(IReadOnlyList<AbilityValue> values, bool resources)
+    {
+        List<AbilityValue> selected = new();
+        foreach (AbilityValue value in values)
+            if (IsResource(value.Metric) == resources) selected.Add(value);
+        return selected;
+    }
+
+    internal static AbilityValue Budget(AbilityMetric metric, float used, float limit) => new(metric,
+        (int)Math.Ceiling(Math.Max(0, limit - used)), (int)Math.Ceiling(Math.Max(0, limit)));
+
+    internal static string Unit(AbilityMetric metric) => metric switch
+    {
+        AbilityMetric.Medic or AbilityMetric.MageRecovery => " HP",
+        AbilityMetric.Repair or AbilityMetric.Charge => "%",
+        _ => string.Empty
+    };
+
+    internal static StageRole Emblem(AbilityMetric metric) => metric switch
+    {
+        AbilityMetric.Medic => StageRole.Medic,
+        AbilityMetric.Rescuer => StageRole.Rescuer,
+        AbilityMetric.Phoenix => StageRole.Phoenix,
+        AbilityMetric.MageRecovery => StageRole.Mage,
+        AbilityMetric.Repair => StageRole.Mechanic,
+        AbilityMetric.Charge => StageRole.Electrician,
+        AbilityMetric.Wager => StageRole.Gambler,
+        _ => StageRole.Jobless
+    };
 }

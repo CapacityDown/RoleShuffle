@@ -87,7 +87,11 @@ internal sealed class StageRolesConfig
 
         HudFontSize = BindInt(config, "HUD", "FontSize", 28, 16, 48, "HUD text size before overall scaling.");
         HudEnabled = BindBool(config, "HUD", "Enabled", true, "Shows every player's assigned role during a stage.");
-        HudAbilityStatusEnabled = BindBool(config, "HUD", "AbilityStatusEnabled", true, "Shows your remaining ability resources below the role heading. Local display setting; requires a 4.5 host.");
+        HudAbilityStatusEnabled = BindBool(config, "HUD", "AbilityStatusEnabled", true, "Shows cooldowns and progress below the role heading; includes budgets when ResourceHudEnabled is off. Local display setting; requires a 4.5 host.");
+        HudResourcesEnabled = BindBool(config, "HUD", "ResourceHudEnabled", true, "Shows your finite ability resources at the top left, independently of the role list. Requires RoleShuffle on this player and a 4.5 host.");
+        HudResourceScale = BindInt(config, "HUD", "ResourceHudScalePercent", 100, 50, 200, "Ability resource HUD scale; automatically reduced to fit the screen.");
+        HudResourceOffsetX = BindInt(config, "HUD", "ResourceHudOffsetX", 16, 0, 3840, "Ability resource HUD distance from the left edge, in 540-height reference pixels.");
+        HudResourceOffsetY = BindInt(config, "HUD", "ResourceHudOffsetY", 24, 0, 2160, "Ability resource HUD distance from the top edge, in 540-height reference pixels.");
         HudRoleDisplay = config.Bind("HUD", "RoleDisplay", "NameOnly",
             new ConfigDescription("Role display style. Player names remain visible in every mode.",
                 new AcceptableValueList<string>("IconAndName", "NameOnly", "IconOnly")));
@@ -455,6 +459,10 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> UniqueRoles { get; }
     internal ConfigEntry<bool> OverhaulEnabled { get; }
     internal ConfigEntry<bool> HudAbilityStatusEnabled { get; }
+    internal ConfigEntry<bool> HudResourcesEnabled { get; }
+    internal ConfigEntry<int> HudResourceScale { get; }
+    internal ConfigEntry<int> HudResourceOffsetX { get; }
+    internal ConfigEntry<int> HudResourceOffsetY { get; }
     internal ConfigEntry<float> TankHealthMultiplier { get; }
     internal ConfigEntry<float> RunnerSpeedMultiplier { get; }
     internal ConfigEntry<float> RunnerStaminaMultiplier { get; }

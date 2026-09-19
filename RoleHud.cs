@@ -216,9 +216,14 @@ internal sealed class RoleHud : MonoBehaviour
             AbilitySnapshot? snapshot = RoleAbilitySync.Read(role.Value);
             if (snapshot != null && snapshot.Values.Count > 0)
             {
-                int pages = (snapshot.Values.Count + 1) / 2;
-                int start = ((int)(Time.unscaledTime / 5f) % pages) * 2;
-                text = RoleAbilityText.Format(snapshot.Values, RoleLanguage.Parse(_config.GuideLanguage.Value), start, 2);
+                IReadOnlyList<AbilityValue> values = _config.HudResourcesEnabled.Value
+                    ? RoleAbilityResources.Select(snapshot.Values, resources: false) : snapshot.Values;
+                if (values.Count > 0)
+                {
+                    int pages = (values.Count + 1) / 2;
+                    int start = ((int)(Time.unscaledTime / 5f) % pages) * 2;
+                    text = RoleAbilityText.Format(values, RoleLanguage.Parse(_config.GuideLanguage.Value), start, 2);
+                }
             }
         }
         _abilityStatus.fontSize = Math.Max(16, Layout.FontSize * 0.8f);

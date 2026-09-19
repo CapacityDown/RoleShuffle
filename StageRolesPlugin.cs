@@ -63,6 +63,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         Controller.Initialize(Settings);
         RoleHud hud = gameObject.AddComponent<RoleHud>();
         hud.Initialize(Settings);
+        gameObject.AddComponent<RoleResourceHud>().Initialize(Settings);
         RoleMenu roleMenu = gameObject.AddComponent<RoleMenu>();
         roleMenu.Initialize(Settings);
         gameObject.AddComponent<RoleSyncStatus>().Initialize(Settings);

@@ -67,6 +67,8 @@
     <Compile Include="BaseUpgradeSync.cs" />
     <Compile Include="RoleGuideFont.cs" />
     <Compile Include="RoleHud.cs" />
+    <Compile Include="RoleResourceHud.cs" />
+    <Compile Include="RoleResourceLayout.cs" />
     <Compile Include="RoleHudTestPreview.cs" />
     <Compile Include="RoleHudEditor.cs" />
     <Compile Include="PlayerUtilitiesCore.cs" />

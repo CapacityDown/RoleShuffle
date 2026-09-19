@@ -11,6 +11,7 @@
     <Compile Include="../../UpgradeService.cs" Link="UpgradeService.cs" />
     <Compile Include="../../RoleHealingRuntime.cs" Link="RoleHealingRuntime.cs" />
     <Compile Include="../../RoleAbilityStatus.cs" Link="RoleAbilityStatus.cs" />
+    <Compile Include="../../RoleResourceLayout.cs" Link="RoleResourceLayout.cs" />
     <Compile Include="../../RoleAbilitySync.cs" Link="RoleAbilitySync.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />

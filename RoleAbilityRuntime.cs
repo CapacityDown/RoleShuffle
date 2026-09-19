@@ -22,7 +22,7 @@ internal sealed partial class StageRoleController
         List<AbilityValue> values = new();
         bool Has(StageRole role) => RoleCatalog.HasCapability(assignment.Role, role);
         void Budget(AbilityMetric metric, float used, float limit) =>
-            values.Add(new AbilityValue(metric, Mathf.FloorToInt(Mathf.Max(0f, limit - used)), Mathf.FloorToInt(limit)));
+            values.Add(RoleAbilityResources.Budget(metric, used, limit));
         void Seconds(AbilityMetric metric, float until) =>
             values.Add(new AbilityValue(metric, Mathf.CeilToInt(Mathf.Max(0f, until - Time.time)), 0));
         if (Has(StageRole.Medic)) Budget(AbilityMetric.Medic, _medic.HealingUsed(assignment.SteamId), _config.MedicTotalHealingLimit.Value);

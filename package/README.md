@@ -123,7 +123,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 Enabled by default. Tank/Runner multiply Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Caps are rounded-up maxima over levels 0–200; Base and role minimums take priority. Tank/Runner are excluded if any corresponding Base effective value reaches its cap or there is no upgrade gain. Lifter keeps display level 200 and fixes normal grip/rotation coefficients at six times vanilla level 1 via host physics: 7.087792 below mass 2, 7.160727 otherwise. This is an absolute value, independent of Base; levels 0–200 remain eligible. Temporary overrides retain priority. Final torque is nonlinear, not a sixfold guarantee. Forced assignments use the same targets. Base includes manual/draw changes. Copies and Superbot inherit these targets. Jobless contracts survive revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills. Bomber/Stinker remain automatic. Set `General.OverhaulEnabled = false` for legacy behavior; change between stages.
 
-Host settings except the local HUD switch:
+Host settings except HUD:
 
 | Key | Default | Range | Effect |
 |---|---|---|---|
@@ -138,10 +138,12 @@ Host settings except the local HUD switch:
 | `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed / Range bonus levels. |
 | `King.StrengthBonusLevels` | `1` | 0–200 | Maximum safe Strength bonus levels. |
 | `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
+| `HUD.AbilityStatusEnabled` | `true` | Boolean | Cooldowns/progress below the role heading; also budgets if the resource HUD is off. |
+| `HUD.ResourceHudEnabled` | `true` | Boolean | Personal resource HUD at the top left, independent of the role list. |
+| `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | Resource HUD scale; fits the screen automatically. |
+| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `16` / `24` | `0`–`3840` / `0`–`2160` | Distance from the left/top edge in 540-height reference pixels. |
 
-| `HUD.AbilityStatusEnabled` | `true` | Boolean | Your ability resources below the HUD heading. |
-
-The ability line shows two resources at a time, rotating every 5 seconds when needed. `/roles` also reports resources. Display requires a 4.5 host; stale data is hidden. Cloud/grenade travel is distance progress, not a promise of immediate spawning.
+The role-heading line cycles two cooldown/progress metrics every 5 seconds. `/roles` also reports resources. Requires a 4.5 host; stale data is hidden. Cloud/grenade distance does not guarantee immediate spawning.
 
 ### Configuration
 
@@ -441,6 +443,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 
 ### Notifications and HUD
 
+- **Resources:** vanilla-style remaining/limit numbers at the top left for healing, revives, repair, charge, wagers and contracts. Copies and Superbot show all budgets together; zero stays red and fractions round up. Shown to installed players while alive in a stage. Configure with `HUD.ResourceHud*`.
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
@@ -448,10 +451,10 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 - RoleShuffle waits until Stage Flux TTS has finished and remains quiet for 1.5 seconds before announcing roles.
 - Role assignments, role-effect notices, and automatic role-query responses are spoken one at a time and do not overlap Stage Flux announcements.
 - Influencer TTS also waits for other announcements, but intentionally remains audible to enemies as part of the role ability.
-- Installed participants see a one-column `ROLES` HUD with names only at the bottom left by default. Their own role stays pinned while additional pages rotate every 5 seconds. With `HUD.PlayersPerPage` at 6 or higher (default: 8), the HUD reserves enough height for six people including the local player, even with Japanese, Chinese or Korean names and role icons. The HUD scales and adjusts its visible position to stay on screen. Long player names are shortened to the available width while preserving role names and Unicode characters. Explicit page limits below six are respected. `HUD.RoleDisplay` and `HUD.IconSize` still control icon display and size.
+- The local `ROLES` list defaults to names at the bottom left, with your role pinned and pages rotating every 5 seconds. It fits six multilingual/icon rows when `HUD.PlayersPerPage` is 6 or higher; smaller limits are respected. Screen fitting and Unicode-safe name shortening preserve role names. See HUD settings above.
 - The Base Upgrade draw animation is shown to the host and participants who have RoleShuffle installed.
-- A `ROLES` button at the top-right of the Escape and lobby menus opens the Roles page. The Escape menu opens on `CURRENT ROLES`; the lobby menu opens on `ROLE GUIDE`, with `CURRENT ROLES` disabled. The left column switches between available views and `BASE UPGRADES`. In `CURRENT ROLES`, your entry appears first with its description expanded when the view opens. Click a player to show or hide that role's description. `BASE UPGRADES` shows the current shared target, configured target, and accumulated truck-draw bonus for every supported upgrade. Installed participants see the host's current values.
-- `ROLE GUIDE` shows enabled role descriptions in the selected language; disabled roles are hidden. The language toggle switches immediately and shares its saved selection with MOD settings. Japanese uses Checkpoint Revenge; other added languages use bundled Noto font subsets. In multiplayer, installed participants see descriptions and visibility based on the host's settings. Translations preserve the host's numeric values. Until settings arrive, descriptions omit unconfirmed values; unknown descriptions from newer hosts remain in English. Single-player uses the player's own settings.
+- Open `ROLES` at the top-right of Escape (`CURRENT ROLES`) or the lobby (`ROLE GUIDE`; current roles unavailable). Your role appears first and expanded; click players to toggle descriptions. The left column also opens `BASE UPGRADES`: host targets, configured targets and accumulated truck-draw bonuses.
+- `ROLE GUIDE` lists enabled roles in the saved UI language, using Checkpoint Revenge for Japanese and Noto subsets for other added languages. Guests see host settings and values; unconfirmed values are omitted and unknown newer descriptions stay English. Solo uses local settings.
 
 ### Compatibility
 
@@ -621,9 +624,12 @@ HUD以外はホスト設定です。
 | `King.StrengthBonusLevels` | `1` | 0–200 | 悪化しないStrengthの追加上限。 |
 | `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
 
-| `HUD.AbilityStatusEnabled` | `true` | 真偽値 | 自分の能力残量をHUD見出し下に表示。 |
+| `HUD.AbilityStatusEnabled` | `true` | 真偽値 | 役職欄にクールダウン・進捗を表示。残量HUDがOFFなら残量も表示。 |
+| `HUD.ResourceHudEnabled` | `true` | 真偽値 | 左上に自分の能力残量を表示。役職一覧とは独立。 |
+| `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | 残量HUDの大きさ。画面内に収まるよう自動調整。 |
+| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `16` / `24` | `0`–`3840` / `0`–`2160` | 左端／上端からの距離。画面高さ540を基準としたピクセル。 |
 
-能力情報は2項目ずつ、必要なら5秒ごとに切り替えます。`/roles`でも残量を確認できます。表示には4.5のホストが必要で、古くなったデータは非表示にします。雲・爆弾の移動量表示は、即時の発生を保証するものではありません。
+役職欄のクールダウン・進捗は2項目ずつ5秒ごとに切り替えます。`/roles`でも残量を確認できます。4.5のホストが必要で、古いデータは非表示にします。雲・爆弾の距離表示は即時発生の保証ではありません。
 
 ### 設定
 
@@ -923,6 +929,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 
 ### 通知とHUD
 
+- **残量HUD：** バニラ風の残量／上限を左上に表示。回復・蘇生・修理・充電・賭け・契約が対象で、コピー能力とSuperbotにも対応します。0は赤く残り、小数は切り上げます。MOD導入者がステージ中に生存している間だけ表示。調整は`HUD.ResourceHud*`で行えます。
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示できます。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
 - ステージ開始時、各プレイヤーは割り当てられた英語の役職名をバニラのチャット／TTSで発言します。
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持します。
@@ -930,7 +937,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - Stage FluxのTTS終了後、1.5秒間の無音を確認してから役職を通知します。
 - 役職割り当て、役職効果通知、役職照会への自動応答は1件ずつ順番に発話し、Stage Fluxの通知とも重なりません。
 - InfluencerのTTSもほかの通知が終わるまで待機しますが、役職能力として意図的に敵へ聞こえる状態を維持します。
-- MOD導入済みの参加者には、1列の`ROLES` HUDがデフォルトで左下に名前のみで表示されます。自分の役職を固定し、複数ページがある場合は5秒ごとに切り替えます。`HUD.PlayersPerPage`が6以上（既定値8）なら、日本語・中国語・韓国語などの名前や役職アイコンがあっても、自分を含む6人分の高さを確保します。倍率と表示位置を自動調整し、画面内に収めます。長いプレイヤー名は文字の途中を壊さず、役職名が残る幅に省略します。表示人数を6未満に設定している場合はその値を優先します。`HUD.RoleDisplay`と`HUD.IconSize`でアイコン表示と大きさを変更できます。
+- `ROLES`一覧は初期設定で左下に名前のみを表示し、自分を固定して5秒ごとにページを切り替えます。`HUD.PlayersPerPage`が6以上なら多言語・アイコン付きでも6人分を確保し、6未満は設定を優先します。画面内への自動調整と文字を壊さない名前省略に対応。表示・サイズ設定は上表を参照してください。
 - Base Upgradeの抽選演出は、ホストとRoleShuffleを導入している参加者に表示されます。
 - Escメニュー・ロビーの右上にある`ROLES`ボタンからRolesページを開けます。Escメニューからは`CURRENT ROLES`、ロビーからは`ROLE GUIDE`を最初に表示し、ロビーでは`CURRENT ROLES`を無効にします。左カラムから利用可能な表示や`BASE UPGRADES`へ切り替えられます。`CURRENT ROLES`では自分を先頭に表示し、画面を開いた時点で自分の役職説明を展開します。プレイヤーをクリックすると、その役職の説明を表示または非表示にできます。`BASE UPGRADES`では、各アップグレードの現在の共有目標値、設定上の目標値、トラック抽選で累積した追加値を確認できます。MOD導入済み参加者にはホストの現在値を表示します。
 - `ROLE GUIDE`では有効な役職の説明を選択言語で表示し、無効化された役職は非表示になります。言語トグルですぐに切り替えられ、MOD設定と同じ選択を保存します。日本語には「チェックポイント★リベンジ」、その他の追加言語には同梱のNotoフォントを使用します。マルチプレイではホストの設定値を保った説明と役職の表示・非表示を反映します。ホストの設定がまだ確認できない間は未確認の数値を含まない説明を表示し、新しいホストの未知の説明文は英語で表示します。シングルプレイでは自分の設定を使用します。

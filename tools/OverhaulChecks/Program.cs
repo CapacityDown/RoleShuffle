@@ -204,6 +204,42 @@ SemiFunc.Multiplayer = false; RoleHealingRuntime.Clear();
 Check(RoleAbilityText.Format(new[] { new AbilityValue(AbilityMetric.RoyalSupport, 2, 0) }, RoleGuideLanguage.Japanese).Contains("強化中の味方 2"), "King HUD counts supported allies");
 
 var metrics = new[] { new AbilityValue(AbilityMetric.Medic, 90, 150), new AbilityValue(AbilityMetric.MageCooldown, 2, 0) };
+var resources = new[] { AbilityMetric.Medic, AbilityMetric.Rescuer, AbilityMetric.Phoenix,
+    AbilityMetric.MageRecovery, AbilityMetric.Repair, AbilityMetric.Charge, AbilityMetric.Wager, AbilityMetric.Contracts };
+foreach (AbilityMetric metric in Enum.GetValues<AbilityMetric>())
+    Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Only spendable budgets use the resource HUD");
+var allMetrics = Enum.GetValues<AbilityMetric>().Select(m => new AbilityValue(m, 0, 0)).ToArray();
+Check(RoleAbilityResources.Select(allMetrics, true).Count == 8, "Empty and disabled budgets stay visible at zero");
+Check(RoleAbilityResources.Select(allMetrics, false).Count == allMetrics.Length - 8, "Progress/cooldown details are not duplicated");
+Check(RoleAbilityResources.Select(metrics, true).Single().Remaining == 90, "Mixed-role status selects the actual remaining budget");
+Check(RoleAbilityResources.Select(Array.Empty<AbilityValue>(), true).Count == 0, "No host data does not invent resources");
+foreach (AbilityMetric metric in resources)
+{
+    foreach (float limit in new[] { 0f, 0.5f, 1f, 2.5f, 50f, 150f, 10000f })
+    foreach (float used in new[] { 0f, 0.25f, 0.5f, 1f, 2.49f, 49.9f, 50f, 150f, 10000f })
+    {
+        var budget = RoleAbilityResources.Budget(metric, used, limit);
+        Check((budget.Remaining == 0) == (used >= limit), "A fractional resource is zero only when exhausted");
+        Check(budget.Remaining <= budget.Limit, "Rounded resource never exceeds its rounded limit");
+    }
+    foreach (RoleGuideLanguage language in Enum.GetValues<RoleGuideLanguage>())
+        Check(!string.IsNullOrWhiteSpace(RoleAbilityText.Label(metric, language)), "Every resource has a localized label");
+}
+Check(RoleAbilityResources.Unit(AbilityMetric.Repair) == "%" && RoleAbilityResources.Unit(AbilityMetric.MageRecovery) == " HP" &&
+    RoleAbilityResources.Unit(AbilityMetric.Phoenix) == "", "Percent, HP and count units remain distinct");
+foreach (var screen in new[] { (640f, 480f), (1280f, 720f), (1920f, 1080f), (2560f, 1080f), (3840f, 2160f) })
+foreach (int rows in Enumerable.Range(1, 8))
+foreach (int scale in new[] { 50, 100, 200 })
+foreach (int offset in new[] { 0, 24, 3840 })
+{
+    var layout = RoleResourceLayout.Fit(screen.Item1, screen.Item2, rows, scale, offset, offset);
+    Check(layout.Scale > 0 && layout.Left >= 0 && layout.Top >= 0 &&
+        layout.Left + RoleResourceLayout.Width * layout.Scale <= screen.Item1 + 0.01f &&
+        layout.Top + rows * RoleResourceLayout.RowHeight * layout.Scale <= screen.Item2 - 110 * screen.Item2 / 540 + 0.01f,
+        "All budgets fit inside the viewport and above vanilla HP/stamina at every supported scale/offset");
+}
+var defaultHud = RoleResourceLayout.Fit(960, 540, 7, 100, 16, 24);
+Check(defaultHud == (1f, 16f, 24f), "Default Superbot displays all seven budgets simultaneously at full size");
 var snapshot = new AbilitySnapshot("p|日本語", StageRole.Imitator, StageRole.Medic, metrics);
 string encoded = RoleAbilityCodec.Encode(new[] { snapshot });
 var decoded = RoleAbilityCodec.Decode(encoded);
@@ -232,6 +268,8 @@ Clock(35); RoleAbilitySync.Publish(new[] { snapshot });
 Check(PhotonNetwork.CurrentRoom.Publications == sends + 1, "Idle state heartbeat");
 PhotonNetwork.IsMasterClient = false;
 Check(RoleAbilitySync.Read(role) != null, "Installed guest reads host state");
+Check(RoleAbilityResources.Select(RoleAbilitySync.Read(role)!.Values, true).Single().Metric == AbilityMetric.Medic,
+    "Guest resource HUD uses host data for the copied role");
 Check(RoleAbilitySync.Read(role with { EffectiveRole = StageRole.King }) == null, "Role mismatch cannot show another ability's state");
 Clock(51); Check(RoleAbilitySync.Read(role) == null, "Stale status expires");
 Clock(36); PhotonNetwork.CurrentRoom = new Room();
