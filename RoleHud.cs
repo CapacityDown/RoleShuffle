@@ -18,7 +18,7 @@ internal sealed class RoleHud : MonoBehaviour
     private const float IconTextGap = 12f;
     private static readonly Vector2 LayoutSize = new(620f, 340f);
     private Vector2 CurrentLayoutSize => new(LayoutSize.x,
-        HudLayoutMath.ContentHeight(LayoutSize.y, _headingHeight, HeadingGap, RowHeight, _config.HudPlayersPerPage.Value) + _abilityHeight);
+        HudLayoutMath.ContentHeight(LayoutSize.y, _headingHeight, HeadingGap, RowHeight, _config.HudPlayersPerPage.Value));
 
     private readonly List<TMP_Text> _fontTargets = new();
     private readonly List<RoleSnapshot> _assignments = new();
@@ -49,8 +49,6 @@ internal sealed class RoleHud : MonoBehaviour
     private RectTransform? _contentRect;
     private CanvasGroup? _canvasGroup;
     private TextMeshProUGUI? _heading;
-    private TextMeshProUGUI? _abilityStatus;
-    private float _abilityHeight;
     private (string Anchor, string Alignment, int X, int Y, int Scale,
         int CanvasWidth, int CanvasHeight, int ScreenWidth, int ScreenHeight)? _lastLayout;
     private (IReadOnlyList<RoleSnapshot>? Data, int PageSize, bool Pin, string? LocalId,
@@ -131,7 +129,6 @@ internal sealed class RoleHud : MonoBehaviour
         {
             _nextRefreshAt = Time.unscaledTime + RefreshIntervalSeconds;
             RefreshAssignments();
-            RefreshAbilityStatus();
         }
 
         bool visible = PreviewSettings != null || (!RoleHudEditor.IsOpen && _config.HudEnabled.Value &&
@@ -199,43 +196,10 @@ internal sealed class RoleHud : MonoBehaviour
         _rows.Clear();
         _fontTargets.Clear();
         _heading = CreateLabel("RoleHeading", content.transform);
-        _abilityStatus = CreateLabel("AbilityStatus", content.transform);
         _lastDisplayMode = string.Empty;
         _lastLayout = null;
         _assignmentState = default;
         _root.SetActive(false);
-    }
-
-    private void RefreshAbilityStatus()
-    {
-        if (_abilityStatus == null) return;
-        string text = string.Empty;
-        RoleSnapshot? role = FindLocalSnapshot();
-        if (PreviewSettings == null && _config.HudAbilityStatusEnabled.Value && role.HasValue)
-        {
-            AbilitySnapshot? snapshot = RoleAbilitySync.Read(role.Value);
-            if (snapshot != null && snapshot.Values.Count > 0)
-            {
-                IReadOnlyList<AbilityValue> values = _config.HudResourcesEnabled.Value
-                    ? RoleAbilityResources.Select(snapshot.Values, resources: false) : snapshot.Values;
-                if (values.Count > 0)
-                {
-                    int pages = (values.Count + 1) / 2;
-                    int start = ((int)(Time.unscaledTime / 5f) % pages) * 2;
-                    text = RoleAbilityText.Format(values, RoleLanguage.Parse(_config.GuideLanguage.Value), start, 2);
-                }
-            }
-        }
-        _abilityStatus.fontSize = Math.Max(16, Layout.FontSize * 0.8f);
-        TMP_FontAsset? abilityFont = RoleGuideFont.ForLanguage(_heading?.font, RoleLanguage.Parse(_config.GuideLanguage.Value));
-        if (abilityFont != null) _abilityStatus.font = abilityFont;
-        _abilityStatus.enableAutoSizing = true;
-        _abilityStatus.fontSizeMin = 14;
-        _abilityStatus.fontSizeMax = Math.Max(16, Layout.FontSize * 0.8f);
-        if (_abilityStatus.text != text) { _abilityStatus.SetText(text); _rowsDirty = true; }
-        float height = text.Length == 0 ? 0 : Mathf.Max(30f, _abilityStatus.GetPreferredValues(text).y + 8f);
-        if (_abilityHeight != height) { _abilityHeight = height; _lastLayout = null; _rowsDirty = true; }
-        _abilityStatus.gameObject.SetActive(text.Length > 0);
     }
 
     private TextMeshProUGUI CreateLabel(string name, Transform parent)
@@ -479,22 +443,13 @@ internal sealed class RoleHud : MonoBehaviour
         float rowHeight = RowHeight;
         // Keep the heading and pinned player in place on a partially filled last page.
         int rowCount = Mathf.Min(_assignments.Count, EffectivePageSize);
-        float height = _headingHeight + HeadingGap + _abilityHeight + rowCount * rowHeight;
+        float height = _headingHeight + HeadingGap + rowCount * rowHeight;
         float top = (CurrentLayoutSize.y - height) * 0.5f;
         RectTransform headingRect = _heading.rectTransform;
         headingRect.anchorMin = headingRect.anchorMax = new Vector2(0f, 1f);
         headingRect.pivot = new Vector2(0f, 1f);
         headingRect.anchoredPosition = new Vector2(0f, -top);
         headingRect.sizeDelta = new Vector2(LayoutSize.x, _headingHeight);
-        if (_abilityStatus != null)
-        {
-            RectTransform abilityRect = _abilityStatus.rectTransform;
-            abilityRect.anchorMin = abilityRect.anchorMax = new Vector2(0f, 1f);
-            abilityRect.pivot = new Vector2(0f, 1f);
-            abilityRect.anchoredPosition = new Vector2(0f, -top - _headingHeight);
-            abilityRect.sizeDelta = new Vector2(LayoutSize.x, _abilityHeight);
-            _abilityStatus.alignment = _heading.alignment;
-        }
 
         for (int index = 0; index < _displayedAssignments.Count; index++)
         {
@@ -520,7 +475,7 @@ internal sealed class RoleHud : MonoBehaviour
 
             HudRow row = _rows[index];
             row.Rect.gameObject.SetActive(true);
-            row.Rect.anchoredPosition = new Vector2(0f, -top - _headingHeight - HeadingGap - _abilityHeight - index * rowHeight);
+            row.Rect.anchoredPosition = new Vector2(0f, -top - _headingHeight - HeadingGap - index * rowHeight);
             row.Rect.sizeDelta = new Vector2(LayoutSize.x, rowHeight);
             RoleSnapshot snapshot = _displayedAssignments[index];
             StageRole emblemRole = snapshot.Role == StageRole.Imitator ? snapshot.EffectiveRole : snapshot.Role;
@@ -696,12 +651,9 @@ internal sealed class RoleHud : MonoBehaviour
         bool fontChanged = false;
         foreach (TMP_Text target in _fontTargets)
         {
-            TMP_FontAsset font = ReferenceEquals(target, _abilityStatus)
-                ? RoleGuideFont.ForLanguage(source.font, RoleLanguage.Parse(_config.GuideLanguage.Value)) ?? source.font
-                : source.font;
-            if (target != null && target.font != font)
+            if (target != null && target.font != source.font)
             {
-                target.font = font;
+                target.font = source.font;
                 fontChanged = true;
             }
         }

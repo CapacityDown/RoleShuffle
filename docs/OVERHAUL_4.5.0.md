@@ -16,9 +16,9 @@
 2. Jobless receives a starting grace period. Carry a different, positive-value valuable at least the configured distance and bring it into the truck to complete a contract. A contract pauses attrition and restores the worker's health. Completions are limited per player per stage; drops, death and teleports do not accumulate work.
 3. King keeps the crown and grants temporary native Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Excludes Kings and never stacks. King bonuses are removed on leaving, death, departure or role change.
 4. Stinker and Bomber remain movement-triggered automatic hazards. Neither has a manual pause, activation switch or charge-and-release operation. This is an explicit user requirement.
-5. The host publishes a separate, versioned ability-status snapshot for installed participants. The local HUD and `/roles` show remaining resources. Existing assignment synchronization is preserved.
+5. The host publishes a separate, versioned ability-status snapshot for installed participants. The local resource HUD shows remaining resources in one vertical column. The role list has no auxiliary status line; `/roles` announces only the assigned role name. Existing assignment synchronization is preserved.
 
-`General.OverhaulEnabled = false` restores legacy behavior for the five changed roles. Ability-status display has a separate local HUD toggle.
+`General.OverhaulEnabled = false` restores legacy behavior for the five changed roles. Resource display has a separate local HUD toggle.
 
 ## Host-only constraint
 

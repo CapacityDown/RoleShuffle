@@ -50,7 +50,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Role command
 
-- Enter `/roles` in the in-game chat to check your own assigned role.
+- Enter `/roles` in the in-game chat to announce only your assigned role name.
 - Vanilla participants can use this command when the host has RoleShuffle installed.
 - Outside an active stage, the response is `YourRole:Unavailable`.
 
@@ -138,12 +138,11 @@ Host settings except HUD:
 | `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed / Range bonus levels. |
 | `King.StrengthBonusLevels` | `1` | 0–200 | Maximum safe Strength bonus levels. |
 | `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
-| `HUD.AbilityStatusEnabled` | `true` | Boolean | Cooldowns/progress below the role heading; also budgets if the resource HUD is off. |
 | `HUD.ResourceHudEnabled` | `true` | Boolean | Personal resource HUD at the top left, independent of the role list. |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | Resource HUD scale; fits the screen automatically. |
 | `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | Extra right/down offset from below native stamina, in native HUD units. |
 
-The role-heading line cycles two cooldown/progress metrics every 5 seconds. `/roles` also reports resources. Requires a 4.5 host; stale data is hidden. Cloud/grenade distance does not guarantee immediate spawning.
+Resources appear in one vertical column below stamina, shrinking when necessary to fit above the role-list area. The role list shows player roles without an extra status line. `/roles` announces only your assigned role name. Resource HUD data requires a 4.5 host; stale data is hidden.
 
 ### Configuration
 
@@ -443,7 +442,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 
 ### Notifications and HUD
 
-- **Resources:** cyan symbols and unit-free counts below stamina, using native typography. Healing, revives, repair, charge, wagers and contracts support copies/Superbot (4 rows per column). Zero stays red; fractions round up. Visible to installed living players. Configure with `HUD.ResourceHud*`.
+- **Resources:** cyan symbols and unit-free counts in one vertical column below stamina, using native typography and shrinking to fit when needed. Healing, revives, repair, charge, wagers and contracts support copies/Superbot. Zero stays red; fractions round up. Visible to installed living players. Configure with `HUD.ResourceHud*`.
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
@@ -535,7 +534,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 
 ### 役職確認コマンド
 
-- ゲーム内チャットで`/roles`を入力すると、自分に割り当てられた役職を確認できます。
+- ゲーム内チャットで`/roles`を入力すると、自分に割り当てられた役職名だけを通知します。
 - ホストがRoleShuffleを導入していれば、MOD未導入の参加者も使用できます。
 - ステージ外では`YourRole:Unavailable`と応答します。
 
@@ -624,12 +623,11 @@ HUD以外はホスト設定です。
 | `King.StrengthBonusLevels` | `1` | 0–200 | 悪化しないStrengthの追加上限。 |
 | `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
 
-| `HUD.AbilityStatusEnabled` | `true` | 真偽値 | 役職欄にクールダウン・進捗を表示。残量HUDがOFFなら残量も表示。 |
 | `HUD.ResourceHudEnabled` | `true` | 真偽値 | 左上に自分の能力残量を表示。役職一覧とは独立。 |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | 残量HUDの大きさ。画面内に収まるよう自動調整。 |
 | `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | スタミナ直下から右／下への追加距離。バニラHUD単位。 |
 
-役職欄のクールダウン・進捗は2項目ずつ5秒ごとに切り替えます。`/roles`でも残量を確認できます。4.5のホストが必要で、古いデータは非表示にします。雲・爆弾の距離表示は即時発生の保証ではありません。
+残量HUDはスタミナ直下に縦1列で並び、項目が多い場合は役職一覧の上に収まるよう縮小します。役職一覧には補助の状態行を挟まず、プレイヤーの役職を表示します。`/roles`は自分に割り当てられた役職名だけを通知します。残量HUDには4.5のホストが必要で、古いデータは非表示にします。
 
 ### 設定
 
@@ -929,7 +927,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 
 ### 通知とHUD
 
-- **残量HUD：** バニラと同じ書体・サイズで、水色の記号と単位なしの数字をスタミナ直下に表示。回復・蘇生・修理・充電・賭け・契約が対象。コピー・Superbotは4行ずつ列分け。0は赤、小数は切り上げ。生存中に表示し、`HUD.ResourceHud*`で調整できます。
+- **残量HUD：** バニラと同じ書体を使い、水色の記号と単位なしの数字をスタミナ直下に縦1列で表示。通常はバニラと同じサイズで、項目が多い場合は収まるよう縮小します。回復・蘇生・修理・充電・賭け・契約が対象。コピー・Superbotにも対応。0は赤、小数は切り上げ。生存中に表示し、`HUD.ResourceHud*`で調整できます。
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示できます。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
 - ステージ開始時、各プレイヤーは割り当てられた英語の役職名をバニラのチャット／TTSで発言します。
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持します。

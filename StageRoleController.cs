@@ -1151,11 +1151,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
         string response = requesterAssignment != null
             ? $"YourRole:{RoleCatalog.AssignmentName(requesterAssignment.AssignedRole, requesterAssignment.Role)}"
             : "YourRole:Unavailable";
-        if (requesterAssignment != null)
-        {
-            string status = RoleAbilityText.Format(BuildAbilityStatus(requesterAssignment).Values, RoleGuideLanguage.English);
-            if (status.Length > 0) response += " | " + status;
-        }
         _notifier.NotifyResponse(requester, response);
         StageRolesPlugin.ModLogger.LogInfo(
             $"Queued a role query response for player {requesterId}.");

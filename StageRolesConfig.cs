@@ -87,7 +87,6 @@ internal sealed class StageRolesConfig
 
         HudFontSize = BindInt(config, "HUD", "FontSize", 28, 16, 48, "HUD text size before overall scaling.");
         HudEnabled = BindBool(config, "HUD", "Enabled", true, "Shows every player's assigned role during a stage.");
-        HudAbilityStatusEnabled = BindBool(config, "HUD", "AbilityStatusEnabled", true, "Shows cooldowns and progress below the role heading; includes budgets when ResourceHudEnabled is off. Local display setting; requires a 4.5 host.");
         HudResourcesEnabled = BindBool(config, "HUD", "ResourceHudEnabled", true, "Shows your finite ability resources at the top left, independently of the role list. Requires RoleShuffle on this player and a 4.5 host.");
         HudResourceScale = BindInt(config, "HUD", "ResourceHudScalePercent", 100, 50, 200, "Ability resource HUD scale; automatically reduced to fit the screen.");
         HudResourceOffsetX = BindInt(config, "HUD", "ResourceHudOffsetX", 0, 0, 3840, "Additional rightward offset from vanilla HP/stamina, in native HUD units. Zero aligns the icons and numbers.");
@@ -458,7 +457,6 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> Enabled { get; }
     internal ConfigEntry<bool> UniqueRoles { get; }
     internal ConfigEntry<bool> OverhaulEnabled { get; }
-    internal ConfigEntry<bool> HudAbilityStatusEnabled { get; }
     internal ConfigEntry<bool> HudResourcesEnabled { get; }
     internal ConfigEntry<int> HudResourceScale { get; }
     internal ConfigEntry<int> HudResourceOffsetX { get; }

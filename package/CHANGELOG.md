@@ -1,8 +1,8 @@
 ## 4.5.0
 
 - Resource HUD amounts now omit units and use cyan icons/numbers, with red retained at zero. Refined ability silhouettes with rounded contours, a clean open wrench jaw, and a soft transparent edge to reduce jagged outlines.
-- Matched resource HUD text to native HP/stamina font, material, sizes (40/20) and spacing. Replaced role emblems with monochrome ability symbols and positioned rows below stamina; four rows per column keep Superbot compact. Schema 36 resets only the old default offsets, with a backup.
-- Added a top-left resource HUD with vanilla HP/stamina-style numbers and role emblems for Medic, Rescuer, Phoenix, Mage recovery, Mechanic, Electrician, Gambler and Jobless. Copied abilities and Superbot are supported; all budgets stay visible, including zero. Local position, scale and visibility are independent of the role list. Fractional budgets round up so a usable remainder does not display zero.
+- Matched resource HUD text to native HP/stamina font, material, sizes (40/20) and spacing. Ability symbols and numbers appear in one vertical column below stamina, shrinking together when many resources are present. The role list has no extra cooldown/progress line, and `/roles` announces only the assigned role name. Schema 36 resets only the old default offsets, with a backup.
+- Added a top-left resource HUD with vanilla HP/stamina-style numbers and monochrome ability symbols for Medic, Rescuer, Phoenix, Mage recovery, Mechanic, Electrician, Gambler and Jobless. Copied abilities and Superbot are supported; all budgets stay visible, including zero. Local position, scale and visibility are independent of the role list. Fractional budgets round up so a usable remainder does not display zero.
 - Rewrote the Tank, Runner, Lifter, Jobless and King guide entries to explain the ability first, followed by practical instructions and settings. Added paragraph breaks and refreshed all 14 languages; gameplay is unchanged.
 - Tank/Runner are excluded from random assignment when any corresponding Base effective value reaches or exceeds its configured cap. Runner is excluded when either speed or stamina reaches its cap. Existing no-gain exclusions and forced assignments are preserved.
 
@@ -10,8 +10,8 @@
 - Lifter displays Strength 200 and fixes normal grip/rotation coefficients at six times vanilla level-1 values through host physics. Base 0–200 remains eligible. Temporary overrides retain priority. Copied roles and Superbot inherit the effect. The legacy Strength setting is preserved; obsolete multiplier/cap settings are removed with backup (schema 35).
 - Fixed ability-status cleanup initializing Photon during lobby startup.
 - Added Jobless delivery contracts with an initial grace period, limited paid breaks and healing rewards.
-- King grants temporary Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Leaving, death or role changes remove only King's bonuses. Native upgrades support unmodded guests; HUD shows supported allies. Config schema 34 preserves the old radius and backs up healing settings.
-- Added remaining ability resources to the local HUD and `/roles`, including healing, revival uses and cooldowns. HUD data is shared with installed participants.
+- King grants temporary Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Leaving, death or role changes remove only King's bonuses. Native upgrades support unmodded guests. Config schema 34 preserves the old radius and backs up healing settings.
+- Added remaining healing and revival resources to the local HUD. Resource HUD data is shared with installed participants.
 - Added an overhaul setting to select the new behavior or legacy role rules. Bomber and Stinker keep their automatic movement-triggered hazards.
 
 ## 4.4.8

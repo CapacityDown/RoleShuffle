@@ -233,15 +233,18 @@ foreach (int scale in new[] { 50, 100, 200 })
 foreach (int offset in new[] { 0, 24, 3840 })
 {
     var layout = RoleResourceLayout.Fit(screen.Item1, screen.Item2, rows, 190, 50, 31, 0.6f, 62, scale, offset, offset);
-    int columns = (rows + layout.Rows - 1) / layout.Rows;
     Check(layout.Scale > 0 && layout.Left >= 0 && layout.Top >= 62 &&
-        layout.Left + (190 + (columns-1) * layout.ColumnPitch) * layout.Scale <= screen.Item1 + 0.01f &&
-        layout.Top + (50 + (layout.Rows-1) * 31) * layout.Scale <= screen.Item2 * 0.6f + 0.01f,
-        "Resource rows stay below native stamina, above the role-list area, and within the native canvas");
+        layout.Left + 190 * layout.Scale <= screen.Item1 + 0.01f &&
+        layout.Top + (50 + (rows-1) * 31) * layout.Scale <= screen.Item2 * 0.6f + 0.01f,
+        "A single resource column stays below native stamina, above the role-list area, and within the native canvas");
 }
-var defaultHud = RoleResourceLayout.Fit(680, 370, 7, 148.1f, 50, 31, 0.6f, 62, 100, 0, 0);
-Check(defaultHud.Scale == 1 && defaultHud.Left == 0.6f && defaultHud.Top == 62 && defaultHud.Rows == 4,
-    "Actual vanilla Game Hud dimensions preserve full native size for seven Superbot resources in two columns");
+var defaultHud = RoleResourceLayout.Fit(680, 370, 1, 148.1f, 50, 31, 0.6f, 62, 100, 0, 0);
+Check(defaultHud.Scale == 1 && defaultHud.Left == 0.6f && defaultHud.Top == 62,
+    "A single resource preserves full native size and position");
+var superbotHud = RoleResourceLayout.Fit(680, 370, 7, 148.1f, 50, 31, 0.6f, 62, 100, 0, 0);
+Check(superbotHud.Scale > 0.6f && superbotHud.Scale < 1 && superbotHud.Left == 0.6f && superbotHud.Top == 62 &&
+    superbotHud.Top + (50 + 6 * 31) * superbotHud.Scale < 370 * 0.6f,
+    "Seven Superbot resources shrink together in one column with room below for the role list");
 Check(RoleResourceLayout.MaximumOffset(99, 50) == 50 && RoleResourceLayout.MaximumOffset(10000, 50) == 90,
     "Maximum text follows vanilla's twenty-unit shift per extra digit");
 foreach (var metric in resources)

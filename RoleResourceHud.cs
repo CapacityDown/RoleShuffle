@@ -59,8 +59,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
         _content.localScale = Vector3.one * layout.Scale;
         _content.anchoredPosition = new Vector2(layout.Left, -layout.Top);
         for (int i = 0; i < _values.Count; i++)
-            _rows[i].Rect.anchoredPosition = new Vector2(i / layout.Rows * layout.ColumnPitch,
-                -(i % layout.Rows) * _rowPitch);
+            _rows[i].Rect.anchoredPosition = new Vector2(0, -i * _rowPitch);
     }
 
     private void EnsureCreated()
