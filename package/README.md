@@ -443,7 +443,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 
 ### Notifications and HUD
 
-- **Resources:** native HP/stamina typography and monochrome symbols below stamina. Healing, revives, repair, charge, wagers and contracts support copies/Superbot (4 rows per column). Zero stays red; fractions round up. Visible to installed living players. Configure with `HUD.ResourceHud*`.
+- **Resources:** cyan symbols and unit-free counts below stamina, using native typography. Healing, revives, repair, charge, wagers and contracts support copies/Superbot (4 rows per column). Zero stays red; fractions round up. Visible to installed living players. Configure with `HUD.ResourceHud*`.
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
@@ -929,7 +929,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 
 ### 通知とHUD
 
-- **残量HUD：** バニラと同じ書体・サイズと単色記号をスタミナ直下に表示。回復・蘇生・修理・充電・賭け・契約が対象。コピー・Superbotは4行ずつ列分けし、0は赤、小数は切り上げ表示。ステージ中の生存者に表示し、`HUD.ResourceHud*`で調整できます。
+- **残量HUD：** バニラと同じ書体・サイズで、水色の記号と単位なしの数字をスタミナ直下に表示。回復・蘇生・修理・充電・賭け・契約が対象。コピー・Superbotは4行ずつ列分け。0は赤、小数は切り上げ。生存中に表示し、`HUD.ResourceHud*`で調整できます。
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示できます。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
 - ステージ開始時、各プレイヤーは割り当てられた英語の役職名をバニラのチャット／TTSで発言します。
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持します。

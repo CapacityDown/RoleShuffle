@@ -21,7 +21,9 @@ internal sealed class RoleResourceIcon : MaskableGraphic
         for (int i = 0; i < points.Count; i++)
         {
             var p = points[i];
-            helper.AddVert(new Vector3(rect.xMin+p.X/25*rect.width,rect.yMax-p.Y/25*rect.height,0),color,Vector2.zero);
+            Color tint = color;
+            tint.a *= p.Alpha;
+            helper.AddVert(new Vector3(rect.xMin+p.X/25*rect.width,rect.yMax-p.Y/25*rect.height,0),tint,Vector2.zero);
             if (i % 3 == 2) helper.AddTriangle(i-2,i-1,i);
         }
     }

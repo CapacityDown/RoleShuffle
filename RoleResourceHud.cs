@@ -9,9 +9,7 @@ namespace REPOJP.StageRoles;
 
 internal sealed class RoleResourceHud : MonoBehaviour
 {
-    // Serialized vanilla colors; live TMP colors may currently be flashing.
-    private static readonly Color Healing = new(0.3373f, 1f, 0.4275f, 1f);
-    private static readonly Color Energy = new(0.9893f, 1f, 0f, 1f);
+    private static readonly Color ResourceColor = new(0.38f, 0.84f, 1f, 1f);
     private readonly List<ResourceRow> _rows = new();
     private StageRolesConfig _config = null!;
     private GameObject? _root;
@@ -129,12 +127,9 @@ internal sealed class RoleResourceHud : MonoBehaviour
             ResourceRow row = _rows[i];
             AbilityValue value = _values[i];
             row.Rect.gameObject.SetActive(true);
-            bool healing = value.Metric is AbilityMetric.Medic or AbilityMetric.MageRecovery or AbilityMetric.Rescuer or AbilityMetric.Phoenix;
-            Color ink = value.Remaining == 0 ? Color.red : healing ? Healing : Energy;
+            Color ink = value.Remaining == 0 ? Color.red : ResourceColor;
             SetText(row.Remaining, value.Remaining.ToString(CultureInfo.InvariantCulture));
-            string slash = value.Remaining == 0 ? "red" : healing ? "#008b20" : "orange";
-            string suffix = value.Metric is AbilityMetric.Repair or AbilityMetric.Charge ? "%" : string.Empty;
-            SetText(row.Maximum, "<b><color=" + slash + ">/</color></b>" + value.Limit.ToString(CultureInfo.InvariantCulture) + suffix);
+            SetText(row.Maximum, "<b>/</b>" + value.Limit.ToString(CultureInfo.InvariantCulture));
             row.Remaining.color = row.Maximum.color = row.Symbol.color = row.NativeIcon.color = ink;
             Sprite? sprite = value.Metric == AbilityMetric.Medic ? _nativePlus?.sprite :
                 value.Metric == AbilityMetric.Charge ? _nativeZap?.sprite : null;

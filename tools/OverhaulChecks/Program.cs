@@ -250,7 +250,24 @@ foreach (var metric in resources)
     Check(glyph.Count > 0 && glyph.Count % 3 == 0 && glyph.All(p => p.X >= 0 && p.X <= 25 && p.Y >= 0 && p.Y <= 25),
         "Every budget has a bounded, nonempty native-size pictogram");
     Check(ReferenceEquals(glyph, RoleResourceSymbols.Get(metric)), "Pictograms are reused without per-frame allocations");
+    Check(glyph.Any(p => p.Alpha == 0) && glyph.All(p => p.Alpha is 0 or 1), "Pictogram contours have a transparent antialiasing rim");
 }
+bool IconCovers(AbilityMetric metric, float x, float y)
+{
+    var mesh = RoleResourceSymbols.Get(metric);
+    float Side(RoleResourceSymbols.Point a, RoleResourceSymbols.Point b) => (b.X-a.X)*(y-a.Y)-(b.Y-a.Y)*(x-a.X);
+    for (int i = 0; i < mesh.Count; i += 3)
+    {
+        var a = mesh[i]; var b = mesh[i+1]; var c = mesh[i+2];
+        if (a.Alpha != 1 || b.Alpha != 1 || c.Alpha != 1) continue;
+        float ab = Side(a,b), bc = Side(b,c), ca = Side(c,a);
+        if ((ab >= 0 && bc >= 0 && ca >= 0) || (ab <= 0 && bc <= 0 && ca <= 0)) return true;
+    }
+    return false;
+}
+Check(IconCovers(AbilityMetric.Repair,4.8f,20.2f) && IconCovers(AbilityMetric.Repair,8,17), "Wrench handle and shank remain connected");
+Check(!IconCovers(AbilityMetric.Repair,18.5f,6), "Concave wrench jaw stays open after triangulation");
+Check(IconCovers(AbilityMetric.Wager,4,12) && !IconCovers(AbilityMetric.Wager,8,13), "Rounded die retains its transparent interior");
 if (args.Length == 2 && args[0] == "--export-hud-icons")
     File.WriteAllText(args[1], System.Text.Json.JsonSerializer.Serialize(resources.ToDictionary(m => m.ToString(), m => RoleResourceSymbols.Get(m))));
 var snapshot = new AbilitySnapshot("p|日本語", StageRole.Imitator, StageRole.Medic, metrics);
