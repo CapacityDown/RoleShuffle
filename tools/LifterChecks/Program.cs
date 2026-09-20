@@ -13,7 +13,8 @@ var opcodes = typeof(OpCodes).GetFields(BindingFlags.Static | BindingFlags.Publi
 var lerp = AccessTools.Method(typeof(Mathf), nameof(Mathf.Lerp));
 var blendMethod = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Blend));
 Check(LifterStrengthRuntime.FieldsAvailable, "Runtime override fields found");
-Near(RoleOverhaulRules.LifterEffectiveStrength(true), 7.087792207792208, "Light target uses upgrade level ONE, not zero");
+Near(RoleOverhaulRules.LifterEffectiveStrength(true), 1.1812987012987013, "Light handling uses vanilla level ONE without sixfold boost");
+Near(RoleOverhaulRules.LifterEffectiveStrength(true, true), 1.1812987012987013, "Light rotation uses vanilla level ONE without sixfold boost");
 Near(RoleOverhaulRules.LifterEffectiveStrength(false), 7.160727272727273, "Heavy target uses upgrade level ONE");
 
 // Inspect installed-game IL without loading Unity; pass all its instructions
@@ -86,7 +87,7 @@ var run = executable.CreateDelegate<Action<PhysGrabObject>>();
 var lifter = new PhysGrabber();
 var other = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Tank } };
 var owner = new PhysGrabObject { playerGrabbing = new[] { lifter, other } };
-foreach (float mass in new[] { 0.5f, 1.999f, 2f, 4f, 8f, 100f })
+foreach (float mass in new[] { 0.02f, 0.05f, 0.1f, 0.5f, 1.999f, 2f, 2.001f, 4f, 8f, 100f })
 for (int level = 0; level <= 200; level++)
 {
     owner.rb.mass = mass;
@@ -201,6 +202,59 @@ Check(nativeCacheUpdate.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Ldc_R4 && 
     && nativeCacheUpdate.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Add)
     && nativeCacheUpdate.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Stfld &&
         i.Operand is FieldReference f && f.Name == "grabStrength"), "Installed game uses the modeled additive Strength cache");
+
+// Numerical regression using the installed game's native small-object force
+// equations, 50 Hz integration and cached-force interpolation. This deliberately
+// models a free, centered hold (not Unity contacts/networking). The old sixfold
+// light coefficients must reproduce sustained motion; the new coefficients
+// obtained from the emitted production patch must settle without extra damping.
+(double Span, double Mean) HoldingMotion(double coefficient, bool rotation)
+{
+    double position = rotation ? Math.PI / 4 : 0.3;
+    double velocity = 0, previousForce = 0, low = double.MaxValue, high = double.MinValue, sum = 0;
+    const double dt = 0.02;
+    int samples = 0;
+    for (int tick = 0; tick < 3000; tick++)
+    {
+        double force;
+        if (rotation)
+        {
+            const double mass = 0.5, extent = 0.2;
+            double degrees = Math.Abs(position) * 180 / Math.PI;
+            force = (degrees / 90) * 15 * mass * dt * mass * (coefficient + 10) * Math.Min(degrees / 30, 1);
+            double divisor = Math.Max(mass * 30, 1) / 7 * mass * 6 / (1 + coefficient);
+            force *= (1 + coefficient) / (1 + extent * extent * 12) * 6500 / divisor;
+            force = Math.CopySign(force, -position);
+            velocity = velocity * 0.8 + (previousForce * 0.1 + force * 0.9) * dt;
+        }
+        else
+        {
+            const double mass = 0.05;
+            double displacement = Math.Clamp(-position * 10, -4, 4);
+            force = Math.Clamp(displacement * 0.9 - velocity * 0.5, -4, 4) *
+                2 / mass * coefficient * 4 * Math.Min(Math.Abs(position) * 10, 1);
+            velocity = velocity * 0.98 + (previousForce * 0.2 + force * 0.8 - 9.81) * dt;
+        }
+        previousForce = force;
+        position += velocity * dt;
+        if (rotation) position = Math.Atan2(Math.Sin(position), Math.Cos(position));
+        if (tick >= 2500) { low = Math.Min(low, position); high = Math.Max(high, position); sum += position; samples++; }
+    }
+    return (high - low, sum / samples);
+}
+RoleOverhaulRules.LifterPhysicsAvailable = true;
+controller.Authority = controller.Ready = true;
+lifter.playerAvatar.Role = StageRole.Lifter;
+owner.rb.mass = 0.5f;
+lifter.grabStrength = 41;
+run(owner);
+var oldTranslation = HoldingMotion(RoleOverhaulRules.EffectiveGrabStrength(1, true) * 6, false);
+var newTranslation = HoldingMotion(lifter.Grip, false);
+var oldRotation = HoldingMotion(RoleOverhaulRules.EffectiveGrabStrength(1, true, true) * 6, true);
+var newRotation = HoldingMotion(lifter.Torque, true);
+Check(oldTranslation.Span > 1 && oldRotation.Span > 0.1, "Prior light coefficients reproduce unsettled native holding motion");
+Check(newTranslation.Span < 0.001 && Math.Abs(newTranslation.Mean) < 0.05, "Reduced light grip settles within 5 cm of its hold target");
+Check(newRotation.Span < 0.001 && Math.Abs(newRotation.Mean) < 0.001, "Reduced light rotation settles without custom force damping");
 
 Console.WriteLine($"PASS: {checks} fixed Lifter math, installed-game IL, emitted IL and host runtime checks.");
 Console.WriteLine("Unity gameplay and vanilla guest networking still require in-game verification.");

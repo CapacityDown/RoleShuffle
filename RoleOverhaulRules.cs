@@ -10,9 +10,10 @@ internal static class RoleOverhaulRules
     internal const int LifterEffectiveMultiplier = 6;
     internal static bool LifterPhysicsAvailable { get; set; }
     internal static double LifterEffectiveStrength(bool lightObject, bool rotation = false) =>
-        EffectiveGrabStrength(LifterReferenceLevel, lightObject, rotation) * LifterEffectiveMultiplier;
+        EffectiveGrabStrength(LifterReferenceLevel, lightObject, rotation) * (lightObject ? 1 : LifterEffectiveMultiplier);
+    // Light objects intentionally use the level-1 handling value to avoid
+    // oscillation. Eligibility follows the role's heavy-object lifting benefit.
     internal static bool LifterBaseReachesTarget(int baseline) =>
-        EffectiveGrabStrength(baseline, true) + 1e-9 >= LifterEffectiveStrength(true) ||
         EffectiveGrabStrength(baseline, false) + 1e-9 >= LifterEffectiveStrength(false);
     internal static bool GrowsWithBase(StageRole role) =>
         role is StageRole.Tank or StageRole.Runner;

@@ -12,13 +12,21 @@
 
 ## Standard v4.5.0 rules
 
-1. Tank and Runner multiply Base effective values and convert them to vanilla upgrade levels, capped at HP 4100, sprint speed 205 and stamina 2040. Base and configured minimums are preserved. Lifter keeps native display level 200 and fixes normal grip/rotation coefficients at six times vanilla level-1 values. Base 0–200 remains eligible. Copied roles and Superbot inherit these targets.
+1. Tank and Runner multiply Base effective values and convert them to vanilla upgrade levels, capped at HP 4100, sprint speed 205 and stamina 2040. Base and configured minimums are preserved. Lifter keeps native display level 200. Heavy grip/rotation coefficients stay at six times vanilla level 1; light objects below mass 2 use level-1 values to reduce holding oscillation. Base 0–200 remains eligible based on the heavy-object benefit. Copied roles and Superbot inherit these targets.
 2. Courier (formerly Jobless) carries distinct positive-value valuables outside delivery areas, then delivers to the truck or extraction point. Unlimited deliveries grant configurable fixed healing and attrition exemption by vanilla size category; each valuable rewards each player once per stage. Tiny/Small/Medium/Big/Wide/Tall/VeryTall default to 10/25/50/100/100/100/100 HP and 30/30/60/90/90/90/120 seconds. Initial grace is 30 seconds; recovery clamps at maximum HP and shorter rewards cannot shorten remaining grace. Drops, death and teleports reset carrying progress.
 3. King keeps the crown and grants temporary native Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Excludes Kings and never stacks. King bonuses are removed on leaving, death, departure or role change.
 4. Stinker and Bomber remain movement-triggered automatic hazards. Neither has a manual pause, activation switch or charge-and-release operation. This is an explicit user requirement.
 5. The host publishes a separate, versioned ability-status snapshot for installed participants. The local resource HUD shows remaining resources in one vertical column. The role list has no auxiliary status line; `/roles` announces only the assigned role name. Existing assignment synchronization is preserved.
 
 These five role updates are the standard v4.5.0 behavior. Schema 37 removes the old mode switch, unused Lifter Strength level and obsolete ability-status line setting after backing up the configuration. Role selection and current tuning are preserved. Resource display has a separate local HUD toggle. The older build remains available in the preserved checkout and deployment backups.
+
+## Lifter light-object handling — UI build 479
+
+- Light objects (native Rigidbody mass below 2) now use vanilla Strength level-1 grip and rotation coefficients: 1.1812987013. Heavy objects keep the sixfold level-1 value, 7.1607272727. Native upgrade display remains 200; Base levels do not change either fixed target. Copies and Superbot inherit the same rule.
+- Reduced the light-object fixed value directly. The existing two-blend host patch remains unchanged; no extra force patch, damping, Rigidbody mutation or settings are introduced. Special overrides, authority checks and role cleanup retain their existing behavior. Eligibility follows the heavy-object benefit, so Base 0–200 stays eligible.
+- Numerical regressions use vanilla's free-hold spring/torque equations and 50 Hz stepping. The prior light coefficients produce persistent movement in the selected small-object cases, while level-1 values settle without custom damping. These simulations do not establish actual Unity collision, multiplayer or gameplay outcomes; in-game confirmation remains pending.
+- Verification: 31,487 Lifter math/installed-game IL/emitted-IL/runtime checks, including mass-boundary cases and Lifter-to-Runner restoration; 75,856 existing role/runtime/sync checks; 12,079 localization checks. Build 479 has zero warnings/errors; 473 compiled game-field references pass against the installed game assembly.
+- All 14 guide translations and English/Japanese release documents describe the light/heavy distinction. CJK font coverage passes. Both role-list PDFs remain 10 pages; only page 2 changed in each edition, and both renders were visually checked. Public secret-role masking remains intact.
 
 ## Courier delivery rewards — UI build 478
 
