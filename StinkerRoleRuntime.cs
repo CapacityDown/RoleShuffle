@@ -9,7 +9,7 @@ namespace REPOJP.StageRoles;
 internal sealed class StinkerRoleRuntime
 {
     private const float TrailEmissionIntervalSeconds = 0.2f;
-    private const float CarrierInitializationDelaySeconds = 0.2f;
+    private const float CarrierBreakGraceSeconds = 0.5f;
     private readonly MonoBehaviour _coroutineOwner;
     private readonly StageRolesConfig _config;
     private readonly VanillaRolePrefabResolver _resolver;
@@ -223,10 +223,9 @@ internal sealed class StinkerRoleRuntime
             // A local frame does not let vanilla clients run Start(): instantiate and
             // break can otherwise arrive in the same Photon dispatch on those clients.
             yield return null;
-            if (SemiFunc.IsMultiplayer())
-            {
-                yield return new WaitForSeconds(CarrierInitializationDelaySeconds);
-            }
+            // Give the spawned valuable a short grace period in both solo and
+            // multiplayer; also let remote clients initialize before breaking.
+            yield return new WaitForSeconds(CarrierBreakGraceSeconds);
             if (!_active || generation != _generation || carrier == null ||
                 !SemiFunc.IsMasterClientOrSingleplayer() ||
                 !_pendingTrailPoints.TryGetValue(assignment.SteamId, out List<Vector3>? currentPoints) ||

@@ -7,10 +7,22 @@ internal static class RoleOverhaulRules
 {
     internal const int LifterStrengthLevel = 200;
     internal const int LifterReferenceLevel = 1;
-    internal const int LifterEffectiveMultiplier = 6;
+    private static readonly double LifterHeavyGrip = MaximumHeavyStrength(false);
+    private static readonly double LifterHeavyRotation = MaximumHeavyStrength(true);
     internal static bool LifterPhysicsAvailable { get; set; }
     internal static double LifterEffectiveStrength(bool lightObject, bool rotation = false) =>
-        EffectiveGrabStrength(LifterReferenceLevel, lightObject, rotation) * (lightObject ? 1 : LifterEffectiveMultiplier);
+        lightObject ? EffectiveGrabStrength(LifterReferenceLevel, true, rotation)
+            : rotation ? LifterHeavyRotation : LifterHeavyGrip;
+
+    // Evaluate each penalty curve over the complete supported range once, not
+    // every physics tick. Use the exact peak, without rounding up to a cap.
+    private static double MaximumHeavyStrength(bool rotation)
+    {
+        double maximum = 0d;
+        for (int level = 0; level <= LifterStrengthLevel; level++)
+            maximum = Math.Max(maximum, EffectiveGrabStrength(level, false, rotation));
+        return maximum;
+    }
     // Light objects intentionally use the level-1 handling value to avoid
     // oscillation. Eligibility follows the role's heavy-object lifting benefit.
     internal static bool LifterBaseReachesTarget(int baseline) =>
@@ -70,7 +82,8 @@ internal static class RoleOverhaulRules
     // R.E.P.O. 0.4.4.3 PhysGrabObject reduces both translation and rotation,
     // with denominator 7 below mass 2 and 20 otherwise. Rotation omits the
     // strength-30 cap in the reduced value. Both curves are non-monotonic.
-    // Used by King's non-weakening bonus selection; Lifter grants level 200.
+    // Used by King's non-weakening bonus selection and Lifter's effective peak.
+    // Lifter's native display remains level 200.
     internal static double EffectiveGrabStrength(int level, bool lightObject, bool rotation = false)
     {
         double strength = 1d + 0.2d * Math.Clamp(level, 0, 200);

@@ -51,7 +51,7 @@ internal static class LifterStrengthRuntime
             return vanilla;
 
         // Exact absolute coefficient, independent of Base/native level. The
-        // rotation result is an input to vanilla torque, not final torque x6.
+        // rotation result is an input to vanilla torque, not final torque.
         return (float)RoleOverhaulRules.LifterEffectiveStrength(owner.rb.mass < 2f, rotation);
     }
 }

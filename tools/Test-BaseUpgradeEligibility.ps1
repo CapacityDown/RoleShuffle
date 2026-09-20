@@ -89,8 +89,8 @@ __TARGETS__
             lifter.Targets[0].Level = minimum;
             if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 200)
                 throw new Exception("Lifter must grant fixed Strength 200 regardless of Base/minimum");
-            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
-                throw new Exception("All Base levels 0-200 remain below the fixed effective target");
+            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (baseline == 50))
+                throw new Exception("Only Base level 50 already reaches the heavy-object peak");
             if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != 200)
                 throw new Exception("Superbot inherits fixed Strength 200");
             count += 3;

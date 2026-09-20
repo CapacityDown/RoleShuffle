@@ -2,6 +2,8 @@
 - Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Infection ends with the stage.
 - Unified role emblem background colors by category.
 - Updated hidden-role abilities.
+- Changed Lifter's heavy-object lifting and turning strength to the highest values available across Strength levels 0–200.
+- Gave Stinker's spawned uranium valuables a 0.5-second grace period before breaking, in both solo and multiplayer.
 
 ## 4.5.0
 - Changed Tank and Runner to strengthen Base health, sprint speed and stamina by 1.5 by default, with configurable minimums and growth limits. They are excluded from random assignment when no further benefit is available or a corresponding Base value reaches its limit.

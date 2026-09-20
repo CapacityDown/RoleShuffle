@@ -79,7 +79,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Tank | Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit. | Health minimum 21. | Minimum, multiplier, cap |
 | Runner | Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Makes heavy objects easier to lift and turn. Light objects use Strength level-1 handling. | Strength displays level 200. Can be selected at any Base level from 0 to 200. | Fixed ability strength |
+| Lifter | Heavy-object lifting and turning use the strongest values across Strength levels 0–200. Light objects use Strength level-1 handling. | Strength displays level 200. Excluded from random assignment at Base Strength level 50, which already reaches the maximum. | Fixed ability strength |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -97,7 +97,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Mage | Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long. | Selecting a matching expression activates its spell; clearing it does not. Spells share a 3-second cooldown, cannot be cast if the cost would be fatal, and can harm players or valuables. The duration bonus does not apply to chat or expression casts, or the Star Wand's instantaneous attack. | Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit |
 | Gambler | A held valuable has a 50% chance to double its current value; otherwise it is destroyed. Gambit green heals 50 HP, red deals 100 damage, black kills, and white fully heals and adds 5 Health levels for the stage. | One wager is available at a time and returns after extraction. Damaged valuables use their reduced value. | Win chance, win multiplier, Gambit green heal, red damage, white temporary Health levels |
 | Hunter | Held or equipped weapons use 75% of normal battery. Enemies killed by Hunter have a 10% chance to drop twice as many orbs and a 0.5% chance to drop 10. | Only Hunter's held or equipped weapons and confirmed kills receive these effects. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies raise only the quality tier of Hunter's added orbs; the normal orb count is unchanged. | Battery consumption, both orb chances, jackpot count |
-| Stinker | Leaves a harmful uranium cloud after every 2 m traveled. Clouds appear one at a time after Stinker moves at least 2 m away from the newest location. | Clouds can damage other players, and Stinker can be hurt by walking back into one. Truck placement is disabled by default. | Distance, safety distance, truck placement |
+| Stinker | Leaves a harmful uranium cloud after every 2 m traveled. Clouds appear one at a time after Stinker moves at least 2 m away from the newest location. Spawned uranium valuables have a 0.5-second grace period before breaking. | Clouds can damage other players, and Stinker can be hurt by walking back into one. Truck placement is disabled by default. | Distance, safety distance, truck placement |
 | Engineer | Prevents supported effect valuables from activating while the Engineer holds them. | Camera, Propane Tank, Snowmobile, Flashlight, Clown Doll, and Love Potion are not affected. By default, not randomly selected if no supported effect valuable is present. | Selection only |
 | Trickster | Type `decoy` in chat or select the configured facial expression to place a fixed Scream Doll that repeatedly attracts enemies within 40 m for 25 seconds. | Another decoy cannot be placed while one is active. Its cooldown begins after the decoy ends: 45 seconds if it attracted an enemy, or 10 seconds if it attracted none. The decoy cannot be grabbed, damaged, or delivered. | Decoy facial expression, active time, normal and no-target cooldowns, radius, pulse interval, placement distance |
 | Mechanic | While directly holding damaged valuables, restores a shared 2% of original sale value per second, up to 50 percentage points per stage. | Only value that is actually restored counts toward the stage limit. Fully repaired and non-valuable objects are ignored. Multiple held valuables share the same repair rate and stage limit. The sale value is restored; damaged visual appearance may remain. | Repair rate, total stage limit |
@@ -123,7 +123,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 ### Role growth and support settings
 
 - **Tank / Runner:** strengthen your Base maximum HP, sprint speed and stamina by 1.5 by default, while keeping configured minimums. Their growth limits are 4,100 HP, 205 sprint speed and 2,040 stamina. Existing Base values are preserved. A role is excluded from random assignment if any corresponding Base value reaches its limit or it cannot provide further upgrades.
-- **Lifter:** makes heavy objects easier to handle regardless of Base Strength. Small items use Strength level-1 handling; the displayed Strength level is 200.
+- **Lifter:** heavy-object lifting and turning stay at the maximum available across Strength levels 0–200, regardless of Base Strength. Small items use Strength level-1 handling; the displayed Strength level is 200. Base Strength level 50 already reaches the maximum and is excluded from random assignment.
 - **Courier:** delivering a valuable restores HP and pauses automatic HP loss according to its size. Each item rewards each player once per stage, including after revival or rejoining.
 - **King:** grants nearby allies temporary Speed, Range and Strength upgrades. The bonus ends outside the area. It does not affect the King or increase HP or stamina.
 
@@ -565,7 +565,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Tank | 基礎の最大HPを1.5倍に強化します。倍率強化の上限は4,100HPです。 | 最低Health 21。 | 最低値・倍率・上限 |
 | Runner | 基礎の走行速度・スタミナを1.5倍に強化します。倍率強化の上限は205・2,040です。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | 重い物を持ち上げたり回したりしやすくなります。小物はStrength Lv1相当の力で扱います。 | Strengthの表示はLv200。BaseがLv0～200のどの場合も抽選対象です。 | 固定能力 |
+| Lifter | 重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定。小物はStrength Lv1相当の力で扱います。 | Strengthの表示はLv200。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。 | 固定能力 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -583,7 +583,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Mage | チャットで`star`、`gravity`、`roll`、`void`、`laser`を入力するか、設定した表情を選択し、順に10、10、15、30、50 HPを消費してバニラ攻撃を発動します。10秒間ダメージを受けなければ、2秒ごとに1 HP回復します。自動回復は1ステージの累計120 HPまでです。保持した杖で発動する魔法の効果時間は1.3倍になります。 | 表情を解除して標準へ戻す操作では発動しません。全魔法で3秒のクールダウンを共有し、消費で死亡する場合は発動しません。攻撃はプレイヤーやValuableにも危険です。効果時間の延長はチャット・表情での魔法や、星杖の瞬間的な攻撃には適用しません。 | 魔法ごとの表情、発射クールダウン、魔法ごとのHP消費量、自動回復の有効化、待機時間、間隔、回復量、ステージごとの回復上限 |
 | Gambler | 持ったValuableは50%の確率で現在価格が2倍になり、失敗すると破壊されます。Gambitは緑で50 HP回復、赤で100ダメージ、黒で死亡、白で全回復してステージ中のHealthを5レベル増やします。 | 賭けは一度に1回だけ使用でき、納品後に復帰します。傷ついたValuableは低下後の価格を基準にします。 | 勝率、勝利倍率、Gambitの緑回復量、赤ダメージ、白の一時Healthレベル |
 | Hunter | 保持または装備中の武器のバッテリー消費量が通常の75%になります。Hunterが倒した敵は10%の確率でオーブが2倍、0.5%の確率で10個になります。 | Hunter本人が保持または装備した武器と、Hunterが倒したと確認できる敵だけが対象です。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体によってHunterが追加するオーブの品質Tierだけが上がり、通常オーブ数は変わりません。 | バッテリー消費率、両方のオーブ確率、特賞個数 |
-| Stinker | 2 m移動するごとに、ダメージを与えるウラン雲を残します。雲は、Stinkerが最新の発生位置から2 m以上離れた後に1つずつ発生します。 | ウラン雲はほかのプレイヤーへダメージを与えます。Stinkerも雲へ戻るとダメージを受ける可能性があります。デフォルトではトラック内に発生しません。 | 距離、安全距離、トラック内発生 |
+| Stinker | 2 m移動するごとに、ダメージを与えるウラン雲を残します。雲は、Stinkerが最新の発生位置から2 m以上離れた後に1つずつ発生します。出現したウラン貴重品は0.5秒の猶予後に壊れます。 | ウラン雲はほかのプレイヤーへダメージを与えます。Stinkerも雲へ戻るとダメージを受ける可能性があります。デフォルトではトラック内に発生しません。 | 距離、安全距離、トラック内発生 |
 | Engineer | 対応している効果付きValuableを保持している間、その効果が発動しないようにします。 | Camera、Propane Tank、Snowmobile、Flashlight、Clown Doll、Love Potionは対象外です。デフォルトでは対応Valuableが存在しない場合に抽選されません。 | 抽選設定のみ |
 | Trickster | チャットで`decoy`と入力するか、設定した表情を選択すると、半径40 m以内の敵を25秒間繰り返し引きつける固定式Scream Dollを設置します。 | デコイが有効な間は新しいデコイを設置できません。クールダウンは終了後から始まり、敵を引きつけた場合は45秒、一体も引きつけなかった場合は10秒です。デコイは掴む、破壊する、納品することができません。 | デコイ用の表情、有効時間、通常時と空振り時のクールダウン、範囲、誘導間隔、設置距離 |
 | Mechanic | 破損したValuableを直接掴んでいる間、元の売却価格の合計2%を毎秒回復し、1ステージにつき合計50ポイントまで回復します。 | 実際に回復した価格だけがステージ上限へ加算されます。修復済みのValuableとValuable以外は対象外です。複数を同時に掴んだ場合、回復速度とステージ上限を共有します。売却価格を回復する効果で、破損した外見は残る場合があります。 | 回復速度、ステージ合計上限 |
@@ -609,7 +609,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 ### 役職の成長・支援設定
 
 - **Tank / Runner：** 基礎の最大HP・走行速度・スタミナを、設定した最低値を保ちながら初期設定で1.5倍に強化します。倍率強化の上限は4,100HP・走行速度205・スタミナ2,040。高い基礎値は維持します。対応する基礎値のいずれかが上限に達している場合や、追加の強化がない場合は抽選対象外です。
-- **Lifter：** Base Strengthにかかわらず、重い物を扱いやすくなります。小物はStrength Lv1相当の力で扱い、Strengthの表示はLv200です。
+- **Lifter：** Base Strengthにかかわらず、重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定します。小物はStrength Lv1相当の力で扱い、Strengthの表示はLv200です。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。
 - **Courier：** 貴重品を配達すると、大きさに応じてHPが回復し、自動HP減少が一時停止します。同じ品の報酬は各自1ステージ1回で、蘇生や再参加でも再獲得できません。
 - **King：** 範囲内の味方にSpeed・Range・Strengthを一時付与し、範囲外で解除します。King自身や、HP・スタミナは対象外です。
 

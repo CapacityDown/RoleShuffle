@@ -11,9 +11,11 @@ void Check(bool value, string message)
     checks++;
 }
 
-foreach (string scenario in new[] { "normal", "disaster", "solo", "returned", "dead", "truck", "removed", "replaced", "stopped", "authority", "invalid-view", "send-failed" })
+foreach (bool multiplayer in new[] { false, true })
+foreach (string scenario in new[] { "normal", "disaster", "returned", "dead", "truck", "removed", "replaced", "stopped", "authority", "invalid-view", "send-failed" })
 {
-    SemiFunc.Multiplayer = scenario != "solo";
+    if (!multiplayer && scenario is "invalid-view" or "send-failed") continue;
+    SemiFunc.Multiplayer = multiplayer;
     SemiFunc.Authority = true;
     PhotonNetwork.Sends = 0;
     PhotonNetwork.PriceSends = 0;
@@ -38,11 +40,9 @@ foreach (string scenario in new[] { "normal", "disaster", "solo", "returned", "d
     body.isKinematic = false; // Vanilla EnableRigidbody resets this after 0.1 seconds.
     Check(body.constraints == RigidbodyConstraints.FreezeAll, scenario + ": freeze survives vanilla activation");
     Check(PhotonNetwork.Sends == 0 && PhysGrabObjectImpactDetector.LocalBreaks == 0, scenario + ": no immediate break");
-    if (SemiFunc.Multiplayer)
-    {
-        Check(routine.MoveNext() && routine.Current is WaitForSeconds { Seconds: 0.2f }, scenario + ": remote initialization delay");
-        Check(PhotonNetwork.Sends == 0, scenario + ": no break during initialization");
-    }
+    Check(routine.MoveNext() && routine.Current is WaitForSeconds { Seconds: 0.5f }, scenario + ": half-second grace after spawn");
+    Check(PhotonNetwork.Sends == 0 && PhysGrabObjectImpactDetector.LocalBreaks == 0,
+        scenario + ": no local or remote break during grace");
     switch (scenario)
     {
         case "returned": assignment.Player.transform.position = Vector3.zero; break;
@@ -55,7 +55,7 @@ foreach (string scenario in new[] { "normal", "disaster", "solo", "returned", "d
         case "invalid-view": carrier.GetComponent<PhotonView>()!.ViewID = 0; break;
     }
     bool waiting = routine.MoveNext();
-    if (scenario == "normal" || scenario == "disaster")
+    if ((scenario == "normal" || scenario == "disaster") && multiplayer)
     {
         Check(waiting && routine.Current is WaitForSeconds { Seconds: 2f }, "tracks carrier through server delivery");
         Check(PhotonNetwork.Sends == 1 && PhotonNetwork.Target == RpcTarget.AllViaServer, "vanilla break uses server ordering");
@@ -63,7 +63,7 @@ foreach (string scenario in new[] { "normal", "disaster", "solo", "returned", "d
         Check(PhysGrabObjectImpactDetector.LocalBreaks == 0, "no early local destruction");
         Check(!routine.MoveNext(), "bounded delivery cleanup completes");
     }
-    else if (scenario == "solo")
+    else if (scenario == "normal" || scenario == "disaster")
     {
         Check(!waiting && PhysGrabObjectImpactDetector.LocalBreaks == 1 && PhotonNetwork.Sends == 0, "singleplayer retains local break");
     }

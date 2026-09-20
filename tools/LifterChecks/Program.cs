@@ -15,7 +15,15 @@ var blendMethod = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(Lifte
 Check(LifterStrengthRuntime.FieldsAvailable, "Runtime override fields found");
 Near(RoleOverhaulRules.LifterEffectiveStrength(true), 1.1812987012987013, "Light handling uses vanilla level ONE without sixfold boost");
 Near(RoleOverhaulRules.LifterEffectiveStrength(true, true), 1.1812987012987013, "Light rotation uses vanilla level ONE without sixfold boost");
-Near(RoleOverhaulRules.LifterEffectiveStrength(false), 7.160727272727273, "Heavy target uses upgrade level ONE");
+foreach (bool rotation in new[] { false, true })
+{
+    double target = RoleOverhaulRules.LifterEffectiveStrength(false, rotation);
+    Near(target, 143d / 24d, "Heavy target is the exact level-50 peak, without rounding");
+    Check(target > RoleOverhaulRules.EffectiveGrabStrength(200, false, rotation), "Peak exceeds the level-200 endpoint");
+    for (int level = 0; level <= 200; level++)
+        Check(RoleOverhaulRules.EffectiveGrabStrength(level, false, rotation) <= target + 1e-9,
+            "Heavy target covers every level, including the penalty dip");
+}
 
 // Inspect installed-game IL without loading Unity; pass all its instructions
 // to the real transpiler, mapping only the locals/members it examines.
@@ -98,7 +106,7 @@ for (int level = 0; level <= 200; level++)
     Near(other.Grip, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2), "Mixed grabber vanilla grip");
     Near(other.Torque, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2, true), "Mixed grabber vanilla rotation");
     Near(lifter.grabStrength, 1f + 0.2f * level, "Never mutate the shared grabber Strength");
-    Check(!RoleOverhaulRules.LifterBaseReachesTarget(level), "Every supported Base level remains eligible");
+    Check(RoleOverhaulRules.LifterBaseReachesTarget(level) == (level == 50), "Only Base at the actual peak is excluded");
 }
 owner.rb.mass = 10; lifter.grabStrength = 41;
 void Vanilla(string reason) { run(owner); Near(lifter.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, false), reason); Near(lifter.Torque, RoleOverhaulRules.EffectiveGrabStrength(200, false, true), reason); }
