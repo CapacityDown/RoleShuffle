@@ -1,8 +1,8 @@
 {
   "generationMode": "Built-in image_gen",
   "count": 42,
-  "format": "Opaque PNG; near-black exterior; category-colored hexagonal interior",
-  "status": "42 role emblem drafts, not integrated into the game",
+  "format": "Original opaque PNGs with near-black exterior; Courier uses native transparent alpha",
+  "status": "42 role emblems integrated; Courier replaces Jobless in v4.5.0",
   "references": {
     "anatomy": "D:/Documents/R.E.P.O. MOD/StagePhysicsEvents/Assets/Semibot_reference.png",
     "style": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
@@ -82,7 +82,7 @@
       "Hardship",
       "#514E49",
       [
-        "Jobless",
+        "Courier",
         "Tuna"
       ]
     ],
@@ -205,12 +205,14 @@
     },
     {
       "id": "13",
-      "role": "Jobless",
-      "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-f75ad48d-8383-4364-81a7-34c2f186ce37.png",
-      "prompt": "Use case: style-transfer. Make ONE individual square emblem PNG for the R.E.P.O. mod RoleShuffle.\nInput image 1 is the approved Tank STYLE reference. Match its exact cream/ivory, charcoal and safety-orange palette, chunky black contours, smooth minimally shaded fills and upright hexagonal emblem frame. Replace the inner scene with the requested role, not a duplicate Tank.\nInput image 2 is the actual original Semibot ANATOMY reference. EVERY emblem must contain recognizable original Semibot features, not a generic robot: rounded domed head, two LARGE protruding spherical eyes with tiny black pupils, horizontal closed mouth seam and short lower-head ring, closed telescoping cylindrical torso and pelvis. SHORT compact smooth tapered cone/fin arms, with ends at the lower torso, never long dangling limbs. Tapered cone legs, NO human hands, feet, shoes, elbows, shoulder armor, antennae, screen faces or square heads. If gripping, use original tractor-beam grip. Do NOT invent extra decorations, clothing or accessories beyond the stated role motif.\nCompose one very readable combined silhouette with one dominant role motif, bold negative space and minimal details, legible at 64 px. Same front-facing hexagon with thin ivory rim; use the specified category color for the entire INTERIOR BACKGROUND behind the character, instead of charcoal, keep 6 percent clear margin around the whole frame. Main motif fills the interior. No text, letters, numerals, watermarks, medals, laurels or ribbons.\nBackground MUST be solid uniform near-black #101216 outside the frame, NOT checkerboard, NOT white, NOT transparency simulation. This is a finished opaque square game icon. Return only ONE emblem, no collage or variants.\nROLE AND MOTIF: Jobless: A worried Semibot beside an empty worker ID card crossed by an orange cancellation slash, with one small downward heart symbol. Blank ID, no letters.\nINTERIOR BACKGROUND CATEGORY: Hardship, solid rich #514E49. Do not leave the hexagon interior black.",
+      "role": "Courier",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\01a0a1f3-aaf0-7cd0-809b-f9921d54fa09\\exec-3442aebb-4617-42e2-b32c-00d1eba05990.png",
+      "prompt": "Use case: precise-object-edit. The input is a concept comparison board. The user has selected A COURIER, the LEFT teal badge. Produce a single square production game role icon of ONLY that selected left badge. Preserve its established design as faithfully as possible: cream rounded thick hexagon outline, dark teal interior, cream SEMIbot with big friendly round eyes walking to the right, cream delivery cap with orange brim, cardboard parcel held in both arms, cream rightward arrow and short motion strokes. Maintain bold clean dark contours, readable silhouette and restrained shading. Fill the square with this one complete badge centered, preserving the entire cream hexagon border, with a small consistent transparent margin. Remove everything else from the board: no labels or lettering below, no other badges, no charcoal outside background. Exterior outside the hexagon must be genuinely transparent alpha. The interior teal field must remain fully opaque. This is the final adopted Courier icon for RoleShuffle, not a new concept. Do not add new elements, do not redesign the character, no watermarks, no surrounding text. Square 1024 by 1024 production art.",
       "category": "Hardship",
-      "background": "#514E49",
-      "file": "13-Jobless.png"
+      "background": "Teal (user-selected proposal A)",
+      "file": "13-Courier.png",
+      "generationMode": "Built-in image_gen (selected concept A edit)",
+      "source_sha256": "43b454c9e09aa38dc24edebb4ad7859de99302c3df5d31fa94000c4b55aead19"
     },
     {
       "id": "14",

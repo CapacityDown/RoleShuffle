@@ -80,7 +80,7 @@ internal static class RoleOverhaulRules
 }
 
 // Owned by the stage assignment, so death, avatar replacement and rejoining
-// cannot replenish completed contracts.
+// cannot reward the same valuable again.
 internal sealed class RoleOverhaulState
 {
     private readonly HashSet<int> _delivered = new();
@@ -101,23 +101,24 @@ internal sealed class RoleOverhaulState
     internal void ResetCargo() { CargoId = 0; CarryDistance = 0; }
     internal bool IsDelivered(int cargoId) => _delivered.Contains(cargoId);
 
-    internal bool Carry(int cargoId, float distance, bool inTruck, float now,
-        float requiredDistance, float grace, int limit)
+    internal bool Carry(int cargoId, float distance, bool inDeliveryArea, float now,
+        float requiredDistance, float grace)
     {
-        if (cargoId == 0 || _delivered.Contains(cargoId) || ContractsCompleted >= limit ||
+        if (cargoId == 0 || _delivered.Contains(cargoId) ||
             float.IsNaN(distance) || float.IsInfinity(distance) || distance < 0 || distance > 4f)
         { ResetCargo(); return false; }
         if (CargoId != cargoId)
         {
             ResetCargo();
-            if (inTruck) return false;
+            if (inDeliveryArea) return false;
             CargoId = cargoId;
             return false; // The first sample only establishes the held object.
         }
-        if (!inTruck) CarryDistance += distance;
-        if (!inTruck || CarryDistance < requiredDistance) return false;
+        if (!inDeliveryArea) CarryDistance += distance;
+        if (!inDeliveryArea || CarryDistance < requiredDistance) return false;
         _delivered.Add(cargoId);
-        PaidUntil = now + grace;
+        // A smaller delivery must not shorten an existing longer break.
+        PaidUntil = Math.Max(PaidUntil, now + grace);
         ResetCargo();
         return true;
     }

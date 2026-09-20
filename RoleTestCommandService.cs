@@ -476,6 +476,11 @@ internal sealed class RoleTestCommandService : MonoBehaviour
 
     private static bool TryParseRole(string value, out StageRole role)
     {
+        if (string.Equals(value, "Courier", StringComparison.OrdinalIgnoreCase))
+        {
+            role = StageRole.Jobless; // Keep /role Jobless and the numeric ID as aliases.
+            return true;
+        }
         if (string.Equals(value, "???", StringComparison.Ordinal) ||
             string.Equals(value, "???1", StringComparison.Ordinal))
         {

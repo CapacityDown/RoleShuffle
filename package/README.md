@@ -30,7 +30,7 @@ Install with a compatible mod manager, or place `RoleShuffle.dll` in the profile
 - Vanilla participants are fully supported and do not need RoleShuffle.
 - Installed participants receive the full role HUD and the scrollable `Roles` page in the Escape menu; each player can choose their own HUD layout.
 - Mage and Trickster do not activate abilities when an expression is cleared. The host's own menu expression restoration is also ignored; other players' expressions restored after closing a menu can still activate an ability.
-- Single-player uses the same role system, but `Tracker`, `Ghost`, `Medic`, `Jobless`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are excluded from random assignment when only one player is present.
+- Single-player uses the same role system, but `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are excluded from random assignment when only one player is present.
 
 ### Role selection and presets
 
@@ -63,10 +63,10 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 - By default, Showcase roles (`Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, `Diver`) and Support roles (`Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`) receive configurable minimum guarantees based on party size.
 - By default, Showcase and Support minimums rise to four each at 24 players. Danger limits rise from one to two at 8 players and three at 16 players; Hardship limits rise from one to two at 12 players. Influencer is a Showcase role and is not treated as a Danger role. A party of four or fewer receives at most one role across both risk groups.
 - A role found among a player's five most recent assignments uses half of its normal selection weight for that player. Other players' histories do not affect that player's selection.
-- A player normally cannot receive the same role in consecutive stages. After receiving `Jobless` or `Tuna`, that player is excluded from both Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
+- A player normally cannot receive the same role in consecutive stages. After receiving `Courier` or `Tuna`, that player is excluded from both Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
 - `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws. Forced test-role assignment is unaffected.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades. Forced role assignment is unaffected.
-- `Tracker`, `Ghost`, `Medic`, `Jobless`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are not selected in single-player or a one-player session.
+- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are not selected in single-player or a one-player session.
 - `Imitator` is selected only after another active player has received a role it can copy.
 - By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` when no melee weapon is available. Weapon-like valuables do not count as weapons for either role's assignment, and staffs do not count for Sniper assignment.
 - During a stage, the participant list is checked regularly. A player is removed after being absent for ten consecutive checks. A returning player regains the previous role, while a newly joined player receives a role, upgrades, announcement, and HUD entry.
@@ -88,7 +88,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Bomber | Drops a random armed grenade every 8 m traveled. Up to 30 generated grenades remain active per Bomber, and the oldest is removed at the limit. | Grenades can injure players and damage valuables. Only Bomber can hold generated grenades. Movement inside the truck does not count while truck placement is disabled. | Distance, limit, truck placement, grenade types |
 | Medic | Heals nearby teammates for 5 HP every 2 seconds within 5 m, up to 150 total HP per stage. | Never heals the Medic. Only living teammates within range are affected. Healing stops when that Medic's stage limit is exhausted. Never selected randomly when only one player is present. | Amount, interval, radius, total limit |
 | Phoenix | Automatically revives itself with 25 HP once per stage after dying. | One use per stage. Revival HP cannot exceed the player's maximum HP. | Revival HP, revival delay, failure grace |
-| Jobless | Carry a different positive-value valuable 5 m outside the truck, then bring it inside. Up to 3 contracts; each fully restores HP and grants a 30-second break. Starts with the same grace. | Otherwise loses 1 HP every 0.1 seconds outside the truck. Can die. Drops/death reset carry progress; returns retain completed work. Not selected solo. | Attrition and contract settings |
+| Courier | Carry a different positive-value valuable 5 m outside delivery areas, then place it in the truck or an extraction point. Unlimited deliveries restore HP and pause attrition by size (settings below). Starts with 30 seconds of grace. | Otherwise loses 1 HP every 0.1 seconds outside the truck; can die. Each item rewards each player once per stage. Drops/death reset carry progress. Not selected solo. | Delivery and attrition settings |
 | Rescuer | While alive, approaching within 3 m of a dead teammate's Death Head revives the nearest eligible teammate with 25 HP. | Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present. | Revival HP, delay, radius, maximum revivals |
 | Vampire | Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50. | Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy. | Amount per tier, radius |
 | King | Crown; grants nearby allies Speed/Range +1 and up to Strength +1 within 8 m. | No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage. | Radius and bonus levels |
@@ -113,7 +113,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Rammer | Tumble Attack deals 100 damage to enemies and deals 15 damage to Rammer after a successful hit. | Launch, Tumble Climb, and Tumble Wings are fixed at level 0 for the stage regardless of Base Upgrades. | Tumble Attack and self damage |
 | Diver | Tumbling while continuing to look down at a fixed floor enables movement below it for up to 10 seconds. | Failing to return through a floor in time kills Diver. Returning above the floor starts a cooldown equal to 1.5 times the previous dive time. The countdown and ready state are announced by TTS. | Underfloor duration, movement force |
 | Sniper | Enemy damage changes continuously with distance: 0.5x at point-blank range, 1x at 8 m, and up to 2x at 24 m. | Applies only when Sniper can be identified as the attacker. Vehicle impacts and Tumble Attacks are unchanged. | Reference distance, minimum and maximum multipliers, maximum-multiplier distance |
-| Imitator | Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator. | Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Jobless, Tuna, or ???1 or ???2. The first valid copy is fixed for the stage. Never selected randomly when only one player is present. | Selection only |
+| Imitator | Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator. | Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, or ???1 or ???2. The first valid copy is fixed for the stage. Never selected randomly when only one player is present. | Selection only |
 | Avenger | When another player dies within 30 m, deals 1.5x damage to enemies for 20 seconds. | Activation, duration refreshes, and expiration are announced by TTS. Another nearby death refreshes the duration without stacking the multiplier. Its own death does not activate the effect. Never selected randomly when only one player is present. | Trigger radius, damage multiplier, and duration |
 | Brawler | Deals 1.25x damage with identifiable melee weapon attacks and 0.75x damage with identifiable guns, staff projectiles, and lasers. | Vehicle impacts, Tumble Attacks, grenades, and ordinary held-object collisions are unchanged. | Melee and ranged damage multipliers |
 | ???1 | ??? | ??? | ??? |
@@ -121,7 +121,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Role growth and support settings
 
-Tank/Runner multiply Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Caps are rounded-up maxima over levels 0–200; Base and role minimums take priority. Tank/Runner are excluded if any corresponding Base effective value reaches its cap or there is no upgrade gain. Lifter keeps display level 200 and fixes normal grip/rotation coefficients at six times vanilla level 1 via host physics: 7.087792 below mass 2, 7.160727 otherwise. This is an absolute value, independent of Base; levels 0–200 remain eligible. Temporary overrides retain priority. Final torque is nonlinear, not a sixfold guarantee. Forced assignments use the same targets. Base includes manual/draw changes. Copies and Superbot inherit these targets. Jobless contracts survive revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills. Bomber/Stinker remain automatic. These are the standard role rules; existing configuration is backed up before obsolete settings are removed.
+Tank/Runner multiply Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Caps are rounded-up maxima over levels 0–200; Base and role minimums take priority. Tank/Runner are excluded if any corresponding Base effective value reaches its cap or there is no upgrade gain. Lifter keeps display level 200 and fixes normal grip/rotation coefficients at six times vanilla level 1 via host physics: 7.087792 below mass 2, 7.160727 otherwise. This is an absolute value, independent of Base; levels 0–200 remain eligible. Temporary overrides retain priority. Final torque is nonlinear, not a sixfold guarantee. Forced assignments use the same targets. Base includes manual/draw changes. Copies and Superbot inherit these targets. Courier delivery history survives revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills. Bomber/Stinker remain automatic. These are the standard role rules; existing configuration is backed up before obsolete settings are removed.
 
 Host settings except HUD:
 
@@ -130,9 +130,10 @@ Host settings except HUD:
 | `Tank.HealthMultiplier` / `Tank.MaximumHealth` | `1.5` / `4100` | 1–10 / 100–4100 | Maximum HP |
 | `Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed` | `1.5` / `205` | 1–10 / 5–205 | Sprint speed |
 | `Runner.StaminaMultiplier` / `Runner.MaximumStamina` | `1.5` / `2040` | 1–10 / 40–2040 | Stamina capacity |
-| `Jobless.ContractDistance` | `5` | 1–50 m | Required carried distance outside the truck. |
-| `Jobless.ContractGraceSeconds` | `30` | 1–300 s | Initial and post-delivery attrition break. |
-| `Jobless.ContractsPerStage` | `3` | 1–30 | Completed contract limit per player. |
+| `Courier.ContractDistance` | `5` | 1–50 m | Carry distance outside delivery areas. |
+| `Courier.InitialGraceSeconds` | `30` | 0–300 s | Initial attrition break. |
+| `Courier.<Size>GraceSeconds` | `30/30/60/90/90/90/120` | 0–300 s | Tiny/Small/Medium/Big/Wide/Tall/VeryTall. Never shortens remaining grace. |
+| `Courier.<Size>HealAmount` | `10/25/50/100/100/100/100` | 0–10000 HP | Same size order; fixed HP, capped at maximum health. |
 | `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed / Range bonus levels. |
 | `King.StrengthBonusLevels` | `1` | 0–200 | Maximum safe Strength bonus levels. |
 | `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
@@ -176,7 +177,7 @@ When an older configuration is detected, RoleShuffle keeps compatible customized
 
 All entries in this table are host-controlled.
 
-Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, and `Bodyguard`. Danger roles are `Bomber`, `Stinker`, and `Werewolf`; Hardship roles are `Jobless` and `Tuna`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
+Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, and `Bodyguard`. Danger roles are `Bomber`, `Stinker`, and `Werewolf`; Hardship roles are `Courier` and `Tuna`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
 
 | Key | Default | Range / values | Effect |
 | --- | ---: | --- | --- |
@@ -186,11 +187,11 @@ Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, 
 | `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `party size:minimum` pairs | Minimum Support assignments by party size. |
 | `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Enables Danger, Hardship, and small-party combined limits. |
 | `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `party size:limit` pairs | Maximum simultaneous `Bomber`, `Stinker`, and `Werewolf` roles by party size. |
-| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `party size:limit` pairs | Maximum simultaneous `Jobless` and `Tuna` roles by party size. |
+| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `party size:limit` pairs | Maximum simultaneous `Courier` and `Tuna` roles by party size. |
 | `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`–`30` | Largest party size using the combined Danger and Hardship limit. |
 | `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`–`30` | Maximum combined Danger and Hardship roles in a small party. |
 | `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | Prevents the same player receiving the same role in consecutive stages when alternatives exist. |
-| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`–`10` | Stages after `Jobless` or `Tuna` during which that player is normally excluded from both roles. |
+| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`–`10` | Stages after `Courier` or `Tuna` during which that player is normally excluded from both roles. |
 | `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | Excludes context-dependent roles when their required enemy, weapon, or usable object is absent. |
 
 #### Base upgrades
@@ -274,7 +275,7 @@ Host-controlled. Each standard role has an `Enabled` switch (`true`/`false`) and
 | `Bomber.Enabled = true` | `Bomber.Weight = 80` |
 | `Medic.Enabled = true` | `Medic.Weight = 100` |
 | `Phoenix.Enabled = true` | `Phoenix.Weight = 100` |
-| `Jobless.Enabled = true` | `Jobless.Weight = 20` |
+| `Courier.Enabled = true` | `Courier.Weight = 20` |
 | `Rescuer.Enabled = true` | `Rescuer.Weight = 80` |
 | `Vampire.Enabled = true` | `Vampire.Weight = 100` |
 | `King.Enabled = true` | `King.Weight = 100` |
@@ -335,8 +336,8 @@ All entries in this table are host-controlled.
 | `Phoenix.ReviveDelaySeconds` | `2` | `2`–`10` | Seconds before Phoenix revival. |
 | `Phoenix.FailureGraceSeconds` | `5` | `1`–`15` | Maximum seconds to hold a failed-stage transition while revival initializes. |
 | `Phoenix.RevivalHealth` | `25` | `1`–`1000` | Health after Phoenix revival, capped at the player's maximum health. |
-| `Jobless.Damage` | `1` | `1`–`100` | Damage per tick outside the truck. |
-| `Jobless.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between damage ticks outside the truck. |
+| `Courier.Damage` | `1` | `1`–`100` | Damage per tick outside the truck. |
+| `Courier.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between damage ticks outside the truck. |
 | `Rescuer.ReviveDelaySeconds` | `2` | `0`–`10` | Seconds a target must remain dead before rescue. |
 | `Rescuer.Radius` | `3` | `1`–`50` | Maximum rescue distance in meters. |
 | `Rescuer.MaximumRevives` | `2` | `1`–`10` | Maximum revivals for each Rescuer per stage. |
@@ -475,7 +476,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 - `Bomber` creates live vanilla hazards. Explosions and physics effects may injure players or damage valuables.
 - `Mage` fires live vanilla attacks selected by case-insensitive chat keywords after trimming surrounding whitespace. Projectiles and beams may injure players or damage valuables.
-- `Jobless` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
+- `Courier` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
 - `Medic` never heals itself.
 - `Phoenix` revives itself once per stage. `Rescuer` revives other nearby players up to the configured limit. Each role uses its own configurable revival HP, with a default of 25.
 - Role-specific upgrade overrides return to their configured base levels at stage end. Other managed upgrades stay at their base levels, and Throw is untouched.
@@ -511,7 +512,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 - MOD未導入の参加者にも対応しており、RoleShuffleの導入は不要です。
 - MOD導入済みの参加者には全員の役職を確認できるHUDと、Escメニュー内のスクロール可能な`Roles`ページが表示されます。HUDの配置は各プレイヤーが個別に変更できます。
 - MageとTricksterは表情の解除では能力を発動しません。ホスト自身のメニュー終了時の表情復帰も除外しますが、参加者のメニュー終了時に復帰した表情では能力が発動する場合があります。
-- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Jobless`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`がランダム抽選から除外されます。
+- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`がランダム抽選から除外されます。
 
 ### ロール選択とプリセット
 
@@ -544,10 +545,10 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 - デフォルトでは、Showcase役（`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`）とSupport役（`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`）を、参加人数に応じて設定された最低人数まで優先的に割り当てます。
 - デフォルトでは、24人以上でShowcaseとSupportをそれぞれ最低4人保証します。Danger上限は8人で2人、16人で3人へ増え、Hardship上限は12人で2人へ増えます。InfluencerはShowcase役であり、Danger役として扱いません。4人以下では両リスクグループを合わせて最大1人です。
 - 各プレイヤーが直近5回に割り当てられた役職は、そのプレイヤーの次回抽選時に通常の半分のWeightで扱います。他のプレイヤーの履歴は影響しません。
-- 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Jobless`または`Tuna`の後、2ステージはそのプレイヤーを両方から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
+- 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Courier`または`Tuna`の後、2ステージはそのプレイヤーを両方から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
 - `Jumper`、`Launcher`、`Climber`、`Flyer`、`Tracker`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。テストコマンドによる強制指定には影響しません。
 - `Influencer`は、現在の参加人数で到達可能なアップグレード目標値が現在のBase Upgradeを1項目も上回らない場合、ランダム抽選から除外されます。強制割り当てには影響しません。
-- `Tracker`、`Ghost`、`Medic`、`Jobless`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`はシングルプレイまたは1人のセッションでは抽選されません。
+- `Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`はシングルプレイまたは1人のセッションでは抽選されません。
 - `Imitator`は、コピー可能な役職を持つ他の参加者が確保された場合だけ抽選されます。
 - デフォルトでは、能力を使える対象がない状況依存役を抽選から除外します。必要なオブジェクトがない`Musician`、`Engineer`、`Electrician`、`Rider`と、近接武器も銃もない場合の`Sniper`、近接武器がない場合の`Brawler`が対象です。両ロールの抽選判定では、武器として使える貴重品も武器に含めません。Sniperの抽選判定では杖も対象外です。
 - ステージ中は参加者一覧を定期的に確認し、10回連続で不在だったプレイヤーを一覧から外します。戻ってきたプレイヤーには以前の役職を戻し、新しく参加したプレイヤーには役職、アップグレード、通知、HUD表示を適用します。
@@ -569,7 +570,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 | Bomber | 8 m移動するごとに起動済みグレネードをランダム設置します。Bomber 1人につき最大30個まで残り、上限では最も古いものを削除します。 | グレネードはプレイヤーやValuableにも危険です。生成されたグレネードを持てるのはBomberだけです。トラック内設置が無効な場合、トラック内の移動距離は加算されません。 | 距離、上限、トラック内設置、グレネード種類 |
 | Medic | 5 m以内の仲間を2秒ごとに5 HP回復し、1ステージにつき合計150 HPまで回復します。 | Medic自身は回復しません。範囲内で生存している仲間だけが対象です。そのMedicの上限を使い切ると回復を停止します。参加者が1人だけの場合はランダム抽選されません。 | 回復量、間隔、範囲、合計上限 |
 | Phoenix | 死亡すると、1ステージに1回だけデフォルト25 HPで自動復活します。 | 1ステージにつき1回です。復活後HPはプレイヤーの最大HPを超えません。 | 復活後HP、復活遅延、失敗時猶予 |
-| Jobless | 異なる価格付き価値品をトラック外で5m運び、保持したまま戻ると契約達成。最大3件。達成ごとにHP全回復・30秒のダメージ免除。開始時も同じ猶予。 | それ以外はトラック外で0.1秒ごとに1ダメージ、死亡あり。手放す・死亡で運搬進捗を解除。再参加でも達成件数は保持。ソロ抽選なし。 | 継続ダメージ・契約設定 |
+| Courier | 貴重品を搬入先の外で5m運び、トラック・納品所へ届けるとサイズ別にHP回復・ダメージ免除（下表）。搬入回数は無制限。開始猶予30秒。 | 猶予外はトラック外で0.1秒ごとに1ダメージ、死亡あり。同じ品の報酬は各自1ステージ1回。手放し・死亡で運搬進捗リセット。1人では抽選対象外。 | 搬入・継続ダメージ |
 | Rescuer | 生存中に、死亡した仲間のDeath Headから3 m以内へ近づくと、最も近い対象をデフォルト25 HPで復活させます。 | 1ステージにつき最大2回です。復活後HPは対象の最大HPを超えません。参加者が1人だけの場合はランダム抽選されません。 | 復活後HP、遅延、範囲、最大復活回数 |
 | Vampire | 10 m以内で敵が死亡すると、Tier 1は5、Tier 2は10、Tier 3は50回復します。 | 敵のバニラDanger Levelを使用します。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体を最大Tier 3まで1段階上として扱います。Vampireが生存し、死亡した敵の近くにいる必要があります。 | Tier別回復量、範囲 |
 | King | Crownと8mの強化範囲。味方へSpeed・Range各＋1、Strength最大＋1。 | 自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。 | 半径・追加レベル |
@@ -594,7 +595,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 | Rammer | Tumble Attackで敵へ100ダメージを与え、命中後に自身が15ダメージを受けます。 | ステージ中はBase Upgradeにかかわらず、Launch、Tumble Climb、Tumble Wingsがレベル0に固定されます。 | Tumble Attack・自傷ダメージ |
 | Diver | 固定された床で下を向いたままタンブルすると床を抜け、最大10秒間、床下を移動できます。 | 時間内に床を抜けて戻れないと死亡します。床上へ戻ると直前の潜航時間の1.5倍のクールダウンが始まり、残り時間と再使用可能状態はTTSで通知されます。 | 床下制限時間、移動力 |
 | Sniper | 敵へのダメージが距離に応じて連続変化し、密着時は0.5倍、8 mで1倍、24 mで最大2倍になります。 | Sniperが攻撃者と特定できる場合だけ適用します。車両衝突とTumble Attackは変化しません。 | 基準距離、最低・最高倍率、最高倍率到達距離 |
-| Imitator | 最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。 | Imitator、King、Bomber、Stinker、Werewolf、Jobless、Tuna、???1、???2はコピーしません。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。 | 抽選設定のみ |
+| Imitator | 最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。 | Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、???1、???2はコピーしません。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。 | 抽選設定のみ |
 | Avenger | 他のプレイヤーが30m以内で死亡すると、20秒間、敵へのダメージが1.5倍になります。 | 発動、残り時間の更新、終了はTTSで通知されます。効果中に近くで別のプレイヤーが死亡した場合は、倍率を重複せず残り時間だけを更新します。自身の死亡では発動しません。1人のセッションでは抽選されません。 | 発動範囲、ダメージ倍率、持続時間 |
 | Brawler | 攻撃者を特定できる近接武器のダメージが1.25倍になり、銃、杖の弾、レーザーによるダメージは0.75倍になります。 | 車両衝突、Tumble Attack、グレネード、通常の保持物による衝突は変化しません。 | 近接・遠隔ダメージ倍率 |
 | ???1 | ??? | ??? | ??? |
@@ -602,7 +603,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 
 ### 役職の成長・支援設定
 
-Tank・RunnerはBaseのHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。上限はレベル0〜200の実効最大値を切り上げた値で、Base・役職最低値を優先します。対象のBase実効値が1つでも上限以上、または強化なしなら抽選対象外。Lifterは表示Lv200を維持し、ホスト側で通常の掴む力・回転係数をバニラLv1の実質値の6倍に固定します。質量2未満は7.087792、それ以上は7.160727。Baseに依存しない固定値で、Base 0〜200は抽選対象です。一時的な上書き効果は優先。回転係数は最終回転力の6倍を意味しません。強制割り当ても同じ目標値を使用します。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Jobless契約数は蘇生・再参加でも保持。Kingは一時アップグレードを付与し、HP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持。これらは標準仕様です。既存設定はバックアップしてから不要な項目を削除します。
+Tank・RunnerはBaseのHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。上限はレベル0〜200の実効最大値を切り上げた値で、Base・役職最低値を優先します。対象のBase実効値が1つでも上限以上、または強化なしなら抽選対象外。Lifterは表示Lv200を維持し、ホスト側で通常の掴む力・回転係数をバニラLv1の実質値の6倍に固定します。質量2未満は7.087792、それ以上は7.160727。Baseに依存しない固定値で、Base 0〜200は抽選対象です。一時的な上書き効果は優先。回転係数は最終回転力の6倍を意味しません。強制割り当ても同じ目標値を使用します。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Courierの搬入履歴は蘇生・再参加でも保持。Kingは一時アップグレードを付与し、HP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持。これらは標準仕様です。既存設定はバックアップしてから不要な項目を削除します。
 
 HUD以外はホスト設定です。
 
@@ -611,9 +612,10 @@ HUD以外はホスト設定です。
 | `Tank.HealthMultiplier` / `Tank.MaximumHealth` | `1.5` / `4100` | 1–10 / 100–4100 | 最大HP |
 | `Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed` | `1.5` / `205` | 1–10 / 5–205 | 走行速度 |
 | `Runner.StaminaMultiplier` / `Runner.MaximumStamina` | `1.5` / `2040` | 1–10 / 40–2040 | スタミナ容量 |
-| `Jobless.ContractDistance` | `5` | 1–50m | トラック外での必要運搬距離。 |
-| `Jobless.ContractGraceSeconds` | `30` | 1–300秒 | 開始時・達成後のダメージ免除。 |
-| `Jobless.ContractsPerStage` | `3` | 1–30 | 各プレイヤーの達成上限。 |
+| `Courier.ContractDistance` | `5` | 1–50m | 搬入先の外での運搬距離。 |
+| `Courier.InitialGraceSeconds` | `30` | 0–300秒 | 開始猶予。 |
+| `Courier.<Size>GraceSeconds` | `30/30/60/90/90/90/120` | 0–300秒 | Tiny/Small/Medium/Big/Wide/Tall/VeryTall（極小/小/中/大/横長/縦長/超縦長）。残り猶予は短縮しません。 |
+| `Courier.<Size>HealAmount` | `10/25/50/100/100/100/100` | 0–10000HP | 同じサイズ順。固定HP回復、最大HPまで。 |
 | `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed・Range追加レベル。 |
 | `King.StrengthBonusLevels` | `1` | 0–200 | 悪化しないStrengthの追加上限。 |
 | `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
@@ -658,7 +660,7 @@ HUD以外はホスト設定です。
 
 この表はすべてホスト設定です。
 
-Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、Hardship役は`Jobless`、`Tuna`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
+Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、Hardship役は`Courier`、`Tuna`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
 
 | キー | デフォルト | 範囲・値 | 内容 |
 | --- | ---: | --- | --- |
@@ -668,11 +670,11 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 | `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `参加人数:最低人数`の組 | 参加人数ごとに保証するSupportの最低人数です。 |
 | `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Danger、Hardship、少人数時の複合上限を有効にします。 |
 | `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `参加人数:上限`の組 | 参加人数ごとの`Bomber`、`Stinker`、`Werewolf`の合計上限です。 |
-| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `参加人数:上限`の組 | 参加人数ごとの`Jobless`と`Tuna`の合計上限です。 |
+| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `参加人数:上限`の組 | 参加人数ごとの`Courier`と`Tuna`の合計上限です。 |
 | `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`～`30` | DangerとHardshipの複合上限を使用する最大参加人数です。 |
 | `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`～`30` | 少人数時に許可するDangerとHardshipの合計最大人数です。 |
 | `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | ほかの候補がある場合、同じプレイヤーへの同役職の連続割り当てを防ぎます。 |
-| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`～`10` | `Jobless`または`Tuna`の後、そのプレイヤーを両役職から通常除外するステージ数です。 |
+| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`～`10` | `Courier`または`Tuna`の後、そのプレイヤーを両役職から通常除外するステージ数です。 |
 | `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | 必要な敵、武器、使用対象が存在しない状況依存役を抽選から除外します。 |
 
 #### 基礎アップグレード
@@ -756,7 +758,7 @@ Weightのデフォルト値はバニラのショップ最大出現数を反映�
 | `Bomber.Enabled = true` | `Bomber.Weight = 80` |
 | `Medic.Enabled = true` | `Medic.Weight = 100` |
 | `Phoenix.Enabled = true` | `Phoenix.Weight = 100` |
-| `Jobless.Enabled = true` | `Jobless.Weight = 20` |
+| `Courier.Enabled = true` | `Courier.Weight = 20` |
 | `Rescuer.Enabled = true` | `Rescuer.Weight = 80` |
 | `Vampire.Enabled = true` | `Vampire.Weight = 100` |
 | `King.Enabled = true` | `King.Weight = 100` |
@@ -817,8 +819,8 @@ Weightのデフォルト値はバニラのショップ最大出現数を反映�
 | `Phoenix.ReviveDelaySeconds` | `2` | `2`～`10` | Phoenixが復活するまでの秒数です。 |
 | `Phoenix.FailureGraceSeconds` | `5` | `1`～`15` | 復活準備中に、失敗時のステージ遷移を保留する最大秒数です。 |
 | `Phoenix.RevivalHealth` | `25` | `1`～`1000` | Phoenix復活後のHPです。プレイヤーの最大HPが上限です。 |
-| `Jobless.Damage` | `1` | `1`～`100` | トラック外で1回ごとに受けるダメージです。 |
-| `Jobless.DamageIntervalSeconds` | `0.1` | `0.05`～`10` | トラック外でダメージを受ける間隔です。 |
+| `Courier.Damage` | `1` | `1`～`100` | トラック外で1回ごとに受けるダメージです。 |
+| `Courier.DamageIntervalSeconds` | `0.1` | `0.05`～`10` | トラック外でダメージを受ける間隔です。 |
 | `Rescuer.ReviveDelaySeconds` | `2` | `0`～`10` | 復活対象が死亡してから必要な秒数です。 |
 | `Rescuer.Radius` | `3` | `1`～`50` | 復活可能な最大距離です。単位はメートルです。 |
 | `Rescuer.MaximumRevives` | `2` | `1`～`10` | Rescuer1人あたり、1ステージで復活できる最大回数です。 |
@@ -957,7 +959,7 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 
 - `Bomber`は起動済みのバニラハザードを生成します。爆発や物理効果によってプレイヤーや貴重品へ被害が出る可能性があります。
 - `Mage`は前後の空白と大文字・小文字を無視したチャットキーワードで選択した、実体のあるバニラ攻撃を発射します。発射体とビームはプレイヤーや貴重品へ被害を与える可能性があります。
-- `Jobless`と`Tuna`は条件を満たしている間、実際に継続ダメージを与え、死亡する可能性があります。受けたダメージは自動回復しません。
+- `Courier`と`Tuna`は条件を満たしている間、実際に継続ダメージを与え、死亡する可能性があります。受けたダメージは自動回復しません。
 - `Medic`は自身を回復しません。
 - `Phoenix`は1ステージに1回だけ自己復活します。`Rescuer`は設定された回数まで周囲の別プレイヤーを復活させます。復活後HPは役職ごとに設定でき、デフォルトは25です。
 - 役職が置き換えたアップグレードはステージ終了時に基礎値へ戻ります。その他の管理対象アップグレードは基礎値を維持し、Throwには触れません。

@@ -89,10 +89,11 @@ internal static class RoleCatalog
     {
         StageRole.Superbot => "???1",
         StageRole.Disaster => "???2",
+        StageRole.Jobless => "Courier",
         _ => role.ToString()
     };
 
-    internal static string AssignmentName(StageRole role) => role.ToString();
+    internal static string AssignmentName(StageRole role) => role == StageRole.Jobless ? "Courier" : role.ToString();
 
     internal static string AssignmentName(
         StageRole assignedRole,

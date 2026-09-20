@@ -14,7 +14,7 @@ internal static class RoleEmblems
     internal static Sprite? Get(StageRole role, bool unrevealed = false, bool grayedOut = false)
     {
         int id = RoleCatalog.IsSecretRole(role) ? (int)role : (int)role + 1;
-        string key = unrevealed ? "Unrevealed" : $"{id:D2}-{role}";
+        string key = unrevealed ? "Unrevealed" : $"{id:D2}-{(role == StageRole.Jobless ? "Courier" : role.ToString())}";
         string cacheKey = grayedOut ? key + "_Disabled" : key;
         if (Cache.TryGetValue(cacheKey, out Sprite? cached)) return cached;
         Texture2D? texture = null;

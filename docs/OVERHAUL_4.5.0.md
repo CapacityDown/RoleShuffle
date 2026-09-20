@@ -13,12 +13,23 @@
 ## Standard v4.5.0 rules
 
 1. Tank and Runner multiply Base effective values and convert them to vanilla upgrade levels, capped at HP 4100, sprint speed 205 and stamina 2040. Base and configured minimums are preserved. Lifter keeps native display level 200 and fixes normal grip/rotation coefficients at six times vanilla level-1 values. Base 0–200 remains eligible. Copied roles and Superbot inherit these targets.
-2. Jobless receives a starting grace period. Carry a different, positive-value valuable at least the configured distance and bring it into the truck to complete a contract. A contract pauses attrition and fully restores the worker's HP to its current maximum. Completions are limited per player per stage; drops, death and teleports do not accumulate work.
+2. Courier (formerly Jobless) carries distinct positive-value valuables outside delivery areas, then delivers to the truck or extraction point. Unlimited deliveries grant configurable fixed healing and attrition exemption by vanilla size category; each valuable rewards each player once per stage. Tiny/Small/Medium/Big/Wide/Tall/VeryTall default to 10/25/50/100/100/100/100 HP and 30/30/60/90/90/90/120 seconds. Initial grace is 30 seconds; recovery clamps at maximum HP and shorter rewards cannot shorten remaining grace. Drops, death and teleports reset carrying progress.
 3. King keeps the crown and grants temporary native Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Excludes Kings and never stacks. King bonuses are removed on leaving, death, departure or role change.
 4. Stinker and Bomber remain movement-triggered automatic hazards. Neither has a manual pause, activation switch or charge-and-release operation. This is an explicit user requirement.
 5. The host publishes a separate, versioned ability-status snapshot for installed participants. The local resource HUD shows remaining resources in one vertical column. The role list has no auxiliary status line; `/roles` announces only the assigned role name. Existing assignment synchronization is preserved.
 
 These five role updates are the standard v4.5.0 behavior. Schema 37 removes the old mode switch, unused Lifter Strength level and obsolete ability-status line setting after backing up the configuration. Role selection and current tuning are preserved. Resource display has a separate local HUD toggle. The older build remains available in the preserved checkout and deployment backups.
+
+## Courier delivery rewards — UI build 478
+
+- Adopted the user's concept A: Courier / 配送員, with a parcel, delivery cap and teal hexagonal emblem. The source and 256 px transparent runtime PNG are tracked with hashes and the generation prompt. Role ID 13 is unchanged; `/role Courier` and the legacy `/role Jobless` both select it.
+- Both native truck and extraction room volumes qualify based on the valuable's location. Carry progress is counted only outside those areas. A release hook refreshes the native room check before discarding progress, covering delivery and release between periodic scans.
+- Removed the per-stage completion cap and its remaining-budget HUD entry. Distinct valuables can be delivered without a count limit; each valuable rewards each player once per stage, including after revival/rejoining. The existing 5 m carrying requirement remains.
+- Healing is fixed HP by category: Tiny 10, Small 25, Medium 50, Big/Wide/Tall/VeryTall 100. Grace defaults are 30/30/60/90/90/90/120 seconds respectively. All seven HP and grace values are independently configurable. Native owner-side healing clamps at maximum HP; a short grace reward cannot reduce a longer active grace period. These rewards do not alter pending Medic/Mage reservations.
+- Schema 39 backs up existing settings, moves Jobless keys to Courier, retains the old shared grace as initial grace, and removes obsolete shared healing and completion-limit keys. Existing Courier keys take priority. The initial grace default remains 30 seconds.
+- Updated all 14 language catalogs and checked font coverage; refreshed only the three CJK subsets needing new glyphs. Detailed and public Japanese role-list PDFs remain 10 pages. All seven changed rendered pages were visually checked; the public edition still hides secret names, descriptions and artwork.
+- Verification: 75,856 runtime/rules/sync checks; 298 role settings/migration, 128 Base settings and 248 save-adjustment checks; 12,079 localization checks; 2,704 healing-budget/notification/weight regressions; 26,659 Lifter math/IL/runtime regressions. Build 478 has zero warnings/errors; 473 compiled game-field references pass the installed-game audit. All 43 emblems are embedded, and Courier's embedded bytes match the runtime PNG.
+- RSO_TEST deployment and live game verification remain deferred while the user continues playing. This build retains the Lifter restoration repair from build 476.
 
 ## Jobless full healing — UI build 477
 

@@ -135,7 +135,7 @@ namespace REPOJP.StageRoles
         internal static IReadOnlyList<StageRole> AllRoles = Enum.GetValues<StageRole>();
         internal static bool IsSecretRole(StageRole role) => role is StageRole.Superbot or StageRole.Disaster;
         internal static string DisplayName(StageRole role) => role switch
-        { StageRole.Superbot => "???1", StageRole.Disaster => "???2", _ => role.ToString() };
+        { StageRole.Superbot => "???1", StageRole.Disaster => "???2", StageRole.Jobless => "Courier", _ => role.ToString() };
     }
     internal readonly record struct UpgradeGrant(string CommandName, string DictionaryName, int Level);
     internal static class RoleGuideSync

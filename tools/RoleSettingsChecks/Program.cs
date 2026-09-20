@@ -46,7 +46,7 @@ Check(!lifterText.Contains("StrengthMultiplier") && !lifterText.Contains("Maximu
 Check(!lifterText.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
     "Fixed Lifter migration removes the unused level setting and preserves selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
-Check(lifterText.Contains("ConfigVersion = 38"), "Config uses the current v4.5 role schema");
+Check(lifterText.Contains("ConfigVersion = 39"), "Config uses the current v4.5 role schema");
 RoleConfigMigration.Apply(lifterFile);
 Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
     "Repeated migration preserves settings and rollback backup");
@@ -92,14 +92,14 @@ foreach (bool wasEnabled in new[] { false, true })
         standard.RunnerSpeedMultiplier.Value == 1.7f && standard.RunnerMaximumSpeed.Value == 99 &&
         standard.RunnerStaminaMultiplier.Value == 1.8f && standard.RunnerMaximumStamina.Value == 1200,
         "Standard rules preserve growth tuning");
-    Check(standard.JoblessContractDistance.Value == 7 && standard.JoblessContractGrace.Value == 45 &&
-        standard.JoblessContractLimit.Value == 5 && !after.Contains("ContractHeal") &&
+    Check(standard.JoblessContractDistance.Value == 7 && standard.JoblessInitialGrace.Value == 45 &&
+        !after.Contains("ContractsPerStage") && !after.Contains("ContractHeal") &&
         standard.KingUpgradeRadius.Value == 12 && standard.KingStrengthBonus.Value == 2,
         "Standard rules preserve contract and King tuning");
     Check(!standard.HudResourcesEnabled.Value && standard.HudResourceOffsetX.Value == 40 && standard.HudResourceScale.Value == 125,
         "Standard rules preserve resource HUD preferences");
     string backup = standardPath + ".pre-v4.5.0-standard-roles.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 38"), "Exact rollback backup and schema upgrade");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 39"), "Exact rollback backup and schema upgrade");
     RoleConfigMigration.Apply(standardFile);
     Check(File.ReadAllText(standardPath) == after && File.ReadAllText(backup) == before, "Standard migration is idempotent");
 }
@@ -113,15 +113,35 @@ foreach (int oldHeal in new[] { 0, 10, 100 })
     string after = File.ReadAllText(joblessPath);
     Check(!after.Contains("ContractHeal") && !joblessFile.Any(e => e.Key.Section == "Jobless" && e.Key.Key == "ContractHeal"),
         "Full healing removes fixed amounts from disk and settings UI, including zero");
-    Check(jobless.JoblessContractDistance.Value == 7 && jobless.JoblessContractGrace.Value == 45 &&
-        jobless.JoblessContractLimit.Value == 5 && jobless.JoblessDamage.Value == 2 && !jobless.JoblessEnabled.Value,
+    Check(jobless.JoblessContractDistance.Value == 7 && jobless.JoblessInitialGrace.Value == 45 &&
+        !after.Contains("ContractsPerStage") && jobless.JoblessDamage.Value == 2 && !jobless.JoblessEnabled.Value,
         "Full healing preserves other contract, damage and selection settings");
     string backup = joblessPath + ".pre-v4.5.0-jobless-full-heal.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 38"), "Exact pre-full-heal config backup");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 39"), "Exact pre-full-heal config backup");
     RoleConfigMigration.Apply(joblessFile);
     Check(File.ReadAllText(joblessPath) == after && File.ReadAllText(backup) == before, "Full-heal migration is idempotent");
 }
 var service = new RoleSelectionSettings(config, file);
+Check(config.JoblessTinyGrace.Value == 30 && config.JoblessSmallGrace.Value == 30 && config.JoblessMediumGrace.Value == 60 &&
+    config.JoblessBigGrace.Value == 90 && config.JoblessWideGrace.Value == 90 && config.JoblessTallGrace.Value == 90 && config.JoblessVeryTallGrace.Value == 120,
+    "Courier category grace defaults use the longer requested durations");
+Check(config.JoblessTinyHeal.Value == 10 && config.JoblessSmallHeal.Value == 25 && config.JoblessMediumHeal.Value == 50 &&
+    config.JoblessBigHeal.Value == 100 && config.JoblessWideHeal.Value == 100 && config.JoblessTallHeal.Value == 100 && config.JoblessVeryTallHeal.Value == 100,
+    "Courier healing uses requested fixed HP amounts");
+string courierPath = Path.Combine(directory, "courier-rename.cfg");
+string oldCourier = "[Migration]\nConfigVersion = 38\n[Jobless]\nEnabled = false\nWeight = 75\nContractDistance = 7\nContractGraceSeconds = 45\nContractsPerStage = 5\nTinyHealAmount = 19\nSmallGraceSeconds = 44\n[Courier]\nSmallGraceSeconds = 55\n";
+File.WriteAllText(courierPath, oldCourier);
+var courierFile = new ConfigFile(courierPath, false) { SaveOnConfigSet = false };
+var courierConfig = new StageRolesConfig(courierFile); courierFile.Save();
+string courierText = File.ReadAllText(courierPath);
+Check(!courierText.Contains("[Jobless]") && !courierText.Contains("ContractsPerStage") && !courierText.Contains("ContractGraceSeconds"),
+    "Legacy role section, count cap and shared duration are removed");
+Check(!courierConfig.JoblessEnabled.Value && courierConfig.JoblessWeight.Value == 75 && courierConfig.JoblessContractDistance.Value == 7 &&
+    courierConfig.JoblessInitialGrace.Value == 45 && courierConfig.JoblessTinyHeal.Value == 19 && courierConfig.JoblessSmallGrace.Value == 55,
+    "Courier migration preserves legacy settings and gives explicit new-section values priority");
+Check(File.ReadAllText(courierPath + ".pre-v4.5.0-delivery-grace.bak") == oldCourier, "Exact rollback backup before Courier migration");
+RoleConfigMigration.Apply(courierFile);
+Check(File.ReadAllText(courierPath) == courierText, "Courier migration is idempotent");
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();
 Check(roles.Length == 42 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");

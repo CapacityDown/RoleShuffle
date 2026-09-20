@@ -407,7 +407,10 @@ internal sealed partial class StageRoleController : MonoBehaviour
             foreach (RoleAssignment assignment in _assignments)
                 if (assignment.Player != null && assignment.Player.photonView != null &&
                     assignment.Player.photonView.ViewID == playerViewId && assignment.Overhaul.CargoId == objectId)
+                {
+                    _overhaul.CargoReleased(assignment, grabbedObject, _notifier);
                     assignment.Overhaul.ResetCargo();
+                }
         if (_engineerSuppressedTrapIds.Contains(objectId) ||
             (EngineerEffectCatalog.IsEffectValuable(grabbedObject) &&
              IsAssignedRole(playerViewId, StageRole.Engineer)))
@@ -1410,7 +1413,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             return;
         }
 
-        assignment.Overhaul.Start(Time.time, _config.JoblessContractGrace.Value);
+        assignment.Overhaul.Start(Time.time, _config.JoblessInitialGrace.Value);
         if (Time.time < assignment.Overhaul.PaidUntil)
         {
             assignment.JoblessDamageTimer = 0f;

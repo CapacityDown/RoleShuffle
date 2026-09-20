@@ -21,3 +21,14 @@ Regenerate with `StageRoles/tools/build_transparent_role_emblems.py` using
 Python, Pillow and NumPy. The script checks the transparent perimeter, opaque
 center, preserved interior and source hashes, and partial alpha at runtime
 edges. Review every comparison sheet after regenerating.
+
+## Courier (v4.5.0)
+
+Role 13 now uses the user-selected Courier concept A. Its selected PNG already
+contains native transparency, so it bypasses the near-black removal process.
+The generated 1254 px master is retained without alteration; System.Drawing
+high-quality bicubic resizing produces the 256 px runtime asset. The central
+alpha is 254/255. Do not run background extraction on this native-alpha source.
+The active set still contains 42 roles plus Unrevealed. Jobless artwork is
+preserved in Git history and the original checkout. See
+`../../../docs/COURIER_DESIGN.md` for the adopted design and generation prompt.

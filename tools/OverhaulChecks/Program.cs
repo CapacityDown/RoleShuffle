@@ -70,27 +70,40 @@ Check(Enumerable.Range(0, 201).Where(n => RoleOverhaulRules.EffectiveGrabStrengt
 var state = new RoleOverhaulState();
 state.Start(10, 30); state.Start(20, 30);
 Check(state.PaidUntil == 40, "Initial grace cannot be refreshed by repeated setup");
-Check(!state.Carry(1, 0, false, 10, 5, 30, 3), "Pick-up establishes cargo");
-Check(!state.Carry(1, 3, false, 11, 5, 30, 3), "Partial journey");
-Check(!state.Carry(1, 2, false, 12, 5, 30, 3), "Outside travel alone does not complete");
-Check(state.Carry(1, 1, true, 13, 5, 30, 3), "Delivery completes outside-to-truck journey");
+Check(!state.Carry(1, 0, false, 10, 5, 30), "Pick-up establishes cargo");
+Check(!state.Carry(1, 3, false, 11, 5, 30), "Partial journey");
+Check(!state.Carry(1, 2, false, 12, 5, 30), "Outside travel alone does not complete");
+Check(state.Carry(1, 1, true, 13, 5, 30), "Delivery completes outside-to-truck journey");
 Check(state.ContractsCompleted == 1 && state.PaidUntil == 43, "Bounded reward recorded once");
-Check(!state.Carry(1, 3, false, 14, 5, 30, 3) && state.CargoId == 0, "Duplicate object cannot pay twice");
-state.Carry(2, 0, false, 15, 5, 30, 3); state.Carry(2, 3, false, 16, 5, 30, 3);
-state.ResetCargo(); state.Carry(2, 0, false, 17, 5, 30, 3);
+Check(!state.Carry(1, 3, false, 14, 5, 30) && state.CargoId == 0, "Duplicate object cannot pay twice");
+state.Carry(2, 0, false, 15, 5, 30); state.Carry(2, 3, false, 16, 5, 30);
+state.ResetCargo(); state.Carry(2, 0, false, 17, 5, 30);
 Check(state.CarryDistance == 0 && state.ContractsCompleted == 1, "Drop/death resets progress while retaining paid work");
-Check(!state.Carry(2, 10, true, 18, 5, 30, 3) && state.CargoId == 0, "Teleport cannot complete a contract");
-Check(!state.Carry(3, 0, true, 19, 5, 30, 3), "Starting inside truck is not work");
+Check(!state.Carry(2, 10, true, 18, 5, 30) && state.CargoId == 0, "Teleport cannot complete a contract");
+Check(!state.Carry(3, 0, true, 19, 5, 30), "Starting inside truck is not work");
 foreach (float invalid in new[] { float.NaN, float.PositiveInfinity, -1f })
-    Check(!state.Carry(4, invalid, false, 20, 5, 30, 3), "Invalid travel rejected");
+    Check(!state.Carry(4, invalid, false, 20, 5, 30), "Invalid travel rejected");
 for (int item = 2; item <= 3; item++)
 {
-    state.Carry(item, 0, false, 21, 5, 30, 3);
-    state.Carry(item, 3, false, 22, 5, 30, 3);
-    state.Carry(item, 3, false, 23, 5, 30, 3);
-    Check(state.Carry(item, 0, true, 24, 5, 30, 3), "Another distinct delivery");
+    state.Carry(item, 0, false, 21, 5, 30);
+    state.Carry(item, 3, false, 22, 5, 30);
+    state.Carry(item, 3, false, 23, 5, 30);
+    Check(state.Carry(item, 0, true, 24, 5, 30), "Another distinct delivery");
 }
-Check(!state.Carry(4, 0, false, 25, 5, 30, 3) && state.ContractsCompleted == 3, "Stage contract cap");
+for (int item = 4; item <= 100; item++)
+{
+    state.Carry(item, 0, false, item, 5, 30);
+    state.Carry(item, 3, false, item, 5, 30);
+    state.Carry(item, 3, false, item, 5, 30);
+    Check(state.Carry(item, 0, true, item, 5, 30), "Delivery count has no stage cap");
+}
+Check(state.ContractsCompleted == 100, "More than the former maximum 30 deliveries are rewarded");
+float longBreak = state.PaidUntil;
+state.Carry(101, 0, false, 100, 5, 1);
+state.Carry(101, 3, false, 100, 5, 1);
+state.Carry(101, 3, false, 100, 5, 1);
+Check(state.Carry(101, 0, true, 100, 5, 1) && state.PaidUntil == longBreak,
+    "Small deliveries never shorten a longer existing exemption");
 
 var config = new StageRolesConfig();
 var runtime = new RoleOverhaulRuntime(config);
@@ -101,12 +114,12 @@ UnityEngine.Object.Items = new[] { cargo };
 Clock(0); runtime.Tick(new[] { worker }, notifier);
 Clock(1); cargo.centerPoint = new Vector3(3,0,0); runtime.Tick(new[] { worker }, notifier);
 Clock(2); cargo.centerPoint = new Vector3(6,0,0); runtime.Tick(new[] { worker }, notifier);
-Clock(3); worker.Player.InTruck = true; runtime.Tick(new[] { worker }, notifier);
-Check(worker.Overhaul.ContractsCompleted == 1 && worker.Player.playerHealth.Health == 100 && notifier.Notifications == 1,
-    "Production contract runtime fully heals the worker and sends one notification");
+Clock(3); worker.Player.InTruck = true; cargo.Rooms.CurrentRooms.Add(new RoomVolume { Truck = true }); runtime.Tick(new[] { worker }, notifier);
+Check(worker.Overhaul.ContractsCompleted == 1 && worker.Player.playerHealth.Health == 75 && notifier.Notifications == 1,
+    "Production delivery heals by size and sends one notification");
 Clock(4); runtime.Tick(new[] { worker }, notifier);
 Check(notifier.Notifications == 1, "Holding delivered cargo cannot repeat rewards");
-worker.Player.InTruck = false; cargo.Id = 11; cargo.Valuable!.Value = 0;
+worker.Player.InTruck = false; cargo.Rooms.CurrentRooms.Clear(); cargo.Id = 11; cargo.Valuable!.Value = 0;
 Clock(5); runtime.Tick(new[] { worker }, notifier);
 Check(worker.Overhaul.CargoId == 0, "Zero-value generated valuables are ineligible");
 cargo.Valuable.Value = 100;
@@ -144,26 +157,73 @@ foreach (bool remote in new[] { false, true })
     Clock(0); rewardRuntime.Tick(new[] { recipient }, notifier);
     Clock(1); delivery.centerPoint = new Vector3(3,0,0); rewardRuntime.Tick(new[] { recipient }, notifier);
     Clock(2); delivery.centerPoint = new Vector3(6,0,0); rewardRuntime.Tick(new[] { recipient }, notifier);
-    Clock(3); recipient.Player.InTruck = true; rewardRuntime.Tick(new[] { recipient }, notifier);
-    Check(recipient.Overhaul.ContractsCompleted == 1 && recipient.Overhaul.PaidUntil == 33, "Full heal preserves contract count and grace");
+    Clock(3); recipient.Player.InTruck = true; delivery.Rooms.CurrentRooms.Add(new RoomVolume { Truck = true }); rewardRuntime.Tick(new[] { recipient }, notifier);
+    Check(recipient.Overhaul.ContractsCompleted == 1 && recipient.Overhaul.PaidUntil == 33, "Fixed healing preserves delivery count and grace");
     if (remote)
     {
-        Check(requests.SequenceEqual(new[] { 2, maximum }), "Full reward bypasses a pending capped heal and sends maximum HP once");
+        Check(requests.SequenceEqual(new[] { 2, 25 }), "Fixed reward bypasses a pending capped heal and sends its amount once");
         int ownerHealth = 1;
         ownerHealth = Math.Min(maximum, ownerHealth + requests[1]);
-        Check(ownerHealth == maximum, "Vanilla owner clamp reaches full health despite stale host HP");
-        Check(budgetCharged == 0, "Full reward does not release or refund another healer's reservation");
+        Check(ownerHealth == 26, "Vanilla owner receives fixed healing despite stale host HP");
+        Check(budgetCharged == 0, "Delivery reward does not release or refund another healer's reservation");
         RoleHealingRuntime.Observe(recipient.Player, 1, maximum);
         Check(budgetCharged == 2, "Later health observation keeps the capped-heal budget charged");
     }
-    else Check(recipient.Player.playerHealth.Health == maximum, "Contract fully heals upgraded maximum HP");
+    else Check(recipient.Player.playerHealth.Health == 26, "Small delivery grants fixed HP even at upgraded maximum HP");
     Clock(4); rewardRuntime.Tick(new[] { recipient }, notifier);
-    Check(recipient.Player.playerHealth.Requests == (remote ? 2 : 1), "Delivered object cannot repeat the full heal");
+    Check(recipient.Player.playerHealth.Requests == (remote ? 2 : 1), "Delivered object cannot repeat its healing");
     recipient.Player.Living = false;
-    Check(!RoleHealingRuntime.TryHealToFull(recipient.Player), "Full healing never revives a dead player");
+    Check(!RoleHealingRuntime.TryHealReward(recipient.Player, 25), "Delivery healing never revives a dead player");
     rewardRuntime.Stop(); RoleHealingRuntime.Clear();
 }
 SemiFunc.Multiplayer = false;
+var sizeConfig = new StageRolesConfig();
+var graceEntries = new[] { sizeConfig.JoblessTinyGrace, sizeConfig.JoblessSmallGrace, sizeConfig.JoblessMediumGrace,
+    sizeConfig.JoblessBigGrace, sizeConfig.JoblessWideGrace, sizeConfig.JoblessTallGrace, sizeConfig.JoblessVeryTallGrace };
+var healEntries = new[] { sizeConfig.JoblessTinyHeal, sizeConfig.JoblessSmallHeal, sizeConfig.JoblessMediumHeal,
+    sizeConfig.JoblessBigHeal, sizeConfig.JoblessWideHeal, sizeConfig.JoblessTallHeal, sizeConfig.JoblessVeryTallHeal };
+for (int i = 0; i < 7; i++) { graceEntries[i].Value = 40 + i; healEntries[i].Value = 7 + i; }
+foreach (ValuableVolume.Type size in Enum.GetValues<ValuableVolume.Type>())
+foreach (bool extraction in new[] { false, true })
+foreach (bool released in new[] { false, true })
+{
+    RoleHealingRuntime.Clear();
+    var courierRuntime = new RoleOverhaulRuntime(sizeConfig);
+    var courier = new RoleAssignment { Player = new PlayerAvatar { Id = "courier" } };
+    courier.Player.playerHealth.Health = 1;
+    var parcel = new PhysGrabObject { Id = 40, HeldBy = "courier", Valuable = new ValuableObject { volumeType = size } };
+    UnityEngine.Object.Items = new[] { parcel };
+    Clock(0); courierRuntime.Tick(new[] { courier }, notifier);
+    Clock(1); parcel.centerPoint = new Vector3(3,0,0); courierRuntime.Tick(new[] { courier }, notifier);
+    Clock(2); parcel.centerPoint = new Vector3(6,0,0); courierRuntime.Tick(new[] { courier }, notifier);
+    courier.Player.InTruck = true;
+    Clock(2.5f); courierRuntime.Tick(new[] { courier }, notifier);
+    Check(courier.Overhaul.ContractsCompleted == 0, "Player in truck does not count an outside valuable as delivered");
+    courier.Player.InTruck = false;
+    var zone = new RoomVolume { Truck = !extraction, Extraction = extraction };
+    Clock(3);
+    if (released)
+    {
+        parcel.HeldBy = "";
+        parcel.Rooms.OnRefresh = () => parcel.Rooms.CurrentRooms.Add(zone);
+        courierRuntime.CargoReleased(courier, parcel, notifier);
+        courier.Overhaul.ResetCargo(); // Production grab-release hook clears progress afterwards.
+    }
+    else { parcel.Rooms.CurrentRooms.Add(zone); courierRuntime.Tick(new[] { courier }, notifier); }
+    Check(courier.Overhaul.ContractsCompleted == 1 && courier.Overhaul.PaidUntil == 43 + (int)size,
+        "Every native size uses its configured grace at either destination, including release between ticks");
+    Check(courier.Player.playerHealth.Health == 8 + (int)size, "Every native size uses its configured fixed HP reward");
+    parcel.HeldBy = "courier";
+    Clock(4); courierRuntime.Tick(new[] { courier }, notifier);
+    courierRuntime.CargoReleased(courier, parcel, notifier);
+    Check(courier.Player.playerHealth.Requests == 1, "Delivery tick and release cannot pay twice");
+    courierRuntime.Stop();
+}
+var cappedRewardPlayer = new PlayerAvatar();
+cappedRewardPlayer.playerHealth.Health = 99;
+Check(RoleHealingRuntime.TryHealReward(cappedRewardPlayer, 100) && cappedRewardPlayer.playerHealth.Health == 100,
+    "Vanilla clamps category healing to maximum HP");
+Check(!RoleHealingRuntime.TryHealReward(cappedRewardPlayer, 0), "Zero category healing is disabled without extra RPCs");
 var king = new RoleAssignment { Role = StageRole.King, Player = new PlayerAvatar { Id = "king" } };
 var ally1 = new RoleAssignment { Role = StageRole.Tank, Player = new PlayerAvatar { Id = "a" } };
 var ally2 = new RoleAssignment { Role = StageRole.Tank, Player = new PlayerAvatar { Id = "b" } };

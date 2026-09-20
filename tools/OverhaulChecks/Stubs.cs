@@ -96,6 +96,7 @@ public sealed class PlayerHealth
 }
 public sealed class ValuableObject
 {
+    public ValuableVolume.Type volumeType = ValuableVolume.Type.Small;
     private float dollarValueCurrent = 100;
     public float Value { get => dollarValueCurrent; set => dollarValueCurrent = value; }
 }
@@ -103,20 +104,42 @@ public sealed class PhysGrabObject
 {
     public int Id;
     public ValuableObject? Valuable = new();
+    public RoomVolumeCheck Rooms = new();
     public string HeldBy = "p";
     public UnityEngine.Vector3 centerPoint;
     public int GetInstanceID() => Id;
-    public T? GetComponent<T>() where T:class => Valuable as T;
+    public T? GetComponent<T>() where T:class => Valuable as T ?? Rooms as T;
     public T? GetComponentInChildren<T>() where T:class => null;
     public T? GetComponentInParent<T>() where T:class => null;
+}
+public static class ValuableVolume { public enum Type { Tiny, Small, Medium, Big, Wide, Tall, VeryTall } }
+public sealed class RoomVolume { public bool Truck, Extraction; }
+public sealed class RoomVolumeCheck
+{
+    public List<RoomVolume> CurrentRooms = new();
+    public Action? OnRefresh;
+    public void CheckSet() => OnRefresh?.Invoke();
 }
 namespace REPOJP.StageRoles
 {
     internal sealed class Entry<T>(T value) { internal T Value { get; set; } = value; }
     internal sealed class StageRolesConfig
     {
-        internal Entry<float> JoblessContractGrace = new(30);
-        internal Entry<int> JoblessContractLimit = new(3);
+        internal Entry<float> JoblessInitialGrace = new(30);
+        internal Entry<float> JoblessTinyGrace = new(30);
+        internal Entry<float> JoblessSmallGrace = new(30);
+        internal Entry<float> JoblessMediumGrace = new(60);
+        internal Entry<float> JoblessBigGrace = new(90);
+        internal Entry<float> JoblessWideGrace = new(90);
+        internal Entry<float> JoblessTallGrace = new(90);
+        internal Entry<float> JoblessVeryTallGrace = new(120);
+        internal Entry<int> JoblessTinyHeal = new(10);
+        internal Entry<int> JoblessSmallHeal = new(25);
+        internal Entry<int> JoblessMediumHeal = new(50);
+        internal Entry<int> JoblessBigHeal = new(100);
+        internal Entry<int> JoblessWideHeal = new(100);
+        internal Entry<int> JoblessTallHeal = new(100);
+        internal Entry<int> JoblessVeryTallHeal = new(100);
         internal Entry<float> JoblessContractDistance = new(5);
         internal Entry<float> KingUpgradeRadius = new(8);
         internal Entry<int> KingSpeedBonus = new(1);

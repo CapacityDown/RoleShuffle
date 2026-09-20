@@ -21,8 +21,8 @@ internal static class RoleGuideCatalog
 
     private static string RevealedSuperbotText(RoleGuideLanguage language) =>
         language == RoleGuideLanguage.Japanese
-            ? "Bomber、Stinker、Werewolf、Jobless、Tuna、\nKing、Diver、Imitator、Sniper、Brawlerを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
-            : "Combines role upgrades and abilities except Bomber, Stinker, Werewolf, Jobless, Tuna, King, Diver, Imitator, Sniper, and Brawler. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
+            ? "Bomber、Stinker、Werewolf、Courier、Tuna、\nKing、Diver、Imitator、Sniper、Brawlerを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
+            : "Combines role upgrades and abilities except Bomber, Stinker, Werewolf, Courier, Tuna, King, Diver, Imitator, Sniper, and Brawler. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
 
     internal static string GenericDescription(
         StageRole role,
@@ -236,7 +236,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"Identifiable attacks against enemies scale continuously with distance: {Number(config.SniperMinimumDamageMultiplier.Value)}x at point-blank range, 1x at {Number(config.SniperReferenceDistance.Value)} m, and up to {Number(config.SniperMaximumDamageMultiplier.Value)}x at {Number(config.SniperMaximumMultiplierDistance.Value)} m. Vehicle impacts and Tumble Attacks are unchanged.",
             StageRole.Imitator =>
-                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Jobless, Tuna, or ???1 or ???2.",
+                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, or ???1 or ???2.",
             StageRole.Avenger =>
                 $"When another player dies within {Number(config.AvengerTriggerRadius.Value)} m, enemy damage is multiplied by {Number(config.AvengerDamageMultiplier.Value)} for {Number(config.AvengerDurationSeconds.Value)} seconds. Another nearby death refreshes the duration without stacking the multiplier.",
             StageRole.Brawler =>
@@ -345,7 +345,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"攻撃者を特定できる敵へのダメージが距離に応じて連続変化します。密着時は{Number(config.SniperMinimumDamageMultiplier.Value)}倍、{Number(config.SniperReferenceDistance.Value)}mで1倍、{Number(config.SniperMaximumMultiplierDistance.Value)}mで最大{Number(config.SniperMaximumDamageMultiplier.Value)}倍になります。車両衝突とTumble Attackは変化しません。",
             StageRole.Imitator =>
-                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nJobless、Tuna、???1、???2はコピーしません。",
+                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、???1、???2はコピーしません。",
             StageRole.Avenger =>
                 $"他のプレイヤーが{Number(config.AvengerTriggerRadius.Value)}m以内で死亡すると、{Number(config.AvengerDurationSeconds.Value)}秒間、敵へのダメージが{Number(config.AvengerDamageMultiplier.Value)}倍になります。効果中の再発動では倍率を重複せず、残り時間だけを更新します。",
             StageRole.Brawler =>

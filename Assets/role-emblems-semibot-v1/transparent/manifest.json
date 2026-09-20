@@ -245,11 +245,11 @@
       "central_interior_opaque": true
     },
     {
-      "name": "13-Jobless",
-      "source": "Assets\\role-emblems-semibot-v1\\selected\\13-Jobless.png",
-      "source_sha256": "8eebb196ef947a490e8f59e3a85f588b5277f40cedb75f20eaf11052c1133664",
-      "master_sha256": "852061952b05b40bef2e13ac61b16317e0d3b4003fac81445fa7f2af20ba120c",
-      "runtime_sha256": "f5a05bc9de5a99dfb35012c6eac4fcc997acf454dafdb38d480da0212dc4c0ef",
+      "name": "13-Courier",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\13-Courier.png",
+      "source_sha256": "43b454c9e09aa38dc24edebb4ad7859de99302c3df5d31fa94000c4b55aead19",
+      "master_sha256": "43b454c9e09aa38dc24edebb4ad7859de99302c3df5d31fa94000c4b55aead19",
+      "runtime_sha256": "7a09defab9fd28ee81d3dddc0d82e9ef8de9fa5d6112704c0f908e9cfff66304",
       "source_size": [
         1254,
         1254
@@ -258,11 +258,10 @@
         256,
         256
       ],
-      "transparent_fraction": 0.4281,
-      "outline_channel_closing": 0,
-      "runtime_edge_pixels": 1998,
-      "rgb_pixels_unchanged": true,
-      "central_interior_opaque": true
+      "method": "Native transparent image_gen output; System.Drawing high-quality bicubic runtime resize",
+      "transparent_fraction": 0.339279,
+      "runtime_edge_pixels": 42530,
+      "central_alpha": 254
     },
     {
       "name": "14-Rescuer",

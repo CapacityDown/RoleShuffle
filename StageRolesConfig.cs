@@ -72,12 +72,12 @@ internal sealed class StageRolesConfig
 
         RiskCombinationLimitsEnabled = BindBool(config, "Role Balance - Limits", "Enabled", true, "Limits simultaneous Danger and Hardship roles during normal assignment.");
         DangerRoleLimit = PartySizeScaling(config, "Role Balance - Limits", "DangerMaximums", "1:1,8:2,16:3", "Maximum simultaneous Bomber, Stinker, and Werewolf roles by party size.");
-        HardshipRoleLimit = PartySizeScaling(config, "Role Balance - Limits", "HardshipMaximums", "1:1,12:2", "Maximum simultaneous Jobless and Tuna roles by party size.");
+        HardshipRoleLimit = PartySizeScaling(config, "Role Balance - Limits", "HardshipMaximums", "1:1,12:2", "Maximum simultaneous Courier and Tuna roles by party size.");
         SmallPartyCombinedRiskPlayerCount = BindInt(config, "Role Balance - Limits", "SmallPartyMaximumPlayers", 4, 1, MaximumSupportedPlayers, "Largest party size that uses the combined Danger and Hardship limit.");
         SmallPartyCombinedRiskRoleLimit = BindInt(config, "Role Balance - Limits", "SmallPartyCombinedMaximum", 1, 1, MaximumSupportedPlayers, "Maximum combined Danger and Hardship roles in a small party.");
 
         PreventConsecutiveSameRole = BindBool(config, "Role Balance - Variety", "PreventSameRole", true, "Prevents a player from receiving the same role in consecutive stages when another role is available.");
-        HardshipPersonalCooldownStages = BindInt(config, "Role Balance - Variety", "HardshipCooldownStages", 2, 0, 10, "Stages after Jobless or Tuna during which that player cannot normally receive either Hardship role.");
+        HardshipPersonalCooldownStages = BindInt(config, "Role Balance - Variety", "HardshipCooldownStages", 2, 0, 10, "Stages after Courier or Tuna during which that player cannot normally receive either Hardship role.");
         ExcludeUnavailableContextRoles = BindBool(config, "Role Balance - Variety", "ExcludeUnavailableRoles", true, "Excludes context-dependent roles when their required player, enemy, weapon, or vanilla object is not available.");
 
         AnnouncementsEnabled = BindBool(config, "Notifications", "Enabled", true, "Enables role-name and role-effect chat and TTS notifications.");
@@ -255,13 +255,26 @@ internal sealed class StageRolesConfig
         PhoenixReviveDelaySeconds = BindFloat(config, "Phoenix", "ReviveDelaySeconds", 2f, 2f, 10f, "Delay before revival. Phoenix always waits at least two seconds.");
         PhoenixFailureGraceSeconds = BindFloat(config, "Phoenix", "FailureGraceSeconds", 5f, 1f, 15f, "Maximum time to hold a failed-stage transition while revival initializes.");
 
-        JoblessEnabled = RoleEnabled(config, "Jobless");
-        JoblessWeight = RoleWeight(config, "Jobless", 20);
-        JoblessDamage = BindInt(config, "Jobless", "Damage", 1, 1, 100, "Damage applied per tick outside the truck.");
-        JoblessDamageIntervalSeconds = BindFloat(config, "Jobless", "DamageIntervalSeconds", 0.1f, 0.05f, 10f, "Seconds between damage ticks outside the truck.");
-        JoblessContractDistance = BindFloat(config, "Jobless", "ContractDistance", 5f, 1f, 50f, "Carry a different positive-value valuable this far outside the truck, then bring it into the truck.");
-        JoblessContractGrace = BindFloat(config, "Jobless", "ContractGraceSeconds", 30f, 1f, 300f, "Initial and post-contract time without Jobless attrition.");
-        JoblessContractLimit = BindInt(config, "Jobless", "ContractsPerStage", 3, 1, 30, "Maximum completed contracts per player per stage, retained through revival and rejoining.");
+        JoblessEnabled = RoleEnabled(config, "Courier");
+        JoblessWeight = RoleWeight(config, "Courier", 20);
+        JoblessDamage = BindInt(config, "Courier", "Damage", 1, 1, 100, "Damage applied per tick outside the truck.");
+        JoblessDamageIntervalSeconds = BindFloat(config, "Courier", "DamageIntervalSeconds", 0.1f, 0.05f, 10f, "Seconds between damage ticks outside the truck.");
+        JoblessContractDistance = BindFloat(config, "Courier", "ContractDistance", 5f, 1f, 50f, "Carry a different positive-value valuable this far outside delivery areas, then bring it into the truck or an extraction point. No stage limit; each valuable rewards each worker once.");
+        JoblessInitialGrace = BindFloat(config, "Courier", "InitialGraceSeconds", 30f, 0f, 300f, "Time without Courier attrition at stage start.");
+        JoblessTinyGrace = BindFloat(config, "Courier", "TinyGraceSeconds", 30f, 0f, 300f, "Attrition exemption after delivering a vanilla Tiny valuable. Healing still applies at zero seconds.");
+        JoblessSmallGrace = BindFloat(config, "Courier", "SmallGraceSeconds", 30f, 0f, 300f, "Attrition exemption after delivering a vanilla Small valuable.");
+        JoblessMediumGrace = BindFloat(config, "Courier", "MediumGraceSeconds", 60f, 0f, 300f, "Attrition exemption after delivering a vanilla Medium valuable.");
+        JoblessBigGrace = BindFloat(config, "Courier", "BigGraceSeconds", 90f, 0f, 300f, "Attrition exemption after delivering a vanilla Big valuable.");
+        JoblessWideGrace = BindFloat(config, "Courier", "WideGraceSeconds", 90f, 0f, 300f, "Attrition exemption after delivering a vanilla Wide valuable.");
+        JoblessTallGrace = BindFloat(config, "Courier", "TallGraceSeconds", 90f, 0f, 300f, "Attrition exemption after delivering a vanilla Tall valuable.");
+        JoblessVeryTallGrace = BindFloat(config, "Courier", "VeryTallGraceSeconds", 120f, 0f, 300f, "Attrition exemption after delivering a vanilla VeryTall valuable.");
+        JoblessTinyHeal = BindInt(config, "Courier", "TinyHealAmount", 10, 0, 10000, "Fixed HP restored after delivering a Tiny valuable, capped by maximum HP.");
+        JoblessSmallHeal = BindInt(config, "Courier", "SmallHealAmount", 25, 0, 10000, "Fixed HP restored after delivering a Small valuable, capped by maximum HP.");
+        JoblessMediumHeal = BindInt(config, "Courier", "MediumHealAmount", 50, 0, 10000, "Fixed HP restored after delivering a Medium valuable, capped by maximum HP.");
+        JoblessBigHeal = BindInt(config, "Courier", "BigHealAmount", 100, 0, 10000, "Fixed HP restored after delivering a Big valuable, capped by maximum HP.");
+        JoblessWideHeal = BindInt(config, "Courier", "WideHealAmount", 100, 0, 10000, "Fixed HP restored after delivering a Wide valuable, capped by maximum HP.");
+        JoblessTallHeal = BindInt(config, "Courier", "TallHealAmount", 100, 0, 10000, "Fixed HP restored after delivering a Tall valuable, capped by maximum HP.");
+        JoblessVeryTallHeal = BindInt(config, "Courier", "VeryTallHealAmount", 100, 0, 10000, "Fixed HP restored after delivering a VeryTall valuable, capped by maximum HP.");
 
         RescuerEnabled = RoleEnabled(config, "Rescuer");
         RescuerWeight = RoleWeight(config, "Rescuer", 80);
@@ -463,8 +476,21 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> RunnerMaximumSpeed { get; }
     internal ConfigEntry<int> RunnerMaximumStamina { get; }
     internal ConfigEntry<float> JoblessContractDistance { get; }
-    internal ConfigEntry<float> JoblessContractGrace { get; }
-    internal ConfigEntry<int> JoblessContractLimit { get; }
+    internal ConfigEntry<float> JoblessInitialGrace { get; }
+    internal ConfigEntry<float> JoblessTinyGrace { get; }
+    internal ConfigEntry<float> JoblessSmallGrace { get; }
+    internal ConfigEntry<float> JoblessMediumGrace { get; }
+    internal ConfigEntry<float> JoblessBigGrace { get; }
+    internal ConfigEntry<float> JoblessWideGrace { get; }
+    internal ConfigEntry<float> JoblessTallGrace { get; }
+    internal ConfigEntry<float> JoblessVeryTallGrace { get; }
+    internal ConfigEntry<int> JoblessTinyHeal { get; }
+    internal ConfigEntry<int> JoblessSmallHeal { get; }
+    internal ConfigEntry<int> JoblessMediumHeal { get; }
+    internal ConfigEntry<int> JoblessBigHeal { get; }
+    internal ConfigEntry<int> JoblessWideHeal { get; }
+    internal ConfigEntry<int> JoblessTallHeal { get; }
+    internal ConfigEntry<int> JoblessVeryTallHeal { get; }
     internal ConfigEntry<float> KingUpgradeRadius { get; }
     internal ConfigEntry<int> KingSpeedBonus { get; }
     internal ConfigEntry<int> KingRangeBonus { get; }
