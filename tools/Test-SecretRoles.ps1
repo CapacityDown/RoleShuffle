@@ -65,7 +65,7 @@ __PARSE__
         Check(TryParseRole("41",out parsed) && parsed==StageRole.Influenza,"Influenza appended without renumbering existing roles");
         Check(TryParseRole("40",out parsed) && parsed==StageRole.Brawler,"standard IDs preserved");
         foreach(StageRole role in Enum.GetValues<StageRole>())
-            Check(RoleCatalog.HasCapability(StageRole.Disaster,role)==(role is StageRole.Disaster or StageRole.Bomber or StageRole.Stinker or StageRole.Tuna),"Disaster capability "+role);
+            Check(RoleCatalog.HasCapability(StageRole.Disaster,role)==(role is StageRole.Disaster or StageRole.Bomber or StageRole.Stinker or StageRole.Tuna or StageRole.Influenza),"Disaster capability "+role);
         Check(!RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Disaster),"Superbot excludes Disaster");
         Check(!RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Influenza),"Superbot excludes Influenza");
         Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Influenza),"Influenza is acquired through infection, not copying");

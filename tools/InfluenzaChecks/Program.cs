@@ -89,4 +89,55 @@ Check(sneezeTarget.Role==StageRole.Runner,"No early sneeze");
 s.Tick(366);
 Check(sneezeTarget.Role==StageRole.Influenza&&sneezer.Player.Spoken.Contains("Achoo!"),"Scheduled sneeze uses 5m range and native voice cue");
 s.Stop();
+
+// Disaster retains all of its combined-role identity while running the same
+// incubation, HP cap and three transmission paths as standalone Influenza.
+foreach (var transmission in new[]{"voice","chat","sneeze"}.Select((mode,index)=>(mode,index)))
+{
+    float start=400+100*transmission.index;
+    Time.time=start;
+    UnityEngine.Random.value=0.1f;
+    UpgradeService.Resets.Clear();
+    var disaster=new RoleAssignment("disaster-"+transmission.mode,StageRole.Disaster,0,0);
+    disaster.Player.Health=38;
+    var victim=new RoleAssignment("victim-"+transmission.mode,StageRole.Tank,0,transmission.mode=="sneeze"?4.9f:2f);
+    var carrier=new RoleAssignment("carrier-"+transmission.mode,StageRole.Disaster,0,1);
+    var d=new StageRoleController();d.Add(disaster,victim,carrier);
+    d.Tick(start+29.99f);
+    d.OnInfluenzaChat(disaster.Player,"hello",new(){Sender=disaster.Player.photonView.Owner});
+    Check(disaster.Player.Maximum==500&&victim.Role==StageRole.Tank,"Disaster does not cap HP or infect during incubation: "+transmission.mode);
+    d.Tick(start+30);
+    Check(disaster.Player.Maximum==75&&disaster.Player.Health==38,"Disaster onset caps maximum without healing: "+transmission.mode);
+    float spreadAt=start+(transmission.mode=="sneeze"?66:31);
+    if(transmission.mode=="voice") disaster.Player.voiceChat.clipLoudnessNoTTS=0.2f;
+    d.Tick(spreadAt);
+    if(transmission.mode=="chat") d.OnInfluenzaChat(disaster.Player,"hello",new(){Sender=disaster.Player.photonView.Owner});
+    Check(victim.Role==StageRole.Influenza&&victim.AssignedRole==StageRole.Influenza,"Disaster spreads ordinary Influenza through "+transmission.mode);
+    Check(d.Onset(victim.SteamId)==spreadAt+30,"Disaster's victim receives its own incubation: "+transmission.mode);
+    Check(disaster.Role==StageRole.Disaster&&disaster.AssignedRole==StageRole.Disaster,"Disaster retains combined role: "+transmission.mode);
+    Check(carrier.Role==StageRole.Disaster&&carrier.AssignedRole==StageRole.Disaster&&d.Onset(carrier.SteamId)==start+30,"Existing Disaster carrier cannot be replaced or reset: "+transmission.mode);
+    Check(d.OnlyCleaned(victim.SteamId)&&UpgradeService.Resets.SequenceEqual(new[]{victim.SteamId}),"Transmission preserves source and carrier abilities: "+transmission.mode);
+    if(transmission.mode=="sneeze") Check(disaster.Player.Spoken.Contains("Achoo!"),"Disaster produces the native sneeze voice cue");
+    disaster.Player.Living=false;d.Tick(spreadAt+0.1f);
+    disaster.Player.Living=true;d.Tick(spreadAt+0.2f);
+    Check(d.Onset(disaster.SteamId)==start+30&&disaster.Player.Maximum==75,"Disaster revival does not reset incubation or remove symptoms: "+transmission.mode);
+    disaster.Player.Health=20;d.Change(disaster,StageRole.Runner);d.Tick(spreadAt+0.3f);
+    Check(disaster.Player.Maximum==500&&disaster.Player.Health==20&&!d.HasInfection(disaster.SteamId),"Leaving Disaster restores maximum without healing: "+transmission.mode);
+    d.Stop();
+    Check(carrier.Player.Maximum==500&&!d.HasInfection(carrier.SteamId),"Stage cleanup restores Disaster maximum: "+transmission.mode);
+}
+
+Time.time=800;
+var ordinarySource=new RoleAssignment("ordinary-source",StageRole.Influenza,0,0);
+var r=new StageRoleController();r.Add(ordinarySource);r.Tick(830);
+Time.time=840;
+var incubatingDisaster=new RoleAssignment("incubating-disaster",StageRole.Disaster,0,2);
+var superbot=new RoleAssignment("superbot",StageRole.Superbot,0,-2);
+r.Add(incubatingDisaster,superbot);
+r.OnInfluenzaChat(ordinarySource.Player,"hello",new(){Sender=ordinarySource.Player.photonView.Owner});
+Check(incubatingDisaster.Role==StageRole.Disaster&&r.Onset(incubatingDisaster.SteamId)==870&&incubatingDisaster.Player.Maximum==500,"Ordinary infection preserves an incubating Disaster");
+r.Tick(870);
+Check(incubatingDisaster.Role==StageRole.Disaster&&incubatingDisaster.Player.Maximum==75,"Protected Disaster still develops symptoms on its original deadline");
+Check(superbot.Player.Maximum==500&&!r.HasInfection(superbot.SteamId),"Superbot does not inherit Influenza");
+r.Stop();
 Console.WriteLine($"Influenza: {count} checks passed (production rules and runtime).");

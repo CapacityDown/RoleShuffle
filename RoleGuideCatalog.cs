@@ -9,14 +9,20 @@ internal static class RoleGuideCatalog
     internal const string InfluenzaDescription = "Symptoms begin 30 seconds after assignment or infection and fix maximum HP at 75. Sneezes occur every 30–90 seconds (60 seconds on average): players within 5 m and 20 degrees to either side have a 60% infection chance. Each ordinary voice utterance or chat message gives players within 3 m and 30 degrees to either side a 30% chance. Infection replaces the original role with Influenza; the newly infected can spread it after their own incubation. Death and revival do not reset incubation. Infection ends at the end of the stage.";
     private const string InfluenzaSummaryJapanese = "発症すると最大HPが75に固定されます。くしゃみや通常の会話で、近くの仲間の役職をインフルエンザに変えてしまいます。";
     private const string InfluenzaDescriptionJapanese = "役職の割り当て・感染から30秒後に発症し、最大HPが75に固定されます。くしゃみは30～90秒間隔（平均60秒）で発生。前方の左右20度ずつ・5m以内にいる各プレイヤーへ60％の確率で感染します。通常のVCはひとまとまりの発話ごと、チャットは1投稿ごとに、前方の左右30度ずつ・3m以内の各プレイヤーへ30％の確率で感染します。感染すると元の役職を失い、Influenzaに変更されます。感染した仲間も30秒後の発症から感染を広げます。死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除されます。";
-    internal static string RevealedSecretDescription(StageRole role, RoleGuideLanguage language) =>
-        RoleText.Description(RevealedSecretText(role, language), language);
+    internal static string RevealedSecretDescription(StageRole role, RoleGuideLanguage language)
+    {
+        string description = RoleText.Description(RevealedSecretText(role, language), language);
+        return role == StageRole.Disaster
+            ? description + "\n\n" + RoleText.Description(
+                language == RoleGuideLanguage.Japanese ? InfluenzaDescriptionJapanese : InfluenzaDescription, language)
+            : description;
+    }
 
     private static string RevealedSecretText(StageRole role, RoleGuideLanguage language) =>
         role == StageRole.Disaster
             ? language == RoleGuideLanguage.Japanese
-                ? "Bomber・Stinker・Tunaの能力と制約を併せ持ちます。移動した場所に起動済みグレネードとウランの雲を発生させ、一定時間動かないと継続ダメージを受けます。移動すると停止時間のカウントとダメージが止まりますが、失ったHPは戻りません。各能力は対応する役職の設定に従います。"
-                : "Combines Bomber, Stinker, and Tuna, including their drawbacks. Movement leaves armed grenades and uranium clouds. Remaining still for too long causes repeated damage; moving resets the inactivity timer and stops further damage without restoring lost HP. Each ability follows its corresponding role settings."
+                ? "Bomber・Stinker・Tuna・Influenzaの能力と制約を併せ持ちます。移動した場所に起動済みグレネードとウランの雲を発生させ、一定時間動かないと継続ダメージを受けます。移動すると停止時間のカウントとダメージが止まりますが、失ったHPは戻りません。各能力は対応する役職の設定に従います。"
+                : "Combines Bomber, Stinker, Tuna, and Influenza, including their drawbacks. Movement leaves armed grenades and uranium clouds. Remaining still for too long causes repeated damage; moving resets the inactivity timer and stops further damage without restoring lost HP. Each ability follows its corresponding role settings."
             : RevealedSuperbotDescription(language);
 
     internal static string RevealedSuperbotDescription(

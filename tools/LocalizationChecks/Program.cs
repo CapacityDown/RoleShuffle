@@ -30,6 +30,15 @@ foreach (var _ in languages) current = RoleLanguage.Next(current);
 Check(current == RoleGuideLanguage.English, "Toggle wraps through all languages");
 
 var config = new StageRolesConfig();
+foreach (var language in languages)
+{
+    string revealed = RoleGuideCatalog.RevealedSecretDescription(StageRole.Disaster, language);
+    string illness = RoleGuideCatalog.Description(StageRole.Influenza, config, language);
+    Check(revealed.Contains("Influenza") && revealed.EndsWith(illness, StringComparison.Ordinal),
+        "Revealed Disaster includes the complete localized Influenza ability: " + language);
+    Check(RoleGuideCatalog.Description(StageRole.Disaster, config, language) == "???",
+        "Disaster's additional ability remains concealed before discovery: " + language);
+}
 var englishCatalog = RoleText.Catalog(RoleGuideLanguage.English);
 string[] PlaceholderSet(string text) => Regex.Matches(text, @"\{\d+\}").Select(m => m.Value).Distinct().Order().ToArray();
 foreach (var language in languages.Where(RoleLanguage.NeedsTranslation))

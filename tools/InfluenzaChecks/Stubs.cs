@@ -82,7 +82,14 @@ namespace REPOJP.StageRoles
         { levels=new(){{"playerUpgradeHealth",HealthLevels.GetValueOrDefault(id,20)}};return true; }
         internal static void SetLevels(string id, int ignored) => Resets.Add(id);
     }
-    internal static class RoleCatalog { internal static int TargetUpgrades(StageRole role, Config config) => 0; }
+    internal static class RoleCatalog
+    {
+        // Capability membership is separately checked against production RoleModels
+        // by Test-SecretRoles.ps1; this harness exercises the runtime consumers.
+        internal static bool HasCapability(StageRole role, StageRole capability) =>
+            role == capability || (role == StageRole.Disaster && capability == StageRole.Influenza);
+        internal static int TargetUpgrades(StageRole role, Config config) => 0;
+    }
     internal sealed class Runtime
     {
         internal readonly List<string> Removed = new();

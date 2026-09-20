@@ -112,7 +112,7 @@ internal static class RoleCatalog
         }
         if (assignedRole == StageRole.Disaster)
         {
-            return capability is StageRole.Bomber or StageRole.Stinker or StageRole.Tuna;
+            return capability is StageRole.Bomber or StageRole.Stinker or StageRole.Tuna or StageRole.Influenza;
         }
         if (assignedRole != StageRole.Superbot)
         {

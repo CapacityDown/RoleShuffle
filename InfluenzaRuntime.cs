@@ -15,7 +15,8 @@ internal sealed partial class StageRoleController
 
     private void StartInfluenza(RoleAssignment assignment)
     {
-        if (assignment.Role == StageRole.Influenza && !_influenza.ContainsKey(assignment.SteamId))
+        if (RoleCatalog.HasCapability(assignment.Role, StageRole.Influenza) &&
+            !_influenza.ContainsKey(assignment.SteamId))
             _influenza.Add(assignment.SteamId, new InfluenzaState(Time.time));
     }
 
@@ -24,7 +25,7 @@ internal sealed partial class StageRoleController
         // Assignment objects may change roles during SpreadInfluenza, but the list is stable.
         foreach (RoleAssignment assignment in _assignments)
         {
-            if (assignment.Role != StageRole.Influenza) continue;
+            if (!RoleCatalog.HasCapability(assignment.Role, StageRole.Influenza)) continue;
             StartInfluenza(assignment);
             InfluenzaState state = _influenza[assignment.SteamId];
             PlayerAvatar player = assignment.Player;
@@ -89,7 +90,7 @@ internal sealed partial class StageRoleController
             info.Sender != player.photonView.Owner ||
             (info.Sender == PhotonNetwork.LocalPlayer && !InfluenzaChatPatches.LocalSubmission))) return;
         RoleAssignment? assignment = FindAssignment(player);
-        if (assignment?.Role == StageRole.Influenza &&
+        if (assignment != null && RoleCatalog.HasCapability(assignment.Role, StageRole.Influenza) &&
             _influenza.TryGetValue(assignment.SteamId, out InfluenzaState? state) && state.Symptomatic(Time.time))
             SpreadInfluenza(assignment, sneeze: false);
     }
@@ -105,7 +106,9 @@ internal sealed partial class StageRoleController
         forward.Normalize();
         foreach (RoleAssignment target in _assignments)
         {
-            if (ReferenceEquals(source, target) || target.Role == StageRole.Influenza ||
+            // Existing carriers include Disaster. Reinfection must not replace
+            // its combined role or restart its incubation period.
+            if (ReferenceEquals(source, target) || RoleCatalog.HasCapability(target.Role, StageRole.Influenza) ||
                 !PlayerState.IsLiving(target.Player)) continue;
             Vector3 delta = InfluenzaHeadPosition(target.Player) - origin;
             float distanceSquared = delta.sqrMagnitude;

@@ -19,6 +19,16 @@
   weight is 20. Influenza is a Danger/Hardship role, excluded from solo draws,
   Superbot capabilities and Imitator copying. Standard, Chaos and Challenge include it.
 
+## Combined role
+
+Disaster (1002) combines Bomber, Stinker, Tuna and Influenza. Its Influenza
+ability follows the same incubation, maximum HP and transmission rules.
+The carrier keeps Disaster and its other abilities. Victims receive ordinary
+Influenza. Players who already carry the ability cannot be reinfected, so
+Disaster is not replaced and its incubation timer is not restarted. Leaving
+Disaster or ending the stage restores the normal maximum HP without healing.
+Public descriptions remain concealed until the hidden role is revealed.
+
 ## Host-only integration
 
 The host owns infection state and uses the game's existing `UpdateHealthRPC`
