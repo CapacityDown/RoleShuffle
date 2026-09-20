@@ -75,7 +75,8 @@
         "Bomber",
         "Stinker",
         "Werewolf",
-        "Disaster"
+        "Disaster",
+        "Influenza"
       ]
     ],
     [
@@ -206,13 +207,16 @@
     {
       "id": "13",
       "role": "Courier",
-      "path": "C:\\Users\\Code-\\.codex\\generated_images\\01a0a1f3-aaf0-7cd0-809b-f9921d54fa09\\exec-3442aebb-4617-42e2-b32c-00d1eba05990.png",
-      "prompt": "Use case: precise-object-edit. The input is a concept comparison board. The user has selected A COURIER, the LEFT teal badge. Produce a single square production game role icon of ONLY that selected left badge. Preserve its established design as faithfully as possible: cream rounded thick hexagon outline, dark teal interior, cream SEMIbot with big friendly round eyes walking to the right, cream delivery cap with orange brim, cardboard parcel held in both arms, cream rightward arrow and short motion strokes. Maintain bold clean dark contours, readable silhouette and restrained shading. Fill the square with this one complete badge centered, preserving the entire cream hexagon border, with a small consistent transparent margin. Remove everything else from the board: no labels or lettering below, no other badges, no charcoal outside background. Exterior outside the hexagon must be genuinely transparent alpha. The interior teal field must remain fully opaque. This is the final adopted Courier icon for RoleShuffle, not a new concept. Do not add new elements, do not redesign the character, no watermarks, no surrounding text. Square 1024 by 1024 production art.",
+      "path": "C:/Users/Code-/.codex/generated_images/01a0a1f3-aaf0-7cd0-809b-f9921d54fa09/exec-cab111c4-0f92-4106-9774-c65f23a0286f.png",
+      "prompt": "Use case: precise-object-edit. Edit target: the attached approved Courier role emblem. Change ONLY the colored interior backdrop inside the hexagonal frame from teal to solid warm charcoal gray #514E49, the established Hardship category color for RoleShuffle. Recolor the small existing ground shadow to a darker neutral gray consistent with that background. Preserve the EXACT existing character and proportions, delivery cap, orange brim and patch, neck ring, eyes, smile, arms, parcel with tape and label, walking legs, right arrow, motion marks, dark outlines, cream hexagonal frame, pose, composition, layout and margins. No redesign, no new details, no silhouette changes. Outside the hexagonal badge stays genuinely transparent alpha; inside stays fully opaque. The gray background must be smooth flat color with NO mosaic, blocks, grain, noise, texture, speckles, patchwork or gradient. Return only one square finished icon, no added text and no comparison board.",
       "category": "Hardship",
-      "background": "Teal (user-selected proposal A)",
+      "background": "#514E49",
       "file": "13-Courier.png",
-      "generationMode": "Built-in image_gen (selected concept A edit)",
-      "source_sha256": "43b454c9e09aa38dc24edebb4ad7859de99302c3df5d31fa94000c4b55aead19"
+      "generationMode": "Built-in image_gen (category background edit)",
+      "source_sha256": "581230ed452d5400acaa913e905bf27ce33a685bc3b66d072e43904c44b0034c",
+      "balance_categories": [
+        "Hardship"
+      ]
     },
     {
       "id": "14",
@@ -461,6 +465,21 @@
       "file": "40-Brawler.png"
     },
     {
+      "id": "41",
+      "role": "Influenza",
+      "file": "41-Influenza.png",
+      "category": "Danger",
+      "background": "#762C37",
+      "balance_categories": [
+        "Danger",
+        "Hardship"
+      ],
+      "path": "C:/Users/Code-/.codex/generated_images/01a0a1f3-aaf0-7cd0-809b-f9921d54fa09/exec-18a7126b-336c-426e-9c6c-a47486b055a4.png",
+      "prompt": "Use case: precise-object-edit. Edit target: the attached approved Influenza role emblem. Change ONLY the colored interior backdrop inside the hexagonal frame from green to a perfectly uniform solid muted burgundy red #762C37, the established Danger category color for RoleShuffle. Preserve the EXACT existing character, pose, proportions, head, separate shallow jaw/neck band below the mouth, short tapered cone arms, eyes, forehead cooling patch, blue sweat, peach blush, cream sneeze puff, orange rays, black outlines, cream hexagonal border, layout and margins. No redesign, no new details, no repositioning, no silhouette changes. Outside the hexagonal badge stays genuinely transparent alpha. Inside the frame must be fully opaque. Background must have NO mosaic, blocks, grain, texture, gradient, speckles or cloudy patches. Crisp smooth edges and flat game-icon rendering. Return only one square finished icon, no text and no comparison board.",
+      "source_sha256": "68f21fd33e919bb5be0924051e39686b5d830e86303a7526bc3250ff3fc92d65",
+      "generationMode": "Built-in image_gen (category background edit)"
+    },
+    {
       "id": "1001",
       "role": "Superbot",
       "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-f598efe4-dcb1-40fa-bc91-b9ec602a9cfc.png",
@@ -487,6 +506,12 @@
     "anatomy": "Short single-piece cone arms, distinct jaw/neck band below mouth; no hat or extra joints.",
     "illness": "Sneeze, cooling forehead patch, sweat and flushed cheeks.",
     "method": "Built-in image_gen; full-resolution native-alpha master",
-    "prompt_record": "docs/INFLUENZA_4.5.1.md"
+    "prompt_record": "docs/INFLUENZA_4.5.1.md",
+    "category": "Danger",
+    "background": "#762C37",
+    "balance_categories": [
+      "Danger",
+      "Hardship"
+    ]
   }
 }

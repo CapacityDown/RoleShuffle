@@ -49,11 +49,13 @@ single-piece cone arms attached below a distinct jaw/neck band, eyes above the
 mouth slit, and no human elbows, hands or unrelated decoration.
 
 References: the existing Tank and Medic runtime icons. The final artwork keeps
-the separate neck band, fever patch, sweat, blush and sneeze. The last edit
-removes mosaic-like background artifacts and keeps the established composition.
+the separate neck band, fever patch, sweat, blush and sneeze. Its primary icon
+category is Danger, with the established burgundy interior color `#762C37`.
+The additional Hardship assignment limit reflects its maximum-health penalty.
+Use smooth fills without mosaic-like artifacts and keep the composition.
 The selected master and runtime PNG are named `41-Influenza.png` in the existing
 asset directories. Built-in image generation was used; no external image API.
 
-### Final cleanup prompt
+### Final category-color prompt
 
-Precise cleanup of this EXACT Influenza emblem. Keep every shape, character anatomy, collar band below mouth, cooling patch, sweat droplets, peach blush, sneeze puff, outlines, orange accents, hexagon border, composition and sizing identical. ONLY REMOVE ALL mosaic-like mottling, square/block artifacts, noise and texture. Make the entire green interior a perfectly UNIFORM SOLID flat color #365D33: no gradient, no cloudy shading, no grain, no patchwork blocks whatsoever. Make the cream body and border uniformly clean #FFF2D8 except existing small intentional hard-edged shadow shapes; remove subtle speckled shading. Keep peach fever blush as two smooth intentional small patches. Crisp smooth dark vector-like lines. Clean anti-aliased edges, genuinely transparent exterior of hexagon. No checkered transparency pattern painted into the image, no added text. This is a flat color game UI emblem, never a textured print.
+Use case: precise-object-edit. Edit target: the attached approved Influenza role emblem. Change ONLY the colored interior backdrop inside the hexagonal frame from green to a perfectly uniform solid muted burgundy red #762C37, the established Danger category color for RoleShuffle. Preserve the EXACT existing character, pose, proportions, head, separate shallow jaw/neck band below the mouth, short tapered cone arms, eyes, forehead cooling patch, blue sweat, peach blush, cream sneeze puff, orange rays, black outlines, cream hexagonal border, layout and margins. No redesign, no new details, no repositioning, no silhouette changes. Outside the hexagonal badge stays genuinely transparent alpha. Inside the frame must be fully opaque. Background must have NO mosaic, blocks, grain, texture, gradient, speckles or cloudy patches. Crisp smooth edges and flat game-icon rendering. Return only one square finished icon, no text and no comparison board.

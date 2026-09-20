@@ -20,6 +20,26 @@ and RoleShuffle-S002 (`01a091a3-dc1e-7463-bad9-ef2e5a5fd3d9`), reconfirmed on
   derive the whole set's anatomy from a later role-specific costume variant.
 - Keep role names and other text out of the artwork.
 
+## Category backgrounds
+
+Use the role's primary icon category for the interior background. Assignment
+balance groups may overlap; they do not require multiple background colors.
+
+| Category | Interior color |
+| --- | --- |
+| Enhancement | `#174665` |
+| Support | `#24563E` |
+| Combat | `#80451F` |
+| Special | `#50356E` |
+| Danger | `#762C37` |
+| Hardship | `#514E49` |
+| Secret | `#756025` |
+
+Influenza uses Danger because it can spread to teammates. It also remains in
+the Hardship assignment group because of its health penalty. Courier uses
+Hardship because delivery pauses its automatic health loss. Preserve the
+existing character and props when correcting a category background.
+
 ## Delivery and review
 
 Keep a full-resolution master and its generation prompt. Export a 256 × 256 RGBA
