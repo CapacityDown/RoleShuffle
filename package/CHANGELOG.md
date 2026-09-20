@@ -1,4 +1,5 @@
 ## 4.5.0
+- Reorganized Courier's guide into delivery steps, size-based reward rows and limits. Clarified that delivery pauses only Courier's automatic HP loss; enemy attacks and other damage still apply.
 
 - Tank and Runner now multiply Base effective values by 1.5 by default, rounding up to vanilla upgrade levels. Growth caps are 4,100 HP, 205 sprint speed and 2,040 stamina. Base and configured minimums remain guaranteed. Copied roles and Superbot inherit the targets.
 - Tank and Runner are excluded from random assignment when a corresponding Base value reaches its configured cap or the role offers no upgrade gain. Runner is excluded when either speed or stamina reaches its cap; forced assignments still use the same upgrade targets.

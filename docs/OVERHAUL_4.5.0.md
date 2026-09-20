@@ -20,6 +20,13 @@
 
 These five role updates are the standard v4.5.0 behavior. Schema 37 removes the old mode switch, unused Lifter Strength level and obsolete ability-status line setting after backing up the configuration. Role selection and current tuning are preserved. Resource display has a separate local HUD toggle. The older build remains available in the preserved checkout and deployment backups.
 
+## Clearer Courier guide — UI build 480
+
+- Reorganized the guide in all 14 languages into the role's benefit, two delivery steps, one reward row per native size, HP-loss risk and reward limits. The generic fallback now describes delivery and recovery as well.
+- Replaced ambiguous exemption wording with a pause of Courier's automatic HP loss. The guide explicitly states that attacks, falls and other damage still apply. It explains uninterrupted carrying outside delivery areas, both destinations, one reward per item per player per stage, maximum-health clamping and taking the longer pause instead of adding durations.
+- Updated the English/Japanese package summary and both role-list PDFs. Each PDF remains 10 pages; only page 8 changed. Both rendered pages were visually checked, with the existing font sizes retained. Public secret-role masking remains intact.
+- Description-only update: gameplay rules and configuration values are unchanged. Verification: 12,079 localization checks and all required Japanese/CJK glyph checks pass. Build 480 has zero warnings/errors; 473 compiled game-field references pass the installed-game audit. Live in-game text layout has not been inspected for this build.
+
 ## Lifter light-object handling — UI build 479
 
 - Light objects (native Rigidbody mass below 2) now use vanilla Strength level-1 grip and rotation coefficients: 1.1812987013. Heavy objects keep the sixfold level-1 value, 7.1607272727. Native upgrade display remains 200; Base levels do not change either fixed target. Copies and Superbot inherit the same rule.
