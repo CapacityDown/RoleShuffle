@@ -25,6 +25,7 @@ namespace REPOJP.StageRoles
 {
     internal static class PlayerState
     {
+        internal static bool IsLiving(PlayerAvatar player) => player.playerHealth.Health > 0;
         internal static bool TryGetCurrentHealth(PlayerAvatar player, out int health)
         { health = player.playerHealth.Health; return health >= 0; }
         internal static bool TryGetMaximumHealth(PlayerAvatar player, out int health)

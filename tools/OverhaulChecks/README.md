@@ -4,6 +4,8 @@ Run `dotnet run --project tools/OverhaulChecks/OverhaulChecks.csproj -c Release`
 
 This harness links the production growth rules, contract/aura runtime, capped-healing logic, status codec and status transport. Unity, player health and Photon are deterministic substitutes. It checks cap boundaries, idempotent targets, contract delivery and duplicate prevention, grace preservation, dead/replaced avatars, zero-value exclusions, King self-exclusion and shared budget, inactive scan cost, malformed and stale data, copied roles, guest reads, room changes and host-only publication.
 
+Jobless delivery rewards fully heal to upgraded maximum HP. Coverage includes 100, 120, 4,100 and 20,000 maximum HP, local/remote ownership, stale host HP, a capped Medic/Mage heal already in flight, unchanged capped-heal reservations, one request per delivered object and no revival. Native transport remains simulated.
+
 `tools/Test-BaseUpgradeEligibility.ps1` additionally extracts the actual production eligibility and target-composition methods, using stubbed base/role inputs. It covers configured minimums, cap-based exclusion, fixed Lifter targets and Superbot with multiplier 1.
 
 ## In-game acceptance checks

@@ -13,12 +13,21 @@
 ## Standard v4.5.0 rules
 
 1. Tank and Runner multiply Base effective values and convert them to vanilla upgrade levels, capped at HP 4100, sprint speed 205 and stamina 2040. Base and configured minimums are preserved. Lifter keeps native display level 200 and fixes normal grip/rotation coefficients at six times vanilla level-1 values. Base 0–200 remains eligible. Copied roles and Superbot inherit these targets.
-2. Jobless receives a starting grace period. Carry a different, positive-value valuable at least the configured distance and bring it into the truck to complete a contract. A contract pauses attrition and restores the worker's health. Completions are limited per player per stage; drops, death and teleports do not accumulate work.
+2. Jobless receives a starting grace period. Carry a different, positive-value valuable at least the configured distance and bring it into the truck to complete a contract. A contract pauses attrition and fully restores the worker's HP to its current maximum. Completions are limited per player per stage; drops, death and teleports do not accumulate work.
 3. King keeps the crown and grants temporary native Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Excludes Kings and never stacks. King bonuses are removed on leaving, death, departure or role change.
 4. Stinker and Bomber remain movement-triggered automatic hazards. Neither has a manual pause, activation switch or charge-and-release operation. This is an explicit user requirement.
 5. The host publishes a separate, versioned ability-status snapshot for installed participants. The local resource HUD shows remaining resources in one vertical column. The role list has no auxiliary status line; `/roles` announces only the assigned role name. Existing assignment synchronization is preserved.
 
 These five role updates are the standard v4.5.0 behavior. Schema 37 removes the old mode switch, unused Lifter Strength level and obsolete ability-status line setting after backing up the configuration. Role selection and current tuning are preserved. Resource display has a separate local HUD toggle. The older build remains available in the preserved checkout and deployment backups.
+
+## Jobless full healing — UI build 477
+
+- Each completed contract now restores the worker to maximum HP, including upgraded health. The native owner-side heal clamps at maximum; sending maximum HP avoids under-healing an unmodded guest when the host's current HP is stale. The reward is sent once per completion even while a capped Medic/Mage heal is pending; existing healing reservations are neither refunded nor overwritten. Contract counts, grace duration and death handling are unchanged.
+- Removed `Jobless.ContractHeal` from configuration and UI. Schema 38 preserves an exact backup before removing it, including previously disabled (`0`) healing. All other Jobless settings remain intact.
+- Updated the role guide in all 14 languages, English/Japanese release documents, and detailed/public Japanese role-list PDFs. Public hidden-role masking is retained.
+- Verification: 75,644 runtime/rules/sync checks; 292 role settings/migration checks, 128 Base settings and 248 save-adjustment checks; 12,079 localization checks; 2,704 existing healing-budget/notification/weight checks. All changed text is covered by existing bundled fonts.
+- Release build 477 has zero warnings/errors; 467 compiled game-field references pass the installed-game audit. Both PDFs remain 10 pages; only the Jobless page changed, and both rendered pages were visually checked.
+- RSO_TEST deployment and live gameplay verification remain deferred at the user's request to continue playing. This build also includes build 476's Strength restoration fix.
 
 ## Strength restoration — UI build 476
 

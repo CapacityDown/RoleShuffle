@@ -10,7 +10,7 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleConfigMigration
 {
-    private const int CurrentSchemaVersion = 37;
+    private const int CurrentSchemaVersion = 38;
     private static readonly ConfigDefinition SchemaDefinition =
         new("Migration", "ConfigVersion");
 
@@ -514,6 +514,7 @@ internal static class RoleConfigMigration
             removed += RemoveKey(values, "General", "OverhaulEnabled");
             removed += RemoveKey(values, "Lifter", "StrengthUpgradeLevels");
             removed += RemoveKey(values, "HUD", "AbilityStatusEnabled");
+            removed += RemoveKey(values, "Jobless", "ContractHeal");
             MoveKey(values, "King", "HealRadius", "King", "UpgradeRadius", ref migrated, ref removed);
             removed += RemoveKey(values, "King", "HealAmount");
             removed += RemoveKey(values, "King", "HealIntervalSeconds");
@@ -548,7 +549,7 @@ internal static class RoleConfigMigration
             if (sourceVersion < CurrentSchemaVersion && values.Count > 1 &&
                 File.Exists(path))
             {
-                string backupPath = path + (sourceVersion >= 36 ? ".pre-v4.5.0-standard-roles.bak" : sourceVersion >= 35 ? ".pre-v4.5.0-native-hud.bak" : sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
+                string backupPath = path + (sourceVersion >= 37 ? ".pre-v4.5.0-jobless-full-heal.bak" : sourceVersion >= 36 ? ".pre-v4.5.0-standard-roles.bak" : sourceVersion >= 35 ? ".pre-v4.5.0-native-hud.bak" : sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
                 if (!File.Exists(backupPath))
                 {
                     File.Copy(path, backupPath, overwrite: false);

@@ -102,8 +102,8 @@ Clock(0); runtime.Tick(new[] { worker }, notifier);
 Clock(1); cargo.centerPoint = new Vector3(3,0,0); runtime.Tick(new[] { worker }, notifier);
 Clock(2); cargo.centerPoint = new Vector3(6,0,0); runtime.Tick(new[] { worker }, notifier);
 Clock(3); worker.Player.InTruck = true; runtime.Tick(new[] { worker }, notifier);
-Check(worker.Overhaul.ContractsCompleted == 1 && worker.Player.playerHealth.Health == 60 && notifier.Notifications == 1,
-    "Production contract runtime delivers one health reward and notification");
+Check(worker.Overhaul.ContractsCompleted == 1 && worker.Player.playerHealth.Health == 100 && notifier.Notifications == 1,
+    "Production contract runtime fully heals the worker and sends one notification");
 Clock(4); runtime.Tick(new[] { worker }, notifier);
 Check(notifier.Notifications == 1, "Holding delivered cargo cannot repeat rewards");
 worker.Player.InTruck = false; cargo.Id = 11; cargo.Valuable!.Value = 0;
@@ -120,6 +120,50 @@ Clock(9); runtime.Tick(new[] { worker }, notifier);
 Check(worker.Overhaul.ContractsCompleted == 1 && worker.Overhaul.PaidUntil == 33, "Replacement avatar retains earned state");
 
 runtime.Stop(); RoleHealingRuntime.Clear();
+foreach (int maximum in new[] { 100, 120, 4100, 20000 })
+foreach (bool remote in new[] { false, true })
+{
+    var rewardRuntime = new RoleOverhaulRuntime(config);
+    var recipient = new RoleAssignment { Player = new PlayerAvatar { Id = "full" } };
+    recipient.Player.playerHealth.Maximum = maximum;
+    recipient.Player.playerHealth.Health = 1;
+    recipient.Player.photonView.IsMine = !remote;
+    SemiFunc.Multiplayer = remote;
+    var requests = new List<int>();
+    int budgetCharged = 0;
+    if (remote)
+    {
+        recipient.Player.playerHealth.OnHeal = amount => requests.Add(amount);
+        Clock(0);
+        Check(RoleHealingRuntime.TryHeal(recipient.Player, 2, amount => budgetCharged += amount), "Capped heal can be in flight before a contract");
+        // Host health may be stale/full while the owning guest still needs HP.
+        recipient.Player.playerHealth.Health = maximum;
+    }
+    var delivery = new PhysGrabObject { Id = 25, HeldBy = "full" };
+    UnityEngine.Object.Items = new[] { delivery };
+    Clock(0); rewardRuntime.Tick(new[] { recipient }, notifier);
+    Clock(1); delivery.centerPoint = new Vector3(3,0,0); rewardRuntime.Tick(new[] { recipient }, notifier);
+    Clock(2); delivery.centerPoint = new Vector3(6,0,0); rewardRuntime.Tick(new[] { recipient }, notifier);
+    Clock(3); recipient.Player.InTruck = true; rewardRuntime.Tick(new[] { recipient }, notifier);
+    Check(recipient.Overhaul.ContractsCompleted == 1 && recipient.Overhaul.PaidUntil == 33, "Full heal preserves contract count and grace");
+    if (remote)
+    {
+        Check(requests.SequenceEqual(new[] { 2, maximum }), "Full reward bypasses a pending capped heal and sends maximum HP once");
+        int ownerHealth = 1;
+        ownerHealth = Math.Min(maximum, ownerHealth + requests[1]);
+        Check(ownerHealth == maximum, "Vanilla owner clamp reaches full health despite stale host HP");
+        Check(budgetCharged == 0, "Full reward does not release or refund another healer's reservation");
+        RoleHealingRuntime.Observe(recipient.Player, 1, maximum);
+        Check(budgetCharged == 2, "Later health observation keeps the capped-heal budget charged");
+    }
+    else Check(recipient.Player.playerHealth.Health == maximum, "Contract fully heals upgraded maximum HP");
+    Clock(4); rewardRuntime.Tick(new[] { recipient }, notifier);
+    Check(recipient.Player.playerHealth.Requests == (remote ? 2 : 1), "Delivered object cannot repeat the full heal");
+    recipient.Player.Living = false;
+    Check(!RoleHealingRuntime.TryHealToFull(recipient.Player), "Full healing never revives a dead player");
+    rewardRuntime.Stop(); RoleHealingRuntime.Clear();
+}
+SemiFunc.Multiplayer = false;
 var king = new RoleAssignment { Role = StageRole.King, Player = new PlayerAvatar { Id = "king" } };
 var ally1 = new RoleAssignment { Role = StageRole.Tank, Player = new PlayerAvatar { Id = "a" } };
 var ally2 = new RoleAssignment { Role = StageRole.Tank, Player = new PlayerAvatar { Id = "b" } };

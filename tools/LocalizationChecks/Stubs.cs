@@ -56,7 +56,6 @@ internal sealed class StageRolesConfig
     internal Entry<float> JoblessContractDistance { get; } = new(7.25f);
     internal Entry<float> JoblessContractGrace { get; } = new(7.25f);
     internal Entry<int> JoblessContractLimit { get; } = new(17);
-    internal Entry<int> JoblessContractHeal { get; } = new(17);
     internal Entry<int> KingSpeedBonus { get; } = new(17);
     internal Entry<int> KingRangeBonus { get; } = new(17);
     internal Entry<int> KingStrengthBonus { get; } = new(17);

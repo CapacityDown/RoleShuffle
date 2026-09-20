@@ -262,7 +262,6 @@ internal sealed class StageRolesConfig
         JoblessContractDistance = BindFloat(config, "Jobless", "ContractDistance", 5f, 1f, 50f, "Carry a different positive-value valuable this far outside the truck, then bring it into the truck.");
         JoblessContractGrace = BindFloat(config, "Jobless", "ContractGraceSeconds", 30f, 1f, 300f, "Initial and post-contract time without Jobless attrition.");
         JoblessContractLimit = BindInt(config, "Jobless", "ContractsPerStage", 3, 1, 30, "Maximum completed contracts per player per stage, retained through revival and rejoining.");
-        JoblessContractHeal = BindInt(config, "Jobless", "ContractHeal", 10, 0, 100, "Health restored to the worker on completing a contract, up to maximum health.");
 
         RescuerEnabled = RoleEnabled(config, "Rescuer");
         RescuerWeight = RoleWeight(config, "Rescuer", 80);
@@ -466,7 +465,6 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> JoblessContractDistance { get; }
     internal ConfigEntry<float> JoblessContractGrace { get; }
     internal ConfigEntry<int> JoblessContractLimit { get; }
-    internal ConfigEntry<int> JoblessContractHeal { get; }
     internal ConfigEntry<float> KingUpgradeRadius { get; }
     internal ConfigEntry<int> KingSpeedBonus { get; }
     internal ConfigEntry<int> KingRangeBonus { get; }

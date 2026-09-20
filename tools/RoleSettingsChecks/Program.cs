@@ -46,7 +46,7 @@ Check(!lifterText.Contains("StrengthMultiplier") && !lifterText.Contains("Maximu
 Check(!lifterText.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
     "Fixed Lifter migration removes the unused level setting and preserves selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
-Check(lifterText.Contains("ConfigVersion = 37"), "Config uses the standard v4.5 role schema");
+Check(lifterText.Contains("ConfigVersion = 38"), "Config uses the current v4.5 role schema");
 RoleConfigMigration.Apply(lifterFile);
 Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
     "Repeated migration preserves settings and rollback backup");
@@ -93,15 +93,33 @@ foreach (bool wasEnabled in new[] { false, true })
         standard.RunnerStaminaMultiplier.Value == 1.8f && standard.RunnerMaximumStamina.Value == 1200,
         "Standard rules preserve growth tuning");
     Check(standard.JoblessContractDistance.Value == 7 && standard.JoblessContractGrace.Value == 45 &&
-        standard.JoblessContractLimit.Value == 5 && standard.JoblessContractHeal.Value == 12 &&
+        standard.JoblessContractLimit.Value == 5 && !after.Contains("ContractHeal") &&
         standard.KingUpgradeRadius.Value == 12 && standard.KingStrengthBonus.Value == 2,
         "Standard rules preserve contract and King tuning");
     Check(!standard.HudResourcesEnabled.Value && standard.HudResourceOffsetX.Value == 40 && standard.HudResourceScale.Value == 125,
         "Standard rules preserve resource HUD preferences");
     string backup = standardPath + ".pre-v4.5.0-standard-roles.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 37"), "Exact rollback backup and schema upgrade");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 38"), "Exact rollback backup and schema upgrade");
     RoleConfigMigration.Apply(standardFile);
     Check(File.ReadAllText(standardPath) == after && File.ReadAllText(backup) == before, "Standard migration is idempotent");
+}
+foreach (int oldHeal in new[] { 0, 10, 100 })
+{
+    string joblessPath = Path.Combine(directory, $"jobless-full-{oldHeal}.cfg");
+    string before = $"[Migration]\nConfigVersion = 37\n[Jobless]\nContractHeal = {oldHeal}\nContractDistance = 7\nContractGraceSeconds = 45\nContractsPerStage = 5\nDamage = 2\nEnabled = false\n";
+    File.WriteAllText(joblessPath, before);
+    var joblessFile = new ConfigFile(joblessPath, false) { SaveOnConfigSet = false };
+    var jobless = new StageRolesConfig(joblessFile); joblessFile.Save();
+    string after = File.ReadAllText(joblessPath);
+    Check(!after.Contains("ContractHeal") && !joblessFile.Any(e => e.Key.Section == "Jobless" && e.Key.Key == "ContractHeal"),
+        "Full healing removes fixed amounts from disk and settings UI, including zero");
+    Check(jobless.JoblessContractDistance.Value == 7 && jobless.JoblessContractGrace.Value == 45 &&
+        jobless.JoblessContractLimit.Value == 5 && jobless.JoblessDamage.Value == 2 && !jobless.JoblessEnabled.Value,
+        "Full healing preserves other contract, damage and selection settings");
+    string backup = joblessPath + ".pre-v4.5.0-jobless-full-heal.bak";
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 38"), "Exact pre-full-heal config backup");
+    RoleConfigMigration.Apply(joblessFile);
+    Check(File.ReadAllText(joblessPath) == after && File.ReadAllText(backup) == before, "Full-heal migration is idempotent");
 }
 var service = new RoleSelectionSettings(config, file);
 StageRolesPlugin.Instance.RoleSettings = service;

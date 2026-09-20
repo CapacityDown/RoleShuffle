@@ -22,6 +22,20 @@ internal static class RoleHealingRuntime
     internal static void Clear() => Pending.Clear();
     internal static void Forget(PlayerAvatar player) => Pending.Remove(player);
 
+    // One-shot full-health rewards have their own count limit. They must not
+    // disappear behind a Medic/Mage recipient lock or refund that healer's
+    // reservation. Vanilla clamps on the owning client. Send maximum HP rather
+    // than the host's missing HP, which may be stale for an unmodded guest.
+    internal static bool TryHealToFull(PlayerAvatar player)
+    {
+        if (player == null || player.playerHealth == null || !PlayerState.IsLiving(player) ||
+            (SemiFunc.IsMultiplayer() && player.photonView == null) ||
+            !PlayerState.TryGetMaximumHealth(player, out int maximum) || maximum <= 0)
+            return false;
+        player.playerHealth.HealOther(maximum, true);
+        return true;
+    }
+
     internal static bool TryHeal(PlayerAvatar player, int amount, Action<int> complete)
     {
         if (player == null || player.playerHealth == null || amount <= 0)

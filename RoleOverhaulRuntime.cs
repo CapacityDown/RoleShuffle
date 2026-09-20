@@ -74,9 +74,9 @@ internal sealed class RoleOverhaulRuntime
         if (!completed) return;
         assignment.JoblessDamageTimer = 0;
         notifier.NotifyResponse(assignment.Player, "ContractComplete");
-        // One attempt per completed contract: it cannot repeat after a failed
-        // or unacknowledged remote request, nor overlap another capped healer.
-        try { RoleHealingRuntime.TryHeal(assignment.Player, _config.JoblessContractHeal.Value, _ => { }); }
+        // The contract is already consumed, so this full heal is sent once even
+        // if another capped heal is pending. No retries or repeated rewards.
+        try { RoleHealingRuntime.TryHealToFull(assignment.Player); }
         catch (Exception error) { StageRolesPlugin.ModLogger.LogDebug($"Contract healing skipped: {error.Message}"); }
     }
 

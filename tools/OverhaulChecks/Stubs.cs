@@ -118,7 +118,6 @@ namespace REPOJP.StageRoles
         internal Entry<float> JoblessContractGrace = new(30);
         internal Entry<int> JoblessContractLimit = new(3);
         internal Entry<float> JoblessContractDistance = new(5);
-        internal Entry<int> JoblessContractHeal = new(10);
         internal Entry<float> KingUpgradeRadius = new(8);
         internal Entry<int> KingSpeedBonus = new(1);
         internal Entry<int> KingRangeBonus = new(1);
