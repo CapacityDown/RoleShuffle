@@ -2,6 +2,8 @@
 
 This document defines the release-document and package rules for RoleShuffle. It is intended to be the checklist used immediately before creating a Thunderstore release ZIP.
 
+The ZIP and document workflow is inherited from [RoleShuffle-S002](codex://threads/01a091a3-dc1e-7463-bad9-ef2e5a5fd3d9). Later explicit instructions in the current task take precedence; release versions, settings and behavior must come from the current release sources.
+
 ## 1. Release sources of truth
 
 The following values must agree in every release.
@@ -27,12 +29,15 @@ RoleShuffle.zip
 ├── README.md
 ├── CHANGELOG.md
 ├── icon.png
-└── RoleShuffle.dll
+├── RoleShuffle.dll
+└── LICENSES/
+    ├── NotoCJK-OFL.txt
+    └── NotoSans-OFL.txt
 ```
 
 The ZIP must not contain an enclosing `package` or `RoleShuffle` directory. It must not contain source files, `bin`, `obj`, PDB files, configuration files, logs, temporary validation files, or another ZIP.
 
-Project policy treats all five files above as mandatory. `manifest.json`, `README.md`, and `icon.png` are Thunderstore package metadata; `CHANGELOG.md` and `RoleShuffle.dll` are also required for a usable RoleShuffle release.
+Project policy treats the five root files above as mandatory. Include the two font license notices under `LICENSES/` while those fonts are bundled. `manifest.json`, `README.md`, and `icon.png` are Thunderstore package metadata; `CHANGELOG.md` and `RoleShuffle.dll` are also required for a usable RoleShuffle release.
 
 ## 3. `manifest.json`
 
@@ -46,6 +51,7 @@ Use valid UTF-8 JSON without comments or trailing commas. Keep the fields in thi
   "description": "【HostOnlyMOD】Random roles shake up every stage with vanilla upgrades and effects—only the host needs the mod! ホスト導入だけで、ステージごとにランダムな役職とバニラの強化・効果を楽しめます！",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2305",
+    "nickklmao-MenuLib-2.5.2",
     "nickklmao-REPOConfig-1.2.6"
   ]
 }
@@ -58,7 +64,7 @@ Rules:
 - `website_url` points to `https://github.com/CapacityDown/RoleShuffle/issues`. README contact links and generated catalog contact URLs use the same Issue page.
 - `description` follows the CapackMods format: `【HostOnlyMOD】` + concise English summary + concise Japanese summary.
 - Describe the player-facing result, not implementation details.
-- BepInEx and REPOConfig remain hard dependencies.
+- BepInEx, MenuLib and REPOConfig remain hard dependencies.
 - Stage Flux is a soft, optional integration and must not be added to `dependencies` unless it becomes mandatory.
 - Do not add development-only libraries or game assemblies to `dependencies`.
 
@@ -78,7 +84,7 @@ Use English first and Japanese second. The two sections must describe the same r
 ### Multiplayer
 ### How roles are assigned
 ### Roles
-### Testing commands
+### Role command
 ### Configuration
 ### Notifications and HUD
 ### Compatibility
@@ -91,7 +97,7 @@ Use English first and Japanese second. The two sections must describe the same r
 ### マルチプレイ
 ### 役職の抽選
 ### 役職一覧
-### テストコマンド
+### 役職確認コマンド
 ### 設定
 ### 通知とHUD
 ### 互換性
@@ -113,7 +119,7 @@ Use English first and Japanese second. The two sections must describe the same r
 - Document every REPOConfig entry, including its exact key, default, allowed range or choices, effect, and whether it is host-controlled or local UI configuration.
 - State that upgrade items are removed from the shop by default when that remains the released behavior.
 - Describe Stage Flux as optional compatibility. Include the deterministic revival priority: Stage Flux Second Chance is evaluated before RoleShuffle Phoenix; if Second Chance activates, Phoenix is preserved.
-- Include concise warnings for roles that can damage players or create hazards, including Bomber, Jobless, Tuna, and Mage.
+- Include concise warnings for roles that can damage players or create hazards, including Bomber, Courier, Tuna, and Mage.
 - Explain Medic self-exclusion, Phoenix and Rescuer limits, and any multiplayer-only restrictions that materially affect users.
 - State that role Health upgrades persist outside stages until the next role assignment, change by level difference without resetting to zero, and are not continuously monitored.
 
@@ -163,9 +169,9 @@ Rules:
 
 ## 7. `RoleShuffle.dll`
 
-- Build the `Release` configuration from `StageRoles/StageRoles.csproj`.
+- Build the `Release` configuration from `StageRoles.csproj` in the active release checkout. For document-only changes or repackaging, reuse the verified Release DLL when its source has not changed; do not rebuild just to create a ZIP.
 - Package only `bin/Release/netstandard2.1/RoleShuffle.dll`.
-- Copy the newly built DLL to `StageRoles/package/RoleShuffle.dll` immediately before creating the ZIP.
+- Copy the verified Release DLL to `package/RoleShuffle.dll` immediately before creating the ZIP.
 - Compare SHA-256 hashes after copying; both files must match.
 - Do not package a DLL copied from the Default test profile because its origin can be ambiguous.
 - Do not include PDB, XML documentation, game DLLs, BepInEx, REPOConfig, or Stage Flux DLLs.
@@ -213,7 +219,9 @@ The README normally does not display the package version. Avoid adding a version
 
 ### ZIP
 
-- [ ] The ZIP contains exactly one copy of each required root file.
+- [ ] The ZIP contains exactly one copy of each required root file and each bundled font license.
+- [ ] Every archived entry matches its validated source by SHA-256; record the ZIP checksum outside the ZIP.
+- [ ] Earlier release ZIPs are retained before replacing the current `RoleShuffle.zip`.
 - [ ] Opening the ZIP shows `manifest.json` at the root, not inside another folder.
 - [ ] The ZIP contains no source, PDB, config, log, temporary, or nested archive files.
 - [ ] The final ZIP installs and launches from a clean profile.
@@ -221,3 +229,16 @@ The README normally does not display the package version. Avoid adding a version
 ## 10. Readiness tracking
 
 Use the validation checklist above against the current build and package. Do not keep release-specific hashes, role counts, or temporary blockers in this reusable guide because they become stale.
+
+
+## 11. Document handoff and PDF workflow
+
+- Keep README in English followed by Japanese; keep CHANGELOG in English only. Both must describe the packaged release and pass `tools/check_release_markdown.py` before packaging.
+- Compare the newest CHANGELOG section against the previous **published release**, not an intermediate build or unused development version. Remove empty, unpublished version headings from the release history. Preserve published sections. Do not list same-version trial changes, reversals, description edits or repairs as separate release changes; summarize the resulting feature once.
+- Include newly added language names when a release adds language support. Keep contact and manifest links on the repository's Issues page.
+- Deliver the upload archive as `RoleShuffle.zip`. A versioned copy may be retained locally with an external checksum and release record. Update ZIP contents whenever release Markdown changes.
+- Build specification PDFs from the target release ZIP and matching implementation. Extract configuration keys, defaults and ranges from that implementation; do not carry historical counts or values into a new version.
+- Specification PDFs cover roles, settings, UI/HUD, host and participant permissions, synchronization, persistence, compatibility and verification procedures. Identify the target release, embed fonts, check links and page flow, and render and visually inspect all pages before delivery.
+- Keep the detailed role-list PDF and the public PDF in parallel. Current instructions require the public copy to mask secret role names, descriptions and artwork; do not inherit the earlier session's decision to expose secrets in a development specification as the policy for public role lists.
+- If remote document delivery is requested, publish the requested artifact and verify an unauthenticated download against the source SHA-256. Preserve binary PDF bytes when committing. Do not treat creating a local ZIP or PDF as a request to publish a release.
+- Record build/static checks separately from actual game and multiplayer checks. Do not claim a fresh in-game test when only archived files, source or automated checks were inspected.

@@ -1,17 +1,11 @@
 ## 4.5.0
-- Reorganized Courier's guide into delivery steps, size-based reward rows and limits. Clarified that delivery pauses only Courier's automatic HP loss; enemy attacks and other damage still apply.
 
-- Tank and Runner now multiply Base effective values by 1.5 by default, rounding up to vanilla upgrade levels. Growth caps are 4,100 HP, 205 sprint speed and 2,040 stamina. Base and configured minimums remain guaranteed. Copied roles and Superbot inherit the targets.
-- Tank and Runner are excluded from random assignment when a corresponding Base value reaches its configured cap or the role offers no upgrade gain. Runner is excluded when either speed or stamina reaches its cap; forced assignments still use the same upgrade targets.
-- Lifter displays Strength 200. Host physics fixes heavy-object grip/rotation at six times vanilla level 1; light objects (mass below 2) use level-1 values to reduce shaking while held. All Base levels 0–200 remain eligible. Temporary overrides retain priority; copies and Superbot inherit the ability. Role changes and stage cleanup restore the target Strength level and cached grab force together.
-- Renamed Jobless to Courier with a new parcel-delivery emblem. Carry positive-value valuables 5 m outside delivery areas, then place them in the truck or an extraction point. Deliveries are unlimited, once per item per player per stage. Tiny/Small/Medium/Big/Wide/Tall/VeryTall heal 10/25/50/100/100/100/100 HP and pause attrition for 30/30/60/90/90/90/120 seconds by default. Each size is configurable; HP is capped at maximum and shorter rewards never reduce remaining grace. Initial grace is 30 seconds. Existing settings are backed up and migrated to Courier; the legacy Jobless command remains valid.
-- King grants temporary Speed/Range +1 and up to safe Strength +1 to living allies within 8 m. Kings do not receive or stack the bonus. Leaving, death or role changes remove only King's additions. Native upgrades support unmodded guests.
-- Added a personal resource HUD below stamina for healing, revives, repair, charge and wagers. Native typography, cyan ability symbols and unit-free numbers appear in one vertical column, shrinking when necessary. Zero remains visible in red; fractional amounts round up. Copies and Superbot are supported, with independent local position, scale and visibility settings.
-- The role list shows player roles without an auxiliary status line. `/roles` announces only the assigned role name. Clarified the five updated role guides in all 14 languages.
-- The updated abilities are the standard role rules. Existing configuration is backed up before obsolete mode, Lifter level and status-line settings are removed; role selection and current tuning are preserved. Bomber and Stinker keep their automatic movement-triggered hazards.
-- Fixed a lobby-loading hang during ability-status cleanup.
-
-## 4.4.8
+- Changed Tank and Runner to multiply Base health, sprint speed and stamina by 1.5 by default, preserving configured minimums. Growth caps are 4,100 HP, 205 sprint speed and 2,040 stamina; roles with no upgrade benefit or a Base value at the corresponding cap are excluded from random assignment.
+- Changed Lifter to display Strength level 200, with heavy-object grip and rotation fixed at six times vanilla level 1 and light objects using level-1 values. All Base levels from 0 to 200 remain eligible.
+- Renamed Jobless to Courier with a new delivery emblem. Carry a valuable worth money for 5 m outside delivery areas, then place it in the truck or an extraction point to recover HP and pause Courier's automatic HP loss. Tiny/Small/Medium/Big/Wide/Tall/VeryTall valuables restore 10/25/50/100/100/100/100 HP and pause HP loss for 30/30/60/90/90/90/120 seconds by default. Rewards are configurable by size; deliveries are unlimited, once per item per player per stage. Other damage still applies, and existing settings migrate automatically.
+- Changed King to grant nearby allies temporary Speed and Range +1 and up to Strength +1 within 8 m. The bonus does not affect Kings or stack, and ends when an ally leaves the area.
+- Added a personal ability-resource HUD below stamina for healing, revives, repairs, charge and wagers. Uses vanilla-style typography, cyan icons and numbers in one column, with local visibility, position and scale settings. Copied abilities and combined roles are supported.
+- Changed `/roles` to announce only the assigned role name, simplified the role-list HUD, and clarified the updated role guides in all 14 supported languages.
 
 ## 4.4.7
 - Fixed Mage and Trickster abilities activating when expressions end or when opening the Escape menu.
