@@ -1,5 +1,4 @@
 ## 4.5.0
-
 - Changed Tank and Runner to multiply Base health, sprint speed and stamina by 1.5 by default, preserving configured minimums. Growth caps are 4,100 HP, 205 sprint speed and 2,040 stamina; roles with no upgrade benefit or a Base value at the corresponding cap are excluded from random assignment.
 - Changed Lifter to display Strength level 200, with heavy-object grip and rotation fixed at six times vanilla level 1 and light objects using level-1 values. All Base levels from 0 to 200 remain eligible.
 - Renamed Jobless to Courier with a new delivery emblem. Carry a valuable worth money for 5 m outside delivery areas, then place it in the truck or an extraction point to recover HP and pause Courier's automatic HP loss. Tiny/Small/Medium/Big/Wide/Tall/VeryTall valuables restore 10/25/50/100/100/100/100 HP and pause HP loss for 30/30/60/90/90/90/120 seconds by default. Rewards are configurable by size; deliveries are unlimited, once per item per player per stage. Other damage still applies, and existing settings migrate automatically.

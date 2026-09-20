@@ -140,7 +140,6 @@ Use English only and preserve the established RoleShuffle format:
 
 ```markdown
 ## 4.5.0
-
 - Added ...
 - Changed ...
 - Fixed ...
@@ -149,6 +148,7 @@ Use English only and preserve the established RoleShuffle format:
 Rules:
 
 - Put the newest version first.
+- Start the first change on the line immediately after each version heading, without a blank line. Keep a blank line between version sections.
 - Use the exact release version without a leading `v`, matching the current RoleShuffle convention.
 - Keep earlier published sections unchanged except to correct a factual error.
 - Use short, user-visible `Added`, `Changed`, `Fixed`, `Improved`, or `Removed` statements.
