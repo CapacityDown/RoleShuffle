@@ -40,6 +40,13 @@ the Hardship assignment group because of its health penalty. Courier uses
 Hardship because delivery pauses its automatic health loss. Preserve the
 existing character and props when correcting a category background.
 
+The color codes above are exact output colors, not approximate generation
+prompts. Use the inherited Python/Pillow region-mask workflow to normalize
+existing interiors. Selected source artwork remains immutable; preserve native
+alpha and the artwork outside the background mask. Export and inspect both the
+full-resolution master and 256 × 256 runtime image. The common Unrevealed icon
+is neutral and is not recolored as a role category.
+
 ## Delivery and review
 
 Keep a full-resolution master and its generation prompt. Export a 256 × 256 RGBA

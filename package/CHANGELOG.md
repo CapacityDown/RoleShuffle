@@ -1,6 +1,6 @@
 ## 4.5.1
 - Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Infection ends with the stage.
-- Matched Courier's emblem background to the Hardship category color.
+- Unified role emblem background colors by category.
 - Updated hidden-role abilities.
 
 ## 4.5.0

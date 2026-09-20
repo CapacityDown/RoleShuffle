@@ -1,43 +1,46 @@
 # Transparent role emblems
 
-The current emblem design retains the cream hexagonal frame, colored interior,
-characters and props. Only the near-black exterior connected to the image
-corners is removed. Dark outlines and shadows enclosed by the frame remain
-opaque. When a prop crosses the frame and connects its dark outline to the
-exterior, narrow channels are sealed in the detection mask before extracting
-the background; the artwork's RGB values are not altered.
+The active set contains 43 role icons and the shared Unrevealed icon. The cream
+hexagonal frame, character, props and dark outlines follow the approved source
+artwork. Only the exterior is transparent. Role interiors use the exact primary
+category palette in `../selected/prompts.json` and `../../../ROLE_ICON_GUIDE.md`.
+The neutral Unrevealed icon is excluded from category normalization.
 
-- `masters/`: 43 full-size RGBA PNGs. RGB pixels are identical to the originals;
-  only exterior alpha is changed.
-- `runtime/`: 43 RGBA PNGs at 256 x 256, embedded by `StageRoles.csproj` and used
-  by the HUD, Current Roles and Role Guide. Alpha-aware downsampling smooths
-  the silhouette edges.
-- `previews/`: source / light background / dark background comparisons for
-  inspection. These are not embedded in the mod.
-- `manifest.json`: source and output SHA-256 hashes and transparency checks.
+## Rebuild
 
-The inputs remain in `../selected/` and `../unrevealed/Unrevealed.png`.
-Regenerate with `StageRoles/tools/build_transparent_role_emblems.py` using
-Python, Pillow and NumPy. The script checks the transparent perimeter, opaque
-center, preserved interior and source hashes, and partial alpha at runtime
-edges. Review every comparison sheet after regenerating.
+Run `python tools/build_transparent_role_emblems.py` from the RoleShuffle root
+with Pillow and NumPy installed. The script calls
+`tools/normalize_role_icon_backgrounds.py` for the background mask and palette.
+It never overwrites selected source artwork or generation prompts.
 
-## Courier (v4.5.0)
+- Opaque sources: remove only near-black exterior connected to image corners.
+  When a prop crosses the cream frame, seal narrow channels in the detection
+  mask to preserve its interior dark outline.
+- Native-alpha sources (Courier and Influenza): retain source alpha directly;
+  never color-key them. Their central alpha can be 254/255.
+- Detect the dominant background color region, exclude the black/cream/orange
+  artwork, and apply the category color with a narrow antialiased transition.
+  Pixels outside the background mask remain unchanged in the full-size master.
+- Export 256 × 256 RGBA runtime images using alpha-aware resampling. Correct
+  background-core RGB after resizing so partial source alpha does not introduce
+  one-channel rounding differences between icons of the same category.
 
-Role 13 now uses the user-selected Courier concept A. Its selected PNG already
-contains native transparency, so it bypasses the near-black removal process.
-The generated 1254 px master is retained without alteration; System.Drawing
-high-quality bicubic resizing produces the 256 px runtime asset. The central
-alpha is 254/255. Do not run background extraction on this native-alpha source.
-The active set still contains 42 roles plus Unrevealed. Jobless artwork is
-preserved in Git history and the original checkout. See
-`../../../docs/COURIER_DESIGN.md` for the adopted design and generation prompt.
+## Outputs and review
 
-## Influenza (v4.5.1)
+- `masters/`: 44 full-size RGBA PNGs, generated locally and ignored by Git.
+- `runtime/`: 44 runtime PNGs, embedded by `StageRoles.csproj` and shared by the
+  HUD, Current Roles and Role Guide.
+- `previews/`: background masks and source/light/dark comparison sheets. These
+  are local review artifacts and are not embedded in the MOD.
+- `manifest.json`: source, master and runtime SHA-256 hashes; transparency,
+  background-core and preservation checks. Recolored role masters have
+  `rgb_pixels_unchanged: false`; their outside-mask pixels are unchanged.
 
-Role 41 follows the original Tank/Medic Semibot anatomy and cream hexagonal
-frame. It includes a separate neck band, a cooling patch, sweat, flushed cheeks
-and a sneeze. The exterior has native alpha; do not color-key this source.
-The 1254 px master is preserved, with a 256 px RGBA runtime export made using
-System.Drawing high-quality bicubic resampling. There are now 43 role icons
-plus Unrevealed. See `../../../docs/INFLUENZA_4.5.1.md` for the design reference.
+Review all comparison sheets after regeneration, including dark contours,
+small props, the neck band and transparent edges. Verify the embedded resources
+against the runtime PNGs. Rebuild the full/public icon catalogs with
+`python tools/build_icon_catalog.py`; public artifacts retain secret-role masks.
+
+The original inputs remain in `../selected/` and
+`../unrevealed/Unrevealed.png`. See `../../../WORKFLOW.md` for the inherited
+source-preservation, review and delivery procedure.

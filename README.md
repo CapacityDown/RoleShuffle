@@ -3,6 +3,7 @@
 R.E.P.O.向け役職MODのソース管理用リポジトリです。
 プレイヤー向けの仕様・設定は[配布用README](package/README.md)、
 バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
+過去タスクから引き継いだ作業方法は[作業ガイド](WORKFLOW.md)を参照してください。
 
 ## v4.5.1開発
 
