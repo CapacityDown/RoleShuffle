@@ -13,5 +13,6 @@
     <Compile Include="../../RoleOverhaulRules.cs" Link="RoleOverhaulRules.cs" />
     <Compile Include="../../LifterStrengthRuntime.cs" Link="LifterStrengthRuntime.cs" />
     <Compile Include="../../LifterStrengthPatch.cs" Link="LifterStrengthPatch.cs" />
+    <Compile Include="../../UpgradeService.cs" Link="UpgradeService.cs" />
   </ItemGroup>
 </Project>

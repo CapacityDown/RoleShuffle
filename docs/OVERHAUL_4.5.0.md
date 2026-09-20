@@ -20,6 +20,14 @@
 
 These five role updates are the standard v4.5.0 behavior. Schema 37 removes the old mode switch, unused Lifter Strength level and obsolete ability-status line setting after backing up the configuration. Role selection and current tuning are preserved. Resource display has a separate local HUD toggle. The older build remains available in the preserved checkout and deployment backups.
 
+## Strength restoration — UI build 476
+
+- Report: a forced Lifter → Runner change left heavy objects easy to lift; the local log confirms both players changed roles. Live internal Strength values were not captured, so the precise source of their divergence remains unconfirmed.
+- The installed game's upgrade method adds `0.2 * level delta` to a separate `PhysGrabber.grabStrength` cache. A stale contribution survives level restoration. Absolute role/Base resets now reconcile the host's cached force to `1 + 0.2 * confirmed Strength level`, including zero-delta resets. This covers the host's replicas of guest avatars. Configured/manual/truck Base levels remain in the normal target calculation; temporary player/object overrides remain untouched. Ordinary additive King/event grants are unchanged.
+- Regression: a simulated stale Lv200 contribution fails against the old production setter. The repaired setter and production physics patch pass 26,659 checks, including repeated Lifter/Superbot → Runner changes at Base 0–200, light/heavy grip and rotation, no-op resets, stage cleanup, other players, authority, overrides and simulated native guest RPCs. Installed IL verifies the additive cache operation. This is not a live multiplayer test.
+- Existing checks: 75,596 growth/contract/aura/resource/sync checks and 13,541 production target/eligibility checks pass. Release build 476 has zero warnings/errors; 464 compiled game-field references pass against the installed game.
+- In-game acceptance is pending. The user chose to continue playing, so RSO_TEST remains on build 475 until deployment is requested after the game exits.
+
 ## Standard role integration — UI build 475
 
 - Removed the optional mode and all runtime branches to the old Tank/Runner/Lifter/Jobless/King behavior. Lifter's unused level setting and obsolete status-line setting are removed by schema 37; an exact pre-migration backup is retained. Tests cover both saved mode-switch values, preserved tuning/selection/HUD preferences and repeat migration.

@@ -11,6 +11,7 @@ namespace UnityEngine
 }
 public sealed class PlayerAvatar
 {
+    public PhysGrabber physGrabber = null!;
     public bool isTumbling;
     public bool Living = true;
     internal StageRole Role = StageRole.Lifter;
@@ -18,6 +19,7 @@ public sealed class PlayerAvatar
 public sealed class PhysGrabber
 {
     public PlayerAvatar playerAvatar = new();
+    public PhysGrabber() { playerAvatar.physGrabber = this; }
     public float grabStrength = 41;
     internal float overrideGrabStrength = -1;
     public float Grip, Torque;
@@ -65,5 +67,9 @@ namespace REPOJP.StageRoles
         internal static Logger ModLogger = new();
         internal StageRoleController Controller = new();
     }
-    internal sealed class Logger { internal void LogWarning(object message) => Console.WriteLine(message); }
+    internal sealed class Logger
+    {
+        internal void LogWarning(object message) => Console.WriteLine(message);
+        internal void LogDebug(object message) { }
+    }
 }

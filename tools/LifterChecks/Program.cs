@@ -121,5 +121,86 @@ lifter.playerAvatar.Role = StageRole.Tank; Vanilla("Role change stops correction
 lifter.playerAvatar.Role = StageRole.Lifter; run(owner); Near(lifter.Grip, RoleOverhaulRules.LifterEffectiveStrength(false), "Copied effective Lifter role");
 Near(LifterStrengthRuntime.Blend(2f, 1f, 0.5f, owner, lifter, false), 1.5, "Changed raw value from another override remains untouched");
 RoleOverhaulRules.LifterPhysicsAvailable = false; Vanilla("Failed or disabled patch");
+
+// Exercise the real absolute upgrade setter together with the patched physics.
+// The old role-only test above intentionally kept Lv200, so it could not catch
+// a cached vanilla grabStrength left over after the stored level was restored.
+RoleOverhaulRules.LifterPhysicsAvailable = true;
+SemiFunc.Players["changed"] = lifter.playerAvatar;
+void SetStrength(int level) => UpgradeService.SetLevels("changed",
+    new[] { new UpgradeGrant("Strength", "playerUpgradeStrength", level) });
+foreach (bool multiplayer in new[] { false, true })
+foreach (StageRole previous in new[] { StageRole.Lifter, StageRole.Superbot })
+for (int baseline = 0; baseline <= 200; baseline++)
+{
+    SemiFunc.Multiplayer = multiplayer;
+    StatsManager.instance.Strength["changed"] = baseline;
+    lifter.grabStrength = 1f + 0.2f * baseline;
+    Photon.Pun.PhotonView.GuestLevels["changed"] = baseline;
+    Photon.Pun.PhotonView.GuestStrength["changed"] = lifter.grabStrength;
+    for (int repeat = 0; repeat < 3; repeat++)
+    {
+        lifter.playerAvatar.Role = previous;
+        SetStrength(200);
+        run(owner);
+        Near(lifter.Grip, RoleOverhaulRules.LifterEffectiveStrength(false), "Assigned Lifter/Superbot has fixed grip");
+        // Model the observed failure class: the additive cache contains an old
+        // Lv200 contribution (e.g. native delayed initialization), independently
+        // of StatsManager. A level delta alone cannot remove this discrepancy.
+        if (repeat == 1) lifter.grabStrength += 40f;
+        lifter.playerAvatar.Role = StageRole.Runner;
+        SetStrength(baseline);
+        Check(StatsManager.instance.Strength["changed"] == baseline, "Runner restores configured Base Strength");
+        Near(lifter.grabStrength, 1f + 0.2f * baseline, "Lifter to Runner reconciles cached Strength");
+        foreach (float mass in new[] { 0.5f, 10f })
+        {
+            owner.rb.mass = mass;
+            run(owner);
+            Near(lifter.Grip, RoleOverhaulRules.EffectiveGrabStrength(baseline, mass < 2), "Runner has Base grip");
+            Near(lifter.Torque, RoleOverhaulRules.EffectiveGrabStrength(baseline, mass < 2, true), "Runner has Base rotation");
+        }
+        owner.rb.mass = 10;
+        if (multiplayer)
+        {
+            Check(Photon.Pun.PhotonView.GuestLevels["changed"] == baseline, "Native RPC restores unmodded guest level");
+            Near(Photon.Pun.PhotonView.GuestStrength["changed"], 1f + 0.2f * baseline, "Native guest delta is not doubled");
+        }
+    }
+}
+StatsManager.instance.Strength["changed"] = 3;
+lifter.grabStrength = 41;
+lifter.overrideGrabStrength = 0.25f;
+int beforeNoOp = Photon.Pun.PhotonView.Sends;
+SetStrength(3);
+Near(lifter.grabStrength, 1.6f, "Stored level already matches but stale force is still restored");
+Near(lifter.overrideGrabStrength, 0.25f, "Absolute reset preserves temporary player override");
+Check(Photon.Pun.PhotonView.Sends == beforeNoOp, "Cache-only repair sends no extra upgrade delta");
+Near(other.grabStrength, 41f, "Reset does not change another player's force");
+lifter.overrideGrabStrength = -1;
+controller.Ready = false;
+lifter.grabStrength = 41;
+SetStrength(0); run(owner);
+Near(lifter.Grip, 1f, "Stage cleanup restores Base with fixed Lifter physics inactive");
+controller.Ready = true;
+SemiFunc.Authority = false;
+lifter.grabStrength = 9;
+SetStrength(0);
+Near(lifter.grabStrength, 9f, "Guest cannot reconcile host-owned grab cache");
+SemiFunc.Authority = true;
+StatsManager.instance.Strength["changed"] = 20;
+lifter.grabStrength = 5;
+UpgradeService.EnsureAtLeastLevels("changed", new[] { new UpgradeGrant("Strength", "playerUpgradeStrength", 3) });
+Near(lifter.grabStrength, 5f, "Minimum grant leaves higher existing upgrade intact");
+SemiFunc.Players.Remove("changed");
+SetStrength(0);
+Check(StatsManager.instance.Strength["changed"] == 0, "Disconnected avatar does not prevent stored Base restoration");
+
+var pun = game.MainModule.Types.Single(t => t.Name == "PunManager");
+var nativeCacheUpdate = pun.Methods.Single(m => m.Name == "UpdateGrabStrengthRightAway").Body.Instructions;
+Check(nativeCacheUpdate.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Ldc_R4 && (float)i.Operand == 0.2f)
+    && nativeCacheUpdate.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Add)
+    && nativeCacheUpdate.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Stfld &&
+        i.Operand is FieldReference f && f.Name == "grabStrength"), "Installed game uses the modeled additive Strength cache");
+
 Console.WriteLine($"PASS: {checks} fixed Lifter math, installed-game IL, emitted IL and host runtime checks.");
 Console.WriteLine("Unity gameplay and vanilla guest networking still require in-game verification.");

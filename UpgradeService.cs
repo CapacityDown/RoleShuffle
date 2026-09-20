@@ -138,15 +138,13 @@ internal static class UpgradeService
                 continue;
             }
             int delta = targetLevel - currentLevel;
-            if (delta == 0)
-            {
-                KingUpgradeAura.Forget(steamId, target.DictionaryName);
-                continue;
-            }
             try
             {
-                SendUpgradeDelta(steamId, target.CommandName, delta);
+                if (delta != 0)
+                    SendUpgradeDelta(steamId, target.CommandName, delta);
                 KingUpgradeAura.Forget(steamId, target.DictionaryName);
+                if (target.CommandName == "Strength")
+                    ReconcileGrabStrength(steamId, targetLevel);
             }
             catch (Exception exception)
             {
@@ -155,6 +153,34 @@ internal static class UpgradeService
                     $"{steamId}: {exception.Message}");
             }
         }
+    }
+
+    private static void ReconcileGrabStrength(string steamId, int targetLevel)
+    {
+        if (!SemiFunc.IsMasterClientOrSingleplayer()) return;
+        PlayerAvatar? player = SemiFunc.PlayerAvatarGetFromSteamID(steamId);
+        PhysGrabber? grabber = player != null ? player.physGrabber : null;
+        if (grabber == null || !TryGetLevels(steamId, out var levels)) return;
+        int actualLevel = levels.GetValueOrDefault("playerUpgradeStrength", 0);
+        if (actualLevel != targetLevel)
+        {
+            StageRolesPlugin.ModLogger.LogWarning(
+                $"Strength reset was not applied: requested {targetLevel}, actual {actualLevel}.");
+            return;
+        }
+
+        // Vanilla applies upgrades by adding 0.2 * delta to a separate cache.
+        // A stale cache (including a duplicated LateStart contribution) survives
+        // that subtraction even after the level is back at Base. Absolute role/
+        // stage resets own this value, so reconcile it even for a zero delta.
+        // Host physics reads these replicas for both host and unmodded guests.
+        // Temporary overrideGrabStrength and per-object overrides stay intact.
+        float expected = 1f + 0.2f * actualLevel;
+        float previous = grabber.grabStrength;
+        if (Math.Abs(previous - expected) <= 0.0001f) return;
+        grabber.grabStrength = expected;
+        StageRolesPlugin.ModLogger.LogDebug(
+            $"Reconciled grab Strength cache at level {actualLevel}: {previous:F4} -> {expected:F4}.");
     }
 
     private static void SendUpgradeDelta(

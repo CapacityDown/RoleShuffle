@@ -72,9 +72,12 @@ public static class SemiFunc
     public static bool GameReady = true;
     public static bool IsMultiplayer() => GameReady ? Multiplayer : throw new InvalidOperationException("GameManager was destroyed");
     public static bool IsMasterClientOrSingleplayer() => !Multiplayer || Photon.Pun.PhotonNetwork.IsMasterClient;
+    public static PlayerAvatar? PlayerAvatarGetFromSteamID(string id) => null;
 }
+public sealed class PhysGrabber { public float grabStrength = 1; }
 public sealed class PlayerAvatar
 {
+    public PhysGrabber physGrabber = new();
     public string Id = "p";
     public bool Living = true;
     public bool InTruck;
