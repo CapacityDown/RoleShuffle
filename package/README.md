@@ -91,7 +91,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Courier | Hold a valuable worth money and carry it 5 m outside delivery areas, then put it in the truck or an extraction point. Each delivery heals HP and pauses Courier's automatic HP loss by size (below). | Starts with a 30-second pause. Otherwise loses 1 HP per 0.1 seconds outside the truck; can die. Other damage still applies. Unlimited deliveries; each item rewards each player once per stage. Early drops reset distance. Not selected solo. | Delivery and HP loss |
 | Rescuer | While alive, approaching within 3 m of a dead teammate's Death Head revives the nearest eligible teammate with 25 HP. | Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present. | Revival HP, delay, radius, maximum revivals |
 | Vampire | Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50. | Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy. | Amount per tier, radius |
-| King | Crown; grants nearby allies Speed/Range +1 and up to Strength +1 within 8 m. | No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage. | Radius and bonus levels |
+| King | Crown; grants nearby allies Speed/Range +2 and up to Strength +5 within 12 m. | No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage. | Radius and bonus levels |
 | Tuna | After a 5-second grace period at stage start, standing still for 3 seconds causes 1 damage every 0.1 seconds until moving. | Can kill the player. The stationary timer starts after the initial grace period. Moving resets it immediately; lost health is not restored. | Delay, damage, interval |
 | Musician | Each instrument note played by the Musician heals the Musician and living players within 10 m for 5 HP. | Requires a vanilla musical valuable. By default, not randomly selected if none is present. | Amount, radius |
 | Mage | Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long. | Selecting a matching expression activates its spell; clearing it does not. Spells share a 3-second cooldown, cannot be cast if the cost would be fatal, and can harm players or valuables. The duration bonus does not apply to chat or expression casts, or the Star Wand's instantaneous attack. | Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit |
@@ -138,9 +138,9 @@ Host settings except HUD:
 | `Courier.InitialGraceSeconds` | `30` | 0–300 s | Initial attrition break. |
 | `Courier.<Size>GraceSeconds` | `30/30/60/90/90/90/120` | 0–300 s | Tiny/Small/Medium/Big/Wide/Tall/VeryTall. Never shortens remaining grace. |
 | `Courier.<Size>HealAmount` | `10/25/50/100/100/100/100` | 0–10000 HP | Same size order; fixed HP, capped at maximum health. |
-| `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed / Range bonus levels. |
-| `King.StrengthBonusLevels` | `1` | 0–200 | Maximum safe Strength bonus levels. |
-| `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
+| `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `2` / `2` | 0–200 | Speed / Range bonus levels. |
+| `King.StrengthBonusLevels` | `5` | 0–200 | Maximum safe Strength bonus levels. |
+| `King.UpgradeRadius` | `12` | 1–30 m | Upgrade aura radius. |
 | `HUD.ResourceHudEnabled` | `true` | Boolean | Personal resource HUD at the top left, independent of the role list. |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | Resource HUD scale; fits the screen automatically. |
 | `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | Moves the resource display right or down from below stamina. |
@@ -577,7 +577,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Courier | 価値のある貴重品をつかんだまま搬入先の外で5m運び、トラックか納品所に入れると配達完了。サイズ別にHP回復・自動HP減少の一時停止（下表）。 | 開始時は30秒停止。効果切れ中はトラック外で0.1秒ごと1HP減少、死亡あり。敵の攻撃等は防げません。配達回数無制限、同じ品の報酬は各自1ステージ1回。途中で放すと運搬やり直し。1人では抽選対象外。 | 配達・自動HP減少 |
 | Rescuer | 生存中に、死亡した仲間のDeath Headから3 m以内へ近づくと、最も近い対象をデフォルト25 HPで復活させます。 | 1ステージにつき最大2回です。復活後HPは対象の最大HPを超えません。参加者が1人だけの場合はランダム抽選されません。 | 復活後HP、遅延、範囲、最大復活回数 |
 | Vampire | 10 m以内で敵が死亡すると、Tier 1は5、Tier 2は10、Tier 3は50回復します。 | 敵のバニラDanger Levelを使用します。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体を最大Tier 3まで1段階上として扱います。Vampireが生存し、死亡した敵の近くにいる必要があります。 | Tier別回復量、範囲 |
-| King | Crownと8mの強化範囲。味方へSpeed・Range各＋1、Strength最大＋1。 | 自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。 | 半径・追加レベル |
+| King | Crownと12mの強化範囲。味方へSpeed・Range各＋2、Strength最大＋5。 | 自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。 | 半径・追加レベル |
 | Tuna | ステージ開始時の5秒間の猶予後、3秒間停止すると、移動するまで0.1秒ごとに1ダメージを受けます。 | 死亡する可能性があります。停止時間の計測は最初の猶予後に始まります。動くと即座にリセットし、失った体力は回復しません。 | 停止時間、ダメージ、間隔 |
 | Musician | Musicianが楽器で音を鳴らすたびに、本人を含む10 m以内の生存プレイヤーを5 HP回復します。 | バニラの楽器系貴重品が必要です。デフォルトでは存在しない場合に抽選されません。 | 回復量、範囲 |
 | Mage | チャットで`star`、`gravity`、`roll`、`void`、`laser`を入力するか、設定した表情を選択し、順に10、10、15、30、50 HPを消費してバニラ攻撃を発動します。10秒間ダメージを受けなければ、2秒ごとに1 HP回復します。自動回復は1ステージの累計120 HPまでです。保持した杖で発動する魔法の効果時間は1.3倍になります。 | 表情を解除して標準へ戻す操作では発動しません。全魔法で3秒のクールダウンを共有し、消費で死亡する場合は発動しません。攻撃はプレイヤーやValuableにも危険です。効果時間の延長はチャット・表情での魔法や、星杖の瞬間的な攻撃には適用しません。 | 魔法ごとの表情、発射クールダウン、魔法ごとのHP消費量、自動回復の有効化、待機時間、間隔、回復量、ステージごとの回復上限 |
@@ -624,9 +624,9 @@ HUD以外はホスト設定です。
 | `Courier.InitialGraceSeconds` | `30` | 0–300秒 | 開始猶予。 |
 | `Courier.<Size>GraceSeconds` | `30/30/60/90/90/90/120` | 0–300秒 | Tiny/Small/Medium/Big/Wide/Tall/VeryTall（極小/小/中/大/横長/縦長/超縦長）。残り猶予は短縮しません。 |
 | `Courier.<Size>HealAmount` | `10/25/50/100/100/100/100` | 0–10000HP | 同じサイズ順。固定HP回復、最大HPまで。 |
-| `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed・Range追加レベル。 |
-| `King.StrengthBonusLevels` | `1` | 0–200 | 悪化しないStrengthの追加上限。 |
-| `King.UpgradeRadius` | `8` | 1–30 m | 味方に強化を付与する範囲。 |
+| `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `2` / `2` | 0–200 | Speed・Range追加レベル。 |
+| `King.StrengthBonusLevels` | `5` | 0–200 | 悪化しないStrengthの追加上限。 |
+| `King.UpgradeRadius` | `12` | 1–30 m | 味方に強化を付与する範囲。 |
 | `HUD.ResourceHudEnabled` | `true` | 真偽値 | 左上に自分の能力残量を表示。役職一覧とは独立。 |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | 残量HUDの大きさ。画面内に収まるよう自動調整。 |
 | `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | スタミナ直下を基準に、残量表示を右／下へ移動します。 |

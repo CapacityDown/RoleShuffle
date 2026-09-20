@@ -4,6 +4,7 @@
 - Updated hidden-role abilities.
 - Changed Lifter's heavy-object lifting and turning strength to the highest values available across Strength levels 0–200.
 - Gave Stinker's spawned uranium valuables a 0.5-second grace period before breaking, in both solo and multiplayer.
+- Increased King's default support to Speed/Range +2 and up to Strength +5 within 12 m.
 
 ## 4.5.0
 - Changed Tank and Runner to strengthen Base health, sprint speed and stamina by 1.5 by default, with configurable minimums and growth limits. They are excluded from random assignment when no further benefit is available or a corresponding Base value reaches its limit.

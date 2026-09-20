@@ -141,10 +141,10 @@ namespace REPOJP.StageRoles
         internal Entry<int> JoblessTallHeal = new(100);
         internal Entry<int> JoblessVeryTallHeal = new(100);
         internal Entry<float> JoblessContractDistance = new(5);
-        internal Entry<float> KingUpgradeRadius = new(8);
-        internal Entry<int> KingSpeedBonus = new(1);
-        internal Entry<int> KingRangeBonus = new(1);
-        internal Entry<int> KingStrengthBonus = new(1);
+        internal Entry<float> KingUpgradeRadius = new(12);
+        internal Entry<int> KingSpeedBonus = new(2);
+        internal Entry<int> KingRangeBonus = new(2);
+        internal Entry<int> KingStrengthBonus = new(5);
     }
     internal sealed class RoleAssignment
     {

@@ -235,23 +235,23 @@ UnityEngine.Object.Scans = 0;
 Clock(10); runtime.Tick(party, notifier);
 Check(king.Player.playerHealth.Health == 50 && ally1.Player.playerHealth.Health == 50 && Level("king", "Speed") == 0,
     "King neither heals nor buffs itself");
-Check(Level("a", "Speed") == 1 && Level("a", "Range") == 1 && Level("a", "Strength") == 1 && king.Overhaul.KingSupportedAllies == 2,
+Check(Level("a", "Speed") == 2 && Level("a", "Range") == 2 && Level("a", "Strength") == 5 && king.Overhaul.KingSupportedAllies == 2,
     "Nearby allies receive native upgrades and King sees supported ally count");
 for (int i = 0; i < 10; i++) Aura();
-Check(Level("a", "Speed") == 1 && UnityEngine.Object.Scans == 0, "Aura never accumulates or scans valuables");
+Check(Level("a", "Speed") == 2 && UnityEngine.Object.Scans == 0, "Aura never accumulates or scans valuables");
 UpgradeService.AddLevels("a", "Speed", 4); // Purchased/event upgrade while buffed.
-ally1.Player.transform.position = new Vector3(9,0,0); Aura();
+ally1.Player.transform.position = new Vector3(13,0,0); Aura();
 Check(Level("a", "Speed") == 4 && Level("a", "Range") == 0 && king.Overhaul.KingSupportedAllies == 1,
     "Leaving range removes only King's addition and preserves external upgrades");
-ally1.Player.transform.position = new Vector3(8,0,0); Aura();
-Check(Level("a", "Speed") == 5, "Exact radius is included");
+ally1.Player.transform.position = new Vector3(12,0,0); Aura();
+Check(Level("a", "Speed") == 6, "Exact expanded radius is included");
 Set("a", "Speed", 10); Aura();
-Check(Level("a", "Speed") == 11, "Role reset replaces old aura ownership before reapplying it");
-Set("a", "Speed", 11); Aura();
-Check(Level("a", "Speed") == 12, "An absolute no-op still replaces the previous aura contribution");
-UpgradeService.EnsureAtLeastLevels("a", new[] { new UpgradeGrant("Speed", "playerUpgradeSpeed", 12) }); Aura();
-Check(Level("a", "Speed") == 13, "Returning-role minimum is evaluated without aura");
-Check(KingUpgradeAura.WithoutBonus("a", "playerUpgradeSpeed", 13) == 12, "Dynamic roles snapshot baseline without temporary aura");
+Check(Level("a", "Speed") == 12, "Role reset replaces old aura ownership before reapplying it");
+Set("a", "Speed", 12); Aura();
+Check(Level("a", "Speed") == 14, "An absolute no-op still replaces the previous aura contribution");
+UpgradeService.EnsureAtLeastLevels("a", new[] { new UpgradeGrant("Speed", "playerUpgradeSpeed", 13) }); Aura();
+Check(Level("a", "Speed") == 15, "Returning-role minimum is evaluated without aura");
+Check(KingUpgradeAura.WithoutBonus("a", "playerUpgradeSpeed", 15) == 13, "Dynamic roles snapshot baseline without temporary aura");
 Set("a", "Speed", 200); Set("a", "Range", 199); Set("a", "Strength", 50); Aura();
 Check(Level("a", "Speed") == 200 && Level("a", "Range") == 200 && Level("a", "Strength") == 50,
     "Level cap and non-monotonic Strength peak are respected");
@@ -265,7 +265,7 @@ foreach (int request in new[] { 0, 1, 5, 200 })
 ally2.Player.Living = false; Aura();
 Check(Level("b", "Speed") == 0 && Level("b", "Range") == 0, "Death removes recipient aura");
 ally2.Player = new PlayerAvatar { Id = "b" }; Aura();
-Check(Level("b", "Speed") == 1, "Replacement avatar receives one aura");
+Check(Level("b", "Speed") == 2, "Replacement avatar receives one aura");
 king.Player.Living = false; Aura();
 Check(Level("b", "Speed") == 0 && Level("a", "Range") == 199, "King death removes all support");
 king.Player.Living = true; Aura();
@@ -274,20 +274,20 @@ Check(Level("b", "Speed") == 0, "King role change removes support");
 king.Role = StageRole.King; Aura();
 KingUpgradeAura.Tick(config, new[] { king, ally1 });
 Check(Level("b", "Speed") == 0, "Disconnected ally's addition is removed from host stats");
-Aura(); Check(Level("b", "Speed") == 1, "Rejoin receives one copy");
+Aura(); Check(Level("b", "Speed") == 2, "Rejoin receives one copy");
 var otherKing = new RoleAssignment { Role = StageRole.King, Player = new PlayerAvatar { Id = "king2" } };
 KingUpgradeAura.Tick(config, new[] { king, otherKing, ally2 });
-Check(Level("b", "Speed") == 1 && Level("king2", "Speed") == 0, "Overlapping Kings never stack or buff Kings");
+Check(Level("b", "Speed") == 2 && Level("king2", "Speed") == 0, "Overlapping Kings never stack or buff Kings");
 runtime.Stop();
 Check(Level("b", "Speed") == 0, "Stopping the stage removes existing additions");
 SemiFunc.Multiplayer = true; PhotonNetwork.IsMasterClient = false; Aura();
 Check(Level("b", "Speed") == 0, "Guest cannot grant upgrades");
 PhotonNetwork.IsMasterClient = true; int sendsBefore = PhotonView.Sends; Aura();
-Check(Level("b", "Speed") == 1 && PhotonView.Sends > sendsBefore, "Host applies locally and sends vanilla RPCs to guests");
+Check(Level("b", "Speed") == 2 && PhotonView.Sends > sendsBefore, "Host applies locally and sends vanilla RPCs to guests");
 runtime.Stop();
 Check(Level("b", "Speed") == 0 && Level("a", "Range") == 199, "Stage cleanup removes only aura");
 PhotonView.FailSend = true; Aura(); Aura();
-Check(Level("b", "Speed") == 1, "Send failure after local application cannot stack grants on retry");
+Check(Level("b", "Speed") == 2, "Send failure after local application cannot stack grants on retry");
 PhotonView.FailSend = false; runtime.Stop();
 PhotonAccess.FailOnRead = true; KingUpgradeAura.Stop(); PhotonAccess.FailOnRead = false;
 SemiFunc.Multiplayer = false;

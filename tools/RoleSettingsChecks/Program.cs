@@ -27,7 +27,31 @@ Check(new[] { "BaseHealthBonus", "BaseSpeedBonus", "BaseStaminaBonus", "BaseStre
     "Migration removes obsolete additive settings");
 Check(File.ReadAllText(oldConfigPath + ".pre-v4.5.0-multipliers.bak").Contains("BaseHealthBonus = 17"),
     "Migration backs up the previous configuration");
-Check(config.KingSpeedBonus.Value == 1 && config.KingRangeBonus.Value == 1 && config.KingStrengthBonus.Value == 1 && config.KingUpgradeRadius.Value == 8, "King support defaults");
+Check(config.KingSpeedBonus.Value == 2 && config.KingRangeBonus.Value == 2 && config.KingStrengthBonus.Value == 5 && config.KingUpgradeRadius.Value == 12, "Stronger King support defaults");
+foreach (string variant in new[] { "defaults", "decimal-radius", "custom", "mixed", "disabled-bonuses", "current-schema" })
+{
+    string supportPath = Path.Combine(directory, "king-support-" + variant + ".cfg");
+    bool custom = variant == "custom", mixed = variant == "mixed", zero = variant == "disabled-bonuses", current = variant == "current-schema";
+    int speed = custom ? 4 : zero ? 0 : 1, range = custom || mixed ? 3 : zero ? 0 : 1, strength = custom ? 9 : zero ? 0 : 1;
+    string radius = custom ? "20" : variant == "decimal-radius" ? "8.00" : "8";
+    string before = $"[Migration]\nConfigVersion = {(current ? 40 : 39)}\n[King]\nSpeedBonusLevels = {speed}\nRangeBonusLevels = {range}\nStrengthBonusLevels = {strength}\nUpgradeRadius = {radius}\nEnabled = false\nWeight = 75\n";
+    File.WriteAllText(supportPath, before);
+    var supportFile = new ConfigFile(supportPath, false) { SaveOnConfigSet = false };
+    var support = new StageRolesConfig(supportFile); supportFile.Save();
+    Check(support.KingSpeedBonus.Value == (current || custom || zero ? speed : 2) &&
+        support.KingRangeBonus.Value == (current || custom || mixed || zero ? range : 2) &&
+        support.KingStrengthBonus.Value == (current || custom || zero ? strength : 5) &&
+        support.KingUpgradeRadius.Value == (custom ? 20 : current ? 8 : 12),
+        "King defaults migrate per key while custom/current-schema values survive: " + variant);
+    Check(!support.KingEnabled.Value && support.KingWeight.Value == 75, "King selection preferences survive: " + variant);
+    string supportBackup = supportPath + ".pre-v4.5.1-king-support.bak";
+    Check(current ? !File.Exists(supportBackup) : File.ReadAllText(supportBackup) == before, "Exact King rollback backup: " + variant);
+    string after = File.ReadAllText(supportPath);
+    Check(after.Contains("ConfigVersion = 40"), "King migration uses schema 40: " + variant);
+    RoleConfigMigration.Apply(supportFile);
+    Check(File.ReadAllText(supportPath) == after && (current || File.ReadAllText(supportBackup) == before),
+        "King migration is repeatable without replacing the backup: " + variant);
+}
 string oldKingPath = Path.Combine(directory, "before-king.cfg");
 File.WriteAllText(oldKingPath, "[Migration]\nConfigVersion = 33\n[King]\nHealRadius = 12\nHealAmount = 9\nHealIntervalSeconds = 2\nTotalHealingLimit = 90\nStrengthBonusLevels = 3\n");
 var kingFile = new ConfigFile(oldKingPath, false) { SaveOnConfigSet = false };
@@ -46,7 +70,7 @@ Check(!lifterText.Contains("StrengthMultiplier") && !lifterText.Contains("Maximu
 Check(!lifterText.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
     "Fixed Lifter migration removes the unused level setting and preserves selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
-Check(lifterText.Contains("ConfigVersion = 39"), "Config uses the current v4.5 role schema");
+Check(lifterText.Contains("ConfigVersion = 40"), "Config uses the current v4.5 role schema");
 RoleConfigMigration.Apply(lifterFile);
 Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
     "Repeated migration preserves settings and rollback backup");
@@ -99,7 +123,7 @@ foreach (bool wasEnabled in new[] { false, true })
     Check(!standard.HudResourcesEnabled.Value && standard.HudResourceOffsetX.Value == 40 && standard.HudResourceScale.Value == 125,
         "Standard rules preserve resource HUD preferences");
     string backup = standardPath + ".pre-v4.5.0-standard-roles.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 39"), "Exact rollback backup and schema upgrade");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 40"), "Exact rollback backup and schema upgrade");
     RoleConfigMigration.Apply(standardFile);
     Check(File.ReadAllText(standardPath) == after && File.ReadAllText(backup) == before, "Standard migration is idempotent");
 }
@@ -117,7 +141,7 @@ foreach (int oldHeal in new[] { 0, 10, 100 })
         !after.Contains("ContractsPerStage") && jobless.JoblessDamage.Value == 2 && !jobless.JoblessEnabled.Value,
         "Full healing preserves other contract, damage and selection settings");
     string backup = joblessPath + ".pre-v4.5.0-jobless-full-heal.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 39"), "Exact pre-full-heal config backup");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 40"), "Exact pre-full-heal config backup");
     RoleConfigMigration.Apply(joblessFile);
     Check(File.ReadAllText(joblessPath) == after && File.ReadAllText(backup) == before, "Full-heal migration is idempotent");
 }

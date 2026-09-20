@@ -10,7 +10,7 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleConfigMigration
 {
-    private const int CurrentSchemaVersion = 39;
+    private const int CurrentSchemaVersion = 40;
     private static readonly ConfigDefinition SchemaDefinition =
         new("Migration", "ConfigVersion");
 
@@ -525,6 +525,20 @@ internal static class RoleConfigMigration
             removed += RemoveKey(values, "Courier", "ContractHeal");
             removed += RemoveKey(values, "Courier", "ContractsPerStage");
             MoveKey(values, "King", "HealRadius", "King", "UpgradeRadius", ref migrated, ref removed);
+            if (sourceVersion < 40)
+            {
+                migrated += ReplaceValueIfEqual(values, "King", "SpeedBonusLevels", "1", "2");
+                migrated += ReplaceValueIfEqual(values, "King", "RangeBonusLevels", "1", "2");
+                migrated += ReplaceValueIfEqual(values, "King", "StrengthBonusLevels", "1", "5");
+                ConfigDefinition radius = new("King", "UpgradeRadius");
+                if (values.TryGetValue(radius, out string? serializedRadius) &&
+                    double.TryParse(serializedRadius, NumberStyles.Float, CultureInfo.InvariantCulture, out double oldRadius) &&
+                    oldRadius == 8d)
+                {
+                    values[radius] = "12";
+                    migrated++;
+                }
+            }
             removed += RemoveKey(values, "King", "HealAmount");
             removed += RemoveKey(values, "King", "HealIntervalSeconds");
             removed += RemoveKey(values, "King", "TotalHealingLimit");
@@ -558,7 +572,7 @@ internal static class RoleConfigMigration
             if (sourceVersion < CurrentSchemaVersion && values.Count > 1 &&
                 File.Exists(path))
             {
-                string backupPath = path + (sourceVersion >= 38 ? ".pre-v4.5.0-delivery-grace.bak" : sourceVersion >= 37 ? ".pre-v4.5.0-jobless-full-heal.bak" : sourceVersion >= 36 ? ".pre-v4.5.0-standard-roles.bak" : sourceVersion >= 35 ? ".pre-v4.5.0-native-hud.bak" : sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
+                string backupPath = path + (sourceVersion >= 39 ? ".pre-v4.5.1-king-support.bak" : sourceVersion >= 38 ? ".pre-v4.5.0-delivery-grace.bak" : sourceVersion >= 37 ? ".pre-v4.5.0-jobless-full-heal.bak" : sourceVersion >= 36 ? ".pre-v4.5.0-standard-roles.bak" : sourceVersion >= 35 ? ".pre-v4.5.0-native-hud.bak" : sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
                 if (!File.Exists(backupPath))
                 {
                     File.Copy(path, backupPath, overwrite: false);

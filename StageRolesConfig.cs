@@ -292,10 +292,10 @@ internal sealed class StageRolesConfig
 
         KingEnabled = RoleEnabled(config, "King");
         KingWeight = RoleWeight(config, "King");
-        KingUpgradeRadius = BindFloat(config, "King", "UpgradeRadius", 8f, 1f, 30f, "Radius in metres for temporary upgrade support to living allies; excludes King.");
-        KingSpeedBonus = BindInt(config, "King", "SpeedBonusLevels", 1, 0, 200, "Temporary Speed levels for allies in range, capped at level 200. Removed on leaving the aura.");
-        KingRangeBonus = BindInt(config, "King", "RangeBonusLevels", 1, 0, 200, "Temporary Range levels for allies in range, capped at level 200. Removed on leaving the aura.");
-        KingStrengthBonus = BindInt(config, "King", "StrengthBonusLevels", 1, 0, 200, "Maximum temporary Strength levels for allies in range. Selects a non-weakening level within this bonus and level 200; otherwise grants none.");
+        KingUpgradeRadius = BindFloat(config, "King", "UpgradeRadius", 12f, 1f, 30f, "Radius in metres for temporary upgrade support to living allies; excludes King.");
+        KingSpeedBonus = BindInt(config, "King", "SpeedBonusLevels", 2, 0, 200, "Temporary Speed levels for allies in range, capped at level 200. Removed on leaving the aura.");
+        KingRangeBonus = BindInt(config, "King", "RangeBonusLevels", 2, 0, 200, "Temporary Range levels for allies in range, capped at level 200. Removed on leaving the aura.");
+        KingStrengthBonus = BindInt(config, "King", "StrengthBonusLevels", 5, 0, 200, "Maximum temporary Strength levels for allies in range. Selects a non-weakening level within this bonus and level 200; otherwise grants none.");
 
         TunaEnabled = RoleEnabled(config, "Tuna");
         TunaWeight = RoleWeight(config, "Tuna", 50);
