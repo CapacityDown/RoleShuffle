@@ -3,7 +3,7 @@
 ## Preservation and scope
 
 - Branch: `feature/roleshuffle-4.5.0-overhaul`.
-- Separate worktree: `RoleShuffle-4.5.0`; the original `StageRoles` checkout remains on `main`.
+- Separate worktree: `RoleShuffle`; the original `StageRoles` checkout remains on `main`.
 - Starting commit: `06f54e467a43f50f06b53c342dbf9d4b37b9a27e`.
 - Keep the package name, assembly name and plugin GUID unchanged.
 - Keep the existing Default profile and original package/ZIP intact. The user authorized deployment to the separate `RSO_TEST` profile on 2026-09-16.
