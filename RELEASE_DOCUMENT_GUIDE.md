@@ -4,6 +4,16 @@ This document defines the release-document and package rules for RoleShuffle. It
 
 The ZIP and document workflow is inherited from [RoleShuffle-S002](codex://threads/01a091a3-dc1e-7463-bad9-ef2e5a5fd3d9). Later explicit instructions in the current task take precedence; release versions, settings and behavior must come from the current release sources.
 
+## Player-facing document policy
+
+These rules apply to README, CHANGELOG and player-facing PDFs:
+
+- Explain the current released abilities, controls, settings and player-visible limitations in plain language.
+- Do not include the development history within a version: experiments, reversals, tuning steps, same-version fixes or document rewrites. README and role guides describe current behavior; CHANGELOG describes only the final differences from the previous published release.
+- Do not include implementation details such as code names, networking/RPC mechanics, physical coefficients, internal mass thresholds, caches, migration algorithms, polling counts, build numbers or debugging procedures. Keep the setting names, defaults, ranges, installation steps and game values players need to use the mod.
+- README must contain at most 100,000 decoded characters and use UTF-8 without a BOM. Validate the source before packaging and verify that the archived README matches it.
+- Never add a CHANGELOG entry for an edit to unpublished release documentation.
+
 ## 1. Release sources of truth
 
 The following values must agree in every release.
@@ -121,7 +131,7 @@ Use English first and Japanese second. The two sections must describe the same r
 - Describe Stage Flux as optional compatibility. Include the deterministic revival priority: Stage Flux Second Chance is evaluated before RoleShuffle Phoenix; if Second Chance activates, Phoenix is preserved.
 - Include concise warnings for roles that can damage players or create hazards, including Bomber, Courier, Tuna, and Mage.
 - Explain Medic self-exclusion, Phoenix and Rescuer limits, and any multiplayer-only restrictions that materially affect users.
-- State that role Health upgrades persist outside stages until the next role assignment, change by level difference without resetting to zero, and are not continuously monitored.
+- Explain when Base and role upgrades apply or end using the released gameplay rules; omit the update algorithm and internal checks.
 
 ### Style rules
 
@@ -150,7 +160,7 @@ Rules:
 - Put the newest version first.
 - Start the first change on the line immediately after each version heading, without a blank line. Keep a blank line between version sections.
 - Use the exact release version without a leading `v`, matching the current RoleShuffle convention.
-- Keep earlier published sections unchanged except to correct a factual error.
+- Preserve earlier published release history. Correct factual errors or reword technical explanations into player-facing effects when requested; do not add unpublished development history.
 - Use short, user-visible `Added`, `Changed`, `Fixed`, `Improved`, or `Removed` statements.
 - Consolidate related implementation work into one user-facing bullet.
 - Describe each version's final net changes relative to the previous released version. Do not list intermediate changes, reversals, or fixes to features introduced within the same version; incorporate their final behavior into the feature summary.
@@ -201,7 +211,8 @@ The README normally does not display the package version. Avoid adding a version
 - [ ] Every released role is listed once in each role catalog.
 - [ ] Role counts agree everywhere, and internal testing commands are not documented.
 - [ ] Every visible REPOConfig entry has a default and explanation.
-- [ ] CHANGELOG is English-only, newest-first, and user-facing.
+- [ ] CHANGELOG is English-only, newest-first, and user-facing, with no empty line after a version heading.
+- [ ] Player-facing documents contain no within-version development history or implementation details.
 - [ ] `icon.png` exists and is exactly 256 × 256.
 
 ### Build and behavior
@@ -234,11 +245,11 @@ Use the validation checklist above against the current build and package. Do not
 ## 11. Document handoff and PDF workflow
 
 - Keep README in English followed by Japanese; keep CHANGELOG in English only. Both must describe the packaged release and pass `tools/check_release_markdown.py` before packaging.
-- Compare the newest CHANGELOG section against the previous **published release**, not an intermediate build or unused development version. Remove empty, unpublished version headings from the release history. Preserve published sections. Do not list same-version trial changes, reversals, description edits or repairs as separate release changes; summarize the resulting feature once.
+- Compare the newest CHANGELOG section against the previous **published release**, not an intermediate build or unused development version. Remove empty, unpublished version headings from the release history. Preserve published release facts. Do not list same-version trial changes, reversals, description edits or repairs as separate release changes; summarize the resulting feature once.
 - Include newly added language names when a release adds language support. Keep contact and manifest links on the repository's Issues page.
 - Deliver the upload archive as `RoleShuffle.zip`. A versioned copy may be retained locally with an external checksum and release record. Update ZIP contents whenever release Markdown changes.
 - Build specification PDFs from the target release ZIP and matching implementation. Extract configuration keys, defaults and ranges from that implementation; do not carry historical counts or values into a new version.
-- Specification PDFs cover roles, settings, UI/HUD, host and participant permissions, synchronization, persistence, compatibility and verification procedures. Identify the target release, embed fonts, check links and page flow, and render and visually inspect all pages before delivery.
+- Player-facing PDFs cover roles, settings, UI/HUD, controls, who can change settings, saved preferences, compatibility and gameplay limitations. Omit technical explanations and development or verification history. Identify the target release, embed fonts, check links and page flow, and render and visually inspect all pages before delivery.
 - Keep the detailed role-list PDF and the public PDF in parallel. Current instructions require the public copy to mask secret role names, descriptions and artwork; do not inherit the earlier session's decision to expose secrets in a development specification as the policy for public role lists.
 - If remote document delivery is requested, publish the requested artifact and verify an unauthenticated download against the source SHA-256. Preserve binary PDF bytes when committing. Do not treat creating a local ZIP or PDF as a request to publish a release.
 - Record build/static checks separately from actual game and multiplayer checks. Do not claim a fresh in-game test when only archived files, source or automated checks were inspected.

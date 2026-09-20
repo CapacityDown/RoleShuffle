@@ -4,7 +4,7 @@
 
 ### Overview
 
-RoleShuffle assigns random roles for each stage using vanilla upgrades and effects. Base upgrades can scale with run level and persist between stages. Tank and Runner use the growth rules below; Lifter fixes heavy grip/rotation at six times level 1; light objects use level 1 (display 200). Other roles replace matching base targets.
+RoleShuffle gives each player a random role at the start of a stage. Roles offer movement, healing, combat and other abilities until the stage ends. Base upgrades stay active between stages and can grow as the run progresses.
 
 Only the host needs RoleShuffle for gameplay effects. Sessions of up to 30 players are supported. Players without the mod receive their role, upgrades, effects, and vanilla chat/TTS announcement normally. Participants who also install RoleShuffle can use the full role HUD.
 
@@ -64,22 +64,22 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 - By default, Showcase and Support minimums rise to four each at 24 players. Danger limits rise from one to two at 8 players and three at 16 players; Hardship limits rise from one to two at 12 players. Influencer is a Showcase role and is not treated as a Danger role. A party of four or fewer receives at most one role across both risk groups.
 - A role found among a player's five most recent assignments uses half of its normal selection weight for that player. Other players' histories do not affect that player's selection.
 - A player normally cannot receive the same role in consecutive stages. After receiving `Courier` or `Tuna`, that player is excluded from both Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
-- `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws. Forced test-role assignment is unaffected.
-- `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades. Forced role assignment is unaffected.
+- `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
+- `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
 - `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are not selected in single-player or a one-player session.
 - `Imitator` is selected only after another active player has received a role it can copy.
 - By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` when no melee weapon is available. Weapon-like valuables do not count as weapons for either role's assignment, and staffs do not count for Sniper assignment.
-- During a stage, the participant list is checked regularly. A player is removed after being absent for ten consecutive checks. A returning player regains the previous role, while a newly joined player receives a role, upgrades, announcement, and HUD entry.
+- Players who leave are removed from the role list. Returning players regain their previous role; new players receive a role, its upgrades and an announcement.
 - Roles and their stage effects are cleared only when the stage actually ends. They remain active if a failed-stage transition is canceled by a revival effect.
 
 ### Roles
 
 | Role | Function and default effect | Important limitation or risk | Configurable values |
 |---|---|---|---|
-| Tank | Convert Base maximum HP x1.5 to levels; growth cap 4,100 HP. | Health minimum 21. | Minimum, multiplier, cap |
-| Runner | Convert Base sprint speed/stamina capacity x1.5 to levels; growth caps 205/2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
+| Tank | Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit. | Health minimum 21. | Minimum, multiplier, cap |
+| Runner | Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Heavy grip/rotation: 6× level 1. Light objects: level 1 to reduce shaking. | Display level 200; Base 0–200 eligible. | Fixed ability strength |
+| Lifter | Makes heavy objects easier to lift and turn. Light objects use Strength level-1 handling. | Strength displays level 200. Can be selected at any Base level from 0 to 200. | Fixed ability strength |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -104,7 +104,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Electrician | While directly holding inactive rechargeable items, restores a shared 10 battery percentage per second, up to 100 percentage points per stage. | Active, full, and unchargeable items are ignored. By default, not randomly selected if no rechargeable item is present. | Charge rate, total stage limit |
 | Warden | Extends enemy stuns caused by Warden's weapons, grenades, or held damaging objects by 3 seconds. | The attack must normally be able to stun the enemy. | Additional stun time |
 | Ninja | Footsteps, landings, voice chat, and chat TTS do not draw enemy investigation. Enemies take twice as long to recognize Ninja visually. | Close contact and noises from weapons, valuables, impacts, explosions, or hazards can still reveal Ninja. | Visual recognition multiplier |
-| Executioner | Deals 2x direct attack damage to enemies that were already stunned before the hit. | The hit that initially causes the stun receives no bonus. Physics-only collision damage is unchanged. | Stunned-enemy damage multiplier |
+| Executioner | Deals 2x direct attack damage to enemies that were already stunned before the hit. | The hit that initially causes the stun receives no bonus. Collisions alone do not receive the bonus. | Stunned-enemy damage multiplier |
 | Rider | While driving a vanilla vehicle, deals 3x impact damage to enemies and doubles existing Tumble knockback against players. | Player damage is not increased. By default, not randomly selected if no vanilla vehicle is present. | Enemy damage and player knockback multipliers |
 | Influencer | Gains stronger upgrades as more living teammates enter a 20 m radius and periodically speaks an English TTS line. | Its footsteps, landings, VC, and chat TTS reach enemies from twice as far away. | Radius, check rate, per-upgrade player-count scaling, noise multiplier, TTS timing and radius |
 | Werewolf | Deals 2x damage to another player when Werewolf can be identified as the attacker. | Self-damage, environment damage, and damage with no identifiable player attacker are unchanged. Never selected randomly when only one player is present. | Player damage multiplier |
@@ -121,7 +121,10 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 
 ### Role growth and support settings
 
-Tank/Runner multiply Base HP, sprint speed and stamina capacity, then round up to upgrade levels. Caps are rounded-up maxima over levels 0–200; Base and role minimums take priority. Tank/Runner are excluded if any corresponding Base effective value reaches its cap or there is no upgrade gain. Lifter keeps display level 200 and uses fixed host-physics grip/rotation: level 1 below mass 2 (1.181299), six times level 1 otherwise (7.160727). This reduces light-object shaking. This is an absolute value, independent of Base; levels 0–200 remain eligible. Temporary overrides retain priority. Final torque is nonlinear, not a sixfold guarantee. Forced assignments use the same targets. Base includes manual/draw changes. Copies and Superbot inherit these targets. Courier delivery history survives revival/rejoining. King excludes Health/Stamina to avoid HP changes and stamina refills. Bomber/Stinker remain automatic. These are the standard role rules; existing configuration is backed up before obsolete settings are removed.
+- **Tank / Runner:** strengthen your Base maximum HP, sprint speed and stamina by 1.5 by default, while keeping configured minimums. Their growth limits are 4,100 HP, 205 sprint speed and 2,040 stamina. Existing Base values are preserved. A role is excluded from random assignment if any corresponding Base value reaches its limit or it cannot provide further upgrades.
+- **Lifter:** makes heavy objects easier to handle regardless of Base Strength. Small items use Strength level-1 handling; the displayed Strength level is 200.
+- **Courier:** delivering a valuable restores HP and pauses automatic HP loss according to its size. Each item rewards each player once per stage, including after revival or rejoining.
+- **King:** grants nearby allies temporary Speed, Range and Strength upgrades. The bonus ends outside the area. It does not affect the King or increase HP or stamina.
 
 Host settings except HUD:
 
@@ -139,15 +142,15 @@ Host settings except HUD:
 | `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
 | `HUD.ResourceHudEnabled` | `true` | Boolean | Personal resource HUD at the top left, independent of the role list. |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | Resource HUD scale; fits the screen automatically. |
-| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | Extra right/down offset from below native stamina, in native HUD units. |
+| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | Moves the resource display right or down from below stamina. |
 
-Resources appear in one vertical column below stamina, shrinking when necessary to fit above the role-list area. The role list shows player roles without an extra status line. `/roles` announces only your assigned role name. Resource HUD data requires a 4.5 host; stale data is hidden.
+Ability resources appear below stamina in one column and shrink to fit when necessary. The role list shows each player's role. Install the same RoleShuffle version as the host to use the resource HUD.
 
 ### Configuration
 
 All settings are available through REPOConfig. Host-controlled settings affect the session. Local settings affect only the installed player's HUD.
 
-When an older configuration is detected, RoleShuffle keeps compatible customized values, carries supported renamed settings forward, and updates settings that still use older defaults. Before reorganizing the current settings, the original file is saved as `REPOJP.RoleShuffle.cfg.pre-v4.4.0.bak`.
+You can customize roles, Base Upgrades and notifications below. HUD and language settings are personal preferences.
 
 #### General, notifications, and HUD
 
@@ -206,7 +209,7 @@ Open `ROLES` → `BASE UPGRADES` → `BASE UPGRADE SETTINGS` to toggle the draw 
 
 OFF excludes a type from future individual and `All Upgrades` draws without removing its base levels or acquired bonuses. An active draw keeps its starting selection. `No individual draw` means weight `0`; an ON type can still receive `All Upgrades`. `No draw` on `All Upgrades` means its weight is `0`. Disabling that entry affects only combined results. All-off selections produce no result.
 
-Manual adjustments are off by default. Enable `Base Upgrades.ManualAdjustmentEnabled` to use +/- in the lobby, truck or shop. Each click changes the total by one and saves the adjustment with that game data, across run levels and reloads. Other saves remain independent. The total is Config + enabled Manual + Draw, clamped to 0–200 (Map Player Count: 0–1); the page shows this breakdown below each total. Disabling manual adjustments hides their controls and guidance and excludes saved amounts until re-enabled. At a clipped limit, a click recalculates the adjustment to change the visible total by one. After game over, the first lobby edit prepares a new save. Guests and lobbies without saving cannot edit. Correct malformed level rules in REPOConfig first. Role overrides and normal base-level application timing still apply.
+Manual adjustments are off by default. Enable `Base Upgrades.ManualAdjustmentEnabled` to use +/- in the lobby, truck or shop. Each click changes the displayed total by one, within 0–200 (Map Player Count: 0–1). Adjustments are saved for each game and remain after reloading. The page shows configured levels, manual adjustments and draw bonuses. Turning the setting off removes the manual contribution until re-enabled. Only the host can adjust levels, and the lobby must support saving.
 
 | Key | Default | Range / values | Effect |
 | --- | ---: | --- | --- |
@@ -255,7 +258,7 @@ Manual adjustments are off by default. Enable `Base Upgrades.ManualAdjustmentEna
 | `Base Upgrade Draw Weights.DeathHeadBattery` | `10` | `0`–`1000` | Relative Death Head Battery selection weight. |
 | `Base Upgrade Draw Weights.AllUpgrades` | `1` | `0`–`1000` | Relative `ALL UPGRADES` selection weight for positive results. |
 
-Default Weights reflect vanilla maximum shop counts: Stamina 40; Speed, Range, and Crouch Rest 30; Health and Strength 20; other supported upgrades 10; ALL UPGRADES 1. The configured Weight is used directly without an additional shop multiplier. Weights decrease toward CappedUpgradeWeightMultiplier as upgrades approach the draw maximum. Existing saved weights are retained; reset individual entries to their defaults to adopt these values. Other mods' shop changes and ShopUpgradeItemCount do not alter the weights.
+Default draw weights are Stamina 40; Speed, Range and Crouch Rest 30; Health and Strength 20; other supported upgrades 10; ALL UPGRADES 1. Larger weights make a result more likely. As an upgrade approaches its draw limit, its weight decreases toward `CappedUpgradeWeightMultiplier`. Shop stock settings do not affect these weights.
 
 #### Role selection
 
@@ -329,15 +332,15 @@ All entries in this table are host-controlled.
 | `Bomber.StunGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla stun grenades in the random selection. |
 | `Bomber.ShockwaveGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla shockwave grenades in the random selection. |
 | `Bomber.DuctTapedGrenadesEnabled` | `true` | `true`, `false` | Includes vanilla duct-taped grenades in the random selection. |
-| `Medic.HealAmount` | `5` | `1`–`100` | Health restored to each nearby teammate per tick. |
-| `Medic.HealIntervalSeconds` | `2` | `0.1`–`30` | Seconds between Medic healing ticks. |
+| `Medic.HealAmount` | `5` | `1`–`100` | Health restored to each nearby teammate each time. |
+| `Medic.HealIntervalSeconds` | `2` | `0.1`–`30` | Seconds between each round of Medic healing. |
 | `Medic.HealRadius` | `5` | `1`–`30` | Maximum healing distance in meters. |
 | `Medic.TotalHealingLimit` | `150` | `1`–`10000` | Maximum total health restored by each Medic per stage. Only health actually missing from a target consumes the limit. |
 | `Phoenix.ReviveDelaySeconds` | `2` | `2`–`10` | Seconds before Phoenix revival. |
 | `Phoenix.FailureGraceSeconds` | `5` | `1`–`15` | Maximum seconds to hold a failed-stage transition while revival initializes. |
 | `Phoenix.RevivalHealth` | `25` | `1`–`1000` | Health after Phoenix revival, capped at the player's maximum health. |
-| `Courier.Damage` | `1` | `1`–`100` | Damage per tick outside the truck. |
-| `Courier.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between damage ticks outside the truck. |
+| `Courier.Damage` | `1` | `1`–`100` | Damage each time outside the truck. |
+| `Courier.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between damage outside the truck. |
 | `Rescuer.ReviveDelaySeconds` | `2` | `0`–`10` | Seconds a target must remain dead before rescue. |
 | `Rescuer.Radius` | `3` | `1`–`50` | Maximum rescue distance in meters. |
 | `Rescuer.MaximumRevives` | `2` | `1`–`10` | Maximum revivals for each Rescuer per stage. |
@@ -347,8 +350,8 @@ All entries in this table are host-controlled.
 | `Vampire.Tier3HealAmount` | `50` | `1`–`100` | Health restored by a nearby Danger Level 3 enemy death. |
 | `Vampire.Radius` | `10` | `1`–`50` | Maximum distance in meters from the dying enemy. |
 | `Tuna.StationaryDelaySeconds` | `3` | `0.1`–`30` | Seconds without movement before damage begins. |
-| `Tuna.Damage` | `1` | `1`–`100` | Damage per stationary tick. |
-| `Tuna.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between stationary damage ticks. |
+| `Tuna.Damage` | `1` | `1`–`100` | Damage per hit while stationary. |
+| `Tuna.DamageIntervalSeconds` | `0.1` | `0.05`–`10` | Seconds between stationary damage. |
 | `Musician.HealAmount` | `5` | `1`–`100` | Health restored to the Musician and each living player in range per instrument note. |
 | `Musician.HealRadius` | `10` | `1`–`50` | Maximum healing distance in meters from the Musician. |
 | `Mage.CastIntervalSeconds` | `3` | `0.1`–`30` | Minimum seconds between spell activations. |
@@ -359,8 +362,8 @@ All entries in this table are host-controlled.
 | `Mage.LaserExpression` | `Scared` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `laser`. |
 | `Mage.AutoRecoveryEnabled` | `true` | `true`, `false` | Enables automatic Mage health recovery after avoiding damage. |
 | `Mage.AutoRecoveryDelaySeconds` | `10` | `0`–`300` | Seconds without taking damage before automatic recovery starts. |
-| `Mage.AutoRecoveryIntervalSeconds` | `2` | `0.1`–`60` | Seconds between automatic recovery ticks. |
-| `Mage.AutoRecoveryAmount` | `1` | `0`–`100` | Health restored by each automatic recovery tick. |
+| `Mage.AutoRecoveryIntervalSeconds` | `2` | `0.1`–`60` | Seconds between each automatic recovery. |
+| `Mage.AutoRecoveryAmount` | `1` | `0`–`100` | HP restored each time automatic recovery occurs. |
 | `Mage.AutoRecoveryTotalHealingLimit` | `120` | `1`–`10000` | Maximum total automatic recovery per player per stage. Other healing is not counted. Death, revival, and role changes do not reset the amount already used. |
 | `Mage.StarHealthCost` | `10` | `0`–`100` | Health consumed after a successful `star` cast. |
 | `Mage.GravityHealthCost` | `10` | `0`–`100` | Health consumed after a successful `gravity` cast. |
@@ -422,7 +425,7 @@ All entries in this table are host-controlled.
 | `Brawler.MeleeDamageMultiplier` | `1.25` | `0`–`10` | Damage multiplier for identifiable melee weapon attacks against enemies and players. |
 | `Brawler.RangedDamageMultiplier` | `0.75` | `0`–`10` | Damage multiplier for identifiable gun, staff-projectile, and laser attacks against enemies and players. |
 
-The default base is Health 1 from run level 1 and 0 for every other managed upgrade. A static role-specific upgrade is an absolute target, not a bonus added to the base. When that role ends, RoleShuffle restores the configured base target; upgrades not overridden by the role stay at their base targets. Influencer and Berserker instead treat each dynamic target as a minimum and never lower the level captured when the role was assigned. Static-role levels change only with assignment or session state, while Influencer and Berserker re-evaluate their configured conditions at the Influencer check interval. `Tracker` always targets Map Player Count 1, while its Health target is configurable. `Rammer` always overrides Launch, Tumble Climb, and Tumble Wings to 0 during the stage. Throw is not managed.
+The default Base level is Health 1 and 0 for other upgrades. Role upgrade settings specify the level used during that role; they are not levels added to Base. Influencer and Berserker preserve stronger upgrades when their conditions change. `Tracker` uses Map Player Count 1 with configurable Health. `Rammer` sets Launch, Tumble Climb and Tumble Wings to 0 during the stage. Throw is unaffected.
 
 Influencer and Berserker scaling accepts comma- or semicolon-separated `condition:level` pairs. Influencer applies the last target whose player-count condition has been reached. Berserker applies the target belonging to the lowest configured HP threshold currently reached. Default expressions omit pairs whose target level would be `0`; add a `condition:0` pair manually when an explicit zero override is needed. Levels are limited to `0`–`100`, except Map Player Count which is limited to `0`–`1`. Entries in the wrong format are ignored.
 
@@ -431,16 +434,16 @@ Influencer and Berserker scaling accepts comma- or semicolon-separated `conditio
 Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` or `DRAW HISTORY`.
 
 - **HUD editor:** `TOOLS` → `HUD EDITOR` opens a sample using the actual HUD layout. Drag it to move it; adjust the anchor, alignment, text size, icon size, overall scale, display mode, and HUD visibility. `SAVE` keeps the local settings. `CANCEL` or Escape discards them; `RESET` restores defaults in the preview. The editor uses mouse input and remains available in the lobby.
-- **Bug report:** `TOOLS` → `REPORT A PROBLEM` provides `COPY REPORT` and `OPEN SAVED REPORT`. Either action generates a fresh Markdown file in `BepInEx/RoleShuffleReports`, then copies its contents or opens that file. The report includes versions, installed mods, local RoleShuffle settings, recent draws, and up to 500 recent RoleShuffle log entries, newest first. Each log entry is limited to 2,048 characters. Known player identifiers, paths, and common private data are masked. Report contents are not displayed in the game. Review the file and add reproduction steps before submitting it yourself. `OPEN GITHUB ISSUES` asks for confirmation before opening the external site in your browser; Cancel or Escape returns to the report menu. Nothing is uploaded automatically.
+- **Bug report:** open `TOOLS` → `REPORT A PROBLEM`, then copy or open the report. Check its contents, add the steps that caused the problem, and submit it through `OPEN GITHUB ISSUES`. The report contains your mod versions, settings and recent activity. Reports are saved in `BepInEx/RoleShuffleReports` and are not sent automatically.
 - **Language:** change `UI.GuideLanguage` in MOD settings or use the existing language toggle in Roles. Both controls share the same saved choice. The default is English; an existing selection is preserved. Choices use native names: English, 日本語, 한국어, 简体中文, 繁體中文, Français, Deutsch, Español, Português (Brasil), Italiano, Русский, Polski, Türkçe, Українська. The menu, role explanations, HUD editor, draw history and sync status follow this selection. Role names, upgrade identifiers, chat commands and diagnostic report contents remain in English.
-- **Sync status:** `TOOLS` shows whether the role list, guide, Base Upgrades, and history agree with the host's latest published data. It distinguishes waiting, synchronized, delayed updates, version differences, and unsupported hosts. `REFRESH DISPLAY DATA` requests a new display snapshot without changing roles or upgrades. This does not check every gameplay RPC or require vanilla guests to install the mod.
-- **Draw history:** `DRAW HISTORY` shows the latest 50 completed truck draws, newest first, including level, selected upgrade, rolled change, and actual before/after Base Upgrade targets. Zero changes and capped outcomes are retained. History is saved with the host's run and shared with installed participants. Cancelled draws and results from before this update are not recorded.
+- **Sync status:** `TOOLS` shows whether the role list, guide, Base Upgrades and history are up to date. If the display is delayed, use `REFRESH DISPLAY DATA`. This refreshes the information shown without changing your role or upgrades.
+- **Draw history:** `DRAW HISTORY` shows the latest 50 completed truck draws, newest first, including level, selected upgrade, rolled change, and actual before/after Base Upgrade targets. Zero changes and capped outcomes are retained. History is saved with the host's run and shared with installed participants. Cancelled draws are not recorded.
 
-`HUD.FontSize` defaults to `28` (range `16`–`48`). `UI.GuideLanguage` defaults to `English`. Both are local settings; the existing `NameOnly` HUD default is unchanged.
+`HUD.FontSize` defaults to `28` (range `16`–`48`). `UI.GuideLanguage` defaults to `English`. Both are personal settings. The default HUD display mode is `NameOnly`.
 
 ### Notifications and HUD
 
-- **Resources:** cyan symbols and unit-free counts in one vertical column below stamina, using native typography and shrinking to fit when needed. Healing, revives, repair, charge, wagers and contracts support copies/Superbot. Zero stays red; fractions round up. Visible to installed living players. Configure with `HUD.ResourceHud*`.
+- **Resources:** the remaining healing, revives, repair, charge and wagers appear below stamina as cyan icons and numbers in one column. The display fits the available space, and empty resources turn red. It appears while you are alive and have the mod installed. Adjust it with `HUD.ResourceHud*`.
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
@@ -448,10 +451,10 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 - RoleShuffle waits until Stage Flux TTS has finished and remains quiet for 1.5 seconds before announcing roles.
 - Role assignments, role-effect notices, and automatic role-query responses are spoken one at a time and do not overlap Stage Flux announcements.
 - Influencer TTS also waits for other announcements, but intentionally remains audible to enemies as part of the role ability.
-- The local `ROLES` list defaults to names at the bottom left, with your role pinned and pages rotating every 5 seconds. It fits six multilingual/icon rows when `HUD.PlayersPerPage` is 6 or higher; smaller limits are respected. Screen fitting and Unicode-safe name shortening preserve role names. See HUD settings above.
+- The local `ROLES` list defaults to names at the bottom left, with your role pinned and pages rotating every 5 seconds. It fits six multilingual/icon rows when `HUD.PlayersPerPage` is 6 or higher; smaller limits are respected. Long player names are shortened to keep role names visible. See HUD settings above.
 - The Base Upgrade draw animation is shown to the host and participants who have RoleShuffle installed.
 - Open `ROLES` at the top-right of Escape (`CURRENT ROLES`) or the lobby (`ROLE GUIDE`; current roles unavailable). Your role appears first and expanded; click players to toggle descriptions. The left column also opens `BASE UPGRADES`: host targets, configured targets and accumulated truck-draw bonuses.
-- `ROLE GUIDE` lists enabled roles in the saved UI language, using Checkpoint Revenge for Japanese and Noto subsets for other added languages. Guests see host settings and values; unconfirmed values are omitted and unknown newer descriptions stay English. Solo uses local settings.
+- `ROLE GUIDE` explains enabled roles in your selected language. In multiplayer, descriptions use the host's settings. If a description is unavailable in your language, it appears in English. Single-player uses your own settings.
 
 ### Compatibility
 
@@ -459,7 +462,6 @@ Stage Flux is optional and is not required to install RoleShuffle.
 
 - Second Chance takes priority over Phoenix, Rescuer, and Bodyguard revival effects. Revival effects that are not needed remain available.
 - If Second Chance or Phoenix prevents a failed stage transition, current roles remain active.
-- RoleShuffle effects do not interfere with player movement or grounded checks.
 - During Value Surge or Value Crash, Mechanic repairs only the value that was actually lost.
 - RoleShuffle announcements and Influencer TTS wait for Stage Flux announcements instead of overlapping them.
 - Enemy Purge defeats do not activate Hunter rewards.
@@ -474,8 +476,8 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 ### Gameplay notes
 
-- `Bomber` creates live vanilla hazards. Explosions and physics effects may injure players or damage valuables.
-- `Mage` fires live vanilla attacks selected by case-insensitive chat keywords after trimming surrounding whitespace. Projectiles and beams may injure players or damage valuables.
+- `Bomber` leaves armed grenades that can injure players and damage valuables.
+- `Mage` casts the spell named in chat. Spells can injure players and damage valuables; uppercase or lowercase commands both work.
 - `Courier` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
 - `Medic` never heals itself.
 - `Phoenix` revives itself once per stage. `Rescuer` revives other nearby players up to the configured limit. Each role uses its own configurable revival HP, with a default of 25.
@@ -486,7 +488,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 ### 概要
 
-RoleShuffleはステージごとに役職を抽選し、バニラのアップグレードや効果を付与します。基礎アップグレードはランレベルに応じて設定でき、ステージ外でも維持されます。Tank・Runnerは後述の成長ルールを使い、Lifterは重量物をLv1実質値の6倍、小物をLv1相当に固定します（表示Lv200）。その他の役職は対応する基礎値を置き換えます。
+RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、移動・回復・戦闘などの能力を付与します。役職はステージ終了まで有効です。基礎アップグレードはステージ外でも維持され、ランの進行に応じて強化できます。
 
 ゲームプレイ効果はホストだけの導入で利用でき、最大30人のセッションをサポートします。MODを導入していない参加者にも、役職、アップグレード、効果、バニラのチャット／TTS通知が適用されます。RoleShuffleを導入している参加者は、すべての役職を確認できるHUDも利用できます。
 
@@ -546,22 +548,22 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 - デフォルトでは、24人以上でShowcaseとSupportをそれぞれ最低4人保証します。Danger上限は8人で2人、16人で3人へ増え、Hardship上限は12人で2人へ増えます。InfluencerはShowcase役であり、Danger役として扱いません。4人以下では両リスクグループを合わせて最大1人です。
 - 各プレイヤーが直近5回に割り当てられた役職は、そのプレイヤーの次回抽選時に通常の半分のWeightで扱います。他のプレイヤーの履歴は影響しません。
 - 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Courier`または`Tuna`の後、2ステージはそのプレイヤーを両方から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
-- `Jumper`、`Launcher`、`Climber`、`Flyer`、`Tracker`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。テストコマンドによる強制指定には影響しません。
-- `Influencer`は、現在の参加人数で到達可能なアップグレード目標値が現在のBase Upgradeを1項目も上回らない場合、ランダム抽選から除外されます。強制割り当てには影響しません。
+- `Jumper`、`Launcher`、`Climber`、`Flyer`、`Tracker`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。
+- `Influencer`は、現在の参加人数で到達可能なアップグレード目標値が現在のBase Upgradeを1項目も上回らない場合、ランダム抽選から除外されます。
 - `Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`はシングルプレイまたは1人のセッションでは抽選されません。
 - `Imitator`は、コピー可能な役職を持つ他の参加者が確保された場合だけ抽選されます。
 - デフォルトでは、能力を使える対象がない状況依存役を抽選から除外します。必要なオブジェクトがない`Musician`、`Engineer`、`Electrician`、`Rider`と、近接武器も銃もない場合の`Sniper`、近接武器がない場合の`Brawler`が対象です。両ロールの抽選判定では、武器として使える貴重品も武器に含めません。Sniperの抽選判定では杖も対象外です。
-- ステージ中は参加者一覧を定期的に確認し、10回連続で不在だったプレイヤーを一覧から外します。戻ってきたプレイヤーには以前の役職を戻し、新しく参加したプレイヤーには役職、アップグレード、通知、HUD表示を適用します。
+- 退出したプレイヤーは役職一覧から外れます。再参加すると以前の役職に戻り、新しい参加者には役職・強化・通知が適用されます。
 - 役職とステージ中の効果は、ステージが実際に終了した場合だけ解除します。復活効果によって失敗時のステージ移行が中断された場合は維持します。
 
 ### 役職一覧
 
 | 役職 | 機能とデフォルト効果 | 主な制限・危険性 | 調整可能な値 |
 |---|---|---|---|
-| Tank | Base最大HP×1.5をレベルへ換算。成長上限4,100HP。 | 最低Health 21。 | 最低値・倍率・上限 |
-| Runner | Base走行速度・スタミナ容量×1.5をレベルへ換算。成長上限205・2,040。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
+| Tank | 基礎の最大HPを1.5倍に強化します。倍率強化の上限は4,100HPです。 | 最低Health 21。 | 最低値・倍率・上限 |
+| Runner | 基礎の走行速度・スタミナを1.5倍に強化します。倍率強化の上限は205・2,040です。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | 重量物はLv1の6倍、小物は振動を抑えるためLv1相当。 | 表示Lv200。Base 0〜200は抽選対象。 | 能力の強さは固定 |
+| Lifter | 重い物を持ち上げたり回したりしやすくなります。小物はStrength Lv1相当の力で扱います。 | Strengthの表示はLv200。BaseがLv0～200のどの場合も抽選対象です。 | 固定能力 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -586,7 +588,7 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 | Electrician | 使用していない充電可能なアイテムを直接掴んでいる間、合計10%のバッテリーを毎秒回復し、1ステージにつき合計100ポイントまで回復します。 | 使用中、満充電、充電不可能なアイテムは対象外です。デフォルトでは充電可能アイテムが存在しない場合に抽選されません。 | 充電速度、ステージ合計上限 |
 | Warden | Wardenの武器、グレネード、保持している攻撃用オブジェクトによる敵のスタン時間を3秒延長します。 | 元の攻撃がその敵をスタンさせられる場合だけ適用します。 | 追加スタン時間 |
 | Ninja | 足音、着地音、VC、チャットTTSで敵の調査行動を発生させず、視覚で認識されるまでの時間が2倍になります。 | 接近や、武器、Valuable、衝突、爆発、危険物などの物音では発見される可能性があります。 | 視認時間倍率 |
-| Executioner | 攻撃前からスタンしている敵への直接攻撃ダメージが2倍になります。 | 最初にスタンさせる攻撃には倍率が適用されません。物理衝突だけで発生するダメージは変更しません。 | スタン中ダメージ倍率 |
+| Executioner | 攻撃前からスタンしている敵への直接攻撃ダメージが2倍になります。 | 最初にスタンさせる攻撃には倍率が適用されません。物がぶつかっただけのダメージには倍率が適用されません。 | スタン中ダメージ倍率 |
 | Rider | バニラ車両の運転中、敵への衝突ダメージを3倍にし、プレイヤーへ元から発生するTumbleノックバックを2倍にします。 | プレイヤーへのダメージは増えません。デフォルトではバニラ車両が存在しない場合に抽選されません。 | 敵ダメージ倍率、プレイヤーノックバック倍率 |
 | Influencer | 半径20 m以内の生存中の仲間が多いほど強化され、定期的に英語TTSを発言します。 | 足音、着地音、VC、チャットTTSが敵へ届く範囲は2倍です。 | 範囲、確認間隔、アップグレード別の人数連動設定、物音倍率、TTS間隔と範囲 |
 | Werewolf | Werewolfが攻撃者と特定できる、他のプレイヤーへのダメージを2倍にします。 | 自傷、環境ダメージ、攻撃者を特定できないダメージは変化しません。1人のセッションでは抽選されません。 | プレイヤーダメージ倍率 |
@@ -603,7 +605,10 @@ RoleShuffleはステージごとに役職を抽選し、バニラのアップグ
 
 ### 役職の成長・支援設定
 
-Tank・RunnerはBaseのHP・走行速度・スタミナ容量に倍率を掛け、レベルへ切り上げます。上限はレベル0〜200の実効最大値を切り上げた値で、Base・役職最低値を優先します。対象のBase実効値が1つでも上限以上、または強化なしなら抽選対象外。Lifterは表示Lv200を維持し、ホスト側で掴む力・回転係数を固定します。質量2未満は振動を抑えるためLv1相当の1.181299、それ以上はLv1の6倍の7.160727。Baseに依存しない固定値で、Base 0〜200は抽選対象です。一時的な上書き効果は優先。回転係数は最終回転力の6倍を意味しません。強制割り当ても同じ目標値を使用します。Baseには手動・抽選分を含み、コピー・Superbotにも適用。Courierの搬入履歴は蘇生・再参加でも保持。Kingは一時アップグレードを付与し、HP増減・スタミナ全回復を避けるためHealth・Staminaは対象外。Bomber・Stinkerは自動発動を維持。これらは標準仕様です。既存設定はバックアップしてから不要な項目を削除します。
+- **Tank / Runner：** 基礎の最大HP・走行速度・スタミナを、設定した最低値を保ちながら初期設定で1.5倍に強化します。倍率強化の上限は4,100HP・走行速度205・スタミナ2,040。高い基礎値は維持します。対応する基礎値のいずれかが上限に達している場合や、追加の強化がない場合は抽選対象外です。
+- **Lifter：** Base Strengthにかかわらず、重い物を扱いやすくなります。小物はStrength Lv1相当の力で扱い、Strengthの表示はLv200です。
+- **Courier：** 貴重品を配達すると、大きさに応じてHPが回復し、自動HP減少が一時停止します。同じ品の報酬は各自1ステージ1回で、蘇生や再参加でも再獲得できません。
+- **King：** 範囲内の味方にSpeed・Range・Strengthを一時付与し、範囲外で解除します。King自身や、HP・スタミナは対象外です。
 
 HUD以外はホスト設定です。
 
@@ -618,19 +623,18 @@ HUD以外はホスト設定です。
 | `Courier.<Size>HealAmount` | `10/25/50/100/100/100/100` | 0–10000HP | 同じサイズ順。固定HP回復、最大HPまで。 |
 | `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `1` / `1` | 0–200 | Speed・Range追加レベル。 |
 | `King.StrengthBonusLevels` | `1` | 0–200 | 悪化しないStrengthの追加上限。 |
-| `King.UpgradeRadius` | `8` | 1–30 m | Upgrade aura radius. |
-
+| `King.UpgradeRadius` | `8` | 1–30 m | 味方に強化を付与する範囲。 |
 | `HUD.ResourceHudEnabled` | `true` | 真偽値 | 左上に自分の能力残量を表示。役職一覧とは独立。 |
 | `HUD.ResourceHudScalePercent` | `100` | `50`–`200` | 残量HUDの大きさ。画面内に収まるよう自動調整。 |
-| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | スタミナ直下から右／下への追加距離。バニラHUD単位。 |
+| `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | スタミナ直下を基準に、残量表示を右／下へ移動します。 |
 
-残量HUDはスタミナ直下に縦1列で並び、項目が多い場合は役職一覧の上に収まるよう縮小します。役職一覧には補助の状態行を挟まず、プレイヤーの役職を表示します。`/roles`は自分に割り当てられた役職名だけを通知します。残量HUDには4.5のホストが必要で、古いデータは非表示にします。
+能力の残量はスタミナ直下に縦1列で表示し、項目が多い場合は収まるよう縮小します。役職一覧には各プレイヤーの役職を表示します。残量HUDを使う場合は、ホストと同じバージョンのRoleShuffleを導入してください。
 
 ### 設定
 
 すべての設定はREPOConfigから変更できます。ホスト設定はセッション全体へ、ローカル設定はMOD導入者本人のHUDだけに反映されます。
 
-古い設定ファイルを使用している場合も、対応しているカスタム設定を引き継ぎ、名称が変わった項目や古いデフォルト値を更新します。今回の設定整理前のファイルは同じ場所へ`REPOJP.RoleShuffle.cfg.pre-v4.4.0.bak`として保存します。
+役職・基礎アップグレード・通知は以下の項目で調整できます。HUDと言語は各自の好みに設定できます。
 
 #### 一般、通知、HUD
 
@@ -689,7 +693,7 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 
 OFFの種類は次回以降の個別・一括抽選から除外し、基礎値や獲得済みボーナスは保持します。実行中の抽選は開始時の設定を使用します。`個別抽選なし`は重み`0`で、ONなら`All Upgrades`の対象になります。`All Upgrades`の`抽選なし`は一括抽選の重み`0`を示し、OFFは一括抽選だけを無効にします。全項目OFFなら抽選結果は発生しません。
 
-手動調整は初期OFFです。`Base Upgrades.ManualAdjustmentEnabled`をONにすると、ロビー・トラック・ショップで±を操作できます。クリックごとに合計を1変更し、調整分をセーブ別に保存してランレベル変更や再開後も保持します。合計は「設定＋有効な手動＋抽選」で0～200（Map Player Countは0～1）に制限し、各合計の下に内訳を表示します。OFFでは手動の操作・案内を隠し、再びONにするまで保存済み調整分を除外します。上限・下限では表示値が1変わるよう調整分を再計算します。ゲームオーバー後の最初のロビー操作では新しいセーブを準備します。参加者やセーブ非対応のロビーでは操作できません。不正な設定式はREPOConfigで修正してください。役職の上書きと基礎値の反映タイミングは通常どおりです。
+手動調整は初期OFFです。`Base Upgrades.ManualAdjustmentEnabled`をONにすると、ロビー・トラック・ショップで±を操作できます。1回押すごとに表示値が1変わり、範囲は0～200（Map Player Countは0～1）です。調整分はセーブごとに保存し、再開後も維持します。画面には設定値・手動調整・抽選分の内訳を表示します。OFFにすると手動調整分を除外し、再びONにすると戻ります。操作できるのはホストだけで、保存に対応したロビーが必要です。
 
 | キー | デフォルト | 範囲・値 | 内容 |
 | --- | ---: | --- | --- |
@@ -738,7 +742,7 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 | `Base Upgrade Draw Weights.DeathHeadBattery` | `10` | `0`～`1000` | Death Head Batteryの相対Weightです。 |
 | `Base Upgrade Draw Weights.AllUpgrades` | `1` | `0`～`1000` | 正の結果で使う`ALL UPGRADES`の相対Weightです。 |
 
-Weightのデフォルト値はバニラのショップ最大出現数を反映し、Staminaは40、Speed・Range・Crouch Restは30、Health・Strengthは20、その他の対象アップグレードは10、ALL UPGRADESは1です。設定Weightをそのまま使い、ショップ出現数による追加の乗算は行いません。抽選上限に近づくほどWeightが低下し、上限ではCappedUpgradeWeightMultiplierの倍率になります。保存済みのWeightは保持されるため、新しいデフォルト値を使う場合は各設定を初期値へ戻してください。他MODによるショップの変更やShopUpgradeItemCountには影響されません。
+抽選Weightの初期値はStaminaが40、Speed・Range・Crouch Restが30、Health・Strengthが20、その他の対象アップグレードが10、ALL UPGRADESが1です。大きい値ほど選ばれやすくなります。上限に近づくほどWeightが低下し、上限では`CappedUpgradeWeightMultiplier`の倍率になります。ショップの商品数の設定は影響しません。
 
 #### 役職の抽選設定
 
@@ -905,7 +909,7 @@ Weightのデフォルト値はバニラのショップ最大出現数を反映�
 | `Brawler.MeleeDamageMultiplier` | `1.25` | `0`～`10` | 攻撃者を特定できる近接武器が敵とプレイヤーへ与えるダメージ倍率です。 |
 | `Brawler.RangedDamageMultiplier` | `0.75` | `0`～`10` | 攻撃者を特定できる銃、杖の弾、レーザーが敵とプレイヤーへ与えるダメージ倍率です。 |
 
-デフォルトの基礎値はランレベル1からHealthが`1`、その他の管理対象アップグレードが`0`です。固定役職のアップグレード値は基礎値への加算ではなく、ステージ中の絶対的な目標値です。役職終了時は設定された基礎値へ戻し、役職が置き換えないアップグレードは基礎値を維持します。InfluencerとBerserkerは動的目標値を最低値として扱い、役職付与時に記録したレベル未満へ下げません。固定効果の役職は割り当てやセッション状態が変化した場合だけ変更し、InfluencerとBerserkerはInfluencerの確認間隔ごとに設定条件を再評価します。`Tracker`はMap Player Countを常に`1`へ設定し、Health目標値のみ変更できます。`Rammer`はステージ中、Launch、Tumble Climb、Tumble Wingsを常に0へ上書きします。Throwは管理対象外です。
+基礎アップグレードの初期値はHealthが1、ほかが0です。役職のアップグレード設定は、その役職で使用するレベルを表し、基礎値への加算ではありません。InfluencerとBerserkerは条件が変わっても元の高い強化を維持します。`Tracker`はMap Player Countが1で、Healthを設定できます。`Rammer`はステージ中のLaunch・Tumble Climb・Tumble Wingsを0にします。Throwには影響しません。
 
 InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたはセミコロンで区切ります。Influencerは到達した人数条件のうち最後の目標値、Berserkerは現在到達している最も低いHP境界の目標値を適用します。目標値が`0`になる組はデフォルトの記述から省略し、明示的に0へ上書きしたい場合だけ`条件:0`を手動で追加します。レベルはMap Player Countだけ`0`～`1`、ほかは`0`～`100`です。形式が正しくない項目は無視されます。
 
@@ -914,16 +918,16 @@ InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたは�
 Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW HISTORY`を選択します。
 
 - **HUD編集：** `TOOLS` → `HUD編集モード`で、実際のHUDと同じレイアウトのサンプルを表示します。ドラッグで移動し、基準位置・整列・文字サイズ・アイコンサイズ・全体倍率・表示形式・HUDの表示／非表示を調整できます。「保存」でローカル設定に反映し、「取消」またはEscで破棄します。「初期値」はプレビューを初期設定に戻します。マウスで操作でき、ロビーでも使用できます。
-- **不具合レポート：** `TOOLS` → `不具合レポート`の「レポートをコピー」または「保存したレポートを開く」を押すたびに、最新のMarkdownファイルを`BepInEx/RoleShuffleReports`へ保存し、その内容をコピーするかファイルを開きます。バージョン・導入MOD・ローカルのRoleShuffle設定・最近の抽選と、最大500件のRoleShuffleログを新しい順に含みます。ログ1件は2,048文字までで、既知のプレイヤー情報・パスなどをマスクします。レポート本文はゲーム内に表示しません。ファイルの内容を確認して再現手順を追記し、手動で投稿してください。「GitHub Issuesを開く」では、外部サイトをブラウザーで開く前に確認ダイアログを表示します。「取消」またはEscでレポート画面へ戻ります。自動送信は行いません。
+- **不具合レポート：** `TOOLS` → `不具合レポート`からレポートをコピーするか、保存したファイルを開きます。内容を確認して発生手順を追記し、「GitHub Issuesを開く」から投稿してください。レポートにはMODのバージョン・設定・最近の動作状況が含まれます。保存先は`BepInEx/RoleShuffleReports`で、自動送信は行いません。
 - **言語：** MOD設定の`UI.GuideLanguage`と、Roles内の既存の言語トグルの両方から変更できます。同じ選択値を保存し、メニューの再表示やゲーム再起動時にも復元します。初期値は英語で、既存の選択は引き継ぎます。選択肢は各言語の名称で表示します：English、日本語、한국어、简体中文、繁體中文、Français、Deutsch、Español、Português (Brasil)、Italiano、Русский、Polski、Türkçe、Українська。メニュー、役職説明、HUD編集、抽選履歴、同期状態に適用します。役職名、アップグレード識別名、チャットコマンド、不具合レポートの診断本文は英語表記です。
-- **同期状態：** `TOOLS`で、役職一覧・ガイド・Base Upgrade・履歴がホストの最新配信データと一致しているかを確認できます。受信待ち・同期済み・更新遅延・バージョン差・ホスト未対応を表示します。「表示データを再取得」で再配信を要求できます。役職や強化値を変更する操作ではなく、すべてのゲーム内通信を検査するものでもありません。MOD未導入の参加者も従来どおり遊べます。
-- **抽選履歴：** `DRAW HISTORY`で、完了したトラック抽選の直近50回を新しい順に表示します。レベル・抽選対象・抽選値・実際のBase Upgrade目標値の前後を確認でき、変化なしや上限・下限に達した結果も記録します。ホストのセーブに保存し、MOD導入済み参加者にも共有します。中断した抽選と、この更新より前の結果は記録しません。
+- **同期状態：** `TOOLS`で、役職一覧・ガイド・Base Upgrade・履歴が最新の状態か確認できます。表示が遅れている場合は「表示データを再取得」を使ってください。表示だけを更新し、役職や強化値は変わりません。
+- **抽選履歴：** `DRAW HISTORY`で、完了したトラック抽選の直近50回を新しい順に表示します。レベル・抽選対象・抽選値・実際のBase Upgrade目標値の前後を確認でき、変化なしや上限・下限に達した結果も記録します。ホストのセーブに保存し、MOD導入済み参加者にも共有します。中断した抽選は記録しません。
 
-`HUD.FontSize`の初期値は`28`（範囲`16`～`48`）、`UI.GuideLanguage`の初期値は`English`です。どちらもローカル設定で、HUDの初期表示形式は引き続き`NameOnly`です。
+`HUD.FontSize`の初期値は`28`（範囲`16`～`48`）、`UI.GuideLanguage`の初期値は`English`です。どちらも個人設定です。HUDの初期表示形式は`NameOnly`です。
 
 ### 通知とHUD
 
-- **残量HUD：** バニラと同じ書体を使い、水色の記号と単位なしの数字をスタミナ直下に縦1列で表示。通常はバニラと同じサイズで、項目が多い場合は収まるよう縮小します。回復・蘇生・修理・充電・賭け・契約が対象。コピー・Superbotにも対応。0は赤、小数は切り上げ。生存中に表示し、`HUD.ResourceHud*`で調整できます。
+- **残量HUD：** 回復・蘇生・修理・充電・賭けの残量を、スタミナの下に水色のアイコンと数字で縦1列に表示します。画面に収まるよう大きさを調整し、使い切った項目は赤く表示します。MODを導入している本人の生存中に表示され、`HUD.ResourceHud*`で調整できます。
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示できます。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
 - ステージ開始時、各プレイヤーは割り当てられた英語の役職名をバニラのチャット／TTSで発言します。
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持します。
@@ -931,10 +935,10 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - Stage FluxのTTS終了後、1.5秒間の無音を確認してから役職を通知します。
 - 役職割り当て、役職効果通知、役職照会への自動応答は1件ずつ順番に発話し、Stage Fluxの通知とも重なりません。
 - InfluencerのTTSもほかの通知が終わるまで待機しますが、役職能力として意図的に敵へ聞こえる状態を維持します。
-- `ROLES`一覧は初期設定で左下に名前のみを表示し、自分を固定して5秒ごとにページを切り替えます。`HUD.PlayersPerPage`が6以上なら多言語・アイコン付きでも6人分を確保し、6未満は設定を優先します。画面内への自動調整と文字を壊さない名前省略に対応。表示・サイズ設定は上表を参照してください。
+- `ROLES`一覧は初期設定で左下に名前のみを表示し、自分を固定して5秒ごとにページを切り替えます。`HUD.PlayersPerPage`が6以上なら多言語・アイコン付きでも6人分を確保し、6未満は設定を優先します。長いプレイヤー名は、役職名が見えるよう短く表示します。表示・サイズ設定は上表を参照してください。
 - Base Upgradeの抽選演出は、ホストとRoleShuffleを導入している参加者に表示されます。
 - Escメニュー・ロビーの右上にある`ROLES`ボタンからRolesページを開けます。Escメニューからは`CURRENT ROLES`、ロビーからは`ROLE GUIDE`を最初に表示し、ロビーでは`CURRENT ROLES`を無効にします。左カラムから利用可能な表示や`BASE UPGRADES`へ切り替えられます。`CURRENT ROLES`では自分を先頭に表示し、画面を開いた時点で自分の役職説明を展開します。プレイヤーをクリックすると、その役職の説明を表示または非表示にできます。`BASE UPGRADES`では、各アップグレードの現在の共有目標値、設定上の目標値、トラック抽選で累積した追加値を確認できます。MOD導入済み参加者にはホストの現在値を表示します。
-- `ROLE GUIDE`では有効な役職の説明を選択言語で表示し、無効化された役職は非表示になります。言語トグルですぐに切り替えられ、MOD設定と同じ選択を保存します。日本語には「チェックポイント★リベンジ」、その他の追加言語には同梱のNotoフォントを使用します。マルチプレイではホストの設定値を保った説明と役職の表示・非表示を反映します。ホストの設定がまだ確認できない間は未確認の数値を含まない説明を表示し、新しいホストの未知の説明文は英語で表示します。シングルプレイでは自分の設定を使用します。
+- `ROLE GUIDE`では有効な役職の説明を選択した言語で表示します。マルチプレイではホストの設定値に沿った説明になります。選択言語の説明がない場合は英語で表示します。シングルプレイでは自分の設定を使用します。
 
 ### 互換性
 
@@ -942,7 +946,6 @@ Stage Fluxは任意の対応MODであり、RoleShuffleの必須MODではあり�
 
 - Second ChanceをPhoenix、Rescuer、Bodyguardの復活効果より優先し、使用されなかった復活効果は維持します。
 - Second ChanceまたはPhoenixが失敗時のステージ移行を止めた場合、現在の役職は維持されます。
-- RoleShuffleの効果はプレイヤーの移動や接地判定へ干渉しません。
 - Value SurgeまたはValue Crash中も、Mechanicは実際に失われた貴重品価値だけを修復します。
 - RoleShuffleの通知とInfluencerのTTSは、Stage Fluxの通知と重ならず順番に再生されます。
 - Enemy Purgeによる撃破ではHunterの報酬は発生しません。
@@ -957,8 +960,8 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 
 ### ゲームプレイ上の注意
 
-- `Bomber`は起動済みのバニラハザードを生成します。爆発や物理効果によってプレイヤーや貴重品へ被害が出る可能性があります。
-- `Mage`は前後の空白と大文字・小文字を無視したチャットキーワードで選択した、実体のあるバニラ攻撃を発射します。発射体とビームはプレイヤーや貴重品へ被害を与える可能性があります。
+- `Bomber`が残す起動済みグレネードは、プレイヤーや貴重品にも被害を与えます。
+- `Mage`はチャットで指定した魔法を発動します。魔法はプレイヤーや貴重品にも被害を与えます。コマンドの大文字・小文字は問いません。
 - `Courier`と`Tuna`は条件を満たしている間、実際に継続ダメージを与え、死亡する可能性があります。受けたダメージは自動回復しません。
 - `Medic`は自身を回復しません。
 - `Phoenix`は1ステージに1回だけ自己復活します。`Rescuer`は設定された回数まで周囲の別プレイヤーを復活させます。復活後HPは役職ごとに設定でき、デフォルトは25です。
