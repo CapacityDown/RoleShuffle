@@ -2,7 +2,7 @@
   "method": "Perimeter-connected near-black exterior to transparent alpha",
   "generator": "Python / Pillow / NumPy",
   "black_limit": 64,
-  "count": 43,
+  "count": 44,
   "assets": [
     {
       "name": "01-Tank",
@@ -862,6 +862,26 @@
       "runtime_edge_pixels": 2067,
       "rgb_pixels_unchanged": true,
       "central_interior_opaque": true
+    },
+    {
+      "name": "41-Influenza",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\41-Influenza.png",
+      "source_sha256": "113c1388c2520f350ca7ad9a60fa5ad08e781a8ec47f39252b928bad15737230",
+      "master_sha256": "113c1388c2520f350ca7ad9a60fa5ad08e781a8ec47f39252b928bad15737230",
+      "runtime_sha256": "5f52926c82ad64afe72eacb92df27d37dae8747d2d09fd86217f2efc82a537c6",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.406387,
+      "runtime_edge_pixels": 38101,
+      "rgb_pixels_unchanged": true,
+      "central_interior_opaque": true,
+      "method": "Native transparent image generation; System.Drawing high-quality bicubic runtime export"
     }
   ]
 }

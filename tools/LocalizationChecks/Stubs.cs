@@ -41,6 +41,7 @@ internal enum StageRole
     Imitator,
     Avenger,
     Brawler,
+    Influenza,
     Superbot = 1001,
     Disaster = 1002
 }

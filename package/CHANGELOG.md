@@ -1,4 +1,5 @@
 ## 4.5.1
+- Added Influenza: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Infection ends with the stage.
 
 ## 4.5.0
 - Changed Tank and Runner to strengthen Base health, sprint speed and stamina by 1.5 by default, with configurable minimums and growth limits. They are excluded from random assignment when no further benefit is available or a corresponding Base value reaches its limit.

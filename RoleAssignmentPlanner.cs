@@ -37,6 +37,7 @@ internal sealed class RoleAssignmentPlanner
         StageRole.Bomber,
         StageRole.Stinker,
         StageRole.Werewolf,
+        StageRole.Influenza,
         StageRole.Disaster
     };
 
@@ -44,6 +45,7 @@ internal sealed class RoleAssignmentPlanner
     {
         StageRole.Jobless,
         StageRole.Tuna,
+        StageRole.Influenza,
         StageRole.Disaster
     };
 

@@ -37,6 +37,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         StageRole.Bodyguard,
         StageRole.Imitator,
         StageRole.Avenger,
+        StageRole.Influenza,
         StageRole.Disaster
     };
     private readonly List<RoleAssignment> _assignments = new();
@@ -810,6 +811,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 assignment.AssignedRole);
             if (assignment.AssignedRole == StageRole.Jobless ||
                 assignment.AssignedRole == StageRole.Tuna ||
+                assignment.AssignedRole == StageRole.Influenza ||
                 assignment.AssignedRole == StageRole.Disaster)
             {
                 lastHardshipStages[assignment.SteamId] = currentStage;
@@ -841,6 +843,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             }
 
             StageRole previousRole = assignment.AssignedRole;
+            EndInfluenza(assignment);
             assignment.AssignedRole = role;
             assignment.Role = role;
             ResetAssignmentForRoleChange(assignment);
@@ -1276,6 +1279,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void CompleteStagePreparation()
     {
+        foreach (RoleAssignment assignment in _assignments) StartInfluenza(assignment);
         _assignmentsInitialized = true;
         _nextPlayerPresenceCheckAt =
             Time.time + PlayerPresenceCheckIntervalSeconds;
@@ -1294,6 +1298,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 Time.time + PlayerPresenceCheckIntervalSeconds;
         }
 
+        TickInfluenza();
         _eventRoles.Tick(_assignments);
         _overhaul.Tick(_assignments, _notifier);
         _mage.MaintainSpawnedObjects();
@@ -3091,6 +3096,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void ActivateJoinedAssignment(RoleAssignment assignment)
     {
+        StartInfluenza(assignment);
         PrepareAssignmentForActivePlayer(assignment);
         _medic.AddPlayer(assignment);
         _stinker.AddPlayer(assignment);
@@ -3165,6 +3171,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _assignmentsInitialized = false;
         _stageGeneration++;
         StopAllCoroutines();
+        StopInfluenza();
         _notifier?.End();
         RoleHealingRuntime.Clear();
         _bomber?.Stop();
@@ -3261,6 +3268,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             assignment.AssignedRole);
         if (assignment.AssignedRole == StageRole.Jobless ||
             assignment.AssignedRole == StageRole.Tuna ||
+            assignment.AssignedRole == StageRole.Influenza ||
             assignment.AssignedRole == StageRole.Disaster)
         {
             _lastHardshipStages[assignment.SteamId] =

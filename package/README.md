@@ -30,7 +30,7 @@ Install with a compatible mod manager, or place `RoleShuffle.dll` in the profile
 - Vanilla participants are fully supported and do not need RoleShuffle.
 - Installed participants receive the full role HUD and the scrollable `Roles` page in the Escape menu; each player can choose their own HUD layout.
 - Mage and Trickster do not activate abilities when an expression is cleared. The host's own menu expression restoration is also ignored; other players' expressions restored after closing a menu can still activate an ability.
-- Single-player uses the same role system, but `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are excluded from random assignment when only one player is present.
+- Single-player uses the same role system, but `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, and `Influenza` are excluded from random assignment when only one player is present.
 
 ### Role selection and presets
 
@@ -40,11 +40,11 @@ Choose `PRESETS` and apply a play style to replace the role switches. Presets pr
 
 | Preset | Enabled roles | Play style |
 | --- | --- | --- |
-| Standard | 42 | Every role, including both secret roles; restores the default ON/OFF selection. |
+| Standard | 43 | Every role, including both secret roles; restores the default ON/OFF selection. |
 | Beginner | 19 | Basic upgrades, recovery and protection without passive hazard or hardship roles. |
 | Cooperative | 16 | Team support, healing, repairs and shared survival. |
-| Chaos | 14 | Explosions, magic, gambles and unpredictable effects. |
-| Challenge | 14 | Risky and specialized roles without dedicated healing or revival roles. |
+| Chaos | 15 | Explosions, magic, gambles and unpredictable effects. |
+| Challenge | 15 | Risky and specialized roles without dedicated healing or revival roles. |
 
 Party-size, context and balance restrictions still apply. The screen identifies a disabled global assignment setting and an empty candidate pool; selecting a preset does not override either `General.Enabled` or zero weights.
 
@@ -63,10 +63,10 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 - By default, Showcase roles (`Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, `Diver`) and Support roles (`Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`) receive configurable minimum guarantees based on party size.
 - By default, Showcase and Support minimums rise to four each at 24 players. Danger limits rise from one to two at 8 players and three at 16 players; Hardship limits rise from one to two at 12 players. Influencer is a Showcase role and is not treated as a Danger role. A party of four or fewer receives at most one role across both risk groups.
 - A role found among a player's five most recent assignments uses half of its normal selection weight for that player. Other players' histories do not affect that player's selection.
-- A player normally cannot receive the same role in consecutive stages. After receiving `Courier` or `Tuna`, that player is excluded from both Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
+- A player normally cannot receive the same role in consecutive stages. After receiving `Courier`, `Tuna`, or `Influenza`, that player is excluded from these Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
 - `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
-- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, and `Avenger` are not selected in single-player or a one-player session.
+- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, and `Influenza` are not selected in single-player or a one-player session.
 - `Imitator` is selected only after another active player has received a role it can copy.
 - By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` when no melee weapon is available. Weapon-like valuables do not count as weapons for either role's assignment, and staffs do not count for Sniper assignment.
 - Players who leave are removed from the role list. Returning players regain their previous role; new players receive a role, its upgrades and an announcement.
@@ -113,9 +113,10 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Rammer | Tumble Attack deals 100 damage to enemies and deals 15 damage to Rammer after a successful hit. | Launch, Tumble Climb, and Tumble Wings are fixed at level 0 for the stage regardless of Base Upgrades. | Tumble Attack and self damage |
 | Diver | Tumbling while continuing to look down at a fixed floor enables movement below it for up to 10 seconds. | Failing to return through a floor in time kills Diver. Returning above the floor starts a cooldown equal to 1.5 times the previous dive time. The countdown and ready state are announced by TTS. | Underfloor duration, movement force |
 | Sniper | Enemy damage changes continuously with distance: 0.5x at point-blank range, 1x at 8 m, and up to 2x at 24 m. | Applies only when Sniper can be identified as the attacker. Vehicle impacts and Tumble Attacks are unchanged. | Reference distance, minimum and maximum multipliers, maximum-multiplier distance |
-| Imitator | Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator. | Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, or ???1 or ???2. The first valid copy is fixed for the stage. Never selected randomly when only one player is present. | Selection only |
+| Imitator | Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator. | Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, or ???1 or ???2. The first valid copy is fixed for the stage. Never selected randomly when only one player is present. | Selection only |
 | Avenger | When another player dies within 30 m, deals 1.5x damage to enemies for 20 seconds. | Activation, duration refreshes, and expiration are announced by TTS. Another nearby death refreshes the duration without stacking the multiplier. Its own death does not activate the effect. Never selected randomly when only one player is present. | Trigger radius, damage multiplier, and duration |
 | Brawler | Deals 1.25x damage with identifiable melee weapon attacks and 0.75x damage with identifiable guns, staff projectiles, and lasers. | Vehicle impacts, Tumble Attacks, grenades, and ordinary held-object collisions are unchanged. | Melee and ranged damage multipliers |
+| Influenza | Symptoms begin 30 seconds after assignment or infection; maximum HP becomes 75. Every 30–90 seconds (average 60), a sneeze has a 60% chance to infect each player within 5m and a 40° forward fan. Each ordinary voice utterance or chat message has a 30% chance within 3m and a 60° forward fan. | Infection replaces the original role with Influenza. Newly infected players spread it after their own incubation. Death and revival do not reset incubation; infection ends with the stage. Excluded from solo draws. | Enabled; Weight (default 20) |
 | ???1 | ??? | ??? | ??? |
 | ???2 | ??? | ??? | ??? |
 
@@ -180,7 +181,7 @@ You can customize roles, Base Upgrades and notifications below. HUD and language
 
 All entries in this table are host-controlled.
 
-Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, and `Bodyguard`. Danger roles are `Bomber`, `Stinker`, and `Werewolf`; Hardship roles are `Courier` and `Tuna`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
+Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, and `Bodyguard`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
 
 | Key | Default | Range / values | Effect |
 | --- | ---: | --- | --- |
@@ -189,12 +190,12 @@ Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, 
 | `Role Balance - Guarantees.SupportEnabled` | `true` | `true`, `false` | Enables party-size-based minimum Support assignments. |
 | `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `party size:minimum` pairs | Minimum Support assignments by party size. |
 | `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Enables Danger, Hardship, and small-party combined limits. |
-| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `party size:limit` pairs | Maximum simultaneous `Bomber`, `Stinker`, and `Werewolf` roles by party size. |
-| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `party size:limit` pairs | Maximum simultaneous `Courier` and `Tuna` roles by party size. |
+| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `party size:limit` pairs | Maximum simultaneous `Bomber`, `Stinker`, `Werewolf`, and `Influenza` roles by party size. |
+| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `party size:limit` pairs | Maximum simultaneous `Courier`, `Tuna`, and `Influenza` roles by party size. |
 | `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`–`30` | Largest party size using the combined Danger and Hardship limit. |
 | `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`–`30` | Maximum combined Danger and Hardship roles in a small party. |
 | `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | Prevents the same player receiving the same role in consecutive stages when alternatives exist. |
-| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`–`10` | Stages after `Courier` or `Tuna` during which that player is normally excluded from both roles. |
+| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`–`10` | Stages after `Courier`, `Tuna`, or `Influenza` during which that player is normally excluded from these roles. |
 | `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | Excludes context-dependent roles when their required enemy, weapon, or usable object is absent. |
 
 #### Base upgrades
@@ -306,6 +307,7 @@ Host-controlled. Each standard role has an `Enabled` switch (`true`/`false`) and
 | `Imitator.Enabled = true` | `Imitator.Weight = 100` |
 | `Avenger.Enabled = true` | `Avenger.Weight = 100` |
 | `Brawler.Enabled = true` | `Brawler.Weight = 100` |
+| `Influenza.Enabled = true` | `Influenza.Weight = 20` |
 | `???1.Enabled = true` | Fixed |
 | `???2.Enabled = true` | Fixed |
 
@@ -514,7 +516,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 - MOD未導入の参加者にも対応しており、RoleShuffleの導入は不要です。
 - MOD導入済みの参加者には全員の役職を確認できるHUDと、Escメニュー内のスクロール可能な`Roles`ページが表示されます。HUDの配置は各プレイヤーが個別に変更できます。
 - MageとTricksterは表情の解除では能力を発動しません。ホスト自身のメニュー終了時の表情復帰も除外しますが、参加者のメニュー終了時に復帰した表情では能力が発動する場合があります。
-- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`がランダム抽選から除外されます。
+- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`がランダム抽選から除外されます。
 
 ### ロール選択とプリセット
 
@@ -524,11 +526,11 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 
 | プリセット | 有効なロール数 | 遊び方 |
 | --- | --- | --- |
-| 標準 | 42 | シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。 |
+| 標準 | 43 | シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。 |
 | 初心者向け | 19 | 基本強化・回復・防御が中心。自動で危害を加える役やハンデ役を除外します。 |
 | 協力重視 | 16 | チーム支援・回復・修理を中心に協力して生き残ります。 |
-| カオス | 14 | 爆発・魔法・ギャンブルなど、予測しづらい展開を楽しみます。 |
-| 高難度 | 14 | 専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。 |
+| カオス | 15 | 爆発・魔法・ギャンブルなど、予測しづらい展開を楽しみます。 |
+| 高難度 | 15 | 専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。 |
 
 人数・状況・バランスによる抽選制限は引き続き適用されます。全体の抽選が無効の場合や候補がない場合は画面に表示します。プリセットを適用しても`General.Enabled`や重み`0`は変更しません。
 
@@ -547,10 +549,10 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 - デフォルトでは、Showcase役（`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`）とSupport役（`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`）を、参加人数に応じて設定された最低人数まで優先的に割り当てます。
 - デフォルトでは、24人以上でShowcaseとSupportをそれぞれ最低4人保証します。Danger上限は8人で2人、16人で3人へ増え、Hardship上限は12人で2人へ増えます。InfluencerはShowcase役であり、Danger役として扱いません。4人以下では両リスクグループを合わせて最大1人です。
 - 各プレイヤーが直近5回に割り当てられた役職は、そのプレイヤーの次回抽選時に通常の半分のWeightで扱います。他のプレイヤーの履歴は影響しません。
-- 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Courier`または`Tuna`の後、2ステージはそのプレイヤーを両方から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
+- 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Courier`、`Tuna`、`Influenza`のいずれかの後、2ステージはそのプレイヤーをこれらの役職から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
 - `Jumper`、`Launcher`、`Climber`、`Flyer`、`Tracker`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。
 - `Influencer`は、現在の参加人数で到達可能なアップグレード目標値が現在のBase Upgradeを1項目も上回らない場合、ランダム抽選から除外されます。
-- `Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`はシングルプレイまたは1人のセッションでは抽選されません。
+- `Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`はシングルプレイまたは1人のセッションでは抽選されません。
 - `Imitator`は、コピー可能な役職を持つ他の参加者が確保された場合だけ抽選されます。
 - デフォルトでは、能力を使える対象がない状況依存役を抽選から除外します。必要なオブジェクトがない`Musician`、`Engineer`、`Electrician`、`Rider`と、近接武器も銃もない場合の`Sniper`、近接武器がない場合の`Brawler`が対象です。両ロールの抽選判定では、武器として使える貴重品も武器に含めません。Sniperの抽選判定では杖も対象外です。
 - 退出したプレイヤーは役職一覧から外れます。再参加すると以前の役職に戻り、新しい参加者には役職・強化・通知が適用されます。
@@ -597,9 +599,10 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Rammer | Tumble Attackで敵へ100ダメージを与え、命中後に自身が15ダメージを受けます。 | ステージ中はBase Upgradeにかかわらず、Launch、Tumble Climb、Tumble Wingsがレベル0に固定されます。 | Tumble Attack・自傷ダメージ |
 | Diver | 固定された床で下を向いたままタンブルすると床を抜け、最大10秒間、床下を移動できます。 | 時間内に床を抜けて戻れないと死亡します。床上へ戻ると直前の潜航時間の1.5倍のクールダウンが始まり、残り時間と再使用可能状態はTTSで通知されます。 | 床下制限時間、移動力 |
 | Sniper | 敵へのダメージが距離に応じて連続変化し、密着時は0.5倍、8 mで1倍、24 mで最大2倍になります。 | Sniperが攻撃者と特定できる場合だけ適用します。車両衝突とTumble Attackは変化しません。 | 基準距離、最低・最高倍率、最高倍率到達距離 |
-| Imitator | 最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。 | Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、???1、???2はコピーしません。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。 | 抽選設定のみ |
+| Imitator | 最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。 | Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、Influenza、???1、???2はコピーしません。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。 | 抽選設定のみ |
 | Avenger | 他のプレイヤーが30m以内で死亡すると、20秒間、敵へのダメージが1.5倍になります。 | 発動、残り時間の更新、終了はTTSで通知されます。効果中に近くで別のプレイヤーが死亡した場合は、倍率を重複せず残り時間だけを更新します。自身の死亡では発動しません。1人のセッションでは抽選されません。 | 発動範囲、ダメージ倍率、持続時間 |
 | Brawler | 攻撃者を特定できる近接武器のダメージが1.25倍になり、銃、杖の弾、レーザーによるダメージは0.75倍になります。 | 車両衝突、Tumble Attack、グレネード、通常の保持物による衝突は変化しません。 | 近接・遠隔ダメージ倍率 |
+| Influenza（インフルエンザ） | 開始・感染から30秒後に発症し、最大HPを75に固定。30～90秒間隔（平均60秒）のくしゃみで、前方40度（左右20度）・5m以内の各プレイヤーへ60％で感染。通常のVCはひとまとまりの発話ごと、チャットは1投稿ごとに、前方60度（左右30度）・3m以内の各プレイヤーへ30％で感染。 | 感染すると元の役職を失いInfluenzaへ変更。感染した仲間も30秒後の発症から感染を広げます。死亡・蘇生で潜伏時間はリセットされず、ステージ終了で解除。1人では抽選対象外。 | 有効・無効、抽選重み（初期値20） |
 | ???1 | ??? | ??? | ??? |
 | ???2 | ??? | ??? | ??? |
 
@@ -664,7 +667,7 @@ HUD以外はホスト設定です。
 
 この表はすべてホスト設定です。
 
-Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、Hardship役は`Courier`、`Tuna`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
+Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
 
 | キー | デフォルト | 範囲・値 | 内容 |
 | --- | ---: | --- | --- |
@@ -673,12 +676,12 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 | `Role Balance - Guarantees.SupportEnabled` | `true` | `true`, `false` | 参加人数別のSupport最低保証を有効にします。 |
 | `Role Balance - Guarantees.SupportMinimums` | `4:1,8:2,14:3,24:4` | `参加人数:最低人数`の組 | 参加人数ごとに保証するSupportの最低人数です。 |
 | `Role Balance - Limits.Enabled` | `true` | `true`, `false` | Danger、Hardship、少人数時の複合上限を有効にします。 |
-| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `参加人数:上限`の組 | 参加人数ごとの`Bomber`、`Stinker`、`Werewolf`の合計上限です。 |
-| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `参加人数:上限`の組 | 参加人数ごとの`Courier`と`Tuna`の合計上限です。 |
+| `Role Balance - Limits.DangerMaximums` | `1:1,8:2,16:3` | `参加人数:上限`の組 | 参加人数ごとの`Bomber`、`Stinker`、`Werewolf`、`Influenza`の合計上限です。 |
+| `Role Balance - Limits.HardshipMaximums` | `1:1,12:2` | `参加人数:上限`の組 | 参加人数ごとの`Courier`、`Tuna`、`Influenza`の合計上限です。 |
 | `Role Balance - Limits.SmallPartyMaximumPlayers` | `4` | `1`～`30` | DangerとHardshipの複合上限を使用する最大参加人数です。 |
 | `Role Balance - Limits.SmallPartyCombinedMaximum` | `1` | `1`～`30` | 少人数時に許可するDangerとHardshipの合計最大人数です。 |
 | `Role Balance - Variety.PreventSameRole` | `true` | `true`, `false` | ほかの候補がある場合、同じプレイヤーへの同役職の連続割り当てを防ぎます。 |
-| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`～`10` | `Courier`または`Tuna`の後、そのプレイヤーを両役職から通常除外するステージ数です。 |
+| `Role Balance - Variety.HardshipCooldownStages` | `2` | `0`～`10` | `Courier`、`Tuna`、`Influenza`のいずれかの後、そのプレイヤーをこれらの役職から通常除外するステージ数です。 |
 | `Role Balance - Variety.ExcludeUnavailableRoles` | `true` | `true`, `false` | 必要な敵、武器、使用対象が存在しない状況依存役を抽選から除外します。 |
 
 #### 基礎アップグレード
@@ -790,6 +793,7 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 | `Imitator.Enabled = true` | `Imitator.Weight = 100` |
 | `Avenger.Enabled = true` | `Avenger.Weight = 100` |
 | `Brawler.Enabled = true` | `Brawler.Weight = 100` |
+| `Influenza.Enabled = true` | `Influenza.Weight = 20` |
 | `???1.Enabled = true` | 固定 |
 | `???2.Enabled = true` | 固定 |
 

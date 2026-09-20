@@ -1,8 +1,8 @@
 {
   "generationMode": "Built-in image_gen",
-  "count": 42,
-  "format": "Original opaque PNGs with near-black exterior; Courier uses native transparent alpha",
-  "status": "42 role emblems integrated; Courier replaces Jobless in v4.5.0",
+  "count": 43,
+  "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha",
+  "status": "43 role emblems integrated",
   "references": {
     "anatomy": "D:/Documents/R.E.P.O. MOD/StagePhysicsEvents/Assets/Semibot_reference.png",
     "style": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
@@ -478,5 +478,15 @@
       "background": "#762C37",
       "file": "1002-Disaster.png"
     }
-  ]
+  ],
+  "influenza": {
+    "references": [
+      "11-Medic.png",
+      "01-Tank.png"
+    ],
+    "anatomy": "Short single-piece cone arms, distinct jaw/neck band below mouth; no hat or extra joints.",
+    "illness": "Sneeze, cooling forehead patch, sweat and flushed cheeks.",
+    "method": "Built-in image_gen; full-resolution native-alpha master",
+    "prompt_record": "docs/INFLUENZA_4.5.1.md"
+  }
 }

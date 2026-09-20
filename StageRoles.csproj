@@ -37,6 +37,8 @@
     <Compile Include="StageRolesPlugin.cs" />
     <Compile Include="StageRolesConfig.cs" />
     <Compile Include="StageRole.cs" />
+    <Compile Include="InfluenzaRules.cs" />
+    <Compile Include="InfluenzaRuntime.cs" />
     <Compile Include="RolePresets.cs" />
     <Compile Include="RoleSelectionSettings.cs" />
     <Compile Include="BaseUpgradeDrawSelection.cs" />

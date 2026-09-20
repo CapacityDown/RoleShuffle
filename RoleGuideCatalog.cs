@@ -5,6 +5,10 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleGuideCatalog
 {
+    internal const string InfluenzaSummary = "After incubation, maximum HP becomes 75. Sneezing and ordinary speech can turn nearby teammates into Influenza.";
+    internal const string InfluenzaDescription = "Symptoms begin 30 seconds after assignment or infection and fix maximum HP at 75. Sneezes occur every 30–90 seconds (60 seconds on average): players within 5 m and 20 degrees to either side have a 60% infection chance. Each ordinary voice utterance or chat message gives players within 3 m and 30 degrees to either side a 30% chance. Infection replaces the original role with Influenza; the newly infected can spread it after their own incubation. Death and revival do not reset incubation. Infection ends at the end of the stage.";
+    private const string InfluenzaSummaryJapanese = "発症すると最大HPが75に固定されます。くしゃみや通常の会話で、近くの仲間の役職をインフルエンザに変えてしまいます。";
+    private const string InfluenzaDescriptionJapanese = "役職の割り当て・感染から30秒後に発症し、最大HPが75に固定されます。くしゃみは30～90秒間隔（平均60秒）で発生。前方の左右20度ずつ・5m以内にいる各プレイヤーへ60％の確率で感染します。通常のVCはひとまとまりの発話ごと、チャットは1投稿ごとに、前方の左右30度ずつ・3m以内の各プレイヤーへ30％の確率で感染します。感染すると元の役職を失い、Influenzaに変更されます。感染した仲間も30秒後の発症から感染を広げます。死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除されます。";
     internal static string RevealedSecretDescription(StageRole role, RoleGuideLanguage language) =>
         RoleText.Description(RevealedSecretText(role, language), language);
 
@@ -21,8 +25,8 @@ internal static class RoleGuideCatalog
 
     private static string RevealedSuperbotText(RoleGuideLanguage language) =>
         language == RoleGuideLanguage.Japanese
-            ? "Bomber、Stinker、Werewolf、Courier、Tuna、\nKing、Diver、Imitator、Sniper、Brawlerを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
-            : "Combines role upgrades and abilities except Bomber, Stinker, Werewolf, Courier, Tuna, King, Diver, Imitator, Sniper, and Brawler. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
+            ? "Influenza、Bomber、Stinker、Werewolf、Courier、Tuna、\nKing、Diver、Imitator、Sniper、Brawlerを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
+            : "Combines role upgrades and abilities except Influenza, Bomber, Stinker, Werewolf, Courier, Tuna, King, Diver, Imitator, Sniper, and Brawler. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
 
     internal static string GenericDescription(
         StageRole role,
@@ -34,6 +38,7 @@ internal static class RoleGuideCatalog
     internal static string GenericDescription(StageRole role) =>
         role switch
         {
+            StageRole.Influenza => InfluenzaSummary,
             StageRole.Tank => "Increases maximum health, making the player harder to defeat.",
             StageRole.Runner => "Increases movement speed and stamina for faster, longer sprints.",
             StageRole.Jumper => "Adds extra jumps that can be used before landing.",
@@ -82,6 +87,7 @@ internal static class RoleGuideCatalog
     private static string GenericDescriptionJapanese(StageRole role) =>
         role switch
         {
+            StageRole.Influenza => InfluenzaSummaryJapanese,
             StageRole.Rider => "運転中の車両が敵へ与える衝突ダメージと、プレイヤーへのノックバックが増加します。",
             StageRole.Influencer => "近くの仲間が多いほど強化されますが、物音が広がり、定期的にTTSで発言します。",
             StageRole.Werewolf => "自身が攻撃者と特定できる、他のプレイヤーへのダメージが増加します。",
@@ -138,6 +144,7 @@ internal static class RoleGuideCatalog
     internal static string Description(StageRole role, StageRolesConfig config) =>
         RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.English) ?? role switch
         {
+            StageRole.Influenza => InfluenzaDescription,
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
             StageRole.Launcher =>
@@ -236,7 +243,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"Identifiable attacks against enemies scale continuously with distance: {Number(config.SniperMinimumDamageMultiplier.Value)}x at point-blank range, 1x at {Number(config.SniperReferenceDistance.Value)} m, and up to {Number(config.SniperMaximumDamageMultiplier.Value)}x at {Number(config.SniperMaximumMultiplierDistance.Value)} m. Vehicle impacts and Tumble Attacks are unchanged.",
             StageRole.Imitator =>
-                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, or ???1 or ???2.",
+                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, or ???1 or ???2.",
             StageRole.Avenger =>
                 $"When another player dies within {Number(config.AvengerTriggerRadius.Value)} m, enemy damage is multiplied by {Number(config.AvengerDamageMultiplier.Value)} for {Number(config.AvengerDurationSeconds.Value)} seconds. Another nearby death refreshes the duration without stacking the multiplier.",
             StageRole.Brawler =>
@@ -251,6 +258,7 @@ internal static class RoleGuideCatalog
         StageRolesConfig config) =>
         RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.Japanese) ?? role switch
         {
+            StageRole.Influenza => InfluenzaDescriptionJapanese,
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",
             StageRole.Influencer =>
@@ -345,7 +353,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"攻撃者を特定できる敵へのダメージが距離に応じて連続変化します。密着時は{Number(config.SniperMinimumDamageMultiplier.Value)}倍、{Number(config.SniperReferenceDistance.Value)}mで1倍、{Number(config.SniperMaximumMultiplierDistance.Value)}mで最大{Number(config.SniperMaximumDamageMultiplier.Value)}倍になります。車両衝突とTumble Attackは変化しません。",
             StageRole.Imitator =>
-                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、???1、???2はコピーしません。",
+                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、Influenza、???1、???2はコピーしません。",
             StageRole.Avenger =>
                 $"他のプレイヤーが{Number(config.AvengerTriggerRadius.Value)}m以内で死亡すると、{Number(config.AvengerDurationSeconds.Value)}秒間、敵へのダメージが{Number(config.AvengerDamageMultiplier.Value)}倍になります。効果中の再発動では倍率を重複せず、残り時間だけを更新します。",
             StageRole.Brawler =>

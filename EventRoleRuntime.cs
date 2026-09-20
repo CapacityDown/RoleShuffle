@@ -99,6 +99,17 @@ internal sealed class EventRoleRuntime
     internal void AddPlayer(RoleAssignment assignment) =>
         PrepareAssignment(assignment);
 
+    internal void RemovePlayer(string steamId)
+    {
+        if (_dynamicStates.Remove(steamId, out DynamicUpgradeState state))
+            foreach (KeyValuePair<string, int> grant in state.Granted)
+                if (grant.Value != 0) UpgradeService.AddLevels(steamId, CommandName(grant.Key), -grant.Value);
+        _pendingHits.Remove(steamId);
+        _pendingRevivals.Remove(steamId);
+        _internalDamage.Clear(steamId);
+        _scalingCache.Remove(steamId);
+    }
+
     internal void Stop()
     {
         foreach (KeyValuePair<string, DynamicUpgradeState> pair in _dynamicStates)

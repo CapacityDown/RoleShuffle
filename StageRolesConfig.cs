@@ -459,6 +459,9 @@ internal sealed class StageRolesConfig
         BrawlerMeleeDamageMultiplier = BindFloat(config, "Brawler", "MeleeDamageMultiplier", 1.25f, 0f, 10f, "Damage multiplier for identifiable melee weapon attacks.");
         BrawlerRangedDamageMultiplier = BindFloat(config, "Brawler", "RangedDamageMultiplier", 0.75f, 0f, 10f, "Damage multiplier for identifiable ranged weapon attacks.");
 
+        InfluenzaEnabled = RoleEnabled(config, "Influenza");
+        InfluenzaWeight = RoleWeight(config, "Influenza", 20);
+
         SuperbotEnabled = BindBool(config, "???1", "Enabled", true, "???");
         DisasterEnabled = BindBool(config, "???2", "Enabled", true, "???");
     }
@@ -744,6 +747,8 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> BrawlerMeleeDamageMultiplier { get; }
     internal ConfigEntry<float> BrawlerRangedDamageMultiplier { get; }
     internal ConfigEntry<bool> SuperbotEnabled { get; }
+    internal ConfigEntry<bool> InfluenzaEnabled { get; }
+    internal ConfigEntry<int> InfluenzaWeight { get; }
     internal ConfigEntry<bool> DisasterEnabled { get; }
 
     internal bool RoleIsEnabled(StageRole role) => RoleEnabledEntry(role)?.Value ?? false;
@@ -790,6 +795,7 @@ internal sealed class StageRolesConfig
         StageRole.Imitator => ImitatorEnabled,
         StageRole.Avenger => AvengerEnabled,
         StageRole.Brawler => BrawlerEnabled,
+        StageRole.Influenza => InfluenzaEnabled,
         StageRole.Superbot => SuperbotEnabled,
         StageRole.Disaster => DisasterEnabled,
         _ => null
@@ -837,6 +843,7 @@ internal sealed class StageRolesConfig
         StageRole.Imitator => ImitatorWeight.Value,
         StageRole.Avenger => AvengerWeight.Value,
         StageRole.Brawler => BrawlerWeight.Value,
+        StageRole.Influenza => InfluenzaWeight.Value,
         StageRole.Superbot => 1,
         StageRole.Disaster => 1,
         _ => 0

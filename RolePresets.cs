@@ -37,12 +37,12 @@ internal static class RolePresets
             "Explosions, magic and risky roles.",
             StageRole.Bomber, StageRole.King, StageRole.Tuna, StageRole.Mage, StageRole.Gambler,
             StageRole.Stinker, StageRole.Trickster, StageRole.Rider, StageRole.Werewolf, StageRole.Berserker,
-            StageRole.Rammer, StageRole.Diver, StageRole.Imitator, StageRole.Disaster),
+            StageRole.Rammer, StageRole.Diver, StageRole.Imitator, StageRole.Influenza, StageRole.Disaster),
         new RolePresetDefinition(RolePreset.Challenge, "Challenge",
             "High risk; no dedicated healers or revivers.",
             StageRole.Jobless, StageRole.Tuna, StageRole.Vampire, StageRole.Mage, StageRole.Gambler,
             StageRole.Hunter, StageRole.Executioner, StageRole.Werewolf, StageRole.Berserker,
-            StageRole.Rammer, StageRole.Diver, StageRole.Sniper, StageRole.Brawler, StageRole.Avenger)
+            StageRole.Rammer, StageRole.Diver, StageRole.Sniper, StageRole.Brawler, StageRole.Avenger, StageRole.Influenza)
     };
 
     internal static RolePresetDefinition? Find(RolePreset id)

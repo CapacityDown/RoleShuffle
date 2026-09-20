@@ -4,7 +4,8 @@ $planner = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../RoleAssignmentP
 $migration = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../RoleConfigMigration.cs') -Raw
 $commands = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../RoleTestCommandService.cs') -Raw
 $parseRole = [regex]::Match($commands, '(?s)    private static bool TryParseRole\(.*?(?=    private static string BuildRoleList)').Value
-$roleEnum = [regex]::Match($models, '(?s)internal enum StageRole\s*\{.*?\}').Value
+$enumSource = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../StageRole.cs') -Raw
+$roleEnum = [regex]::Match($enumSource, '(?s)internal enum StageRole\s*\{.*?\}').Value
 $catalog = [regex]::Match($models, '(?s)    internal static bool IsSecretRole.*?(?=    internal static IReadOnlyList<UpgradeGrant> BaseUpgrades)').Value
 $move = [regex]::Match($migration, '(?s)    private static void MoveKeys\(.*?(?=    private static void MoveKey\()').Value
 $planner = $planner.Substring($planner.IndexOf('internal sealed class RoleAssignmentPlanner'))
@@ -60,11 +61,14 @@ __PARSE__
         Check(TryParseRole("???2",out parsed) && parsed==StageRole.Disaster,"command secret alias 2");
         Check(TryParseRole("Disaster",out parsed) && parsed==StageRole.Disaster,"command real name");
         Check(!TryParseRole("999",out parsed) && !TryParseRole("1000",out parsed),"old IDs no longer assigned");
-        Check(!TryParseRole("41",out parsed),"hidden roles have no ordinary numeric alias");
+        Check(!TryParseRole("42",out parsed),"hidden roles have no ordinary numeric alias");
+        Check(TryParseRole("41",out parsed) && parsed==StageRole.Influenza,"Influenza appended without renumbering existing roles");
         Check(TryParseRole("40",out parsed) && parsed==StageRole.Brawler,"standard IDs preserved");
         foreach(StageRole role in Enum.GetValues<StageRole>())
             Check(RoleCatalog.HasCapability(StageRole.Disaster,role)==(role is StageRole.Disaster or StageRole.Bomber or StageRole.Stinker or StageRole.Tuna),"Disaster capability "+role);
         Check(!RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Disaster),"Superbot excludes Disaster");
+        Check(!RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Influenza),"Superbot excludes Influenza");
+        Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Influenza),"Influenza is acquired through infection, not copying");
         Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Disaster),"Disaster cannot be copied");
         Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Superbot),"Superbot cannot be copied");
         var config=new StageRolesConfig();

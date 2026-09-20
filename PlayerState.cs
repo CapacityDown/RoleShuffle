@@ -194,6 +194,23 @@ internal static class PlayerState
         return true;
     }
 
+    internal static bool SetMaximumHealthSynchronized(PlayerAvatar? player, int maximum)
+    {
+        if (!SemiFunc.IsMasterClientOrSingleplayer() || player?.playerHealth == null ||
+            !TryGetCurrentHealth(player, out int health)) return false;
+        maximum = Math.Max(1, maximum);
+        // Preserve zero for dead players; restoring the maximum must never revive or heal.
+        int current = Math.Clamp(health, 0, maximum);
+        if (SemiFunc.IsMultiplayer())
+        {
+            PhotonView? view = player.playerHealth.GetComponent<PhotonView>() ?? player.photonView;
+            if (view == null) return false;
+            view.RPC(nameof(PlayerHealth.UpdateHealthRPC), RpcTarget.All, current, maximum, false, false);
+        }
+        else player.playerHealth.UpdateHealthRPC(current, maximum, false, false);
+        return true;
+    }
+
     private static bool ReadBool(FieldInfo? field, object instance) =>
         field?.GetValue(instance) is bool value && value;
 

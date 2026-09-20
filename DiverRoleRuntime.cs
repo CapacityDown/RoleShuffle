@@ -523,6 +523,12 @@ internal sealed class DiverRoleRuntime
             rigidbody);
     }
 
+    internal void RemovePlayer(string steamId)
+    {
+        if (_states.Remove(steamId, out DiveState state) && state.Underfloor)
+            RestoreAboveFloor(state, startCooldown: false);
+    }
+
     internal void Stop()
     {
         foreach (DiveState state in _states.Values)

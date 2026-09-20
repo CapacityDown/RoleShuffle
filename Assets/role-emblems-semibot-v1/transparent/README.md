@@ -32,3 +32,12 @@ alpha is 254/255. Do not run background extraction on this native-alpha source.
 The active set still contains 42 roles plus Unrevealed. Jobless artwork is
 preserved in Git history and the original checkout. See
 `../../../docs/COURIER_DESIGN.md` for the adopted design and generation prompt.
+
+## Influenza (v4.5.1)
+
+Role 41 follows the original Tank/Medic Semibot anatomy and cream hexagonal
+frame. It includes a separate neck band, a cooling patch, sweat, flushed cheeks
+and a sneeze. The exterior has native alpha; do not color-key this source.
+The 1254 px master is preserved, with a 256 px RGBA runtime export made using
+System.Drawing high-quality bicubic resampling. There are now 43 role icons
+plus Unrevealed. See `../../../docs/INFLUENZA_4.5.1.md` for the design reference.

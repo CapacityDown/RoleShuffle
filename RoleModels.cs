@@ -128,7 +128,8 @@ internal static class RoleCatalog
                capability != StageRole.Diver &&
                capability != StageRole.Imitator &&
                capability != StageRole.Sniper &&
-               capability != StageRole.Brawler;
+               capability != StageRole.Brawler &&
+               capability != StageRole.Influenza;
     }
 
     internal static bool CanBeCopiedByImitator(StageRole role) =>
@@ -139,6 +140,7 @@ internal static class RoleCatalog
         role != StageRole.Werewolf &&
         role != StageRole.Jobless &&
         role != StageRole.Tuna &&
+        role != StageRole.Influenza &&
         !IsSecretRole(role);
 
     internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(

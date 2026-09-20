@@ -12,6 +12,13 @@ R.E.P.O.向け役職MODのソース管理用リポジトリです。
 Tank・Runner・Lifter・Courier・Kingの更新はv4.5.0の標準仕様です。旧仕様への切り替え設定は廃止し、設定移行時にバックアップを作成します。
 StinkerとBomberは移動による自動発生を維持し、任意停止操作は追加しません。
 
+v4.5.1のInfluenzaは[実装メモ](docs/INFLUENZA_4.5.1.md)を参照してください。
+感染判定と復元処理の検証は次のコマンドで実行できます。
+
+```powershell
+dotnet run --project tools/InfluenzaChecks/InfluenzaChecks.csproj -c Release
+```
+
 ```powershell
 dotnet run --project tools/OverhaulChecks/OverhaulChecks.csproj -c Release
 pwsh -NoProfile -File tools/Test-BaseUpgradeEligibility.ps1
