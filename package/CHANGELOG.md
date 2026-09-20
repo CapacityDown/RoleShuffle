@@ -1,3 +1,5 @@
+## 4.5.1
+
 ## 4.5.0
 - Changed Tank and Runner to strengthen Base health, sprint speed and stamina by 1.5 by default, with configurable minimums and growth limits. They are excluded from random assignment when no further benefit is available or a corresponding Base value reaches its limit.
 - Changed Lifter to make heavy objects easier to lift and turn, while small items use Strength level-1 handling. Strength displays level 200.
