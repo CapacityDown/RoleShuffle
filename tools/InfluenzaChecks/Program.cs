@@ -88,6 +88,9 @@ var s=new StageRoleController();s.Add(sneezer,sneezeTarget);s.Tick(330);s.Tick(3
 Check(sneezeTarget.Role==StageRole.Runner,"No early sneeze");
 s.Tick(366);
 Check(sneezeTarget.Role==StageRole.Influenza&&sneezer.Player.Spoken.Contains("Achoo!"),"Scheduled sneeze uses 5m range and native voice cue");
+var firstNoise=EnemyDirector.instance!.Investigations.Single();
+Check(firstNoise.Position.Equals(new Vector3(0,1,0))&&firstNoise.Radius==5f&&!firstNoise.PathfindOnly,
+    "Sneeze calls vanilla investigation at the fallback head position with normal voice radius");
 s.Stop();
 
 // Disaster retains all of its combined-role identity while running the same
@@ -109,9 +112,12 @@ foreach (var transmission in new[]{"voice","chat","sneeze"}.Select((mode,index)=
     d.Tick(start+30);
     Check(disaster.Player.Maximum==75&&disaster.Player.Health==38,"Disaster onset caps maximum without healing: "+transmission.mode);
     float spreadAt=start+(transmission.mode=="sneeze"?66:31);
+    int noiseBefore=EnemyDirector.instance!.Investigations.Count;
     if(transmission.mode=="voice") disaster.Player.voiceChat.clipLoudnessNoTTS=0.2f;
     d.Tick(spreadAt);
     if(transmission.mode=="chat") d.OnInfluenzaChat(disaster.Player,"hello",new(){Sender=disaster.Player.photonView.Owner});
+    Check(EnemyDirector.instance.Investigations.Count-noiseBefore==(transmission.mode=="sneeze"?2:0),
+        "Both Disaster carriers alert enemies only on a scheduled sneeze: "+transmission.mode);
     Check(victim.Role==StageRole.Influenza&&victim.AssignedRole==StageRole.Influenza,"Disaster spreads ordinary Influenza through "+transmission.mode);
     Check(d.Onset(victim.SteamId)==spreadAt+30,"Disaster's victim receives its own incubation: "+transmission.mode);
     Check(disaster.Role==StageRole.Disaster&&disaster.AssignedRole==StageRole.Disaster,"Disaster retains combined role: "+transmission.mode);
@@ -140,4 +146,48 @@ r.Tick(870);
 Check(incubatingDisaster.Role==StageRole.Disaster&&incubatingDisaster.Player.Maximum==75,"Protected Disaster still develops symptoms on its original deadline");
 Check(superbot.Player.Maximum==500&&!r.HasInfection(superbot.SteamId),"Superbot does not inherit Influenza");
 r.Stop();
+
+// Exercise the real sneeze path for local and vanilla guest avatars, including
+// failed audio, dead players, repeat frames and role changes.
+foreach (bool multiplayer in new[]{false,true})
+foreach (bool local in new[]{false,true})
+foreach (bool failedAudio in new[]{false,true})
+{
+    SemiFunc.Multiplayer=multiplayer;
+    Time.time=0;
+    EnemyDirector.instance=new();
+    var noisy=new RoleAssignment("noisy",StageRole.Influenza,0,0);
+    noisy.Player.photonView.Owner=local?PhotonNetwork.LocalPlayer:new NetworkPlayer();
+    noisy.Player.PlayerVisionTarget=new Vision { VisionTransform=new Transform { position=new(0,1.5f,0) } };
+    noisy.Player.FailChat=failedAudio;
+    var listener=new RoleAssignment("listener",StageRole.Runner,0,4.9f);
+    var noiseController=new StageRoleController();noiseController.Add(noisy,listener);
+    noiseController.Tick(29.99f);noiseController.Tick(30);noiseController.Tick(65.99f);
+    Check(EnemyDirector.instance.Investigations.Count==0,"No sneeze noise before its deadline");
+    noiseController.Tick(66);
+    var noise=EnemyDirector.instance.Investigations.Single();
+    Check(noise.Position.Equals(new Vector3(0,1.5f,0))&&noise.Radius==5f&&!noise.PathfindOnly,
+        "Host emits normal enemy investigation for local/remote avatars regardless of TTS success");
+    Check(listener.Role==StageRole.Influenza,"Audio failure does not interrupt sneeze infection");
+    listener.Player.Living=false;
+    noiseController.Tick(66);noiseController.Tick(67);
+    Check(EnemyDirector.instance.Investigations.Count==1,"Repeated frames do not repeat the sneeze noise");
+    noisy.Player.Living=false;noiseController.Tick(102);
+    Check(EnemyDirector.instance.Investigations.Count==1,"Dead carriers make no sneeze noise");
+    noisy.Player.Living=true;noiseController.Tick(103);
+    Check(EnemyDirector.instance.Investigations.Count==2,"Living carrier resumes scheduled sneeze noise");
+    noiseController.Change(noisy,StageRole.Runner);noiseController.Tick(139);
+    Check(EnemyDirector.instance.Investigations.Count==2,"Leaving Influenza stops its enemy alerts");
+    noiseController.Stop();
+}
+SemiFunc.Multiplayer=true;
+Time.time=0;
+EnemyDirector.instance=null;
+var noDirector=new StageRoleController();
+var isolated=new RoleAssignment("isolated",StageRole.Influenza,0,0);
+var isolatedTarget=new RoleAssignment("isolated-target",StageRole.Runner,0,4.9f);
+noDirector.Add(isolated,isolatedTarget);noDirector.Tick(30);noDirector.Tick(66);
+Check(isolated.Player.Spoken.Contains("Achoo!")&&isolatedTarget.Role==StageRole.Influenza,
+    "Missing enemy director does not interrupt the sneeze or infection");
+noDirector.Stop();
 Console.WriteLine($"Influenza: {count} checks passed (production rules and runtime).");

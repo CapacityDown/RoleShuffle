@@ -9,6 +9,11 @@
   incubation; reconnects retain the same state within the stage.
 - A uniform interval of 30–90 seconds yields an average of 60 seconds per sneeze.
   The native `Achoo!` TTS cue is separate from ordinary speech infection trials.
+  Each sneeze also calls native `EnemyDirector.SetInvestigate` on the host at the
+  carrier's head position, with the vanilla voice radius of 5 m and `pathfindOnly: false`.
+  Hearing is omnidirectional, independent of the infection fan; native enemy hearing
+  multipliers and investigation behavior still apply. The alert does not depend on
+  successful TTS playback or notification audio suppression. Disaster inherits it.
 - Sneeze: 60% per eligible living target, within 5 m and a horizontal ±20° fan.
 - Speech: 30% per eligible living target, within 3 m and a horizontal ±30° fan.
   Distance is measured in 3D between heads. No additional line-of-sight rule.

@@ -40,6 +40,13 @@ namespace Photon.Pun
 public static class SemiFunc { public static bool Multiplayer = true; public static bool IsMultiplayer() => Multiplayer; }
 public sealed class PlayerVoiceChat { public float clipLoudnessNoTTS; }
 public sealed class Vision { public Transform VisionTransform = new(); }
+public sealed class EnemyDirector
+{
+    public static EnemyDirector? instance = new();
+    public readonly List<(Vector3 Position, float Radius, bool PathfindOnly)> Investigations = new();
+    public void SetInvestigate(Vector3 position, float radius, bool pathfindOnly = false) =>
+        Investigations.Add((position, radius, pathfindOnly));
+}
 public sealed class PlayerAvatar
 {
     public string Id = "";
@@ -51,7 +58,12 @@ public sealed class PlayerAvatar
     public Photon.Pun.PhotonView photonView = new();
     public PlayerVoiceChat voiceChat = new();
     public List<string> Spoken = new();
-    public void ChatMessageSend(string text) => Spoken.Add(text);
+    public bool FailChat;
+    public void ChatMessageSend(string text)
+    {
+        if (FailChat) throw new InvalidOperationException("TTS unavailable");
+        Spoken.Add(text);
+    }
     public void ChatMessageSendRPC() {}
 }
 public sealed class ChatManager {}

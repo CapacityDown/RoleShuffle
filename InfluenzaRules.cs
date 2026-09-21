@@ -7,6 +7,8 @@ internal static class InfluenzaRules
     internal const float IncubationSeconds = 30f;
     internal const int MaximumHealth = 75;
     internal const float SpeechSilenceSeconds = 0.75f;
+    // Match vanilla voice investigation; each enemy applies its own hearing multiplier.
+    internal const float SneezeInvestigateRadius = 5f;
 
     // Uniform 30–90 seconds: irregular, with an exact expected interval of 60.
     internal static float SneezeInterval(double sample) =>

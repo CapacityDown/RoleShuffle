@@ -47,6 +47,10 @@ internal sealed partial class StageRoleController
             // Standard TTS reaches unmodded guests. This is not ordinary chat input.
             try { player.ChatMessageSend("Achoo!"); }
             catch (Exception error) { StageRolesPlugin.ModLogger.LogDebug($"Sneeze voice unavailable: {error.Message}"); }
+            // Alert enemies on the host even if TTS fails or notification audio is suppressed.
+            // Hearing is omnidirectional and separate from the forward infection fan.
+            EnemyDirector.instance?.SetInvestigate(
+                InfluenzaHeadPosition(player), InfluenzaRules.SneezeInvestigateRadius, pathfindOnly: false);
             SpreadInfluenza(assignment, sneeze: true);
         }
     }

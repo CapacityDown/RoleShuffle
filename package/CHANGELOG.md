@@ -1,5 +1,5 @@
 ## 4.5.1
-- Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Infection ends with the stage.
+- Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Sneezes also alert nearby enemies. Infection ends with the stage.
 - Unified role emblem background colors by category.
 - Updated hidden-role abilities.
 - Changed Lifter's heavy-object lifting and turning strength to the highest values available across Strength levels 0–200.
