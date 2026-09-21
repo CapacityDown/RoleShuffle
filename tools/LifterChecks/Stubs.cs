@@ -24,14 +24,31 @@ public sealed class PhysGrabber
     internal float overrideGrabStrength = -1;
     public float Grip, Torque;
 }
+// Preserve the fixture emitter's simple foreach while exposing the game's
+// Count/indexer collection contract to the melee prefix.
+public sealed class GrabberCollection(PhysGrabber[] items)
+{
+    public int Count => items.Length;
+    public PhysGrabber this[int index] => items[index];
+    public Enumerator GetEnumerator() => new(items);
+    public static implicit operator GrabberCollection(PhysGrabber[] items) => new(items);
+    public struct Enumerator(PhysGrabber[] items)
+    {
+        private int index = -1;
+        public PhysGrabber Current => items[index];
+        public bool MoveNext() => ++index < items.Length;
+    }
+}
 public sealed class PhysGrabObject
 {
     public UnityEngine.Rigidbody rb = new();
-    public bool isGun;
+    public bool isGun, isMelee;
+    public ItemAttributes? itemAttributes;
+    public T? GetComponent<T>() where T : class => itemAttributes as T;
     public bool overrideExtraGrabStrengthDisable, overrideExtraTorqueStrengthDisable;
     public float overrideGrabStrengthTimer, overrideMinGrabStrengthTimer, overrideTorqueStrengthTimer, overrideMinTorqueStrengthTimer;
     public float overrideGrabStrength, overrideMinGrabStrength, overrideTorqueStrength = 1, overrideMinTorqueStrength;
-    public PhysGrabber[] playerGrabbing = Array.Empty<PhysGrabber>();
+    public GrabberCollection playerGrabbing = Array.Empty<PhysGrabber>();
 
     // Vanilla's two blends in a per-player loop, emitted and run after patching.
     public void PhysicsGrabbingManipulation()
@@ -70,6 +87,55 @@ public sealed class PhysGrabObject
             blend = UnityEngine.Mathf.Min((strength - 1f) / (rb.mass < 2f ? 7f : 20f), 0.9f);
             item.Torque = UnityEngine.Mathf.Lerp(strength, reduced, blend);
         }
+    }
+}
+public sealed class ItemAttributes { }
+public sealed class ItemMelee
+{
+    public static bool HoldingPatchesEnabled;
+    private readonly PhysGrabObject physGrabObject;
+    public ItemMelee(PhysGrabObject owner) => physGrabObject = owner;
+    public bool Rotate, Attack, ThrowWhileHolding;
+    public float MassRatio = 1f, CustomTorque = 0.4f;
+    public Action? DuringHolding;
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    public float MeleeStrengthBonus(float divisor)
+    {
+        float result = 0;
+        if (HoldingPatchesEnabled && !LifterMeleeHoldingPatch.HoldingBonus(this, divisor, ref result)) return result;
+        if (physGrabObject.playerGrabbing.Count == 0) return 0;
+        float level = Math.Max(0, (physGrabObject.playerGrabbing[0].grabStrength - 1f) / 0.2f);
+        return level / (level + divisor);
+    }
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    public float MeleeStrengthScale(float amplitude) => 1f + amplitude * MeleeStrengthBonus(5f);
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    public void GrabOverridesLogic()
+    {
+        ItemMelee? previous = null;
+        if (HoldingPatchesEnabled) LifterMeleeHoldingPatch.BeginHolding(this, out previous);
+        try { GrabOverridesBody(); }
+        finally { if (HoldingPatchesEnabled) LifterMeleeHoldingPatch.EndHolding(previous); }
+    }
+    private void GrabOverridesBody()
+    {
+        float scale = MeleeStrengthScale(1f);
+        float attackScale = Attack ? MeleeStrengthScale(0.5f) : 1f;
+        if (!Rotate && physGrabObject.playerGrabbing.Count > 0)
+        {
+            physGrabObject.overrideMinGrabStrength = (17f + 42f * MeleeStrengthBonus(90f)) * MassRatio;
+            physGrabObject.overrideMinGrabStrengthTimer = 0.1f;
+            physGrabObject.overrideExtraGrabStrengthDisable = physGrabObject.overrideExtraTorqueStrengthDisable = true;
+            physGrabObject.overrideTorqueStrength = CustomTorque * MassRatio * scale * attackScale;
+            physGrabObject.overrideTorqueStrengthTimer = 0.1f;
+        }
+        if (Rotate)
+        {
+            physGrabObject.overrideMinTorqueStrength = 4f * MassRatio * scale;
+            physGrabObject.overrideMinTorqueStrengthTimer = 0.1f;
+        }
+        DuringHolding?.Invoke();
+        if (ThrowWhileHolding) throw new InvalidOperationException("holding fixture failure");
     }
 }
 namespace REPOJP.StageRoles

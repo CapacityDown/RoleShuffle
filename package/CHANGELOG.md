@@ -2,7 +2,7 @@
 - Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Sneezes also alert nearby enemies. Infection ends with the stage.
 - Unified role emblem background colors by category.
 - Updated hidden-role abilities.
-- Changed Lifter's heavy-object lifting and turning strength to the highest values available across Strength levels 0–200. Guns use level-1 handling with their normal aiming and recoil.
+- Changed Lifter's heavy-object lifting and turning strength to the highest values available across Strength levels 0–200. Shop items, including guns and melee weapons, use level-1 handling while retaining their normal use and attack behavior.
 - Gave Stinker's spawned uranium valuables a 0.5-second grace period before breaking, in both solo and multiplayer.
 - Increased King's default support to Speed/Range +2 and up to Strength +5 within 12 m.
 

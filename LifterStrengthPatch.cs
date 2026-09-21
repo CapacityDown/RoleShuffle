@@ -14,7 +14,12 @@ internal static class LifterStrengthPatch
     internal static void Install(Harmony harmony)
     {
         RoleOverhaulRules.LifterPhysicsAvailable = false;
-        try { harmony.PatchAll(typeof(LifterStrengthPatch)); }
+        try
+        {
+            // Holding prefixes stay inert until the shared physics patch succeeds.
+            harmony.PatchAll(typeof(LifterMeleeHoldingPatch));
+            harmony.PatchAll(typeof(LifterStrengthPatch));
+        }
         catch (Exception error)
         {
             RoleOverhaulRules.LifterPhysicsAvailable = false;

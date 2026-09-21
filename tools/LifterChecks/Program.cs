@@ -346,5 +346,120 @@ runGun(gun);
 Near(gunLifter.Grip, RoleOverhaulRules.LifterEffectiveStrength(false), "Switching gun to heavy cargo restores peak grip");
 Near(gunLifter.Torque, RoleOverhaulRules.LifterEffectiveStrength(false, true), "Switching gun to heavy cargo restores peak rotation");
 
+
+// Shop equipment of any mass uses the native level-1 pipeline, including
+// weapons and other purchase items. Plain valuables keep the heavy target.
+Check(physics.Fields.Any(f => f.Name == "isMelee" && f.FieldType.FullName == "System.Boolean"), "Installed melee classification field");
+var meleeType = game.MainModule.Types.Single(t => t.Name == "ItemMelee");
+Check(meleeType.Fields.Any(f => f.Name == "physGrabObject" && f.FieldType.Name == "PhysGrabObject"), "Installed melee object reference");
+Check(meleeType.Methods.Single(m => m.Name == "MeleeStrengthBonus").Body.Instructions.Count(i =>
+    i.Operand is FieldReference f && f.Name == "grabStrength") == 1, "Melee independently reads first-holder Strength");
+var itemHolder = new PhysGrabber();
+var itemOther = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Runner } };
+var shopItem = new PhysGrabObject { playerGrabbing = new[] { itemHolder, itemOther } };
+foreach (string kind in new[] { "shop", "melee", "gun", "shop-melee" })
+foreach (float mass in new[] { 0.1f, 1.999f, 2f, 8f, 100f })
+foreach (StageRole role in new[] { StageRole.Lifter, StageRole.Superbot })
+{
+    shopItem.isGun = kind == "gun";
+    shopItem.isMelee = kind.Contains("melee");
+    shopItem.itemAttributes = kind.StartsWith("shop") ? new ItemAttributes() : null;
+    shopItem.rb.mass = reference.rb.mass = mass;
+    itemHolder.playerAvatar.Role = role;
+    for (int state = 0; state < 8; state++)
+    {
+        GunState(shopItem, itemHolder, state); GunState(shopItem, itemOther, state);
+        GunState(reference, referenceHolder, state);
+        referenceHolder.grabStrength = 1.2f;reference.PhysicsGrabbingGunFixture();
+        float expectedGrip = referenceHolder.Grip, expectedTorque = referenceHolder.Torque;
+        foreach (int level in new[] { 0, 1, 25, 50, 100, 200 })
+        {
+            itemHolder.grabStrength = itemOther.grabStrength = 1f + level * 0.2f;
+            runGun(shopItem);
+            Near(itemHolder.Grip, expectedGrip, kind + " native level-1 grip");
+            Near(itemHolder.Torque, expectedTorque, kind + " native level-1 torque with item overrides");
+            Near(itemHolder.grabStrength, 1f + level * 0.2f, "Equipment does not mutate shared Strength");
+            referenceHolder.grabStrength = itemOther.grabStrength;reference.PhysicsGrabbingGunFixture();
+            Near(itemOther.Grip, referenceHolder.Grip, "Other equipment holder keeps their own Strength");
+            Near(itemOther.Torque, referenceHolder.Torque, "Other equipment holder keeps native torque");
+        }
+    }
+}
+
+// Run the production prefix/finalizer through the fixture dispatcher: the
+// game's legacy Harmony detour runtime cannot patch the net9 test process.
+// Swing bonus calls outside the holding scope must stay native.
+ItemMelee.HoldingPatchesEnabled = true;
+try
+{
+    var meleeHolder = new PhysGrabber();
+    var meleeObject = new PhysGrabObject { isMelee = true, itemAttributes = new(), playerGrabbing = new[] { meleeHolder } };
+    var melee = new ItemMelee(meleeObject);
+    var nativeHolder = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Runner }, grabStrength = 1.2f };
+    var nativeObject = new PhysGrabObject { isMelee = true, itemAttributes = new(), playerGrabbing = new[] { nativeHolder } };
+    var nativeMelee = new ItemMelee(nativeObject);
+    foreach (StageRole role in new[] { StageRole.Lifter, StageRole.Superbot })
+    foreach (float massRatio in new[] { 0.1f, 1f })
+    foreach (float torque in new[] { 0.4f, 2f, 12f })
+    foreach (bool rotating in new[] { false, true })
+    foreach (bool attacking in new[] { false, true })
+    {
+        meleeHolder.playerAvatar.Role = role;
+        melee.MassRatio = nativeMelee.MassRatio = massRatio;
+        melee.CustomTorque = nativeMelee.CustomTorque = torque;
+        melee.Rotate = nativeMelee.Rotate = rotating;
+        melee.Attack = nativeMelee.Attack = attacking;
+        nativeMelee.GrabOverridesLogic();
+        for (int level = 0; level <= 200; level++)
+        {
+            meleeHolder.grabStrength = 1f + 0.2f * level;
+            float swingBefore = melee.MeleeStrengthScale(0.3f);
+            melee.GrabOverridesLogic();
+            Near(meleeObject.overrideMinGrabStrength, nativeObject.overrideMinGrabStrength, "Melee hold force matches native Lv1");
+            Near(meleeObject.overrideTorqueStrength, nativeObject.overrideTorqueStrength, "Melee custom torque matches native Lv1 holding");
+            Near(meleeObject.overrideMinTorqueStrength, nativeObject.overrideMinTorqueStrength, "Melee manual rotation matches native Lv1 holding");
+            runGun(meleeObject);nativeObject.PhysicsGrabbingGunFixture();
+            Near(meleeHolder.Grip, nativeHolder.Grip, "Combined melee override and physics path matches Lv1 grip");
+            Near(meleeHolder.Torque, nativeHolder.Torque, "Combined melee override and physics path matches Lv1 rotation");
+            Near(melee.MeleeStrengthScale(0.3f), swingBefore, "Swing bonus unchanged outside holding scope");
+            Near(meleeHolder.grabStrength, 1f + 0.2f * level, "Melee overrides do not change stored grabber Strength");
+        }
+    }
+    meleeHolder.playerAvatar.Role = StageRole.Lifter;meleeHolder.grabStrength = 41;
+    melee.Rotate = false;melee.Attack = false;melee.MassRatio = 1;melee.CustomTorque = 0.4f;
+    float expectedNativeBonus = melee.MeleeStrengthBonus(90f);
+    melee.ThrowWhileHolding = true;
+    try { melee.GrabOverridesLogic();Check(false, "Fixture must throw"); }
+    catch (InvalidOperationException error) { Check(error.Message == "holding fixture failure", "Original exception preserved"); }
+    melee.ThrowWhileHolding = false;
+    Near(melee.MeleeStrengthBonus(90f), expectedNativeBonus, "Finalizer clears context after a failed hold update");
+    nativeMelee.ThrowWhileHolding = true;
+    melee.DuringHolding = () =>
+    {
+        Near(nativeMelee.MeleeStrengthBonus(90f), 1f / 91f, "Other weapon unaffected by active holding scope");
+        try { nativeMelee.GrabOverridesLogic(); } catch (InvalidOperationException) { }
+        Near(melee.MeleeStrengthBonus(90f), 1f / 91f, "Nested failure restores outer weapon context");
+    };
+    melee.GrabOverridesLogic();melee.DuringHolding = null;nativeMelee.ThrowWhileHolding = false;
+    Near(melee.MeleeStrengthBonus(90f), expectedNativeBonus, "Nested context fully cleared after update");
+    void NativeMeleeHold(string reason)
+    {
+        melee.GrabOverridesLogic();
+        Near(meleeObject.overrideMinGrabStrength, 17f + 42f * expectedNativeBonus, reason);
+    }
+    controller.Authority = false;NativeMeleeHold("Guests do not modify melee overrides");controller.Authority = true;
+    controller.Ready = false;NativeMeleeHold("Stage end stops melee overrides");controller.Ready = true;
+    controller._config.Enabled.Value = false;NativeMeleeHold("Disabled role mod leaves melee native");controller._config.Enabled.Value = true;
+    meleeHolder.playerAvatar.Living = false;NativeMeleeHold("Dead holder leaves melee native");meleeHolder.playerAvatar.Living = true;
+    RoleOverhaulRules.LifterPhysicsAvailable = false;NativeMeleeHold("Unavailable Lifter patch leaves melee native");RoleOverhaulRules.LifterPhysicsAvailable = true;
+    meleeHolder.playerAvatar.Role = StageRole.Runner;NativeMeleeHold("Role change ends melee holding correction");
+    meleeHolder.playerAvatar.Role = StageRole.Lifter;
+    nativeHolder.grabStrength = 41;meleeObject.playerGrabbing = new[] { nativeHolder, meleeHolder };
+    NativeMeleeHold("Non-Lifter first holder retains native shared override selection");
+    meleeObject.playerGrabbing = Array.Empty<PhysGrabber>();melee.GrabOverridesLogic();
+    Near(melee.MeleeStrengthBonus(90f), 0, "Unheld melee retains zero bonus");
+}
+finally { ItemMelee.HoldingPatchesEnabled = false; }
+
 Console.WriteLine($"PASS: {checks} fixed Lifter math, installed-game IL, emitted IL and host runtime checks.");
 Console.WriteLine("Unity gameplay and vanilla guest networking still require in-game verification.");

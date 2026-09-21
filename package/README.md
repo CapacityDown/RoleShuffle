@@ -79,7 +79,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Tank | Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit. | Health minimum 21. | Minimum, multiplier, cap |
 | Runner | Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Heavy-object lifting and turning use the strongest values across Strength levels 0–200. Light objects and guns use Strength level-1 handling. | Strength displays level 200. Excluded from random assignment at Base Strength level 50, which already reaches the maximum. | Fixed ability strength |
+| Lifter | Heavy-object lifting and turning use the strongest values across Strength levels 0–200. Light objects and shop items (including guns and melee weapons) use Strength level-1 handling. | Strength displays level 200. Excluded from random assignment at Base Strength level 50, which already reaches the maximum. | Fixed ability strength |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -123,7 +123,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 ### Role growth and support settings
 
 - **Tank / Runner:** strengthen your Base maximum HP, sprint speed and stamina by 1.5 by default, while keeping configured minimums. Their growth limits are 4,100 HP, 205 sprint speed and 2,040 stamina. Existing Base values are preserved. A role is excluded from random assignment if any corresponding Base value reaches its limit or it cannot provide further upgrades.
-- **Lifter:** heavy-object lifting and turning stay at the maximum available across Strength levels 0–200, regardless of Base Strength. Small items and guns use Strength level-1 handling; the displayed Strength level is 200. Base Strength level 50 already reaches the maximum and is excluded from random assignment.
+- **Lifter:** heavy-object lifting and turning stay at the maximum available across Strength levels 0–200, regardless of Base Strength. Small items and shop equipment use Strength level-1 handling; the displayed Strength level is 200. Base Strength level 50 already reaches the maximum and is excluded from random assignment.
 - **Courier:** delivering a valuable restores HP and pauses automatic HP loss according to its size. Each item rewards each player once per stage, including after revival or rejoining.
 - **King:** grants nearby allies temporary Speed, Range and Strength upgrades. The bonus ends outside the area. It does not affect the King or increase HP or stamina.
 
@@ -565,7 +565,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Tank | 基礎の最大HPを1.5倍に強化します。倍率強化の上限は4,100HPです。 | 最低Health 21。 | 最低値・倍率・上限 |
 | Runner | 基礎の走行速度・スタミナを1.5倍に強化します。倍率強化の上限は205・2,040です。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | 重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定。小物や銃はStrength Lv1相当の力で扱います。 | Strengthの表示はLv200。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。 | 固定能力 |
+| Lifter | 重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定。小物やショップ購入アイテム（銃・近接武器を含む）はStrength Lv1相当の力で扱います。 | Strengthの表示はLv200。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。 | 固定能力 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -609,7 +609,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 ### 役職の成長・支援設定
 
 - **Tank / Runner：** 基礎の最大HP・走行速度・スタミナを、設定した最低値を保ちながら初期設定で1.5倍に強化します。倍率強化の上限は4,100HP・走行速度205・スタミナ2,040。高い基礎値は維持します。対応する基礎値のいずれかが上限に達している場合や、追加の強化がない場合は抽選対象外です。
-- **Lifter：** Base Strengthにかかわらず、重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定します。小物や銃はStrength Lv1相当の力で扱い、Strengthの表示はLv200です。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。
+- **Lifter：** Base Strengthにかかわらず、重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定します。小物やショップ購入アイテム（銃・近接武器を含む）はStrength Lv1相当の力で扱い、Strengthの表示はLv200です。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。
 - **Courier：** 貴重品を配達すると、大きさに応じてHPが回復し、自動HP減少が一時停止します。同じ品の報酬は各自1ステージ1回で、蘇生や再参加でも再獲得できません。
 - **King：** 範囲内の味方にSpeed・Range・Strengthを一時付与し、範囲外で解除します。King自身や、HP・スタミナは対象外です。
 
