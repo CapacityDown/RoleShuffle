@@ -136,7 +136,7 @@ Use English first and Japanese second. The two sections must describe the same r
 ### Style rules
 
 - Write for mod users, not developers.
-- Use in-game English names consistently in both language sections.
+- Use in-game English names consistently in both language sections. Role-name columns in role lists must contain only the English role name, without Japanese names or parenthetical translations.
 - Keep README and CHANGELOG within Thunderstore's 100,000-character limit, encoded as UTF-8 without a BOM. The limit counts decoded characters, not UTF-8 bytes. Prefer shared explanations for repeated settings while retaining every key, default, range, effect, and control scope.
 - Keep internal class names, Harmony patches, RPC names, reflection, Prefab resolution, hashes, and historical implementation details out of the README.
 - Use backticks for configuration keys, literal role names where needed, and numeric examples.
