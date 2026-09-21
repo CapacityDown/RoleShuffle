@@ -210,6 +210,9 @@ internal sealed class StageRolesConfig
 
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
+        LifterHeavyGripMultiplier = BindFloat(config, "Lifter", "HeavyGripMultiplier", 1f, 0.1f, 5f, "Heavy-object lifting strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
+        LifterHeavyRotationMultiplier = BindFloat(config, "Lifter", "HeavyRotationMultiplier", 1f, 0.1f, 5f, "Heavy-object turning strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
+        LifterLightItemStrengthLevel = BindInt(config, "Lifter", "LightItemStrengthLevel", 1, 0, 200, "Strength level used to hold light objects and shop equipment, including weapons. Default 1 reduces shaking. Does not change the displayed Strength level or weapon attack bonuses.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");
@@ -347,6 +350,7 @@ internal sealed class StageRolesConfig
         StinkerDistance = BindFloat(config, "Stinker", "DistancePerCloud", 2f, 1f, 100f, "Travel distance required per uranium cloud.");
         StinkerSafetyDistance = BindFloat(config, "Stinker", "MinimumSafetyDistance", 2f, 1f, 30f, "Minimum distance from the newest pending cloud when it is created.");
         StinkerAllowTruckSpawns = BindBool(config, "Stinker", "AllowTruckSpawns", false, "Allows uranium cloud creation inside the truck.");
+        StinkerBreakGraceSeconds = BindFloat(config, "Stinker", "BreakGraceSeconds", 0.5f, 0f, 10f, "Seconds from a spawned uranium valuable being ready until it breaks. Applies to newly spawned valuables; clouds remain automatic.");
 
         EngineerEnabled = RoleEnabled(config, "Engineer");
         EngineerWeight = RoleWeight(config, "Engineer", 70);
@@ -461,6 +465,18 @@ internal sealed class StageRolesConfig
 
         InfluenzaEnabled = RoleEnabled(config, "Influenza");
         InfluenzaWeight = RoleWeight(config, "Influenza", 20);
+        InfluenzaIncubationSeconds = BindFloat(config, "Influenza", "IncubationSeconds", 30f, 0f, 300f, "Seconds until symptoms begin after assignment or infection. Applies to new infections; existing timers are kept.");
+        InfluenzaMaximumHealth = BindInt(config, "Influenza", "MaximumHealth", 75, 1, 10000, "Maximum HP forced after symptoms begin. Raising this value does not heal the player.");
+        InfluenzaSneezeMinimumSeconds = BindFloat(config, "Influenza", "SneezeMinimumSeconds", 30f, 1f, 600f, "Shortest random sneeze interval after symptoms begin. The two interval values are sorted; changes apply when the next sneeze is scheduled.");
+        InfluenzaSneezeMaximumSeconds = BindFloat(config, "Influenza", "SneezeMaximumSeconds", 90f, 1f, 600f, "Longest random sneeze interval after symptoms begin. Equal interval values give a regular interval.");
+        InfluenzaSneezeRange = BindFloat(config, "Influenza", "SneezeRange", 5f, 0.1f, 30f, "Maximum distance in metres for sneeze infection.");
+        InfluenzaSneezeAngle = BindFloat(config, "Influenza", "SneezeAngleDegrees", 40f, 1f, 360f, "Full horizontal infection angle in front when sneezing. 40 means 20 degrees to each side.");
+        InfluenzaSneezeChance = BindFloat(config, "Influenza", "SneezeChancePercent", 60f, 0f, 100f, "Infection chance for each eligible teammate per sneeze. Zero prevents sneeze infection.");
+        InfluenzaSpeechRange = BindFloat(config, "Influenza", "SpeechRange", 3f, 0.1f, 30f, "Maximum distance in metres for ordinary voice and text-chat infection.");
+        InfluenzaSpeechAngle = BindFloat(config, "Influenza", "SpeechAngleDegrees", 60f, 1f, 360f, "Full horizontal infection angle for voice and text chat. 60 means 30 degrees to each side.");
+        InfluenzaSpeechChance = BindFloat(config, "Influenza", "SpeechChancePercent", 30f, 0f, 100f, "Infection chance for each eligible teammate per utterance or chat message. Zero prevents speech infection.");
+        InfluenzaSpeechSilenceSeconds = BindFloat(config, "Influenza", "SpeechSilenceSeconds", 0.75f, 0.1f, 5f, "Silent gap required before voice counts as a new utterance. Text chat always uses one check per message.");
+        InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
         SuperbotEnabled = BindBool(config, "???1", "Enabled", true, "???");
         DisasterEnabled = BindBool(config, "???2", "Enabled", true, "???");
@@ -569,6 +585,9 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> JumperExtraJumpLevels { get; }
     internal ConfigEntry<bool> LifterEnabled { get; }
     internal ConfigEntry<int> LifterWeight { get; }
+    internal ConfigEntry<float> LifterHeavyGripMultiplier { get; }
+    internal ConfigEntry<float> LifterHeavyRotationMultiplier { get; }
+    internal ConfigEntry<int> LifterLightItemStrengthLevel { get; }
     internal ConfigEntry<bool> LauncherEnabled { get; }
     internal ConfigEntry<int> LauncherWeight { get; }
     internal ConfigEntry<int> LauncherLaunchLevels { get; }
@@ -668,6 +687,7 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> StinkerDistance { get; }
     internal ConfigEntry<float> StinkerSafetyDistance { get; }
     internal ConfigEntry<bool> StinkerAllowTruckSpawns { get; }
+    internal ConfigEntry<float> StinkerBreakGraceSeconds { get; }
     internal ConfigEntry<bool> EngineerEnabled { get; }
     internal ConfigEntry<int> EngineerWeight { get; }
     internal ConfigEntry<bool> TricksterEnabled { get; }
@@ -749,6 +769,18 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> SuperbotEnabled { get; }
     internal ConfigEntry<bool> InfluenzaEnabled { get; }
     internal ConfigEntry<int> InfluenzaWeight { get; }
+    internal ConfigEntry<float> InfluenzaIncubationSeconds { get; }
+    internal ConfigEntry<int> InfluenzaMaximumHealth { get; }
+    internal ConfigEntry<float> InfluenzaSneezeMinimumSeconds { get; }
+    internal ConfigEntry<float> InfluenzaSneezeMaximumSeconds { get; }
+    internal ConfigEntry<float> InfluenzaSneezeRange { get; }
+    internal ConfigEntry<float> InfluenzaSneezeAngle { get; }
+    internal ConfigEntry<float> InfluenzaSneezeChance { get; }
+    internal ConfigEntry<float> InfluenzaSpeechRange { get; }
+    internal ConfigEntry<float> InfluenzaSpeechAngle { get; }
+    internal ConfigEntry<float> InfluenzaSpeechChance { get; }
+    internal ConfigEntry<float> InfluenzaSpeechSilenceSeconds { get; }
+    internal ConfigEntry<float> InfluenzaSneezeNoiseRadius { get; }
     internal ConfigEntry<bool> DisasterEnabled { get; }
 
     internal bool RoleIsEnabled(StageRole role) => RoleEnabledEntry(role)?.Value ?? false;

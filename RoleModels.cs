@@ -185,8 +185,10 @@ internal static class RoleCatalog
             if (!RoleOverhaulRules.LifterPhysicsAvailable) return true;
             foreach (UpgradeGrant baseline in baseUpgrades)
                 if (baseline.CommandName == "Strength")
-                    return RoleOverhaulRules.LifterBaseReachesTarget(baseline.Level);
-            return false;
+                    return RoleOverhaulRules.LifterBaseReachesTarget(baseline.Level,
+                        config.LifterHeavyGripMultiplier.Value, config.LifterHeavyRotationMultiplier.Value);
+            return RoleOverhaulRules.LifterBaseReachesTarget(0,
+                config.LifterHeavyGripMultiplier.Value, config.LifterHeavyRotationMultiplier.Value);
         }
         if (RoleOverhaulRules.GrowsWithBase(role))
         {

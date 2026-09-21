@@ -190,4 +190,69 @@ noDirector.Add(isolated,isolatedTarget);noDirector.Tick(30);noDirector.Tick(66);
 Check(isolated.Player.Spoken.Contains("Achoo!")&&isolatedTarget.Role==StageRole.Influenza,
     "Missing enemy director does not interrupt the sneeze or infection");
 noDirector.Stop();
+// Non-default host settings run through the production infection path.
+Time.time = 0; UnityEngine.Random.value = 0.5f; EnemyDirector.instance = new();
+var custom = new StageRoleController();
+custom._config.InfluenzaIncubationSeconds.Value = 4;
+custom._config.InfluenzaMaximumHealth.Value = 42;
+custom._config.InfluenzaSneezeMinimumSeconds.Value = 9;
+custom._config.InfluenzaSneezeMaximumSeconds.Value = 3;
+custom._config.InfluenzaSneezeRange.Value = 8;
+custom._config.InfluenzaSneezeAngle.Value = 180;
+custom._config.InfluenzaSneezeChance.Value = 100;
+custom._config.InfluenzaSpeechChance.Value = 0;
+custom._config.InfluenzaSneezeNoiseRadius.Value = 12;
+var customSource = new RoleAssignment("custom-source", StageRole.Influenza, 0, 0);
+var customTarget = new RoleAssignment("custom-target", StageRole.Runner, 5, 0);
+custom.Add(customSource, customTarget);custom.Tick(3.99f);
+Check(customSource.Player.Maximum == 500, "Custom incubation has no early cap");
+custom.Tick(4);
+Check(customSource.Player.Maximum == 42, "Custom maximum HP at configured onset");
+custom._config.InfluenzaIncubationSeconds.Value = 99;
+custom._config.InfluenzaMaximumHealth.Value = 60;custom.Tick(5);
+Check(custom.Onset(customSource.SteamId) == 4 && customSource.Player.Maximum == 60 && customSource.Player.Health == 42,
+    "Live HP tuning never heals or restarts an existing incubation");
+customSource.Player.voiceChat.clipLoudnessNoTTS = 0.2f;custom.Tick(6);
+Check(customTarget.Role == StageRole.Runner, "Zero speech probability prevents transmission");
+custom.Tick(9.99f);Check(customTarget.Role == StageRole.Runner, "Reversed interval endpoints are sorted");
+custom.Tick(10);
+Check(customTarget.Role == StageRole.Influenza && custom.Onset(customTarget.SteamId) == 109,
+    "Custom wide sneeze range and 100 percent chance apply; new infection gets new incubation");
+Check(EnemyDirector.instance.Investigations.Single().Radius == 12, "Configured enemy hearing radius");
+custom._config.InfluenzaSneezeMinimumSeconds.Value = custom._config.InfluenzaSneezeMaximumSeconds.Value = 1;
+custom._config.InfluenzaSneezeNoiseRadius.Value = 0;
+int utterances = customSource.Player.Spoken.Count;custom.Tick(15.99f);
+Check(customSource.Player.Spoken.Count == utterances, "Changing interval preserves already scheduled sneeze");
+custom.Tick(16);custom.Tick(17);
+Check(customSource.Player.Spoken.Count == utterances + 2 && EnemyDirector.instance.Investigations.Count == 1,
+    "New interval applies on scheduling; zero noise radius suppresses alerts");
+custom.Stop();
+Time.time = 20;
+var speech = new StageRoleController();
+speech._config.InfluenzaIncubationSeconds.Value = 0;
+speech._config.InfluenzaSpeechRange.Value = 10;
+speech._config.InfluenzaSpeechAngle.Value = 180;
+speech._config.InfluenzaSpeechChance.Value = 100;
+speech._config.InfluenzaSpeechSilenceSeconds.Value = 2;
+speech._config.InfluenzaSneezeMinimumSeconds.Value = speech._config.InfluenzaSneezeMaximumSeconds.Value = 600;
+var talker = new RoleAssignment("tuned-talker", StageRole.Influenza, 0, 0);
+var listenerOne = new RoleAssignment("listener-one", StageRole.Runner, 4, 0);
+speech.Add(talker, listenerOne);speech.Tick(20);
+talker.Player.voiceChat.clipLoudnessNoTTS = 0.2f;speech.Tick(20.1f);
+Check(listenerOne.Role == StageRole.Influenza, "Custom speech fan, range and chance apply to voice");
+var listenerTwo = new RoleAssignment("listener-two", StageRole.Runner, -4, 0);speech.Add(listenerTwo);speech.Tick(21.1f);
+Check(listenerTwo.Role == StageRole.Runner, "Custom silence gap prevents repeated trials during an utterance");
+speech.Tick(23.2f);Check(listenerTwo.Role == StageRole.Influenza, "New utterance after configured silence gap");
+speech._config.InfluenzaSpeechRange.Value = 2;
+var outside = new RoleAssignment("outside-tuned-range", StageRole.Runner, 0, 4);speech.Add(outside);
+speech.OnInfluenzaChat(talker.Player, "hello", new() { Sender = talker.Player.photonView.Owner });
+Check(outside.Role == StageRole.Runner, "Text chat uses the same configured range");
+speech._config.InfluenzaSpeechRange.Value = 10;
+speech.OnInfluenzaChat(talker.Player, "hello", new() { Sender = talker.Player.photonView.Owner });
+Check(outside.Role == StageRole.Influenza, "Text chat uses configured transmission chance");
+speech.Stop();
+Check(InfluenzaRules.InRange(1, -1, true, sneezeAngle: 360) && !InfluenzaRules.InRange(1, Cos(11), true, sneezeAngle: 20), "Custom full-angle boundaries");
+Check(!InfluenzaRules.Infects(0, true, 0, 100) && InfluenzaRules.Infects(0.999, false, 0, 100) &&
+    InfluenzaRules.Infects(1, true, 100, 0) && !InfluenzaRules.Infects(1, false, 100, 0), "Zero and 100 percent settings include Unity random endpoints");
+
 Console.WriteLine($"Influenza: {count} checks passed (production rules and runtime).");

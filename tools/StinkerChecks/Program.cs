@@ -11,6 +11,7 @@ void Check(bool value, string message)
     checks++;
 }
 
+foreach (float grace in new[] { 0f, 0.5f, 3f, 10f })
 foreach (bool multiplayer in new[] { false, true })
 foreach (string scenario in new[] { "normal", "disaster", "returned", "dead", "truck", "removed", "replaced", "stopped", "authority", "invalid-view", "send-failed" })
 {
@@ -24,7 +25,9 @@ foreach (string scenario in new[] { "normal", "disaster", "returned", "dead", "t
     var assignment = new RoleAssignment { Player = new PlayerAvatar() };
     if (scenario == "disaster") assignment.Role = StageRole.Disaster;
     assignment.Player.transform.position = new Vector3(5, 0, 0);
-    var runtime = new StinkerRoleRuntime(new MonoBehaviour(), new StageRolesConfig(), new VanillaRolePrefabResolver());
+    var config = new StageRolesConfig();
+    config.StinkerBreakGraceSeconds.Value = grace;
+    var runtime = new StinkerRoleRuntime(new MonoBehaviour(), config, new VanillaRolePrefabResolver());
     runtime.Begin(new[] { assignment });
     var flags = BindingFlags.NonPublic | BindingFlags.Instance;
     var points = (Dictionary<string, List<Vector3>>)typeof(StinkerRoleRuntime).GetField("_pendingTrailPoints", flags)!.GetValue(runtime)!;
@@ -40,7 +43,7 @@ foreach (string scenario in new[] { "normal", "disaster", "returned", "dead", "t
     body.isKinematic = false; // Vanilla EnableRigidbody resets this after 0.1 seconds.
     Check(body.constraints == RigidbodyConstraints.FreezeAll, scenario + ": freeze survives vanilla activation");
     Check(PhotonNetwork.Sends == 0 && PhysGrabObjectImpactDetector.LocalBreaks == 0, scenario + ": no immediate break");
-    Check(routine.MoveNext() && routine.Current is WaitForSeconds { Seconds: 0.5f }, scenario + ": half-second grace after spawn");
+    Check(routine.MoveNext() && routine.Current is WaitForSeconds delay && delay.Seconds == grace, scenario + ": configured grace after spawn");
     Check(PhotonNetwork.Sends == 0 && PhysGrabObjectImpactDetector.LocalBreaks == 0,
         scenario + ": no local or remote break during grace");
     switch (scenario)
@@ -209,10 +212,12 @@ namespace REPOJP.StageRoles
     internal class StageRolesConfig
     {
         public readonly Setting StinkerAllowTruckSpawns = new();
+        public readonly NumberSetting StinkerBreakGraceSeconds = new();
         public float ClampedStinkerDistance => 2;
         public float ClampedStinkerSafetyDistance => 2;
     }
     internal class Setting { public bool Value => false; }
+    internal class NumberSetting { public float Value = 0.5f; }
     internal class ResolvedRolePrefab { public string ResourcePath = "uranium"; public GameObject Prefab = new(); }
     internal class VanillaRolePrefabResolver
     {

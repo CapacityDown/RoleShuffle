@@ -461,5 +461,32 @@ try
 }
 finally { ItemMelee.HoldingPatchesEnabled = false; }
 
+controller._config.LifterHeavyGripMultiplier.Value = 2f;
+controller._config.LifterHeavyRotationMultiplier.Value = 0.5f;
+var tunedHolder = new PhysGrabber { grabStrength = 41f };
+var tunedObject = new PhysGrabObject { rb = new Rigidbody { mass = 8f }, playerGrabbing = new[] { tunedHolder } };
+Near(LifterStrengthRuntime.Blend(41, 1, 0.9f, tunedObject, tunedHolder, false), 143d / 12d, "Custom heavy grip applied immediately");
+Near(LifterStrengthRuntime.Blend(41, 1, 0.9f, tunedObject, tunedHolder, true), 143d / 48d, "Custom heavy rotation applied independently");
+Check(!RoleOverhaulRules.LifterBaseReachesTarget(50, 2, 0.5), "Increased grip remains eligible at Base peak");
+Check(!RoleOverhaulRules.LifterBaseReachesTarget(50, 0.5, 2), "Increased rotation remains eligible at Base peak");
+Check(RoleOverhaulRules.LifterBaseReachesTarget(50, 0.5, 0.5), "Base exceeding both custom targets is excluded");
+foreach (int level in new[] { 0, 1, 12, 200 })
+{
+    controller._config.LifterLightItemStrengthLevel.Value = level;
+    tunedObject.rb.mass = 1f;
+    Near(LifterStrengthRuntime.Blend(41, 1, 0.9f, tunedObject, tunedHolder, false), RoleOverhaulRules.EffectiveGrabStrength(level, true), "Custom light-object grip");
+    tunedObject.itemAttributes = new(); tunedObject.rb.mass = 8;
+    Near(LifterStrengthRuntime.NativeStrengthInput(41, tunedObject, tunedHolder), 1f + 0.2f * level, "Custom shop holding level applies independently of mass");
+    var tunedMelee = new ItemMelee(tunedObject); ItemMelee.HoldingPatchesEnabled = true;
+    tunedMelee.GrabOverridesLogic(); ItemMelee.HoldingPatchesEnabled = false;
+    Near(tunedObject.overrideMinGrabStrength, 17f + 42f * level / (level + 90f), "Melee uses same custom holding level");
+    tunedObject.overrideMinGrabStrengthTimer = tunedObject.overrideTorqueStrengthTimer = 0;
+    tunedObject.overrideExtraGrabStrengthDisable = tunedObject.overrideExtraTorqueStrengthDisable = false;
+    tunedObject.itemAttributes = null;
+    Near(tunedHolder.grabStrength, 41, "Settings never mutate shared Strength");
+}
+controller._config.LifterHeavyGripMultiplier.Value = controller._config.LifterHeavyRotationMultiplier.Value = 1;
+controller._config.LifterLightItemStrengthLevel.Value = 1;
+
 Console.WriteLine($"PASS: {checks} fixed Lifter math, installed-game IL, emitted IL and host runtime checks.");
 Console.WriteLine("Unity gameplay and vanilla guest networking still require in-game verification.");

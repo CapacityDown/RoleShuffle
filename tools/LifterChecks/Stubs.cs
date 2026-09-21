@@ -144,6 +144,9 @@ namespace REPOJP.StageRoles
     internal sealed class StageRolesConfig
     {
         internal Entry<bool> Enabled = new(true);
+    internal Entry<float> LifterHeavyGripMultiplier { get; } = new(1f);
+    internal Entry<float> LifterHeavyRotationMultiplier { get; } = new(1f);
+    internal Entry<int> LifterLightItemStrengthLevel { get; } = new(1);
     }
     internal sealed partial class StageRoleController
     {

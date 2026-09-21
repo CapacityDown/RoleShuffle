@@ -79,7 +79,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Tank | Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit. | Health minimum 21. | Minimum, multiplier, cap |
 | Runner | Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Heavy-object lifting and turning use the strongest values across Strength levels 0–200. | Strength displays level 200. Excluded from random assignment at Base Strength level 50, which already reaches the maximum. | Fixed ability strength |
+| Lifter | Heavy-object lifting and turning use the strongest values across Strength levels 0–200. | Strength displays level 200. Excluded when Base meets both strength targets (Lv50 with defaults). | Holding strength |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -97,7 +97,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Mage | Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long. | Selecting a matching expression activates its spell; clearing it does not. Spells share a 3-second cooldown, cannot be cast if the cost would be fatal, and can harm players or valuables. The duration bonus does not apply to chat or expression casts, or the Star Wand's instantaneous attack. | Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit |
 | Gambler | A held valuable has a 50% chance to double its current value; otherwise it is destroyed. Gambit green heals 50 HP, red deals 100 damage, black kills, and white fully heals and adds 5 Health levels for the stage. | One wager is available at a time and returns after extraction. Damaged valuables use their reduced value. | Win chance, win multiplier, Gambit green heal, red damage, white temporary Health levels |
 | Hunter | Held or equipped weapons use 75% of normal battery. Enemies killed by Hunter have a 10% chance to drop twice as many orbs and a 0.5% chance to drop 10. | Only Hunter's held or equipped weapons and confirmed kills receive these effects. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies raise only the quality tier of Hunter's added orbs; the normal orb count is unchanged. | Battery consumption, both orb chances, jackpot count |
-| Stinker | Leaves a harmful uranium cloud after every 2 m traveled. Clouds appear one at a time after Stinker moves at least 2 m away from the newest location. Spawned uranium valuables have a 0.5-second grace period before breaking. | Clouds can damage other players, and Stinker can be hurt by walking back into one. Truck placement is disabled by default. | Distance, safety distance, truck placement |
+| Stinker | Leaves a harmful uranium cloud after every 2 m traveled. Clouds appear one at a time after Stinker moves at least 2 m away from the newest location. Spawned uranium valuables have a 0.5-second grace period before breaking. | Clouds can damage other players, and Stinker can be hurt by walking back into one. Truck placement is disabled by default. | Distance, safety distance, truck spawning, break delay |
 | Engineer | Prevents supported effect valuables from activating while the Engineer holds them. | Camera, Propane Tank, Snowmobile, Flashlight, Clown Doll, and Love Potion are not affected. By default, not randomly selected if no supported effect valuable is present. | Selection only |
 | Trickster | Type `decoy` in chat or select the configured facial expression to place a fixed Scream Doll that repeatedly attracts enemies within 40 m for 25 seconds. | Another decoy cannot be placed while one is active. Its cooldown begins after the decoy ends: 45 seconds if it attracted an enemy, or 10 seconds if it attracted none. The decoy cannot be grabbed, damaged, or delivered. | Decoy facial expression, active time, normal and no-target cooldowns, radius, pulse interval, placement distance |
 | Mechanic | While directly holding damaged valuables, restores a shared 2% of original sale value per second, up to 50 percentage points per stage. | Only value that is actually restored counts toward the stage limit. Fully repaired and non-valuable objects are ignored. Multiple held valuables share the same repair rate and stage limit. The sale value is restored; damaged visual appearance may remain. | Repair rate, total stage limit |
@@ -116,18 +116,11 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Imitator | Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator. | Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, or ???1 or ???2. The first valid copy is fixed for the stage. Never selected randomly when only one player is present. | Selection only |
 | Avenger | When another player dies within 30 m, deals 1.5x damage to enemies for 20 seconds. | Activation, duration refreshes, and expiration are announced by TTS. Another nearby death refreshes the duration without stacking the multiplier. Its own death does not activate the effect. Never selected randomly when only one player is present. | Trigger radius, damage multiplier, and duration |
 | Brawler | Deals 1.25x damage with identifiable melee weapon attacks and 0.75x damage with identifiable guns, staff projectiles, and lasers. | Vehicle impacts, Tumble Attacks, grenades, and ordinary held-object collisions are unchanged. | Melee and ranged damage multipliers |
-| Influenza | **Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance. | **If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws. | Enabled; Weight (default 20) |
+| Influenza | **Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance. | **If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws. | Onset, HP, sneeze intervals, infection range/angle/chance, hearing |
 | ???1 | ??? | ??? | ??? |
 | ???2 | ??? | ??? | ??? |
 
 ### Role growth and support settings
-
-- **Tank / Runner:** strengthen your Base maximum HP, sprint speed and stamina by 1.5 by default, while keeping configured minimums. Their growth limits are 4,100 HP, 205 sprint speed and 2,040 stamina. Existing Base values are preserved. A role is excluded from random assignment if any corresponding Base value reaches its limit or it cannot provide further upgrades.
-- **Lifter:** heavy-object lifting and turning stay at the maximum available across Strength levels 0–200, regardless of Base Strength. The displayed Strength level is 200. Base Strength level 50 already reaches the maximum and is excluded from random assignment.
-- **Courier:** delivering a valuable restores HP and pauses automatic HP loss according to its size. Each item rewards each player once per stage, including after revival or rejoining.
-- **King:** grants nearby allies temporary Speed, Range and Strength upgrades. The bonus ends outside the area. It does not affect the King or increase HP or stamina.
-
-Host settings except HUD:
 
 | Key | Default | Range | Effect |
 |---|---|---|---|
@@ -146,6 +139,24 @@ Host settings except HUD:
 | `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | Moves the resource display right or down from below stamina. |
 
 Ability resources appear below stamina in one column and shrink to fit when necessary. The role list shows each player's role. Install the same RoleShuffle version as the host to use the resource HUD.
+
+### Ability tuning
+
+Host: REPOConfig → RoleShuffle → role name. Defaults preserve the abilities above. Holding strength, HP and infection checks use current settings. Incubation changes apply to new infections; an already scheduled sneeze keeps its deadline. Stinker delay applies to new valuables. Existing settings are preserved.
+
+| Setting | Default | Range | Effect |
+|---|---|---|---|
+| `Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier` | `1` / `1` | 0.1–5 | Lifting / turning strength relative to the maximum across Strength Lv0–200. |
+| `Lifter.LightItemStrengthLevel` | `1` | 0–200 | Holding level for light objects and shop equipment. |
+| `Stinker.BreakGraceSeconds` | `0.5` | 0–10 s | Delay before a spawned uranium valuable breaks. |
+| `Influenza.IncubationSeconds` | `30` | 0–300 s | Delay from infection to symptoms. |
+| `Influenza.MaximumHealth` | `75` | 1–10000 HP | Maximum HP after onset. Increasing it does not heal. |
+| `Influenza.SneezeMinimumSeconds` / `Influenza.SneezeMaximumSeconds` | `30` / `90` | 1–600 s | Random interval; endpoints are sorted. Equal values give a regular interval. |
+| `Influenza.SneezeRange` / `Influenza.SpeechRange` | `5` / `3` | 0.1–30 m | Infection distance for sneezes / voice and text chat. |
+| `Influenza.SneezeAngleDegrees` / `Influenza.SpeechAngleDegrees` | `40` / `60` | 1–360° | Full infection angle. Half applies on each side. |
+| `Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent` | `60` / `30` | 0–100% | Chance per teammate per sneeze / utterance or message. |
+| `Influenza.SpeechSilenceSeconds` | `0.75` | 0.1–5 s | Silent gap that starts a new utterance. |
+| `Influenza.SneezeNoiseRadius` | `5` | 0–100 m | Enemy hearing distance, modified by enemy hearing. Zero disables the alert. |
 
 ### Configuration
 
@@ -565,7 +576,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Tank | 基礎の最大HPを1.5倍に強化します。倍率強化の上限は4,100HPです。 | 最低Health 21。 | 最低値・倍率・上限 |
 | Runner | 基礎の走行速度・スタミナを1.5倍に強化します。倍率強化の上限は205・2,040です。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | 重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定。 | Strengthの表示はLv200。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。 | 固定能力 |
+| Lifter | 重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定。 | Strengthの表示はLv200。基礎値が両方の目標に達すると抽選対象外（初期設定ではLv50）。 | 保持する力 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -583,7 +594,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Mage | チャットで`star`、`gravity`、`roll`、`void`、`laser`を入力するか、設定した表情を選択し、順に10、10、15、30、50 HPを消費してバニラ攻撃を発動します。10秒間ダメージを受けなければ、2秒ごとに1 HP回復します。自動回復は1ステージの累計120 HPまでです。保持した杖で発動する魔法の効果時間は1.3倍になります。 | 表情を解除して標準へ戻す操作では発動しません。全魔法で3秒のクールダウンを共有し、消費で死亡する場合は発動しません。攻撃はプレイヤーやValuableにも危険です。効果時間の延長はチャット・表情での魔法や、星杖の瞬間的な攻撃には適用しません。 | 魔法ごとの表情、発射クールダウン、魔法ごとのHP消費量、自動回復の有効化、待機時間、間隔、回復量、ステージごとの回復上限 |
 | Gambler | 持ったValuableは50%の確率で現在価格が2倍になり、失敗すると破壊されます。Gambitは緑で50 HP回復、赤で100ダメージ、黒で死亡、白で全回復してステージ中のHealthを5レベル増やします。 | 賭けは一度に1回だけ使用でき、納品後に復帰します。傷ついたValuableは低下後の価格を基準にします。 | 勝率、勝利倍率、Gambitの緑回復量、赤ダメージ、白の一時Healthレベル |
 | Hunter | 保持または装備中の武器のバッテリー消費量が通常の75%になります。Hunterが倒した敵は10%の確率でオーブが2倍、0.5%の確率で10個になります。 | Hunter本人が保持または装備した武器と、Hunterが倒したと確認できる敵だけが対象です。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体によってHunterが追加するオーブの品質Tierだけが上がり、通常オーブ数は変わりません。 | バッテリー消費率、両方のオーブ確率、特賞個数 |
-| Stinker | 2 m移動するごとに、ダメージを与えるウラン雲を残します。雲は、Stinkerが最新の発生位置から2 m以上離れた後に1つずつ発生します。出現したウラン貴重品は0.5秒の猶予後に壊れます。 | ウラン雲はほかのプレイヤーへダメージを与えます。Stinkerも雲へ戻るとダメージを受ける可能性があります。デフォルトではトラック内に発生しません。 | 距離、安全距離、トラック内発生 |
+| Stinker | 2 m移動するごとに、ダメージを与えるウラン雲を残します。雲は、Stinkerが最新の発生位置から2 m以上離れた後に1つずつ発生します。出現したウラン貴重品は0.5秒の猶予後に壊れます。 | ウラン雲はほかのプレイヤーへダメージを与えます。Stinkerも雲へ戻るとダメージを受ける可能性があります。デフォルトではトラック内に発生しません。 | 距離、安全距離、トラック内発生、破壊猶予 |
 | Engineer | 対応している効果付きValuableを保持している間、その効果が発動しないようにします。 | Camera、Propane Tank、Snowmobile、Flashlight、Clown Doll、Love Potionは対象外です。デフォルトでは対応Valuableが存在しない場合に抽選されません。 | 抽選設定のみ |
 | Trickster | チャットで`decoy`と入力するか、設定した表情を選択すると、半径40 m以内の敵を25秒間繰り返し引きつける固定式Scream Dollを設置します。 | デコイが有効な間は新しいデコイを設置できません。クールダウンは終了後から始まり、敵を引きつけた場合は45秒、一体も引きつけなかった場合は10秒です。デコイは掴む、破壊する、納品することができません。 | デコイ用の表情、有効時間、通常時と空振り時のクールダウン、範囲、誘導間隔、設置距離 |
 | Mechanic | 破損したValuableを直接掴んでいる間、元の売却価格の合計2%を毎秒回復し、1ステージにつき合計50ポイントまで回復します。 | 実際に回復した価格だけがステージ上限へ加算されます。修復済みのValuableとValuable以外は対象外です。複数を同時に掴んだ場合、回復速度とステージ上限を共有します。売却価格を回復する効果で、破損した外見は残る場合があります。 | 回復速度、ステージ合計上限 |
@@ -602,18 +613,11 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Imitator | 最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。 | Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、Influenza、???1、???2はコピーしません。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。 | 抽選設定のみ |
 | Avenger | 他のプレイヤーが30m以内で死亡すると、20秒間、敵へのダメージが1.5倍になります。 | 発動、残り時間の更新、終了はTTSで通知されます。効果中に近くで別のプレイヤーが死亡した場合は、倍率を重複せず残り時間だけを更新します。自身の死亡では発動しません。1人のセッションでは抽選されません。 | 発動範囲、ダメージ倍率、持続時間 |
 | Brawler | 攻撃者を特定できる近接武器のダメージが1.25倍になり、銃、杖の弾、レーザーによるダメージは0.75倍になります。 | 車両衝突、Tumble Attack、グレネード、通常の保持物による衝突は変化しません。 | 近接・遠隔ダメージ倍率 |
-| Influenza（インフルエンザ） | **発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。 | **感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。 | 有効・無効、抽選重み（初期値20） |
+| Influenza（インフルエンザ） | **発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。 | **感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。 | 発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音 |
 | ???1 | ??? | ??? | ??? |
 | ???2 | ??? | ??? | ??? |
 
 ### 役職の成長・支援設定
-
-- **Tank / Runner：** 基礎の最大HP・走行速度・スタミナを、設定した最低値を保ちながら初期設定で1.5倍に強化します。倍率強化の上限は4,100HP・走行速度205・スタミナ2,040。高い基礎値は維持します。対応する基礎値のいずれかが上限に達している場合や、追加の強化がない場合は抽選対象外です。
-- **Lifter：** Base Strengthにかかわらず、重い物をつかむ力・回転力をStrength Lv0～200の中の最大値に固定します。Strengthの表示はLv200です。Base Strengthが既に最大値に達するLv50の場合は抽選対象外です。
-- **Courier：** 貴重品を配達すると、大きさに応じてHPが回復し、自動HP減少が一時停止します。同じ品の報酬は各自1ステージ1回で、蘇生や再参加でも再獲得できません。
-- **King：** 範囲内の味方にSpeed・Range・Strengthを一時付与し、範囲外で解除します。King自身や、HP・スタミナは対象外です。
-
-HUD以外はホスト設定です。
 
 | キー | 初期値 | 範囲 | 効果 |
 |---|---|---|---|
@@ -632,6 +636,24 @@ HUD以外はホスト設定です。
 | `HUD.ResourceHudOffsetX` / `ResourceHudOffsetY` | `0` / `0` | `0`–`3840` / `0`–`2160` | スタミナ直下を基準に、残量表示を右／下へ移動します。 |
 
 能力の残量はスタミナ直下に縦1列で表示し、項目が多い場合は収まるよう縮小します。役職一覧には各プレイヤーの役職を表示します。残量HUDを使う場合は、ホストと同じバージョンのRoleShuffleを導入してください。
+
+### 能力の調整
+
+ホストがREPOConfig → RoleShuffle → 役職名から設定します。初期値は上記の能力です。保持する力・HP・感染判定には現在の値を使用します。発症時間は新しい感染から適用し、予約済みのくしゃみの時刻は維持します。Stinkerの猶予は新しく出現する貴重品から適用します。既存設定は保持します。
+
+| 設定 | 初期値 | 範囲 | 効果 |
+|---|---|---|---|
+| `Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier` | `1` / `1` | 0.1～5 | Strength Lv0～200の最大値に対する、つかむ力／回転力の倍率。 |
+| `Lifter.LightItemStrengthLevel` | `1` | 0～200 | 軽量品・ショップ装備を保持するStrengthレベル。 |
+| `Stinker.BreakGraceSeconds` | `0.5` | 0～10秒 | 出現したウラン貴重品が壊れるまでの猶予。 |
+| `Influenza.IncubationSeconds` | `30` | 0～300秒 | 感染から発症までの時間。 |
+| `Influenza.MaximumHealth` | `75` | 1～10000HP | 発症後の最大HP。増やしても回復しません。 |
+| `Influenza.SneezeMinimumSeconds` / `Influenza.SneezeMaximumSeconds` | `30` / `90` | 1～600秒 | くしゃみの間隔。大小を自動で揃え、同値なら一定間隔。 |
+| `Influenza.SneezeRange` / `Influenza.SpeechRange` | `5` / `3` | 0.1～30m | くしゃみ／VC・チャットで感染する距離。 |
+| `Influenza.SneezeAngleDegrees` / `Influenza.SpeechAngleDegrees` | `40` / `60` | 1～360度 | 感染範囲の全角。左右それぞれ半分の角度。 |
+| `Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent` | `60` / `30` | 0～100％ | くしゃみ／発話・投稿ごとの、仲間1人あたりの感染確率。 |
+| `Influenza.SpeechSilenceSeconds` | `0.75` | 0.1～5秒 | 別の発話として判定する無音時間。 |
+| `Influenza.SneezeNoiseRadius` | `5` | 0～100m | 敵に聞こえる基本距離。敵の聴力で変化。0で反応なし。 |
 
 ### 設定
 

@@ -10,9 +10,11 @@ internal static class RoleOverhaulRules
     private static readonly double LifterHeavyGrip = MaximumHeavyStrength(false);
     private static readonly double LifterHeavyRotation = MaximumHeavyStrength(true);
     internal static bool LifterPhysicsAvailable { get; set; }
-    internal static double LifterEffectiveStrength(bool lightObject, bool rotation = false) =>
-        lightObject ? EffectiveGrabStrength(LifterReferenceLevel, true, rotation)
-            : rotation ? LifterHeavyRotation : LifterHeavyGrip;
+    internal static double LifterEffectiveStrength(bool lightObject, bool rotation = false,
+        double multiplier = 1d, int lightLevel = LifterReferenceLevel) =>
+        lightObject ? EffectiveGrabStrength(lightLevel, true, rotation)
+            : (rotation ? LifterHeavyRotation : LifterHeavyGrip) *
+                (double.IsNaN(multiplier) ? 1d : Math.Clamp(multiplier, 0.1d, 5d));
 
     // Evaluate each penalty curve over the complete supported range once, not
     // every physics tick. Use the exact peak, without rounding up to a cap.
@@ -23,10 +25,11 @@ internal static class RoleOverhaulRules
             maximum = Math.Max(maximum, EffectiveGrabStrength(level, false, rotation));
         return maximum;
     }
-    // Light objects intentionally use the level-1 handling value to avoid
-    // oscillation. Eligibility follows the role's heavy-object lifting benefit.
-    internal static bool LifterBaseReachesTarget(int baseline) =>
-        EffectiveGrabStrength(baseline, false) + 1e-9 >= LifterEffectiveStrength(false);
+    // Light objects default to level 1 to reduce oscillation. Random assignment
+    // requires a remaining heavy-object lifting or turning benefit.
+    internal static bool LifterBaseReachesTarget(int baseline, double gripMultiplier = 1d, double rotationMultiplier = 1d) =>
+        EffectiveGrabStrength(baseline, false) + 1e-9 >= LifterEffectiveStrength(false, false, gripMultiplier) &&
+        EffectiveGrabStrength(baseline, false, true) + 1e-9 >= LifterEffectiveStrength(false, true, rotationMultiplier);
     internal static bool GrowsWithBase(StageRole role) =>
         role is StageRole.Tank or StageRole.Runner;
 

@@ -23,6 +23,8 @@ public class Entry<T> { public T Value; public Entry(T value) { Value = value; }
 public class StageRolesConfig {
     public UpgradeGrant[] Bases;
     public UpgradeGrant[] Targets;
+    public Entry<float> LifterHeavyGripMultiplier = new(1f);
+    public Entry<float> LifterHeavyRotationMultiplier = new(1f);
     public Entry<float> TankHealthMultiplier = new(1.5f);
     public Entry<float> RunnerSpeedMultiplier = new(1.5f);
     public Entry<float> RunnerStaminaMultiplier = new(1.5f);
@@ -95,6 +97,18 @@ __TARGETS__
                 throw new Exception("Superbot inherits fixed Strength 200");
             count += 3;
         }
+        lifter.Bases[0].Level = 50;
+        lifter.LifterHeavyGripMultiplier.Value = 2;
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Custom grip gain keeps Lifter eligible");
+        lifter.LifterHeavyGripMultiplier.Value = 0.5f; lifter.LifterHeavyRotationMultiplier.Value = 2;
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Custom rotation gain keeps Lifter eligible");
+        lifter.LifterHeavyRotationMultiplier.Value = 0.5f;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Base exceeding both custom targets excludes Lifter");
+        lifter.Bases = Array.Empty<UpgradeGrant>();
+        lifter.LifterHeavyGripMultiplier.Value = lifter.LifterHeavyRotationMultiplier.Value = 0.1f;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Absent Base Strength means level zero for custom eligibility");
+        lifter.LifterHeavyGripMultiplier.Value = lifter.LifterHeavyRotationMultiplier.Value = 1;
+        count += 4;
         lifter.Targets[0].Level = 25;
         RoleOverhaulRules.LifterPhysicsAvailable = false;
         if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))

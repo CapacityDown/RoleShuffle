@@ -7,6 +7,12 @@ namespace REPOJP.StageRoles;
 
 internal sealed partial class StageRoleController
 {
+    internal int LifterItemLevel => _config.LifterLightItemStrengthLevel.Value;
+    internal float LifterStrength(bool lightObject, bool rotation) =>
+        (float)RoleOverhaulRules.LifterEffectiveStrength(lightObject, rotation,
+            (rotation ? _config.LifterHeavyRotationMultiplier : _config.LifterHeavyGripMultiplier).Value,
+            LifterItemLevel);
+
     internal bool UsesFixedLifterStrength(PlayerAvatar player) =>
         RoleAssignmentsReady && _config.Enabled.Value &&
         PlayerState.IsLiving(player) && PlayerHasRole(player, StageRole.Lifter);
@@ -37,7 +43,7 @@ internal static class LifterStrengthRuntime
         Gun!.GetValue(owner) is true || Melee!.GetValue(owner) is true ||
         owner.GetComponent<ItemAttributes>() != null;
 
-    // Shop items and weapons use level-1 Strength while held. Supply it
+    // Shop items and weapons use the configured Strength (default level 1). Supply it
     // before vanilla applies those overrides, so their built-in behavior stays
     // intact without receiving the role's level-200 input or heavy-object boost.
     // This changes a local value, never the shared grabber or stored upgrade.
@@ -46,7 +52,7 @@ internal static class LifterStrengthRuntime
         grabber != null && grabber.playerAvatar != null &&
         StageRolesPlugin.Instance?.Controller?.UsesFixedLifterStrength(grabber.playerAvatar) == true &&
         IsLevelOneItem(owner)
-            ? 1f + 0.2f * RoleOverhaulRules.LifterReferenceLevel : raw;
+            ? 1f + 0.2f * StageRolesPlugin.Instance.Controller.LifterItemLevel : raw;
 
     // Replaces only the two vanilla penalty blends, inside the individual
     // grabber loop. Never changes the shared grabber state or other players.
@@ -74,7 +80,7 @@ internal static class LifterStrengthRuntime
 
         // Exact absolute coefficient, independent of Base/native level. The
         // rotation result is an input to vanilla torque, not final torque.
-        return (float)RoleOverhaulRules.LifterEffectiveStrength(owner.rb.mass < 2f, rotation);
+        return StageRolesPlugin.Instance.Controller.LifterStrength(owner.rb.mass < 2f, rotation);
     }
 }
 
@@ -85,7 +91,7 @@ internal static class LifterMeleeHoldingPatch
     [ThreadStatic] private static ItemMelee? _holdingMelee;
     internal static bool FieldsAvailable => MeleeObject?.FieldType == typeof(PhysGrabObject);
 
-    // Only the native holding-override calculation gets a level-1 bonus.
+    // Only the native holding-override calculation gets the configured item bonus.
     // Swing forces and cooldowns use the same native helper outside this scope
     // and must continue to receive their original Strength bonus.
     [HarmonyPrefix, HarmonyPatch(typeof(ItemMelee), "GrabOverridesLogic")]
@@ -112,7 +118,7 @@ internal static class LifterMeleeHoldingPatch
             StageRolesPlugin.Instance?.Controller?.UsesFixedLifterStrength(grabber.playerAvatar) != true)
             return true;
 
-        float level = RoleOverhaulRules.LifterReferenceLevel;
+        float level = StageRolesPlugin.Instance.Controller.LifterItemLevel;
         __result = level / (level + __0);
         return false;
     }

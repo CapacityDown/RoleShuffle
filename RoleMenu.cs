@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 492;
+    private const int RoleUiBuildNumber = 494;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -510,7 +510,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
                     if (RoleCatalog.IsSecretRole(snapshot.Role))
                     {
                         description = RoleGuideCatalog
-                            .RevealedSecretDescription(snapshot.Role, _guideLanguage);
+                            .RevealedSecretDescription(snapshot.Role, _guideLanguage, descriptions.TryGetValue(StageRole.Influenza, out string illness) ? illness : null);
                     }
                     TMP_Text measurementText = MeasurementText(page);
                     foreach (string line in WrapGuideText(
@@ -600,7 +600,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             if (RoleCatalog.IsSecretRole(role))
             {
                 description = secretAssigned
-                    ? RoleGuideCatalog.RevealedSecretDescription(role, _guideLanguage)
+                    ? RoleGuideCatalog.RevealedSecretDescription(role, _guideLanguage, descriptions.TryGetValue(StageRole.Influenza, out string illness) ? illness : null)
                     : "???";
             }
             entries.Add(new RoleMenuEntry(

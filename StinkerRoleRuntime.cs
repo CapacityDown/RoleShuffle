@@ -9,7 +9,6 @@ namespace REPOJP.StageRoles;
 internal sealed class StinkerRoleRuntime
 {
     private const float TrailEmissionIntervalSeconds = 0.2f;
-    private const float CarrierBreakGraceSeconds = 0.5f;
     private readonly MonoBehaviour _coroutineOwner;
     private readonly StageRolesConfig _config;
     private readonly VanillaRolePrefabResolver _resolver;
@@ -225,7 +224,7 @@ internal sealed class StinkerRoleRuntime
             yield return null;
             // Give the spawned valuable a short grace period in both solo and
             // multiplayer; also let remote clients initialize before breaking.
-            yield return new WaitForSeconds(CarrierBreakGraceSeconds);
+            yield return new WaitForSeconds(_config.StinkerBreakGraceSeconds.Value);
             if (!_active || generation != _generation || carrier == null ||
                 !SemiFunc.IsMasterClientOrSingleplayer() ||
                 !_pendingTrailPoints.TryGetValue(assignment.SteamId, out List<Vector3>? currentPoints) ||

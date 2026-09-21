@@ -17,8 +17,11 @@ internal sealed partial class StageRoleController
     {
         if (RoleCatalog.HasCapability(assignment.Role, StageRole.Influenza) &&
             !_influenza.ContainsKey(assignment.SteamId))
-            _influenza.Add(assignment.SteamId, new InfluenzaState(Time.time));
+            _influenza.Add(assignment.SteamId, new InfluenzaState(Time.time, _config.InfluenzaIncubationSeconds.Value));
     }
+
+    private float NextInfluenzaSneeze() => Time.time + InfluenzaRules.SneezeInterval(UnityEngine.Random.value,
+        _config.InfluenzaSneezeMinimumSeconds.Value, _config.InfluenzaSneezeMaximumSeconds.Value);
 
     private void TickInfluenza()
     {
@@ -33,24 +36,25 @@ internal sealed partial class StageRoleController
 
             bool speaking = InfluenzaVoice?.GetValue(player) is PlayerVoiceChat voice &&
                 InfluenzaMicLoudness?.GetValue(voice) is float loudness && loudness > 0.05f;
-            bool speechStarted = state.ObserveVoice(Time.time, speaking);
+            bool speechStarted = state.ObserveVoice(Time.time, speaking, _config.InfluenzaSpeechSilenceSeconds.Value);
             if (!state.Symptomatic(Time.time)) continue;
             if (!state.SymptomsStarted)
             {
                 state.SymptomsStarted = true;
-                state.NextSneezeAt = Time.time + InfluenzaRules.SneezeInterval(UnityEngine.Random.value);
+                state.NextSneezeAt = NextInfluenzaSneeze();
             }
             EnforceInfluenzaHealth(assignment, state);
             if (speechStarted) SpreadInfluenza(assignment, sneeze: false);
             if (Time.time < state.NextSneezeAt) continue;
-            state.NextSneezeAt = Time.time + InfluenzaRules.SneezeInterval(UnityEngine.Random.value);
+            state.NextSneezeAt = NextInfluenzaSneeze();
             // Standard TTS reaches unmodded guests. This is not ordinary chat input.
             try { player.ChatMessageSend("Achoo!"); }
             catch (Exception error) { StageRolesPlugin.ModLogger.LogDebug($"Sneeze voice unavailable: {error.Message}"); }
             // Alert enemies on the host even if TTS fails or notification audio is suppressed.
             // Hearing is omnidirectional and separate from the forward infection fan.
-            EnemyDirector.instance?.SetInvestigate(
-                InfluenzaHeadPosition(player), InfluenzaRules.SneezeInvestigateRadius, pathfindOnly: false);
+            if (_config.InfluenzaSneezeNoiseRadius.Value > 0f)
+                EnemyDirector.instance?.SetInvestigate(
+                    InfluenzaHeadPosition(player), _config.InfluenzaSneezeNoiseRadius.Value, pathfindOnly: false);
             SpreadInfluenza(assignment, sneeze: true);
         }
     }
@@ -59,13 +63,14 @@ internal sealed partial class StageRoleController
         UpgradeService.TryGetLevels(steamId, out var levels)
             ? levels.GetValueOrDefault("playerUpgradeHealth", 0) : 0;
 
-    private static void EnforceInfluenzaHealth(RoleAssignment assignment, InfluenzaState state)
+    private void EnforceInfluenzaHealth(RoleAssignment assignment, InfluenzaState state)
     {
         if (!PlayerState.TryGetMaximumHealth(assignment.Player, out int maximum)) return;
         state.CaptureHealth(maximum, HealthUpgrade(assignment.SteamId));
-        if (maximum != InfluenzaRules.MaximumHealth ||
-            (PlayerState.TryGetCurrentHealth(assignment.Player, out int current) && current > InfluenzaRules.MaximumHealth))
-            PlayerState.SetMaximumHealthSynchronized(assignment.Player, InfluenzaRules.MaximumHealth);
+        int target = _config.InfluenzaMaximumHealth.Value;
+        if (maximum != target ||
+            (PlayerState.TryGetCurrentHealth(assignment.Player, out int current) && current > target))
+            PlayerState.SetMaximumHealthSynchronized(assignment.Player, target);
     }
 
     private void EndInfluenza(RoleAssignment assignment)
@@ -118,8 +123,11 @@ internal sealed partial class StageRoleController
             float distanceSquared = delta.sqrMagnitude;
             delta.y = 0;
             float dot = delta.sqrMagnitude < 0.0001f ? 1f : Vector3.Dot(forward, delta.normalized);
-            if (!InfluenzaRules.InRange(distanceSquared, dot, sneeze) ||
-                !InfluenzaRules.Infects(UnityEngine.Random.value, sneeze)) continue;
+            if (!InfluenzaRules.InRange(distanceSquared, dot, sneeze,
+                    _config.InfluenzaSneezeRange.Value, _config.InfluenzaSpeechRange.Value,
+                    _config.InfluenzaSneezeAngle.Value, _config.InfluenzaSpeechAngle.Value) ||
+                !InfluenzaRules.Infects(UnityEngine.Random.value, sneeze,
+                    _config.InfluenzaSneezeChance.Value, _config.InfluenzaSpeechChance.Value)) continue;
             InfectWithInfluenza(target);
         }
     }

@@ -10,22 +10,32 @@ internal static class InfluenzaRules
     // Match vanilla voice investigation; each enemy applies its own hearing multiplier.
     internal const float SneezeInvestigateRadius = 5f;
 
-    // Uniform 30–90 seconds: irregular, with an exact expected interval of 60.
-    internal static float SneezeInterval(double sample) =>
-        30f + 60f * (float)Math.Clamp(sample, 0d, 1d);
+    // Uniform interval between sorted bounds; defaults average 60 seconds.
+    internal static float SneezeInterval(double sample, float minimum = 30f, float maximum = 90f) =>
+        Math.Min(minimum, maximum) + Math.Abs(maximum - minimum) * (float)Math.Clamp(sample, 0d, 1d);
 
-    internal static bool Infects(double sample, bool sneeze) =>
-        sample >= 0d && sample < (sneeze ? 0.6d : 0.3d);
+    internal static bool Infects(double sample, bool sneeze, double sneezePercent = 60d, double speechPercent = 30d)
+    {
+        double chance = Math.Clamp(sneeze ? sneezePercent : speechPercent, 0d, 100d);
+        // Unity's Random.value can include 1; a configured 100% must include it.
+        return sample >= 0d && sample <= 1d && (chance == 100d || sample < chance / 100d);
+    }
 
     // Distance is three-dimensional; the requested left/right fan is horizontal.
-    internal static bool InRange(double distanceSquared, double horizontalDot, bool sneeze) =>
-        distanceSquared <= (sneeze ? 25d : 9d) &&
-        horizontalDot + 0.000001d >= Math.Cos((sneeze ? 20d : 30d) * Math.PI / 180d);
+    internal static bool InRange(double distanceSquared, double horizontalDot, bool sneeze,
+        double sneezeRange = 5d, double speechRange = 3d, double sneezeAngle = 40d, double speechAngle = 60d)
+    {
+        double range = sneeze ? sneezeRange : speechRange;
+        double halfAngle = (sneeze ? sneezeAngle : speechAngle) / 2d;
+        return distanceSquared >= 0d && distanceSquared <= range * range &&
+            horizontalDot + 0.000001d >= Math.Cos(halfAngle * Math.PI / 180d);
+    }
 }
 
 internal sealed class InfluenzaState
 {
-    internal InfluenzaState(float infectedAt) => OnsetAt = infectedAt + InfluenzaRules.IncubationSeconds;
+    internal InfluenzaState(float infectedAt, float incubationSeconds = InfluenzaRules.IncubationSeconds) =>
+        OnsetAt = infectedAt + incubationSeconds;
     internal float OnsetAt { get; }
     internal float NextSneezeAt { get; set; } = float.PositiveInfinity;
     internal bool SymptomsStarted { get; set; }
@@ -36,10 +46,10 @@ internal sealed class InfluenzaState
 
     internal bool Symptomatic(float now) => now >= OnsetAt;
 
-    internal bool ObserveVoice(float now, bool audible)
+    internal bool ObserveVoice(float now, bool audible, float silenceSeconds = InfluenzaRules.SpeechSilenceSeconds)
     {
         if (!audible) return false;
-        bool newSpeech = now - _lastVoiceAt >= InfluenzaRules.SpeechSilenceSeconds;
+        bool newSpeech = now - _lastVoiceAt >= silenceSeconds;
         _lastVoiceAt = now;
         return newSpeech && Symptomatic(now);
     }

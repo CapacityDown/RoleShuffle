@@ -70,7 +70,22 @@ public sealed class ChatManager {}
 namespace REPOJP.StageRoles
 {
     internal sealed class Entry<T>(T value) { internal T Value = value; }
-    internal sealed class Config { internal Entry<bool> Enabled = new(true); }
+    internal sealed class Config
+    {
+        internal Entry<bool> Enabled = new(true);
+        internal Entry<float> InfluenzaIncubationSeconds = new(30f);
+        internal Entry<int> InfluenzaMaximumHealth = new(75);
+        internal Entry<float> InfluenzaSneezeMinimumSeconds = new(30f);
+        internal Entry<float> InfluenzaSneezeMaximumSeconds = new(90f);
+        internal Entry<float> InfluenzaSneezeRange = new(5f);
+        internal Entry<float> InfluenzaSneezeAngle = new(40f);
+        internal Entry<float> InfluenzaSneezeChance = new(60f);
+        internal Entry<float> InfluenzaSpeechRange = new(3f);
+        internal Entry<float> InfluenzaSpeechAngle = new(60f);
+        internal Entry<float> InfluenzaSpeechChance = new(30f);
+        internal Entry<float> InfluenzaSpeechSilenceSeconds = new(0.75f);
+        internal Entry<float> InfluenzaSneezeNoiseRadius = new(5f);
+    }
     internal sealed class RoleAssignment(string id, StageRole role, float x, float z)
     {
         internal string SteamId = id;
@@ -122,7 +137,7 @@ namespace REPOJP.StageRoles
         private readonly List<RoleAssignment> _assignments = new();
         private readonly Dictionary<string, RoleAssignment> _departedAssignments = new();
         private bool _stageReady=true, _assignmentsInitialized=true;
-        private readonly Config _config = new();
+        internal readonly Config _config = new();
         private readonly Runtime _bomber=new(), _medic=new(), _stinker=new(), _trickster=new(), _eventRoles=new(), _diver=new();
         private float _nextAbilityPublishAt;
         private readonly Notifier _notifier=new();

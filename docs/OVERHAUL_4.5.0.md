@@ -10,6 +10,12 @@
 - Original package DLL SHA-256: `6BD1FC2D8D21570A52BCC9E7E2250DF88F7D4540915E94A9B31CB1AB52A9A5F4`.
 - Original ZIP SHA-256: `F275B92D50696D06236AF2B5ECA4B53A2040C7D3B4EDC22D48A8F8368CB5778F`.
 
+## Ability configuration
+
+REPOConfig exposes Tank/Runner multipliers, minimums and growth caps; Courier delivery requirements and size rewards; and King aura radius and bonuses. Lifter adds `HeavyGripMultiplier`, `HeavyRotationMultiplier` (default 1 each) and `LightItemStrengthLevel` (default 1). Native Strength display remains 200; random eligibility compares both configured heavy-object targets with Base. Item handling remains separate from native melee swing bonuses. Stinker adds `BreakGraceSeconds` (default 0.5).
+
+Influenza exposes incubation, maximum HP, sorted sneeze interval bounds, sneeze/speech distance, full angle and chance, speech silence gap and enemy hearing radius. Existing infection deadlines and already scheduled sneezes are preserved when settings change. New schedules read current values; HP and transmission read live host values. The detailed guide uses configured values in all languages; revealed Disaster receives the same host-supplied illness description. These additions use distinct keys and preserve schema-40 custom values without reviving obsolete overhaul settings.
+
 ## Standard v4.5.0 rules
 
 1. Tank and Runner multiply Base effective values and convert them to vanilla upgrade levels, capped at HP 4100, sprint speed 205 and stamina 2040. Base and configured minimums are preserved. Lifter keeps native display level 200. In v4.5.1, heavy grip/rotation coefficients use each curve's exact maximum across vanilla levels 0–200: 143/24 (5.9583333333), reached at level 50. Light objects below mass 2 use level-1 values to reduce holding oscillation. Shop items (`ItemAttributes` on the held object), guns and melee weapons of any mass receive level-1 Strength as the local input before native overrides. Item blends then follow vanilla instead of the heavy-object target. The scoped `ItemMelee.GrabOverridesLogic` patch also evaluates the first holder's holding bonus at level 1, because melee computes minimum grip and torque independently of the shared physics loop. Scope restoration runs in a finalizer; swing force and cooldown calculations outside the holding scope remain native. Shared grabber Strength and upgrade levels remain unchanged. Base 50 is excluded from random Lifter assignment because it already reaches the heavy-object maximum. Copied roles and Superbot inherit these targets.

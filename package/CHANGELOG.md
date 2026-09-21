@@ -1,9 +1,9 @@
 ## 4.5.1
-- Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Sneezes also alert nearby enemies. Infection ends with the stage.
+- Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Sneezes also alert nearby enemies. Infection ends with the stage. Onset, HP, sneeze intervals, infection conditions, and enemy hearing are configurable.
 - Unified role emblem background colors by category.
 - Updated hidden-role abilities.
-- Changed Lifter's heavy-object lifting and turning strength to the highest values available across Strength levels 0–200.
-- Gave Stinker's spawned uranium valuables a 0.5-second grace period before breaking, in both solo and multiplayer.
+- Changed Lifter's default heavy-object lifting and turning strength to the highest values across Strength levels 0–200, with configurable holding strength.
+- Gave Stinker's spawned uranium valuables a configurable grace period before breaking, defaulting to 0.5 seconds in both solo and multiplayer.
 - Increased King's default support to Speed/Range +2 and up to Strength +5 within 12 m.
 
 ## 4.5.0

@@ -9,6 +9,7 @@ Directory.CreateDirectory(directory);
 string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
+Console.WriteLine($"Ability configuration checks passed: {AbilityConfigChecks.Run(directory)}");
 Check(config.TankHealthMultiplier.Value == 1.5f && config.RunnerSpeedMultiplier.Value == 1.5f &&
     config.RunnerStaminaMultiplier.Value == 1.5f,
     "Effective-value multiplier defaults");

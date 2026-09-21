@@ -9,12 +9,12 @@ internal static class RoleGuideCatalog
     internal const string InfluenzaDescription = "Onset\n30 seconds after becoming Influenza, maximum HP is fixed at 75. You can spread infection only after symptoms begin.\n\nSneezing\nYou sneeze automatically every 30-90 seconds (about once a minute). Each teammate in front, within 5 m and 20 degrees to either side, has a 60% chance of infection.\nThe sound also alerts enemies in every direction: the base radius is 5 m and varies with the enemy's hearing.\n\nVoice and text chat\nAfter symptoms begin, each spoken utterance or chat message gives each teammate in front, within 3 m and 30 degrees to either side, a 30% chance of infection. Continuous speech counts as one utterance.\n\nIf infected\nThe teammate immediately loses their current role and becomes Influenza. They develop symptoms 30 seconds later and can then infect others. Death and revival do not reset the timer. Infection ends when the stage ends.";
     private const string InfluenzaSummaryJapanese = "インフルエンザになって30秒後、最大HPが75に固定されます。くしゃみや会話で仲間に感染させると、相手もこの役職に変わります。くしゃみの音は敵にも届きます。";
     private const string InfluenzaDescriptionJapanese = "【発症】\nインフルエンザになって30秒後、最大HPが75に固定されます。発症するまでは感染を広げません。\n\n【くしゃみ】\n発症後、30～90秒ごと（平均約1分）に自動でくしゃみをします。前方5m以内・正面から左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％の確率で感染します。\n音は周囲の敵にも届きます。基本は全方向5mで、敵の聴力によって変わります。\n\n【VC・チャット】\n発症後、VCで話すかチャットを送ると、前方3m以内・正面から左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％の確率で感染します。\nVCはひとまとまりの発話につき1回、チャットは1投稿につき1回の判定です。\n\n【感染した仲間】\n感染すると、その場で元の役職を失い、インフルエンザに変わります。その仲間も30秒後に発症し、さらに感染を広げます。死亡・蘇生で発症までの時間はリセットされず、感染はステージ終了で解除されます。";
-    internal static string RevealedSecretDescription(StageRole role, RoleGuideLanguage language)
+    internal static string RevealedSecretDescription(StageRole role, RoleGuideLanguage language, string? influenzaDescription = null)
     {
         string description = RoleText.Description(RevealedSecretText(role, language), language);
         return role == StageRole.Disaster
-            ? description + "\n\n" + RoleText.Description(
-                language == RoleGuideLanguage.Japanese ? InfluenzaDescriptionJapanese : InfluenzaDescription, language)
+            ? description + "\n\n" + (influenzaDescription ?? RoleText.Description(
+                language == RoleGuideLanguage.Japanese ? InfluenzaDescriptionJapanese : InfluenzaDescription, language))
             : description;
     }
 
@@ -205,7 +205,8 @@ internal static class RoleGuideCatalog
                 $"Enemies killed by Hunter have a {Number(config.HunterDoubleOrbChancePercent.Value)}% chance to drop twice as many orbs and a {Number(config.HunterJackpotOrbChancePercent.Value)}% jackpot chance to drop {config.HunterJackpotOrbCount.Value}."),
             StageRole.Stinker => (
                 $"Leaves a harmful uranium cloud every {Number(config.StinkerDistance.Value)} m traveled after moving {Number(config.StinkerSafetyDistance.Value)} m away from it. " +
-                "The clouds appear one at a time and can harm other players."),
+                "The clouds appear one at a time and can harm other players.") +
+                RoleText.Format(RoleOverhaulDescriptions.StinkerGrace, RoleGuideLanguage.English, config.StinkerBreakGraceSeconds.Value),
             StageRole.Engineer =>
                 "Prevents supported effect valuables from activating while the Engineer holds them. Camera, Propane Tank, Snowmobile, Flashlight, Clown Doll, and Love Potion are not affected.",
             StageRole.Trickster => (
@@ -333,7 +334,8 @@ internal static class RoleGuideCatalog
                 $"Hunterが倒した敵は{Number(config.HunterDoubleOrbChancePercent.Value)}%の確率でオーブが2倍になり、{Number(config.HunterJackpotOrbChancePercent.Value)}%の特賞では{config.HunterJackpotOrbCount.Value}個になります。",
             StageRole.Stinker =>
                 $"{Number(config.StinkerDistance.Value)}m移動するごとに、発生場所から{Number(config.StinkerSafetyDistance.Value)}m離れた後で有害なウラン雲を残します。" +
-                "雲は一つずつ発生し、他のプレイヤーにも危険です。",
+                "雲は一つずつ発生し、他のプレイヤーにも危険です。" +
+                RoleText.Format(RoleOverhaulDescriptions.StinkerGrace, RoleGuideLanguage.Japanese, config.StinkerBreakGraceSeconds.Value),
             StageRole.Engineer =>
                 "対応する効果付きValuableを持っている間、その効果の発動を防ぎます。Camera、Propane Tank、Snowmobile、Flashlight、Clown Doll、Love Potionには効果がありません。",
             StageRole.Trickster =>

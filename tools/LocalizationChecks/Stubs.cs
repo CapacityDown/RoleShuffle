@@ -48,6 +48,22 @@ internal enum StageRole
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal Entry<float> LifterHeavyGripMultiplier { get; } = new(1f);
+    internal Entry<float> LifterHeavyRotationMultiplier { get; } = new(1f);
+    internal Entry<int> LifterLightItemStrengthLevel { get; } = new(1);
+    internal Entry<float> StinkerBreakGraceSeconds { get; } = new(0.5f);
+    internal Entry<float> InfluenzaIncubationSeconds { get; } = new(30f);
+    internal Entry<int> InfluenzaMaximumHealth { get; } = new(75);
+    internal Entry<float> InfluenzaSneezeMinimumSeconds { get; } = new(30f);
+    internal Entry<float> InfluenzaSneezeMaximumSeconds { get; } = new(90f);
+    internal Entry<float> InfluenzaSneezeRange { get; } = new(5f);
+    internal Entry<float> InfluenzaSneezeAngle { get; } = new(40f);
+    internal Entry<float> InfluenzaSneezeChance { get; } = new(60f);
+    internal Entry<float> InfluenzaSpeechRange { get; } = new(3f);
+    internal Entry<float> InfluenzaSpeechAngle { get; } = new(60f);
+    internal Entry<float> InfluenzaSpeechChance { get; } = new(30f);
+    internal Entry<float> InfluenzaSpeechSilenceSeconds { get; } = new(0.75f);
+    internal Entry<float> InfluenzaSneezeNoiseRadius { get; } = new(5f);
     internal Entry<float> TankHealthMultiplier { get; } = new(7.25f);
     internal Entry<float> RunnerSpeedMultiplier { get; } = new(7.25f);
     internal Entry<float> RunnerStaminaMultiplier { get; } = new(7.25f);

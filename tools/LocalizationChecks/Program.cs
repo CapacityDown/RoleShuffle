@@ -32,7 +32,8 @@ Check(current == RoleGuideLanguage.English, "Toggle wraps through all languages"
 var config = new StageRolesConfig();
 foreach (var language in languages)
 {
-    string revealed = RoleGuideCatalog.RevealedSecretDescription(StageRole.Disaster, language);
+    string revealed = RoleGuideCatalog.RevealedSecretDescription(StageRole.Disaster, language,
+        RoleGuideCatalog.Description(StageRole.Influenza, config, language));
     string illness = RoleGuideCatalog.Description(StageRole.Influenza, config, language);
     Check(revealed.Contains("Influenza") && revealed.EndsWith(illness, StringComparison.Ordinal),
         "Revealed Disaster includes the complete localized Influenza ability: " + language);
@@ -98,4 +99,36 @@ try
     }
 }
 finally { if (File.Exists(temp)) File.Delete(temp); }
+config.LifterHeavyGripMultiplier.Value = 2.5f;
+config.LifterHeavyRotationMultiplier.Value = 0.5f;
+config.InfluenzaIncubationSeconds.Value = 17;
+config.InfluenzaMaximumHealth.Value = 123;
+config.InfluenzaSneezeMinimumSeconds.Value = 19;
+config.InfluenzaSneezeMaximumSeconds.Value = 7;
+config.InfluenzaSneezeRange.Value = 7.25f;
+config.InfluenzaSneezeAngle.Value = 90;
+config.InfluenzaSneezeChance.Value = 80;
+config.InfluenzaSneezeNoiseRadius.Value = 13;
+config.InfluenzaSpeechRange.Value = 9;
+config.InfluenzaSpeechAngle.Value = 110;
+config.InfluenzaSpeechChance.Value = 15;
+config.StinkerBreakGraceSeconds.Value = 2.5f;
+foreach (var language in languages)
+{
+    foreach (var role in new[] { StageRole.Lifter, StageRole.Influenza, StageRole.Stinker })
+    {
+        string english = RoleGuideCatalog.Description(role, config);
+        string translated = RoleGuideCatalog.Description(role, config, language);
+        Check(!translated.Contains("{") && !translated.Contains("}"), "No unresolved configured values: " + language + "/" + role);
+        if (RoleLanguage.NeedsTranslation(language))
+            Check(RoleText.Description(english, language) == translated, "Host custom values translated: " + language + "/" + role);
+        foreach (string value in new[] { "17", "123", "7.25", "2.5", "0.5" })
+            Check(Regex.Matches(english, Regex.Escape(value)).Count == Regex.Matches(translated, Regex.Escape(value)).Count,
+                "Custom value preserved: " + language + "/" + role + "/" + value);
+    }
+    string illness = RoleGuideCatalog.Description(StageRole.Influenza, config, language);
+    Check(RoleGuideCatalog.RevealedSecretDescription(StageRole.Disaster, language, illness).EndsWith(illness), "Revealed Disaster follows host illness settings");
+    Check(!RoleGuideCatalog.Description(StageRole.Lifter, config, language).Contains("shop"), "Removed Lifter item note stays absent");
+}
+
 Console.WriteLine($"Localization checks passed: {checks}");
