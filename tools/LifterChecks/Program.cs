@@ -12,6 +12,7 @@ var opcodes = typeof(OpCodes).GetFields(BindingFlags.Static | BindingFlags.Publi
     .Where(f => f.FieldType == typeof(OpCode)).Select(f => (OpCode)f.GetValue(null)!).ToDictionary(op => op.Name!);
 var lerp = AccessTools.Method(typeof(Mathf), nameof(Mathf.Lerp));
 var blendMethod = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Blend));
+var inputMethod = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.NativeStrengthInput));
 Check(LifterStrengthRuntime.FieldsAvailable, "Runtime override fields found");
 Near(RoleOverhaulRules.LifterEffectiveStrength(true), 1.1812987012987013, "Light handling uses vanilla level ONE without sixfold boost");
 Near(RoleOverhaulRules.LifterEffectiveStrength(true, true), 1.1812987012987013, "Light rotation uses vanilla level ONE without sixfold boost");
@@ -53,45 +54,56 @@ List<CodeInstruction> InstalledInstructions() => method.Body.Instructions.Select
 }).ToList();
 var installed = LifterStrengthPatch.Transpiler(InstalledInstructions(), proxyMethod).ToList();
 Check(RoleOverhaulRules.LifterPhysicsAvailable && installed.Count(i => i.Calls(blendMethod)) == 2, "Production transpiler matches installed game");
+Check(installed.Count(i => i.Calls(inputMethod)) == 2, "Both installed-game Strength reads receive the gun input correction");
+Check(physics.Fields.Any(f => f.Name == "isGun" && f.FieldType.FullName == "System.Boolean"), "Installed native gun classification field");
+var gunUpdate = game.MainModule.Types.Single(t => t.Name == "ItemGun").Methods.Single(m => m.Name == "UpdateMaster");
+Check(gunUpdate.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "OverrideTorqueStrength") &&
+    gunUpdate.Body.Instructions.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Ldc_R4 && (float)i.Operand == 12f),
+    "Installed guns refresh the aiming torque override even when not firing");
 int[] sites = installed.Select((code, index) => (code, index)).Where(x => x.code.Calls(blendMethod)).Select(x => x.index).ToArray();
 Check(installed[sites[0]-1].opcode == OpCodes.Ldc_I4_0 && installed[sites[1]-1].opcode == OpCodes.Ldc_I4_1, "Grip and rotation site order");
 var unsupported = InstalledInstructions(); unsupported.Add(new CodeInstruction(OpCodes.Call, lerp));
 var rejected = LifterStrengthPatch.Transpiler(unsupported, proxyMethod).ToList();
-Check(!RoleOverhaulRules.LifterPhysicsAvailable && rejected.All(i => !i.Calls(blendMethod)), "Unknown game shape fails without partial patch");
+Check(!RoleOverhaulRules.LifterPhysicsAvailable && rejected.All(i => !i.Calls(blendMethod) && !i.Calls(inputMethod)), "Unknown game shape fails without partial patch");
 
 // Decode with real Harmony, transform with production code, then emit/run it.
-var fixture = typeof(PhysGrabObject).GetMethod(nameof(PhysGrabObject.PhysicsGrabbingManipulation))!;
-var executable = new DynamicMethod("LifterPatchedFixture", typeof(void), new[] { typeof(PhysGrabObject) }, typeof(PhysGrabObject).Module, true);
-var generator = executable.GetILGenerator();
-var original = PatchProcessor.GetOriginalInstructions(fixture, generator);
-var patched = LifterStrengthPatch.Transpiler(original, fixture).ToList();
-if (!RoleOverhaulRules.LifterPhysicsAvailable)
+Action<PhysGrabObject> CompileFixture(string methodName)
 {
-    Console.WriteLine(string.Join("\n", fixture.GetMethodBody()!.LocalVariables.Select(v => $"local {v.LocalIndex}: {v.LocalType}")));
-    Console.WriteLine(string.Join("\n", original.Select((code, index) => $"{index}: {code}")));
-}
-Check(RoleOverhaulRules.LifterPhysicsAvailable && patched.Count(i => i.Calls(blendMethod)) == 2, "Executable fixture patched at both sites");
-foreach (var code in patched)
-{
-    foreach (var label in code.labels) generator.MarkLabel(label);
-    Check(code.blocks.Count == 0, "Fixture has no exception blocks");
-    OpCode opcode = code.opcode;
-    if (code.operand is Label && opcode.OperandType == OperandType.ShortInlineBrTarget) opcode = opcodes[opcode.Name![..^2]];
-    switch (code.operand)
+    var fixture = typeof(PhysGrabObject).GetMethod(methodName)!;
+    var executable = new DynamicMethod("LifterPatchedFixture", typeof(void), new[] { typeof(PhysGrabObject) }, typeof(PhysGrabObject).Module, true);
+    var generator = executable.GetILGenerator();
+    var original = PatchProcessor.GetOriginalInstructions(fixture, generator);
+    var patched = LifterStrengthPatch.Transpiler(original, fixture).ToList();
+    if (!RoleOverhaulRules.LifterPhysicsAvailable)
     {
-        case null: generator.Emit(opcode); break;
-        case LocalBuilder local: generator.Emit(opcode, local); break;
-        case Label label: generator.Emit(opcode, label); break;
-        case MethodInfo target: generator.Emit(opcode, target); break;
-        case FieldInfo field: generator.Emit(opcode, field); break;
-        case Type target: generator.Emit(opcode, target); break;
-        case float value: generator.Emit(opcode, value); break;
-        case int value when opcode.OperandType == OperandType.InlineVar: generator.Emit(opcode, (short)value); break;
-        case int value: generator.Emit(opcode, value); break;
-        default: throw new Exception("Unhandled fixture operand " + code.operand.GetType());
+        Console.WriteLine(string.Join("\n", fixture.GetMethodBody()!.LocalVariables.Select(v => $"local {v.LocalIndex}: {v.LocalType}")));
+        Console.WriteLine(string.Join("\n", original.Select((code, index) => $"{index}: {code}")));
     }
+    Check(RoleOverhaulRules.LifterPhysicsAvailable && patched.Count(i => i.Calls(blendMethod)) == 2 && patched.Count(i => i.Calls(inputMethod)) == 2, "Executable fixture patched at both sites");
+    foreach (var code in patched)
+    {
+        foreach (var label in code.labels) generator.MarkLabel(label);
+        Check(code.blocks.Count == 0, "Fixture has no exception blocks");
+        OpCode opcode = code.opcode;
+        if (code.operand is Label && opcode.OperandType == OperandType.ShortInlineBrTarget) opcode = opcodes[opcode.Name![..^2]];
+        switch (code.operand)
+        {
+            case null: generator.Emit(opcode); break;
+            case LocalBuilder local: generator.Emit(opcode, local); break;
+            case Label label: generator.Emit(opcode, label); break;
+            case MethodInfo target: generator.Emit(opcode, target); break;
+            case FieldInfo field: generator.Emit(opcode, field); break;
+            case Type target: generator.Emit(opcode, target); break;
+            case float value: generator.Emit(opcode, value); break;
+            case int value when opcode.OperandType == OperandType.InlineVar: generator.Emit(opcode, (short)value); break;
+            case int value: generator.Emit(opcode, value); break;
+            default: throw new Exception("Unhandled fixture operand " + code.operand.GetType());
+        }
+    }
+    return executable.CreateDelegate<Action<PhysGrabObject>>();
 }
-var run = executable.CreateDelegate<Action<PhysGrabObject>>();
+var run = CompileFixture(nameof(PhysGrabObject.PhysicsGrabbingManipulation));
+var runGun = CompileFixture(nameof(PhysGrabObject.PhysicsGrabbingGunFixture));
 var lifter = new PhysGrabber();
 var other = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Tank } };
 var owner = new PhysGrabObject { playerGrabbing = new[] { lifter, other } };
@@ -117,7 +129,8 @@ controller._config.Enabled.Value = false; Vanilla("Disabled mod"); controller._c
 lifter.playerAvatar.Living = false; Vanilla("Dead player"); lifter.playerAvatar.Living = true;
 lifter.playerAvatar.isTumbling = true; Vanilla("Tumbling override"); lifter.playerAvatar.isTumbling = false;
 lifter.overrideGrabStrength = 0; Vanilla("Player override"); lifter.overrideGrabStrength = -1;
-foreach (var field in typeof(PhysGrabObject).GetFields().Where(f => f.Name.StartsWith("override")))
+foreach (var field in typeof(PhysGrabObject).GetFields().Where(f => f.Name.StartsWith("override") &&
+    (f.Name.EndsWith("Timer") || f.Name.EndsWith("Disable"))))
 {
     field.SetValue(owner, field.FieldType == typeof(bool) ? (object)true : 1f);
     run(owner);
@@ -263,6 +276,75 @@ var newRotation = HoldingMotion(lifter.Torque, true);
 Check(oldTranslation.Span > 1 && oldRotation.Span > 0.1, "Prior light coefficients reproduce unsettled native holding motion");
 Check(newTranslation.Span < 0.001 && Math.Abs(newTranslation.Mean) < 0.05, "Reduced light grip settles within 5 cm of its hold target");
 Check(newRotation.Span < 0.001 && Math.Abs(newRotation.Mean) < 0.001, "Reduced light rotation settles without custom force damping");
+
+
+// Compare patched guns against the same unpatched native override pipeline at
+// Strength level 1. Include idle aim, manual rotation, firing and custom overrides.
+var gunLifter = new PhysGrabber();
+var gunOther = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Tank } };
+var gun = new PhysGrabObject { isGun = true, playerGrabbing = new[] { gunLifter, gunOther } };
+var referenceHolder = new PhysGrabber();
+var reference = new PhysGrabObject { isGun = true, playerGrabbing = new[] { referenceHolder } };
+void GunState(PhysGrabObject obj, PhysGrabber holder, int state)
+{
+    obj.overrideTorqueStrength = state == 1 ? 2f : state == 2 ? 0.01f : 12f;
+    obj.overrideTorqueStrengthTimer = state == 3 ? 0f : 0.1f;
+    obj.overrideExtraGrabStrengthDisable = obj.overrideExtraTorqueStrengthDisable = state == 2;
+    obj.overrideGrabStrengthTimer = state == 4 ? 0.1f : 0;
+    obj.overrideGrabStrength = 0.5f;
+    obj.overrideMinGrabStrengthTimer = obj.overrideMinTorqueStrengthTimer = state == 5 ? 0.1f : 0;
+    obj.overrideMinGrabStrength = 3; obj.overrideMinTorqueStrength = 15;
+    holder.overrideGrabStrength = state == 6 ? 0.25f : -1;
+    holder.playerAvatar.isTumbling = state == 7;
+}
+foreach (float mass in new[] { 0.5f, 1.999f, 2f, 2.001f, 8f })
+for (int state = 0; state < 8; state++)
+foreach (StageRole role in new[] { StageRole.Lifter, StageRole.Superbot })
+{
+    gun.rb.mass = reference.rb.mass = mass;
+    gunLifter.playerAvatar.Role = role;
+    GunState(gun, gunLifter, state); GunState(reference, referenceHolder, state);
+    referenceHolder.grabStrength = 1.2f;
+    reference.PhysicsGrabbingGunFixture();
+    float expectedGrip = referenceHolder.Grip, expectedTorque = referenceHolder.Torque;
+    GunState(gun, gunOther, state);
+    for (int level = 0; level <= 200; level++)
+    {
+        gunLifter.grabStrength = gunOther.grabStrength = 1f + 0.2f * level;
+        runGun(gun);
+        Near(gunLifter.Grip, expectedGrip, "Gun grip equals native level-1 handling with overrides");
+        Near(gunLifter.Torque, expectedTorque, "Gun rotation retains native aiming/firing overrides at level 1");
+        Near(gunLifter.grabStrength, 1f + 0.2f * level, "Gun handling never mutates the shared Strength cache");
+        referenceHolder.grabStrength = gunOther.grabStrength;reference.PhysicsGrabbingGunFixture();
+        Near(gunOther.Grip, referenceHolder.Grip, "Another gun holder retains native grip");
+        Near(gunOther.Torque, referenceHolder.Torque, "Another gun holder retains native rotation");
+    }
+}
+gun.rb.mass = reference.rb.mass = 2f;
+GunState(gun, gunLifter, 0);GunState(reference, referenceHolder, 0);
+gunLifter.playerAvatar.Role = StageRole.Lifter;gunLifter.grabStrength = 41;
+referenceHolder.grabStrength = 41;reference.PhysicsGrabbingGunFixture();
+float oldGunGrip = referenceHolder.Grip;
+runGun(gun);
+Check(gunLifter.Grip < oldGunGrip / 3, "Idle gun no longer gets level-200 or heavy-object grip");
+void GunUsesVanilla(string reason)
+{
+    runGun(gun);
+    Near(gunLifter.Grip, referenceHolder.Grip, reason + " grip");
+    Near(gunLifter.Torque, referenceHolder.Torque, reason + " torque");
+}
+gunLifter.playerAvatar.Role = StageRole.Runner;GunUsesVanilla("Leaving Lifter ends gun correction");
+gunLifter.playerAvatar.Role = StageRole.Lifter;
+controller.Authority = false;GunUsesVanilla("Non-host does not correct guns");controller.Authority = true;
+controller.Ready = false;GunUsesVanilla("Stage cleanup ends gun correction");controller.Ready = true;
+controller._config.Enabled.Value = false;GunUsesVanilla("Disabled mod leaves guns native");controller._config.Enabled.Value = true;
+gunLifter.playerAvatar.Living = false;GunUsesVanilla("Dead holder receives no gun correction");gunLifter.playerAvatar.Living = true;
+RoleOverhaulRules.LifterPhysicsAvailable = false;GunUsesVanilla("Unavailable patch leaves guns native");RoleOverhaulRules.LifterPhysicsAvailable = true;
+// Returning to an ordinary heavy object restores the existing role peak immediately.
+gun.isGun = false;GunState(gun, gunLifter, 3);gun.overrideTorqueStrength = 1;
+runGun(gun);
+Near(gunLifter.Grip, RoleOverhaulRules.LifterEffectiveStrength(false), "Switching gun to heavy cargo restores peak grip");
+Near(gunLifter.Torque, RoleOverhaulRules.LifterEffectiveStrength(false, true), "Switching gun to heavy cargo restores peak rotation");
 
 Console.WriteLine($"PASS: {checks} fixed Lifter math, installed-game IL, emitted IL and host runtime checks.");
 Console.WriteLine("Unity gameplay and vanilla guest networking still require in-game verification.");

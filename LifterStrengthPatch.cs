@@ -46,10 +46,19 @@ internal static class LifterStrengthPatch
             return source;
 
         MethodInfo replacement = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Blend));
-        var result = new List<CodeInstruction>(source.Count + 6);
+        MethodInfo nativeInput = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.NativeStrengthInput));
+        var result = new List<CodeInstruction>(source.Count + 12);
         int site = 0;
         foreach (CodeInstruction instruction in source)
         {
+            if (instruction.opcode == OpCodes.Ldfld && Equals(instruction.operand, strength))
+            {
+                result.Add(instruction);
+                result.Add(new CodeInstruction(OpCodes.Ldarg_0));
+                result.Add(new CodeInstruction(OpCodes.Ldloc, local));
+                result.Add(new CodeInstruction(OpCodes.Call, nativeInput));
+                continue;
+            }
             if (!instruction.Calls(lerp)) { result.Add(instruction); continue; }
             var owner = new CodeInstruction(OpCodes.Ldarg_0);
             owner.MoveLabelsFrom(instruction);

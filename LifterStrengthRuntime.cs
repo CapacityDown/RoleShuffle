@@ -22,12 +22,24 @@ internal static class LifterStrengthRuntime
     private static readonly FieldInfo? MinGrabTimer = AccessTools.Field(typeof(PhysGrabObject), "overrideMinGrabStrengthTimer");
     private static readonly FieldInfo? TorqueTimer = AccessTools.Field(typeof(PhysGrabObject), "overrideTorqueStrengthTimer");
     private static readonly FieldInfo? MinTorqueTimer = AccessTools.Field(typeof(PhysGrabObject), "overrideMinTorqueStrengthTimer");
+    private static readonly FieldInfo? Gun = AccessTools.Field(typeof(PhysGrabObject), "isGun");
 
     internal static bool FieldsAvailable =>
         Tumbling?.FieldType == typeof(bool) && GrabberOverride?.FieldType == typeof(float) &&
         GrabDisabled?.FieldType == typeof(bool) && TorqueDisabled?.FieldType == typeof(bool) &&
         GrabTimer?.FieldType == typeof(float) && MinGrabTimer?.FieldType == typeof(float) &&
-        TorqueTimer?.FieldType == typeof(float) && MinTorqueTimer?.FieldType == typeof(float);
+        TorqueTimer?.FieldType == typeof(float) && MinTorqueTimer?.FieldType == typeof(float) &&
+        Gun?.FieldType == typeof(bool);
+
+    // Guns continuously override torque while aiming. Supply level-1 Strength
+    // before vanilla applies those overrides, so its aim/recoil behavior stays
+    // intact without receiving the role's level-200 input or heavy-object boost.
+    // This changes a local value, never the shared grabber or stored upgrade.
+    internal static float NativeStrengthInput(float raw, PhysGrabObject owner, PhysGrabber grabber) =>
+        RoleOverhaulRules.LifterPhysicsAvailable && owner != null &&
+        Gun!.GetValue(owner) is true && grabber != null && grabber.playerAvatar != null &&
+        StageRolesPlugin.Instance?.Controller?.UsesFixedLifterStrength(grabber.playerAvatar) == true
+            ? 1f + 0.2f * RoleOverhaulRules.LifterReferenceLevel : raw;
 
     // Replaces only the two vanilla penalty blends, inside the individual
     // grabber loop. Never changes the shared grabber state or other players.
@@ -39,6 +51,9 @@ internal static class LifterStrengthRuntime
             grabber == null || grabber.playerAvatar == null ||
             StageRolesPlugin.Instance?.Controller?.UsesFixedLifterStrength(grabber.playerAvatar) != true)
             return vanilla;
+
+        // Gun Strength is already normalized before the native override chain.
+        if (Gun!.GetValue(owner) is true) return vanilla;
 
         // Explicit vanilla/other-mod disables and temporary overrides retain
         // precedence. In particular, Lifter cannot cancel tumbling penalties.

@@ -27,8 +27,10 @@ public sealed class PhysGrabber
 public sealed class PhysGrabObject
 {
     public UnityEngine.Rigidbody rb = new();
+    public bool isGun;
     public bool overrideExtraGrabStrengthDisable, overrideExtraTorqueStrengthDisable;
     public float overrideGrabStrengthTimer, overrideMinGrabStrengthTimer, overrideTorqueStrengthTimer, overrideMinTorqueStrengthTimer;
+    public float overrideGrabStrength, overrideMinGrabStrength, overrideTorqueStrength = 1, overrideMinTorqueStrength;
     public PhysGrabber[] playerGrabbing = Array.Empty<PhysGrabber>();
 
     // Vanilla's two blends in a per-player loop, emitted and run after patching.
@@ -42,6 +44,30 @@ public sealed class PhysGrabObject
             item.Grip = UnityEngine.Mathf.Lerp(strength, reduced, blend);
             strength = item.grabStrength;
             reduced = strength / (1f + strength);
+            item.Torque = UnityEngine.Mathf.Lerp(strength, reduced, blend);
+        }
+    }
+
+    // Installed-game override ordering for comparison with native level-1 guns.
+    public void PhysicsGrabbingGunFixture()
+    {
+        foreach (PhysGrabber item in playerGrabbing)
+        {
+            float strength = item.grabStrength;
+            if (item.playerAvatar.isTumbling || overrideExtraGrabStrengthDisable) strength = 1;
+            if (overrideMinGrabStrengthTimer > 0) strength = Math.Max(strength, overrideMinGrabStrength + strength / 5);
+            if (overrideGrabStrengthTimer > 0) strength = overrideGrabStrength;
+            if (item.overrideGrabStrength != -1) strength = item.overrideGrabStrength;
+            float reduced = strength / (1f + UnityEngine.Mathf.Min(strength, 30f));
+            float blend = UnityEngine.Mathf.Min((strength - 1f) / (rb.mass < 2f ? 7f : 20f), 0.9f);
+            item.Grip = UnityEngine.Mathf.Lerp(strength, reduced, blend);
+
+            strength = item.grabStrength;
+            if (overrideExtraTorqueStrengthDisable || item.playerAvatar.isTumbling) strength = 1;
+            if (overrideMinTorqueStrengthTimer > 0) strength = Math.Max(strength, overrideMinTorqueStrength + strength / 5);
+            strength = Math.Max(strength, overrideTorqueStrength);
+            reduced = strength / (1f + strength);
+            blend = UnityEngine.Mathf.Min((strength - 1f) / (rb.mass < 2f ? 7f : 20f), 0.9f);
             item.Torque = UnityEngine.Mathf.Lerp(strength, reduced, blend);
         }
     }
