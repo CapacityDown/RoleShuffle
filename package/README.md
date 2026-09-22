@@ -211,9 +211,11 @@ Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, 
 
 #### Base upgrades
 
+Item retention starts when enabled; earlier uses are not recovered. Saved levels add to role/base targets; Lifter/Rammer fixed levels and Influenza HP take priority. BASE UPGRADES excludes item bonuses; these appear in vanilla stats. To sell upgrades, set `General.ShopUpgradeItemCount` above 0.
+
 All entries in this table are host-controlled.
 
-Base targets stay active between stages and apply to upgrades not overridden by the current role. Use comma-separated `run level:value` pairs: `1:1,5:3,10:6` means 1 on levels 1–4, 3 on levels 5–9, and 6 from level 10. Run levels accept 1–999999. Blank settings and levels before the first entry use 0. Values are clamped to the allowed range; malformed pairs are ignored. Throw is never changed.
+Base targets stay active between stages and apply to upgrades not overridden by the current role. Use comma-separated `run level:value` pairs: `1:1,5:3,10:6` means 1 on levels 1–4, 3 on levels 5–9, and 6 from level 10. Run levels accept 1–999999. Blank settings and levels before the first entry use 0. Values are clamped to the allowed range; malformed pairs are ignored. Base settings and truck draws do not change Throw.
 
 Truck draws occur after leaving the shop, during truck preparation. They select an upgrade and change amount using relative weights. Amounts that no eligible target can receive within its limits are excluded. Positive results can select `All Upgrades`, affecting enabled types with room below their limits. Results persist for the run and are announced by the host.
 
@@ -221,11 +223,13 @@ Open `ROLES` → `BASE UPGRADES` → `BASE UPGRADE SETTINGS` to toggle the draw 
 
 OFF excludes a type from future individual and `All Upgrades` draws without removing its base levels or acquired bonuses. An active draw keeps its starting selection. `No individual draw` means weight `0`; an ON type can still receive `All Upgrades`. `No draw` on `All Upgrades` means its weight is `0`. Disabling that entry affects only combined results. All-off selections produce no result.
 
-Manual adjustments are off by default. Enable `Base Upgrades.ManualAdjustmentEnabled` to use +/- in the lobby, truck or shop. Each click changes the displayed total by one, within 0–200 (Map Player Count: 0–1). Adjustments are saved for each game and remain after reloading. The page shows configured levels, manual adjustments and draw bonuses. Turning the setting off removes the manual contribution until re-enabled. Only the host can adjust levels, and the lobby must support saving.
+Manual adjustments persist per save. Each +/- click changes the total by 1, within 0–200 (Map Player Count: 0–1). The host needs a save-supported lobby.
 
 | Key | Default | Range / values | Effect |
 | --- | ---: | --- | --- |
-| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`, `false` | Enables manual adjustments and the minus/plus buttons in the lobby, truck and shop. Off hides the buttons, the Manual breakdown and related guidance, and excludes saved manual amounts from base targets; re-enabling restores them. Base rules and truck draws are unaffected. |
+| `Base Upgrades.KeepUpgradeItems` | `false` | `true`, `false` | Keep consumed levels in this save. Off stops recording and excludes saved amounts at the next role/base reset without deleting them; Throw remains permanent. |
+| `Base Upgrades.UpgradeItemScope` | `Player` | `Player`, `AllPlayers` | New uses benefit the consumer or everyone, including later joiners. Past uses keep their original recipients. |
+| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`, `false` | Enables manual +/- in the lobby, truck and shop. Off hides manual controls and explanations and excludes saved adjustments; on restores them. Base rules and truck draws remain active. |
 | `Base Upgrades.HealthUpgradeLevels` | `1:1` | `level:value` pairs; value `0`–`200` | Base Health target by run level. |
 | `Base Upgrades.StaminaUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Stamina target by run level. |
 | `Base Upgrades.ExtraJumpUpgradeLevels` | Blank | `level:value` pairs; value `0`–`200` | Base Extra Jump target by run level. |
@@ -494,7 +498,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 - `Courier` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
 - `Medic` never heals itself.
 - `Phoenix` revives itself once per stage. `Rescuer` revives other nearby players up to the configured limit. Each role uses its own configurable revival HP, with a default of 25.
-- Role-specific upgrade overrides return to their configured base levels at stage end. Other managed upgrades stay at their base levels, and Throw is untouched.
+- Role upgrades end at stage end. Base levels include retained item amounts when enabled. Throw remains permanent.
 - Setting every role to disabled or weight `0` leaves no eligible random role to assign.
 
 ## 日本語
@@ -708,9 +712,11 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 
 #### 基礎アップグレード
 
+使用分の保持はONにした後からです。過去の使用は復元しません。役職・基礎値に加算しますが、Lifter・Rammerの固定値とInfluenzaのHPを優先します。アイテム分はBASE UPGRADESには含めず、バニラの能力値に反映します。販売する場合は`General.ShopUpgradeItemCount`を1以上にしてください。
+
 この表はすべてホスト設定です。
 
-役職が上書きしない強化には基礎値を適用し、ステージ外でも維持します。カンマ区切りの`ランレベル:設定値`で指定します。`1:1,5:3,10:6`ならレベル1～4は1、5～9は3、10以降は6です。ランレベルは1～999999。空欄や最初の指定レベルより前は0、範囲外の値は上限・下限に補正し、不正な組は無視します。Throwは変更しません。
+役職が上書きしない強化には基礎値を適用し、ステージ外でも維持します。カンマ区切りの`ランレベル:設定値`で指定します。`1:1,5:3,10:6`ならレベル1～4は1、5～9は3、10以降は6です。ランレベルは1～999999。空欄や最初の指定レベルより前は0、範囲外の値は上限・下限に補正し、不正な組は無視します。基礎設定・トラック抽選ではThrowを変更しません。
 
 トラック抽選はショップを出た後の準備中に行い、相対Weightで種類と増減値を選びます。範囲内で適用できる対象がない増減値は除外します。正の結果では`All Upgrades`も候補となり、ONの種類のうち上限まで余地があるものを強化します。結果はホストが発言し、そのラン中維持します。
 
@@ -718,11 +724,13 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 
 OFFの種類は次回以降の個別・一括抽選から除外し、基礎値や獲得済みボーナスは保持します。実行中の抽選は開始時の設定を使用します。`個別抽選なし`は重み`0`で、ONなら`All Upgrades`の対象になります。`All Upgrades`の`抽選なし`は一括抽選の重み`0`を示し、OFFは一括抽選だけを無効にします。全項目OFFなら抽選結果は発生しません。
 
-手動調整は初期OFFです。`Base Upgrades.ManualAdjustmentEnabled`をONにすると、ロビー・トラック・ショップで±を操作できます。1回押すごとに表示値が1変わり、範囲は0～200（Map Player Countは0～1）です。調整分はセーブごとに保存し、再開後も維持します。画面には設定値・手動調整・抽選分の内訳を表示します。OFFにすると手動調整分を除外し、再びONにすると戻ります。操作できるのはホストだけで、保存に対応したロビーが必要です。
+手動調整はセーブごとに保持します。±で表示値が1変わり、範囲は0～200（Map Player Countは0～1）。保存対応ロビーでホストが操作します。
 
 | キー | デフォルト | 範囲・値 | 内容 |
 | --- | ---: | --- | --- |
-| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`、`false` | ロビー・トラック・ショップでの手動調整と±ボタンを有効にします。OFFではボタン・内訳の「手動」・手動調整の案内を非表示にし、保存済み調整値を基礎値から除外します。再びONにすると復元します。設定式とトラック抽選には影響しません。 |
+| `Base Upgrades.KeepUpgradeItems` | `false` | `true`、`false` | 使用分を同じセーブで保持。OFFで記録を止め、次の役職・基礎値適用から保存分を除外（削除なし）。Throwはバニラ同様に残ります。 |
+| `Base Upgrades.UpgradeItemScope` | `Player` | `Player`、`AllPlayers` | 今後の使用分を本人／全員（後からの参加者を含む）へ加算。過去の加算先は変わりません。 |
+| `Base Upgrades.ManualAdjustmentEnabled` | `false` | `true`、`false` | ロビー・トラック・ショップの±操作を有効化。OFFで手動操作・内訳・案内を隠し、保存済み調整分を除外。ONで復元。設定式とトラック抽選は維持します。 |
 | `Base Upgrades.HealthUpgradeLevels` | `1:1` | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのHealth基礎目標値です。 |
 | `Base Upgrades.StaminaUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのStamina基礎目標値です。 |
 | `Base Upgrades.ExtraJumpUpgradeLevels` | 空欄 | `レベル:設定値`の組、設定値`0`～`200` | ランレベルごとのExtra Jump基礎目標値です。 |
@@ -991,5 +999,5 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 - `Courier`と`Tuna`は条件を満たしている間、実際に継続ダメージを与え、死亡する可能性があります。受けたダメージは自動回復しません。
 - `Medic`は自身を回復しません。
 - `Phoenix`は1ステージに1回だけ自己復活します。`Rescuer`は設定された回数まで周囲の別プレイヤーを復活させます。復活後HPは役職ごとに設定でき、デフォルトは25です。
-- 役職が置き換えたアップグレードはステージ終了時に基礎値へ戻ります。その他の管理対象アップグレードは基礎値を維持し、Throwには触れません。
+- 役職の強化はステージ終了時に基礎値へ戻ります。使用分の保持がONなら、その分も加算します。Throwは残ります。
 - すべての役職を無効化するか、すべての`Weight`を`0`にすると、ランダム抽選できる役職がなくなります。

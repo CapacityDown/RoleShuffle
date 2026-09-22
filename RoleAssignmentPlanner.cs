@@ -311,12 +311,12 @@ internal sealed class RoleAssignmentPlanner
             {
                 continue;
             }
-            if (RoleCatalog.BaseUpgradeMeetsOrExceedsRoleTarget(role, _config))
+            if (RoleCatalog.BaseUpgradeMeetsOrExceedsRoleTarget(role, _config, steamId))
             {
                 continue;
             }
             if (role == StageRole.Influencer &&
-                !RoleCatalog.InfluencerHasUpgradeBenefit(_config, playerCount))
+                !RoleCatalog.InfluencerHasUpgradeBenefit(_config, playerCount, steamId))
             {
                 continue;
             }

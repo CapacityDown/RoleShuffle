@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace REPOJP.StageRoles;
 
+internal enum UpgradeItemScope { Player, AllPlayers }
+
 internal sealed class StageRolesConfig
 {
     internal const int MaximumSupportedPlayers = 30;
@@ -122,6 +124,14 @@ internal sealed class StageRolesConfig
 
         SetRoleCommandEnabled = BindBool(config, "Testing", "Enabled", false, "Enables the testing commands.");
 
+        KeepUpgradeItems = BindBool(config, "Base Upgrades", "KeepUpgradeItems", false,
+            "Keeps upgrade levels gained by consuming items in this save. Default: off. " +
+            "Turning off stops recording and applying saved item amounts without deleting them. " +
+            "Role-fixed values take priority while that role is active. Throw keeps vanilla permanence and also supports AllPlayers.");
+        UpgradeItemScope = config.Bind("Base Upgrades", "UpgradeItemScope", REPOJP.StageRoles.UpgradeItemScope.Player,
+            new ConfigDescription("Who receives newly consumed upgrades: Player keeps them for the user; " +
+                "AllPlayers grants them to everyone, including later joiners. " +
+                "The scope is stored when the item is used; changing it does not move earlier amounts."));
         BaseUpgradeManualAdjustmentEnabled = BindBool(config, "Base Upgrades", "ManualAdjustmentEnabled", false,
             "Allows the host to use the minus/plus buttons on BASE UPGRADES. Default: off. " +
             "Adjustments are available in the lobby, truck, or shop, not during stages. " +
@@ -547,6 +557,8 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> HudPinLocalPlayer { get; }
     internal ConfigEntry<bool> SetRoleCommandEnabled { get; }
 
+    internal ConfigEntry<bool> KeepUpgradeItems { get; }
+    internal ConfigEntry<UpgradeItemScope> UpgradeItemScope { get; }
     internal ConfigEntry<bool> BaseUpgradeManualAdjustmentEnabled { get; }
     internal ConfigEntry<string> BaseHealthLevels { get; }
     internal ConfigEntry<string> BaseStaminaLevels { get; }

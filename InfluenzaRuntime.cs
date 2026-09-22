@@ -151,7 +151,7 @@ internal sealed partial class StageRoleController
         assignment.AssignedRole = StageRole.Influenza;
         assignment.Role = StageRole.Influenza;
         ResetAssignmentForRoleChange(assignment);
-        UpgradeService.SetLevels(assignment.SteamId, RoleCatalog.TargetUpgrades(StageRole.Influenza, _config));
+        UpgradeService.SetLevels(assignment.SteamId, RoleCatalog.TargetUpgrades(StageRole.Influenza, _config, assignment.SteamId));
         KingUpgradeAura.Tick(_config, _assignments);
         StartInfluenza(assignment);
         RoleAssignmentSync.Publish(_assignments);

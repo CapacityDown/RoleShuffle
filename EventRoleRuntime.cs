@@ -96,6 +96,15 @@ internal sealed class EventRoleRuntime
         }
     }
 
+    internal void RetainedUpgradeApplied(string steamId, StageRole role, IReadOnlyList<UpgradeGrant> changes)
+    {
+        if (!_dynamicStates.TryGetValue(steamId, out var state) || !state.Initialized) return;
+        foreach (UpgradeGrant change in changes)
+            if (!UpgradeItemRetention.IsFixed(role, change.CommandName))
+                state.Baseline[change.DictionaryName] = UpgradeItemRetention.Add(
+                    state.Baseline.GetValueOrDefault(change.DictionaryName, 0), change.Level);
+    }
+
     internal void AddPlayer(RoleAssignment assignment) =>
         PrepareAssignment(assignment);
 
@@ -733,6 +742,9 @@ internal sealed class EventRoleRuntime
                     entry!.Value,
                     condition)
                 : baseline;
+            if (roleControlsUpgrade)
+                target = UpgradeItemRetention.Add(target,
+                    UpgradeItemRetention.Total(_config, assignment.SteamId, upgrade.DictionaryName));
             int desiredGrant = roleControlsUpgrade
                 ? Math.Max(0, target - baseline)
                 : 0;
@@ -755,6 +767,7 @@ internal sealed class EventRoleRuntime
     {
         foreach (DynamicUpgradeDefinition upgrade in RoleUpgradeScaling.Definitions)
         {
+            if (UpgradeItemRetention.IsFixed(assignment.Role, upgrade.CommandName)) continue;
             int baseline = state.Baseline.GetValueOrDefault(
                 upgrade.DictionaryName,
                 0);
@@ -768,11 +781,11 @@ internal sealed class EventRoleRuntime
             {
                 target = Math.Max(
                     target,
-                    ResolveScalingTarget(
+                    UpgradeItemRetention.Add(ResolveScalingTarget(
                         StageRole.Influencer,
                         upgrade,
                         influencerEntry.Value,
-                        nearbyPlayers));
+                        nearbyPlayers), UpgradeItemRetention.Total(_config, assignment.SteamId, upgrade.DictionaryName)));
             }
             if (_config.BerserkerUpgradeScaling.TryGetValue(
                     upgrade.Name,
@@ -780,11 +793,11 @@ internal sealed class EventRoleRuntime
             {
                 target = Math.Max(
                     target,
-                    ResolveScalingTarget(
+                    UpgradeItemRetention.Add(ResolveScalingTarget(
                         StageRole.Berserker,
                         upgrade,
                         berserkerEntry.Value,
-                        healthPercent));
+                        healthPercent), UpgradeItemRetention.Total(_config, assignment.SteamId, upgrade.DictionaryName)));
             }
 
             int desiredGrant = Math.Max(0, target - baseline);

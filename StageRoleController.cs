@@ -859,7 +859,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             {
                 UpgradeService.SetLevels(
                     assignment.SteamId,
-                    RoleCatalog.TargetUpgrades(assignment.Role, _config));
+                    RoleCatalog.TargetUpgrades(assignment.Role, _config, assignment.SteamId));
             }
         }
 
@@ -1195,7 +1195,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
             yield break;
         }
 
-        IReadOnlyList<UpgradeGrant> baseUpgrades = RoleCatalog.BaseUpgrades(_config);
         List<StageRole> enabledRoles = EnabledRoles();
         if (!SemiFunc.IsMultiplayer() || players.Count <= 1)
         {
@@ -1216,7 +1215,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 string steamId = PlayerIdentity.SteamId(player);
                 if (!string.IsNullOrEmpty(steamId))
                 {
-                    UpgradeService.SetLevels(steamId, baseUpgrades);
+                    UpgradeService.SetLevels(steamId, RoleCatalog.BaseUpgrades(_config, steamId));
                 }
             }
             CompleteStagePreparation();
@@ -1244,7 +1243,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             {
                 StageRolesPlugin.ModLogger.LogWarning(
                     $"No role could be planned for player {steamId}.");
-                UpgradeService.SetLevels(steamId, baseUpgrades);
+                UpgradeService.SetLevels(steamId, RoleCatalog.BaseUpgrades(_config, steamId));
                 continue;
             }
             RoleAssignment assignment = new(steamId, player, role);
@@ -1255,7 +1254,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         {
             UpgradeService.SetLevels(
                 assignment.SteamId,
-                RoleCatalog.TargetUpgrades(assignment.Role, _config));
+                RoleCatalog.TargetUpgrades(assignment.Role, _config, assignment.SteamId));
             StageRolesPlugin.ModLogger.LogInfo(
                 $"Assigned {RoleCatalog.AssignmentName(assignment.AssignedRole, assignment.Role)} " +
                 $"to player {assignment.SteamId}.");
@@ -2774,7 +2773,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 IReadOnlyList<UpgradeGrant> restoredTargets =
                     RoleCatalog.TargetUpgrades(
                         restoredAssignment.Role,
-                        _config);
+                        _config, steamId);
                 UpgradeService.EnsureAtLeastLevels(
                     steamId,
                     restoredTargets);
@@ -2849,7 +2848,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         {
             UpgradeService.SetLevels(
                 steamId,
-                RoleCatalog.BaseUpgrades(_config));
+                RoleCatalog.BaseUpgrades(_config, steamId));
             StageRolesPlugin.ModLogger.LogWarning(
                 $"No role was available for newly detected player {steamId}.");
             return null;
@@ -2880,7 +2879,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         {
             UpgradeService.SetLevels(
                 steamId,
-                RoleCatalog.BaseUpgrades(_config));
+                RoleCatalog.BaseUpgrades(_config, steamId));
             StageRolesPlugin.ModLogger.LogWarning(
                 $"No repeatable role was available for newly detected player {steamId}.");
             return null;
@@ -2890,7 +2889,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         RoleAssignment assignment = new(steamId, player, role);
         UpgradeService.SetLevels(
             steamId,
-            RoleCatalog.TargetUpgrades(assignment.Role, _config));
+            RoleCatalog.TargetUpgrades(assignment.Role, _config, assignment.SteamId));
         return assignment;
     }
 
@@ -2943,7 +2942,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         ResetAssignmentForRoleChange(mimic);
         UpgradeService.SetLevels(
             mimic.SteamId,
-            RoleCatalog.TargetUpgrades(mimic.Role, _config));
+            RoleCatalog.TargetUpgrades(mimic.Role, _config, mimic.SteamId));
         _medic.AddPlayer(mimic);
         _mage.AddPlayer(mimic);
         _eventRoles.AddPlayer(mimic);
@@ -3204,10 +3203,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
             {
                 steamIds.Add(assignment.SteamId);
             }
-            IReadOnlyList<UpgradeGrant> baseUpgrades = RoleCatalog.BaseUpgrades(_config);
             foreach (string steamId in steamIds)
             {
-                UpgradeService.SetLevels(steamId, baseUpgrades);
+                UpgradeService.SetLevels(steamId, RoleCatalog.BaseUpgrades(_config, steamId));
             }
         }
         ClearAssignments();

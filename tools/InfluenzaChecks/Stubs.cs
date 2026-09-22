@@ -115,7 +115,7 @@ namespace REPOJP.StageRoles
         // by Test-SecretRoles.ps1; this harness exercises the runtime consumers.
         internal static bool HasCapability(StageRole role, StageRole capability) =>
             role == capability || (role == StageRole.Disaster && capability == StageRole.Influenza);
-        internal static int TargetUpgrades(StageRole role, Config config) => 0;
+        internal static int TargetUpgrades(StageRole role, Config config, string? steamId = null) => 0;
     }
     internal sealed class Runtime
     {

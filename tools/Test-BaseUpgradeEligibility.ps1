@@ -7,11 +7,14 @@ $targetMatch = [regex]::Match($roleSource, '(?s)    internal static IReadOnlyLis
 if (-not $targetMatch.Success) { throw 'Production upgrade-target method not found.' }
 $rules = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../RoleOverhaulRules.cs') -Raw
 $rules = $rules.Replace('using System;', '').Replace('using System.Collections.Generic;', '').Replace('namespace REPOJP.StageRoles;', '')
+$retention = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../UpgradeItemRetention.cs') -Raw
+$retention = $retention.Replace('using System;', '').Replace('using System.Collections.Generic;', '').Replace('namespace REPOJP.StageRoles;', '')
 $testSource = @'
+#nullable enable annotations
 using System;
 using System.Collections.Generic;
 __RULES__
-public enum StageRole { Tank, Runner, Jumper, Lifter, Launcher, Climber, Flyer, Tracker, Ghost, Mage, Superbot }
+public enum StageRole { Tank, Runner, Jumper, Lifter, Launcher, Climber, Flyer, Tracker, Ghost, Mage, Superbot, Rammer }
 public class UpgradeGrant {
     public string CommandName;
     public string DictionaryName;
@@ -21,6 +24,7 @@ public class UpgradeGrant {
 }
 public class Entry<T> { public T Value; public Entry(T value) { Value = value; } }
 public class StageRolesConfig {
+    public Entry<bool> KeepUpgradeItems = new(false);
     public UpgradeGrant[] Bases;
     public UpgradeGrant[] Targets;
     public Entry<float> LifterHeavyGripMultiplier = new(1f);
@@ -33,8 +37,21 @@ public class StageRolesConfig {
     public Entry<int> RunnerMaximumStamina = new(2040);
 
 }
+public class StatsManager {
+    public static StatsManager instance = new();
+    public Dictionary<string, int> runStats = new();
+}
+public record DynamicUpgradeDefinition(string Name, string CommandName, string DictionaryName, int MaximumLevel);
+public static class RoleUpgradeScaling {
+    public static IReadOnlyList<DynamicUpgradeDefinition> Definitions = new[] {
+        new DynamicUpgradeDefinition("Strength", "Strength", "Strength", 200),
+        new DynamicUpgradeDefinition("Health", "Health", "Health", 200),
+        new DynamicUpgradeDefinition("Speed", "Speed", "Speed", 200)
+    };
+}
+__RETENTION__
 public static class EligibilityChecks {
-    static IReadOnlyList<UpgradeGrant> BaseUpgrades(StageRolesConfig config) { return config.Bases; }
+    static IReadOnlyList<UpgradeGrant> BaseUpgrades(StageRolesConfig config, string? steamId = null) { return UpgradeItemRetention.Apply(config.Bases, config, steamId); }
     static IReadOnlyList<UpgradeGrant> RoleUpgrades(StageRole role, StageRolesConfig config) { return config.Targets; }
 __METHOD__
 __TARGETS__
@@ -152,9 +169,31 @@ __TARGETS__
             if (command == "Strength" && RoleOverhaulRules.ReachesMaximum(command, level, 6)) throw new Exception("Rounded Strength cap 6 is unattainable through level 200");
             count++;
         }
+        StatsManager.instance.runStats.Clear();
+        var personal = new StageRolesConfig {
+            Bases = new[] { new UpgradeGrant("Strength", 0) },
+            Targets = new[] { new UpgradeGrant("Strength", 200) }
+        };
+        personal.KeepUpgradeItems.Value = true;
+        UpgradeItemRetention.Record("a", false, new Dictionary<string, int>(), new Dictionary<string, int> { ["Strength"] = 50 });
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, personal, "a")) throw new Exception("Personal item baseline reaches Lifter peak");
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, personal, "b")) throw new Exception("Personal item baseline must not exclude someone else");
+        if (TargetUpgrades(StageRole.Lifter, personal, "a")[0].Level != 200) throw new Exception("Lifter fixed level wins");
+        if (BaseUpgrades(personal, "a")[0].Level != 50) throw new Exception("Role cleanup retains personal item levels");
+        personal.KeepUpgradeItems.Value = false;
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, personal, "a")) throw new Exception("Off excludes retained levels from eligibility");
+        personal.KeepUpgradeItems.Value = true;
+        UpgradeItemRetention.Record("a", true, new Dictionary<string, int>(), new Dictionary<string, int> { ["Strength"] = 50 });
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, personal, "b")) throw new Exception("Shared item baseline excludes peers at peak");
+        personal.Bases = new[] { new UpgradeGrant("Health", 0) };
+        personal.Targets = new[] { new UpgradeGrant("Health", 21) };
+        UpgradeItemRetention.Record("a", false, new Dictionary<string, int>(), new Dictionary<string, int> { ["Health"] = 200 });
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tank, personal, "a")) throw new Exception("Personal Health items reach Tank cap");
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tank, personal, "b")) throw new Exception("Other player's Tank remains eligible");
+        count += 8;
         Console.WriteLine("PASS: " + count + " production eligibility and upgrade-target checks (stubbed base/role inputs).");
     }
 }
 '@
-Add-Type -TypeDefinition $testSource.Replace('__METHOD__', $methodSource).Replace('__TARGETS__', $targetMatch.Value).Replace('__RULES__', $rules)
+Add-Type -TypeDefinition $testSource.Replace('__METHOD__', $methodSource).Replace('__TARGETS__', $targetMatch.Value).Replace('__RULES__', $rules).Replace('__RETENTION__', $retention)
 [EligibilityChecks]::Run()

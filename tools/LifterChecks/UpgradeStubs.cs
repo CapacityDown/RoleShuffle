@@ -78,3 +78,8 @@ namespace REPOJP.StageRoles
         internal static void Forget(string id, string key) { }
     }
 }
+
+namespace REPOJP.StageRoles
+{
+    internal static class UpgradeItemRetentionPatch { internal static void ApplyPendingThrow(string steamId) { } }
+}

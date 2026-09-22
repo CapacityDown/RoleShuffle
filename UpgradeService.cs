@@ -129,6 +129,8 @@ internal static class UpgradeService
             return;
         }
 
+        UpgradeItemRetentionPatch.ApplyPendingThrow(steamId);
+
         foreach (UpgradeGrant target in targets)
         {
             int targetLevel = Math.Max(0, target.Level);

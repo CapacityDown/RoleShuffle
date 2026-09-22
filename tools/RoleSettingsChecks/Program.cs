@@ -10,6 +10,17 @@ string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
 Console.WriteLine($"Ability configuration checks passed: {AbilityConfigChecks.Run(directory)}");
+Check(!config.KeepUpgradeItems.Value && Equals(config.KeepUpgradeItems.DefaultValue, false), "Consumed upgrade retention defaults off");
+Check(config.KeepUpgradeItems.Definition.Section == "Base Upgrades" && config.KeepUpgradeItems.Definition.Key == "KeepUpgradeItems", "Retention is bound in REPOConfig");
+Check(config.UpgradeItemScope.Value == UpgradeItemScope.Player && Enum.GetValues<UpgradeItemScope>().Length == 2, "Personal and shared scopes available; personal is default");
+config.KeepUpgradeItems.Value = true;
+config.UpgradeItemScope.Value = UpgradeItemScope.AllPlayers;
+file.Save();
+var retentionReload = new StageRolesConfig(new ConfigFile(path, false) { SaveOnConfigSet = false });
+Check(retentionReload.KeepUpgradeItems.Value && retentionReload.UpgradeItemScope.Value == UpgradeItemScope.AllPlayers, "Retention and scope persist in real BepInEx configuration");
+config.KeepUpgradeItems.Value = false;
+config.UpgradeItemScope.Value = UpgradeItemScope.Player;
+
 Check(config.TankHealthMultiplier.Value == 1.5f && config.RunnerSpeedMultiplier.Value == 1.5f &&
     config.RunnerStaminaMultiplier.Value == 1.5f,
     "Effective-value multiplier defaults");

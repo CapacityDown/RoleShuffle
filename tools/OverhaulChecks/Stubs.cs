@@ -205,3 +205,8 @@ public sealed class PunManager
     public int UpgradeDeathHeadBattery(string id, int delta) => StatsManager.instance.Add(id, "DeathHeadBattery", delta);
 }
 namespace REPOJP.StageRoles { internal readonly record struct UpgradeGrant(string CommandName, string DictionaryName, int Level); }
+
+namespace REPOJP.StageRoles
+{
+    internal static class UpgradeItemRetentionPatch { internal static void ApplyPendingThrow(string steamId) { } }
+}

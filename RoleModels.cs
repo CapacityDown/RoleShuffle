@@ -144,8 +144,8 @@ internal static class RoleCatalog
         !IsSecretRole(role);
 
     internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(
-        StageRolesConfig config) =>
-        BuildBaseUpgrades(config, includeTruckDrawBonus: true);
+        StageRolesConfig config, string? steamId = null) =>
+        UpgradeItemRetention.Apply(BuildBaseUpgrades(config, includeTruckDrawBonus: true), config, steamId);
 
     internal static IReadOnlyList<UpgradeGrant> ConfiguredBaseUpgrades(
         StageRolesConfig config) =>
@@ -172,14 +172,14 @@ internal static class RoleCatalog
 
     internal static bool BaseUpgradeMeetsOrExceedsRoleTarget(
         StageRole role,
-        StageRolesConfig config)
+        StageRolesConfig config, string? steamId = null)
     {
         if (role < StageRole.Tank || role > StageRole.Ghost)
         {
             return false;
         }
 
-        IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config);
+        IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config, steamId);
         if (role == StageRole.Lifter)
         {
             if (!RoleOverhaulRules.LifterPhysicsAvailable) return true;
@@ -206,7 +206,7 @@ internal static class RoleCatalog
                 if (maximum >= 0d && RoleOverhaulRules.ReachesMaximum(baseline.CommandName, baseline.Level, maximum))
                     return true;
             }
-            foreach (UpgradeGrant target in TargetUpgrades(role, config))
+            foreach (UpgradeGrant target in TargetUpgrades(role, config, steamId))
                 foreach (UpgradeGrant baseline in baseUpgrades)
                     if (target.DictionaryName == baseline.DictionaryName && target.Level > baseline.Level)
                         return false;
@@ -231,10 +231,10 @@ internal static class RoleCatalog
 
     internal static bool InfluencerHasUpgradeBenefit(
         StageRolesConfig config,
-        int playerCount)
+        int playerCount, string? steamId = null)
     {
         int maximumNearbyPlayers = Math.Max(0, playerCount - 1);
-        IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config);
+        IReadOnlyList<UpgradeGrant> baseUpgrades = BaseUpgrades(config, steamId);
         foreach (DynamicUpgradeDefinition upgrade in RoleUpgradeScaling.Definitions)
         {
             if (!config.InfluencerUpgradeScaling.TryGetValue(
@@ -266,7 +266,8 @@ internal static class RoleCatalog
             foreach (UpgradeScalingRule rule in rules)
             {
                 if (rule.Condition <= maximumNearbyPlayers &&
-                    rule.Level > baseLevel)
+                    UpgradeItemRetention.Add(rule.Level, steamId == null ? 0 :
+                        UpgradeItemRetention.Total(config, steamId, upgrade.DictionaryName)) > baseLevel)
                 {
                     return true;
                 }
@@ -277,7 +278,7 @@ internal static class RoleCatalog
 
     internal static IReadOnlyList<UpgradeGrant> TargetUpgrades(
         StageRole role,
-        StageRolesConfig config)
+        StageRolesConfig config, string? steamId = null)
     {
         List<UpgradeGrant> targets = new(BaseUpgrades(config));
         foreach (UpgradeGrant roleUpgrade in RoleUpgrades(role, config))
@@ -306,7 +307,7 @@ internal static class RoleCatalog
                 break;
             }
         }
-        return targets;
+        return UpgradeItemRetention.Apply(targets, config, steamId, role);
     }
 
     private static int GrowthTarget(string command, int baseline, int minimum, StageRolesConfig config) => command switch
