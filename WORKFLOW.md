@@ -10,7 +10,7 @@ historical version numbers, deployment profiles and superseded design choices.
 
 - Work in `RoleShuffle`; preserve the original `StageRoles` checkout and previous
   release artifacts so the stable version can be restored.
-- Keep the MOD name RoleShuffle. Continue the current release version (4.5.1)
+- Keep the MOD name RoleShuffle. Continue the current development version (4.5.2)
   unless the user changes it. Do not revive the old overhaul setting.
 - The user has authorized repository operations and normal pushes to the
   CapacityDown/RoleShuffle repository across branches. Do not ask again for each

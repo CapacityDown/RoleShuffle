@@ -16,7 +16,7 @@ These rules apply to README, CHANGELOG and player-facing PDFs:
 
 ## 1. Release sources of truth
 
-The following values must agree in every release.
+The following values must agree in every release. At the start of a new development version, keep the previous CHANGELOG intact until there is a player-facing change to describe; do not create an empty version heading. Preserve the previous release ZIP until a new release package is built and validated.
 
 | Value | Source files | Current value |
 |---|---|---|
@@ -24,7 +24,7 @@ The following values must agree in every release.
 | Display name | `StageRolesPlugin.cs` | `RoleShuffle` |
 | Assembly name | `StageRoles.csproj` | `RoleShuffle` |
 | Plugin GUID | `StageRolesPlugin.cs` | `REPOJP.RoleShuffle` |
-| Version | `StageRoles.csproj`, `StageRolesPlugin.cs`, `package/manifest.json`, latest CHANGELOG heading | `4.5.1` |
+| Version | `StageRoles.csproj`, `StageRolesPlugin.cs`, `package/manifest.json`, latest CHANGELOG heading | `4.5.2` |
 | DLL name | project output and package root | `RoleShuffle.dll` |
 
 Do not publish when any version or name differs. The ZIP filename is not used as a source of truth; use `RoleShuffle.zip` for the release artifact unless a versioned archive is specifically required for local retention.
@@ -56,7 +56,7 @@ Use valid UTF-8 JSON without comments or trailing commas. Keep the fields in thi
 ```json
 {
   "name": "RoleShuffle",
-  "version_number": "4.5.1",
+  "version_number": "4.5.2",
   "website_url": "https://github.com/CapacityDown/RoleShuffle/issues",
   "description": "【HostOnlyMOD】Random roles shake up every stage with vanilla upgrades and effects—only the host needs the mod! ホスト導入だけで、ステージごとにランダムな役職とバニラの強化・効果を楽しめます！",
   "dependencies": [
@@ -149,7 +149,7 @@ Use English first and Japanese second. The two sections must describe the same r
 Use English only and preserve the established RoleShuffle format:
 
 ```markdown
-## 4.5.1
+## 4.5.2
 - Added ...
 - Changed ...
 - Fixed ...

@@ -5,7 +5,7 @@ R.E.P.O.向け役職MODのソース管理用リポジトリです。
 バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
 過去タスクから引き継いだ作業方法は[作業ガイド](WORKFLOW.md)を参照してください。
 
-## v4.5.1開発
+## v4.5.2開発
 
 `feature/roleshuffle-4.5.0-overhaul`ブランチを専用worktreeで開発しています。
 現行の`StageRoles`フォルダ、`main`、既存のDLL・ZIP・ゲーム導入先は保持します。
