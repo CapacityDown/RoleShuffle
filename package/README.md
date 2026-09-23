@@ -94,7 +94,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | King | Crown; grants nearby allies Speed/Range +2 and up to Strength +5 within 12 m. | No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage. | Radius and bonus levels |
 | Tuna | After a 5-second grace period at stage start, standing still for 3 seconds causes 1 damage every 0.1 seconds until moving. | Can kill the player. The stationary timer starts after the initial grace period. Moving resets it immediately; lost health is not restored. | Delay, damage, interval |
 | Musician | Each instrument note played by the Musician heals the Musician and living players within 10 m for 5 HP. | Requires a vanilla musical valuable. By default, not randomly selected if none is present. | Amount, radius |
-| Mage | Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long. | Selecting a matching expression activates its spell; clearing it does not. Spells share a 3-second cooldown, cannot be cast if the cost would be fatal, and can harm players or valuables. The duration bonus does not apply to chat or expression casts, or the Star Wand's instantaneous attack. | Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit |
+| Mage | Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long. | Matching expressions cast spells; clearing them does not. Spells share a 3-second cooldown, require surviving the HP cost, and can harm players or valuables. The staff duration bonus excludes chat/expression casts and the Star Wand's instant attack. | Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit |
 | Gambler | A held valuable has a 50% chance to double its current value; otherwise it is destroyed. Gambit green heals 50 HP, red deals 100 damage, black kills, and white fully heals and adds 5 Health levels for the stage. | One wager is available at a time and returns after extraction. Damaged valuables use their reduced value. | Win chance, win multiplier, Gambit green heal, red damage, white temporary Health levels |
 | Hunter | Held or equipped weapons use 75% of normal battery. Enemies killed by Hunter have a 10% chance to drop twice as many orbs and a 0.5% chance to drop 10. | Only Hunter's held or equipped weapons and confirmed kills receive these effects. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies raise only the quality tier of Hunter's added orbs; the normal orb count is unchanged. | Battery consumption, both orb chances, jackpot count |
 | Stinker | Leaves a harmful uranium cloud after every 2 m traveled. Clouds appear one at a time after Stinker moves at least 2 m away from the newest location. Spawned uranium valuables have a 0.5-second grace period before breaking. | Clouds can damage other players, and Stinker can be hurt by walking back into one. Truck placement is disabled by default. | Distance, safety distance, truck spawning, break delay |
@@ -161,8 +161,6 @@ Host: REPOConfig → RoleShuffle → role name. Defaults preserve the abilities 
 ### Configuration
 
 All settings are available through REPOConfig. Host-controlled settings affect the session. Local settings affect only the installed player's HUD.
-
-You can customize roles, Base Upgrades and notifications below. HUD and language settings are personal preferences.
 
 #### General, notifications, and HUD
 
@@ -372,6 +370,7 @@ All entries in this table are host-controlled.
 | `Musician.HealAmount` | `5` | `1`–`100` | Health restored to the Musician and each living player in range per instrument note. |
 | `Musician.HealRadius` | `10` | `1`–`50` | Maximum healing distance in meters from the Musician. |
 | `Mage.CastIntervalSeconds` | `3` | `0.1`–`30` | Minimum seconds between spell activations. |
+| `Mage.BeamDurationSeconds` | `7` | `0.1`–`30` | Laser spell duration in seconds. Held staff attacks are unchanged. |
 | `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `star`. |
 | `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `roll`. |
 | `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `gravity`. |
@@ -663,8 +662,6 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 
 すべての設定はREPOConfigから変更できます。ホスト設定はセッション全体へ、ローカル設定はMOD導入者本人のHUDだけに反映されます。
 
-役職・基礎アップグレード・通知は以下の項目で調整できます。HUDと言語は各自の好みに設定できます。
-
 #### 一般、通知、HUD
 
 | キー | デフォルト | 範囲・値 | 内容 | 管理 |
@@ -873,6 +870,7 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 | `Musician.HealAmount` | `5` | `1`～`100` | 楽器で音を鳴らすたびに、本人と範囲内の各生存プレイヤーを回復する量です。 |
 | `Musician.HealRadius` | `10` | `1`～`50` | Musicianから回復可能な最大距離です。単位はメートルです。 |
 | `Mage.CastIntervalSeconds` | `3` | `0.1`～`30` | 魔法発動の最短間隔です。 |
+| `Mage.BeamDurationSeconds` | `7` | `0.1`～`30` | ビーム魔法の継続秒数。手持ちの杖には適用しません。 |
 | `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `star`を発動する表情です。 |
 | `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `roll`を発動する表情です。 |
 | `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `gravity`を発動する表情です。 |

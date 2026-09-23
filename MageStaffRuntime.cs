@@ -72,8 +72,12 @@ internal static class MageStaffRuntime
         }
     }
 
-    internal static float BeamDuration(float duration, ValuableWizardStaff staff) =>
-        IsMageStaff(staff.gameObject) ? duration * DurationMultiplier : duration;
+    internal static float BeamDuration(float duration, ValuableWizardStaff staff)
+    {
+        MageBeamCarrier? carrier = staff.GetComponent<MageBeamCarrier>();
+        if (carrier != null) return carrier.BeamDurationSeconds;
+        return IsMageStaff(staff.gameObject) ? duration * DurationMultiplier : duration;
+    }
 }
 
 [HarmonyPatch(typeof(SlowProjectile), nameof(SlowProjectile.SetSpawner))]

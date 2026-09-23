@@ -15,7 +15,7 @@ internal sealed class MageRoleRuntime
         internal float NextHealAt;
     }
 
-    private const float BeamCarrierLifetimeSeconds = 4.25f;
+    private const float BeamCarrierCleanupDelaySeconds = 0.25f;
     private readonly MonoBehaviour _coroutineOwner;
     private readonly StageRolesConfig _config;
     private readonly VanillaRolePrefabResolver _resolver;
@@ -418,7 +418,7 @@ internal sealed class MageRoleRuntime
         {
             yield break;
         }
-        MageBeamCarrier.Attach(carrier);
+        MageBeamCarrier beam = MageBeamCarrier.Attach(carrier);
         ValuableWizardStaff? staff =
             carrier.GetComponent<ValuableWizardStaff>() ??
             carrier.GetComponentInChildren<ValuableWizardStaff>(true);
@@ -428,9 +428,13 @@ internal sealed class MageRoleRuntime
             DestroyNetworkObject(carrier);
             yield break;
         }
+        // Capture once: native StaffLaser sends this duration to every player,
+        // and cleanup must use the same value even if settings change mid-cast.
+        float duration = Mathf.Clamp(_config.MageBeamDurationSeconds.Value, 0.1f, 30f);
+        beam.BeamDurationSeconds = duration;
         staff.StaffLaser();
         StageRolesPlugin.ModLogger.LogDebug("Mage fired a Wizard Staff beam.");
-        yield return new WaitForSeconds(BeamCarrierLifetimeSeconds);
+        yield return new WaitForSeconds(duration + BeamCarrierCleanupDelaySeconds);
         _spawnedObjects.Remove(carrier);
         DestroyNetworkObject(carrier);
     }

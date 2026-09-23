@@ -55,8 +55,8 @@ foreach (bool remote in new[] { false, true })
     Check(marker != null, "Host and modded guests identify the temporary beam carrier");
     Check(!MageBeamCarrierRecoilPatch.Prefix(root.GetComponent<ValuableWizardStaff>()!), "Only generated carrier skips native beam recoil");
     // Simulate native initialization/timer expiry, grab/impact displacement,
-    // and visual refreshes throughout and beyond the 4.25-second lifetime.
-    for (int frame = 0; frame < 300; frame++)
+    // and visual refreshes beyond the maximum configurable 30-second beam.
+    for (int frame = 0; frame < 1600; frame++)
     {
         body.isKinematic = false; body.useGravity = true;
         body.velocity = new(1, -8, 3); body.angularVelocity = new(0, 4, 0);

@@ -12,6 +12,7 @@ namespace REPOJP.StageRoles;
 internal sealed class MageBeamCarrier : MonoBehaviour
 {
     internal const string SpawnMarker = "RoleShuffle.MageBeam.v1";
+    internal float BeamDurationSeconds { get; set; } = 7f;
     private const float OverrideSeconds = 1f;
     private bool _initialized;
     private Vector3 _position;
@@ -25,11 +26,12 @@ internal sealed class MageBeamCarrier : MonoBehaviour
     internal static bool HasSpawnMarker(object[]? data) =>
         data is { Length: 1 } && data[0] is string marker && marker == SpawnMarker;
 
-    internal static void Attach(GameObject carrier)
+    internal static MageBeamCarrier Attach(GameObject carrier)
     {
         MageBeamCarrier marker = carrier.GetComponent<MageBeamCarrier>() ??
             carrier.AddComponent<MageBeamCarrier>();
         marker.Initialize();
+        return marker;
     }
 
     private void Initialize()

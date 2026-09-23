@@ -13,6 +13,7 @@ internal static class AbilityConfigChecks
         var config = new StageRolesConfig(file);
         var cases = new (string Section, string Key, object Default, object Min, object Max)[]
         {
+            ("Mage", "BeamDurationSeconds", 7f, 0.1f, 30f),
             ("Lifter", "HeavyGripMultiplier", 1f, 0.1f, 5f),
             ("Lifter", "HeavyRotationMultiplier", 1f, 0.1f, 5f),
             ("Lifter", "LightItemStrengthLevel", 1, 0, 200),
