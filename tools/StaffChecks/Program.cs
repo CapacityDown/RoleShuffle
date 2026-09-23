@@ -48,5 +48,21 @@ Check(Calls(Method("ValuableWizardStaff", "StaffLaser")).Count(m => m.DeclaringT
 Check(!Calls(PluginType("MageRoleRuntime").Methods.Single(m => m.Name == "TryCastProjectile")).Any(m => m.DeclaringType.Name == "MageStaffRuntime"), "Chat/expression projectile path does not opt into staff bonus");
 Check(PluginType("MageStaffRuntime").Methods.Single(m => m.Name == "IsMageStaff").Body.Instructions.Any(i =>
     i.Operand is MethodReference m && m.Name == "PlayerHasRole"), "Staff bonus requires active Mage capability");
+Check(Method("ValuableWizardStaff", "Start").Parameters.Count == 0 &&
+    Method("ValuableWizardStaff", "FixedUpdate").Parameters.Count == 0, "Carrier setup and recoil patch targets exist in installed game");
+Check(Calls(Method("ValuableWizardStaff", "FixedUpdate")).Any(m => m.Name == "AddForce"), "Native beam applies recoil that the carrier must suppress");
+foreach (string method in new[] { "OverrideKinematic", "OverrideZeroGravity", "OverrideGrabDisable" })
+    Check(Method("PhysGrabObject", method).IsPublic && Method("PhysGrabObject", method).Parameters.Single().ParameterType.FullName == "System.Single",
+        "Carrier override uses accessible native method: " + method);
+Check(Calls(Method("PhysGrabObject", "OverrideKinematicLogic")).Any(m => m.Name == "set_isKinematic"), "Native expiry can reset a one-time physics freeze");
+using var photon = AssemblyDefinition.ReadAssembly(@"E:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\PhotonUnityNetworking.dll");
+var transformSync = photon.MainModule.Types.Single(t => t.Name == "PhotonTransformView").Methods.Single(m => m.Name == "OnPhotonSerializeView");
+Check(Calls(transformSync).Any(m => m.Name == "get_isKinematic") && Calls(transformSync).Any(m => m.Name == "set_isKinematic"),
+    "Vanilla transform synchronization sends and restores the host's frozen body state");
+Check(!Calls(transformSync).Any(m => m.Name.Contains("localScale") || m.DeclaringType.Name == "Renderer"),
+    "Vanilla transform synchronization cannot transmit hidden staff meshes or scale");
+Check(Calls(PluginType("MageRoleRuntime").Methods.Single(m => m.Name == "SpawnNetworkObject")).Any(m =>
+    m.DeclaringType.Name == "PhotonNetwork" && m.Name == "Instantiate" && m.Parameters.Count == 5),
+    "Beam marker travels in existing native instantiation data");
 Console.WriteLine($"PASS: {checks} installed-game IL and staff integration contract checks.");
 Console.WriteLine("Static contract validation only; Unity gameplay and vanilla-client visuals need in-game testing.");

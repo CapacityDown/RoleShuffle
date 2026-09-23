@@ -494,7 +494,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 ### Gameplay notes
 
 - `Bomber` leaves armed grenades that can injure players and damage valuables.
-- `Mage` casts the spell named in chat. Spells can injure players and damage valuables; uppercase or lowercase commands both work.
+- `Mage` spells can harm players and valuables; spell names ignore case. The laser stays at its firing position. RoleShuffle users see only the beam; unmodded guests still see its temporary staff.
 - `Courier` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
 - `Medic` never heals itself.
 - `Phoenix` revives itself once per stage. `Rescuer` revives other nearby players up to the configured limit. Each role uses its own configurable revival HP, with a default of 25.
@@ -995,7 +995,7 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 ### ゲームプレイ上の注意
 
 - `Bomber`が残す起動済みグレネードは、プレイヤーや貴重品にも被害を与えます。
-- `Mage`はチャットで指定した魔法を発動します。魔法はプレイヤーや貴重品にも被害を与えます。コマンドの大文字・小文字は問いません。
+- `Mage`の魔法はプレイヤーや貴重品にも被害を与えます。魔法名の大文字・小文字は問いません。ビームは発射位置に固定され、MOD導入側では杖を表示しません。未導入の参加者には一時的な杖が見えます。
 - `Courier`と`Tuna`は条件を満たしている間、実際に継続ダメージを与え、死亡する可能性があります。受けたダメージは自動回復しません。
 - `Medic`は自身を回復しません。
 - `Phoenix`は1ステージに1回だけ自己復活します。`Rescuer`は設定された回数まで周囲の別プレイヤーを復活させます。復活後HPは役職ごとに設定でき、デフォルトは25です。

@@ -104,6 +104,7 @@
     <Compile Include="RoleHealingRuntime.cs" />
     <Compile Include="MageRoleRuntime.cs" />
     <Compile Include="MageStaffRuntime.cs" />
+    <Compile Include="MageBeamCarrier.cs" />
     <Compile Include="GamblerRoleRuntime.cs" />
     <Compile Include="HunterBatteryRuntime.cs" />
     <Compile Include="StinkerRoleRuntime.cs" />

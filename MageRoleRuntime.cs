@@ -392,8 +392,10 @@ internal sealed class MageRoleRuntime
             GameObject carrier = SpawnNetworkObject(
                 resolved,
                 rootPosition,
-                rootRotation);
+                rootRotation,
+                new object[] { MageBeamCarrier.SpawnMarker });
             carrier.name = "RoleShuffle_MageBeam";
+            MageBeamCarrier.Attach(carrier);
             SetGeneratedValuablePriceZero(carrier);
             StageFluxCompatibility.MarkInternalCarrier(carrier);
             _spawnedObjects.Add(carrier);
@@ -416,7 +418,7 @@ internal sealed class MageRoleRuntime
         {
             yield break;
         }
-        DisableBeamCarrierPhysics(carrier);
+        MageBeamCarrier.Attach(carrier);
         ValuableWizardStaff? staff =
             carrier.GetComponent<ValuableWizardStaff>() ??
             carrier.GetComponentInChildren<ValuableWizardStaff>(true);
@@ -436,9 +438,10 @@ internal sealed class MageRoleRuntime
     private static GameObject SpawnNetworkObject(
         ResolvedRolePrefab resolved,
         Vector3 position,
-        Quaternion rotation) =>
+        Quaternion rotation,
+        object[]? data = null) =>
         SemiFunc.IsMultiplayer()
-            ? PhotonNetwork.Instantiate(resolved.ResourcePath, position, rotation, 0)
+            ? PhotonNetwork.Instantiate(resolved.ResourcePath, position, rotation, 0, data)
             : UnityEngine.Object.Instantiate(resolved.Prefab, position, rotation);
 
     private static void SetGeneratedValuablePriceZero(GameObject instance)
@@ -459,26 +462,6 @@ internal sealed class MageRoleRuntime
             {
                 valuable.DollarValueSetRPC(0f);
             }
-        }
-    }
-
-    private static void DisableBeamCarrierPhysics(GameObject carrier)
-    {
-        foreach (Collider collider in carrier.GetComponentsInChildren<Collider>(true))
-        {
-            if (collider.GetComponentInParent<HurtCollider>() == null)
-            {
-                collider.enabled = false;
-            }
-        }
-        foreach (Rigidbody body in carrier.GetComponentsInChildren<Rigidbody>(true))
-        {
-            if (!body.isKinematic)
-            {
-                body.velocity = Vector3.zero;
-                body.angularVelocity = Vector3.zero;
-            }
-            body.isKinematic = true;
         }
     }
 
