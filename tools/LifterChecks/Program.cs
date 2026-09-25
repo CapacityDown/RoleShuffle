@@ -347,7 +347,7 @@ Near(gunLifter.Grip, RoleOverhaulRules.LifterEffectiveStrength(false), "Switchin
 Near(gunLifter.Torque, RoleOverhaulRules.LifterEffectiveStrength(false, true), "Switching gun to heavy cargo restores peak rotation");
 
 
-// Non-cart shop equipment of any mass uses the native level-1 pipeline, including
+// Non-vehicle shop equipment of any mass uses the native level-1 pipeline, including
 // weapons and other purchase items. Plain valuables keep the heavy target.
 Check(physics.Fields.Any(f => f.Name == "isMelee" && f.FieldType.FullName == "System.Boolean"), "Installed melee classification field");
 var meleeType = game.MainModule.Types.Single(t => t.Name == "ItemMelee");
@@ -386,7 +386,7 @@ foreach (StageRole role in new[] { StageRole.Lifter, StageRole.Superbot })
     }
 }
 
-// Native carts are heavy targets even when their own controls lower their mass.
+// Native carts and bikes are heavy targets even when their mass is lowered.
 // Classify the grabbed object itself, leaving cargo and mounted shop tools alone.
 Check(physics.Fields.Any(f => f.Name == "isCart" && f.FieldType.FullName == "System.Boolean"), "Installed native cart classification field");
 var awake = physics.Methods.Single(m => m.Name == "Awake").Body.Instructions;
@@ -394,49 +394,73 @@ Check(awake.Any(i => i.Operand is GenericInstanceMethod m && m.Name == "GetCompo
     m.GenericArguments.Any(t => t.Name == "PhysGrabCart")) &&
     awake.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Stfld && i.Operand is FieldReference f && f.Name == "isCart"),
     "Installed game identifies actual carts by PhysGrabCart");
-var cartHolder = new PhysGrabber();
-var cartOther = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Runner } };
-var cart = new PhysGrabObject { isCart = true, playerGrabbing = new[] { cartHolder, cartOther } };
-foreach (bool shopCart in new[] { false, true })
-foreach (float mass in new[] { 0.1f, 1.999f, 2f, 8f, 100f })
-foreach (StageRole role in new[] { StageRole.Lifter, StageRole.Superbot })
-for (int level = 0; level <= 200; level++)
+foreach (string bikeType in new[] { "ItemVehicle", "ValuableArcticSnowBike" })
+    Check(game.MainModule.Types.Single(t => t.Name == bikeType).Methods.Single(m => m.Name == "Start")
+        .Body.Instructions.Any(i => i.Operand is GenericInstanceMethod m && m.Name == "GetComponent" &&
+            m.GenericArguments.Any(t => t.Name == "PhysGrabObject")),
+        bikeType + " uses the same object's PhysGrabObject");
+var vehicleActive = game.MainModule.Types.Single(t => t.Name == "ItemVehicle").Methods.Single(m => m.Name == "StateActive");
+Check(vehicleActive.Body.Instructions.Any(i => i.Operand is MethodReference m &&
+    m.DeclaringType.Name == "PhysGrabber" && m.Name == "OverrideGrabStrength"),
+    "Mounted vehicle control uses a grabber override that must retain precedence");
+foreach (string kind in new[] { "cart", "scooter", "snow-bike" })
 {
-    cart.itemAttributes = shopCart ? new ItemAttributes() : null;
-    cart.rb.mass = mass;
-    cartHolder.playerAvatar.Role = role;
-    cartHolder.grabStrength = cartOther.grabStrength = 1f + 0.2f * level;
-    run(cart);
-    Near(cartHolder.Grip, 143d / 24d, "Cart uses the heavy peak regardless of mass or shop status");
-    Near(cartHolder.Torque, 143d / 24d, "Cart turning uses the heavy peak");
-    Near(cartOther.Grip, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2), "Other cart holder keeps native grip");
-    Near(cartOther.Torque, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2, true), "Other cart holder keeps native torque");
-    Near(cartHolder.grabStrength, 1f + 0.2f * level, "Cart never mutates shared Strength");
+    var vehicleHolder = new PhysGrabber();
+    var otherHolder = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Runner } };
+    var vehicle = new PhysGrabObject { playerGrabbing = new[] { vehicleHolder, otherHolder } };
+    void SetVehicle(bool enabled)
+    {
+        vehicle.isCart = enabled && kind == "cart";
+        vehicle.itemVehicle = enabled && kind == "scooter" ? new() : null;
+        vehicle.snowBike = enabled && kind == "snow-bike" ? new() : null;
+    }
+    SetVehicle(true);
+    foreach (bool hasItemAttributes in new[] { false, true })
+    foreach (float mass in new[] { 0.1f, 1.999f, 2f, 8f, 100f })
+    foreach (StageRole role in new[] { StageRole.Lifter, StageRole.Superbot })
+    for (int level = 0; level <= 200; level++)
+    {
+        vehicle.itemAttributes = hasItemAttributes ? new ItemAttributes() : null;
+        vehicle.rb.mass = mass;
+        vehicleHolder.playerAvatar.Role = role;
+        vehicleHolder.grabStrength = otherHolder.grabStrength = 1f + 0.2f * level;
+        run(vehicle);
+        Near(vehicleHolder.Grip, 143d / 24d, kind + " uses the heavy peak regardless of mass or shop status");
+        Near(vehicleHolder.Torque, 143d / 24d, kind + " turning uses the heavy peak");
+        Near(otherHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2), "Other vehicle holder keeps native grip");
+        Near(otherHolder.Torque, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2, true), "Other vehicle holder keeps native torque");
+        Near(vehicleHolder.grabStrength, 1f + 0.2f * level, kind + " never mutates shared Strength");
+    }
+    vehicle.rb.mass = 0.1f;
+    vehicleHolder.playerAvatar.Role = StageRole.Runner; run(vehicle);
+    Near(vehicleHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), kind + " loses boost immediately after leaving Lifter");
+    vehicleHolder.playerAvatar.Role = StageRole.Lifter;
+    SetVehicle(false); run(vehicle);
+    Near(vehicleHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(1, true), kind + " to other shop equipment restores Lv1");
+    SetVehicle(true);
+    controller.Authority = false; run(vehicle);
+    Near(vehicleHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), kind + " receives no correction on guests");
+    controller.Authority = true;
+    vehicleHolder.playerAvatar.isTumbling = true; run(vehicle);
+    Near(vehicleHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), kind + " boost respects tumbling");
+    vehicleHolder.playerAvatar.isTumbling = false;
+    vehicle.overrideGrabStrengthTimer = 1; run(vehicle);
+    Near(vehicleHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), kind + " boost preserves explicit grab overrides");
+    vehicle.overrideGrabStrengthTimer = 0;
+    vehicleHolder.overrideGrabStrength = 0;
+    runGun(vehicle);
+    Near(vehicleHolder.Grip, 0, kind + " preserves the seated driver's zero grab force");
+    Near(vehicleHolder.grabStrength, 41, kind + " mounted override never changes shared Strength");
+    vehicleHolder.overrideGrabStrength = -1;
+    controller._config.LifterHeavyGripMultiplier.Value = 2;
+    controller._config.LifterHeavyRotationMultiplier.Value = 0.5f;
+    controller._config.LifterLightItemStrengthLevel.Value = 12;
+    run(vehicle);
+    Near(vehicleHolder.Grip, 143d / 12d, kind + " uses configured heavy grip at low mass");
+    Near(vehicleHolder.Torque, 143d / 48d, kind + " uses configured heavy rotation at low mass");
+    controller._config.LifterHeavyGripMultiplier.Value = controller._config.LifterHeavyRotationMultiplier.Value = 1;
+    controller._config.LifterLightItemStrengthLevel.Value = 1;
 }
-cart.rb.mass = 0.1f;
-cartHolder.playerAvatar.Role = StageRole.Runner; run(cart);
-Near(cartHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), "Leaving Lifter immediately ends cart boost");
-cartHolder.playerAvatar.Role = StageRole.Lifter;
-cart.isCart = false; run(cart);
-Near(cartHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(1, true), "Switching from a cart to other shop equipment restores Lv1");
-cart.isCart = true;
-controller.Authority = false; run(cart);
-Near(cartHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), "Guests do not apply the cart boost");
-controller.Authority = true;
-cartHolder.playerAvatar.isTumbling = true; run(cart);
-Near(cartHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), "Cart boost respects tumbling");
-cartHolder.playerAvatar.isTumbling = false;
-cart.overrideGrabStrengthTimer = 1; run(cart);
-Near(cartHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, true), "Cart boost preserves explicit grab overrides");
-cart.overrideGrabStrengthTimer = 0;
-controller._config.LifterHeavyGripMultiplier.Value = 2;
-controller._config.LifterHeavyRotationMultiplier.Value = 0.5f;
-controller._config.LifterLightItemStrengthLevel.Value = 12;
-run(cart);
-Near(cartHolder.Grip, 143d / 12d, "Lightweight shop cart uses configured heavy grip");
-Near(cartHolder.Torque, 143d / 48d, "Lightweight shop cart uses configured heavy rotation");
-controller._config.LifterHeavyGripMultiplier.Value = controller._config.LifterHeavyRotationMultiplier.Value = 1;
-controller._config.LifterLightItemStrengthLevel.Value = 1;
 
 // Run the production prefix/finalizer through the fixture dispatcher: the
 // game's legacy Harmony detour runtime cannot patch the net9 test process.

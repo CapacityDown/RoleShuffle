@@ -44,7 +44,9 @@ public sealed class PhysGrabObject
     public UnityEngine.Rigidbody rb = new();
     public bool isGun, isMelee, isCart;
     public ItemAttributes? itemAttributes;
-    public T? GetComponent<T>() where T : class => itemAttributes as T;
+    public ItemVehicle? itemVehicle;
+    public ValuableArcticSnowBike? snowBike;
+    public T? GetComponent<T>() where T : class => itemAttributes as T ?? itemVehicle as T ?? snowBike as T;
     public bool overrideExtraGrabStrengthDisable, overrideExtraTorqueStrengthDisable;
     public float overrideGrabStrengthTimer, overrideMinGrabStrengthTimer, overrideTorqueStrengthTimer, overrideMinTorqueStrengthTimer;
     public float overrideGrabStrength, overrideMinGrabStrength, overrideTorqueStrength = 1, overrideMinTorqueStrength;
@@ -90,6 +92,8 @@ public sealed class PhysGrabObject
     }
 }
 public sealed class ItemAttributes { }
+public sealed class ItemVehicle { }
+public sealed class ValuableArcticSnowBike { }
 public sealed class ItemMelee
 {
     public static bool HoldingPatchesEnabled;

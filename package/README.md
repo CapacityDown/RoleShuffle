@@ -79,7 +79,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Tank | Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit. | Health minimum 21. | Minimum, multiplier, cap |
 | Runner | Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040. | Minimum Speed 6, Stamina 46. | Minimums, multipliers, caps |
 | Jumper | Adds up to 10 extra jumps before landing by setting Extra Jump to level 10. | Uses the vanilla Extra Jump upgrade and has no separate active ability. | Extra Jump target `0`–`100` |
-| Lifter | Heavy objects and carts use peak lifting/turning strength from Strength Lv0–200. | Strength displays level 200. Excluded when Base meets both strength targets (Lv50 with defaults). | Holding strength |
+| Lifter | Heavy objects, carts and bikes use peak lifting/turning strength from Strength Lv0–200. | Strength displays Lv200. Excluded if Base meets both strength targets (default: Lv50). | Holding strength |
 | Launcher | Launches the player farther forward when starting a Tumble. Launch is level 10. | Uses the vanilla Launch upgrade and has no separate active ability. | Launch target `0`–`100` |
 | Climber | Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20. | Uses the two vanilla upgrades and has no separate active ability. | Tumble Climb and Range targets `0`–`100` |
 | Flyer | Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10. | Uses the vanilla Tumble Wings upgrade and has no separate active ability. | Tumble Wings target `0`–`100` |
@@ -147,7 +147,7 @@ Host: REPOConfig → RoleShuffle → role name. Defaults preserve the abilities 
 | Setting | Default | Range | Effect |
 |---|---|---|---|
 | `Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier` | `1` / `1` | 0.1–5 | Lifting / turning strength relative to the maximum across Strength Lv0–200. |
-| `Lifter.LightItemStrengthLevel` | `1` | 0–200 | Holding level for light objects and shop equipment except carts. |
+| `Lifter.LightItemStrengthLevel` | `1` | 0–200 | Holding level for light objects/shop equipment, excluding carts/bikes. |
 | `Stinker.BreakGraceSeconds` | `0.5` | 0–10 s | Delay before a spawned uranium valuable breaks. |
 | `Influenza.IncubationSeconds` | `30` | 0–300 s | Delay from infection to symptoms. |
 | `Influenza.MaximumHealth` | `75` | 1–10000 HP | Maximum HP after onset. Increasing it does not heal. |
@@ -579,7 +579,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Tank | 基礎の最大HPを1.5倍に強化します。倍率強化の上限は4,100HPです。 | 最低Health 21。 | 最低値・倍率・上限 |
 | Runner | 基礎の走行速度・スタミナを1.5倍に強化します。倍率強化の上限は205・2,040です。 | 最低Speed 6・Stamina 46。 | 最低値・倍率・上限 |
 | Jumper | Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。 | バニラのExtra Jumpアップグレードを使用し、別の能動的な能力はありません。 | Extra Jump目標値`0`～`100` |
-| Lifter | 重い物・カートをつかむ力・回転力をStrength Lv0～200の最大値に固定。 | Strengthの表示はLv200。基礎値が両方の目標に達すると抽選対象外（初期設定ではLv50）。 | 保持する力 |
+| Lifter | 重い物・カート・バイクをつかむ力・回転力をStrength Lv0～200の最大値に固定。 | Strengthの表示はLv200。基礎値が両方の目標に達すると抽選対象外（初期設定ではLv50）。 | 保持する力 |
 | Launcher | Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。 | バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。 | Launch目標値`0`～`100` |
 | Climber | Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。 | 2種類のバニラアップグレードを使用し、別の能動的な能力はありません。 | Tumble ClimbとRangeの目標値`0`～`100` |
 | Flyer | Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。 | バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。 | Tumble Wings目標値`0`～`100` |
@@ -647,7 +647,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | 設定 | 初期値 | 範囲 | 効果 |
 |---|---|---|---|
 | `Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier` | `1` / `1` | 0.1～5 | Strength Lv0～200の最大値に対する、つかむ力／回転力の倍率。 |
-| `Lifter.LightItemStrengthLevel` | `1` | 0～200 | 軽量品・ショップ装備（カートを除く）を保持するStrengthレベル。 |
+| `Lifter.LightItemStrengthLevel` | `1` | 0～200 | 軽量品・ショップ装備（カート・バイクを除く）を保持するStrengthレベル。 |
 | `Stinker.BreakGraceSeconds` | `0.5` | 0～10秒 | 出現したウラン貴重品が壊れるまでの猶予。 |
 | `Influenza.IncubationSeconds` | `30` | 0～300秒 | 感染から発症までの時間。 |
 | `Influenza.MaximumHealth` | `75` | 1～10000HP | 発症後の最大HP。増やしても回復しません。 |
