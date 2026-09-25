@@ -220,9 +220,9 @@ internal sealed class StageRolesConfig
 
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
-        LifterHeavyGripMultiplier = BindFloat(config, "Lifter", "HeavyGripMultiplier", 1f, 0.1f, 5f, "Heavy-object lifting strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
-        LifterHeavyRotationMultiplier = BindFloat(config, "Lifter", "HeavyRotationMultiplier", 1f, 0.1f, 5f, "Heavy-object turning strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
-        LifterLightItemStrengthLevel = BindInt(config, "Lifter", "LightItemStrengthLevel", 1, 0, 200, "Strength level used to hold light objects and shop equipment, including weapons. Default 1 reduces shaking. Does not change the displayed Strength level or weapon attack bonuses.");
+        LifterHeavyGripMultiplier = BindFloat(config, "Lifter", "HeavyGripMultiplier", 1f, 0.1f, 5f, "Heavy-object and cart lifting strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
+        LifterHeavyRotationMultiplier = BindFloat(config, "Lifter", "HeavyRotationMultiplier", 1f, 0.1f, 5f, "Heavy-object and cart turning strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
+        LifterLightItemStrengthLevel = BindInt(config, "Lifter", "LightItemStrengthLevel", 1, 0, 200, "Strength level used to hold light objects and shop equipment, including weapons but excluding carts. Default 1 reduces shaking. Does not change the displayed Strength level or weapon attack bonuses.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
         LauncherWeight = RoleWeight(config, "Launcher");

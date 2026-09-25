@@ -30,20 +30,23 @@ internal static class LifterStrengthRuntime
     private static readonly FieldInfo? MinTorqueTimer = AccessTools.Field(typeof(PhysGrabObject), "overrideMinTorqueStrengthTimer");
     private static readonly FieldInfo? Gun = AccessTools.Field(typeof(PhysGrabObject), "isGun");
     private static readonly FieldInfo? Melee = AccessTools.Field(typeof(PhysGrabObject), "isMelee");
+    private static readonly FieldInfo? Cart = AccessTools.Field(typeof(PhysGrabObject), "isCart");
 
     internal static bool FieldsAvailable =>
         Tumbling?.FieldType == typeof(bool) && GrabberOverride?.FieldType == typeof(float) &&
         GrabDisabled?.FieldType == typeof(bool) && TorqueDisabled?.FieldType == typeof(bool) &&
         GrabTimer?.FieldType == typeof(float) && MinGrabTimer?.FieldType == typeof(float) &&
         TorqueTimer?.FieldType == typeof(float) && MinTorqueTimer?.FieldType == typeof(float) &&
-        Gun?.FieldType == typeof(bool) && Melee?.FieldType == typeof(bool) &&
+        Gun?.FieldType == typeof(bool) && Melee?.FieldType == typeof(bool) && Cart?.FieldType == typeof(bool) &&
         LifterMeleeHoldingPatch.FieldsAvailable;
 
-    private static bool IsLevelOneItem(PhysGrabObject owner) =>
-        Gun!.GetValue(owner) is true || Melee!.GetValue(owner) is true ||
-        owner.GetComponent<ItemAttributes>() != null;
+    private static bool IsCart(PhysGrabObject owner) => Cart!.GetValue(owner) is true;
 
-    // Shop items and weapons use the configured Strength (default level 1). Supply it
+    private static bool IsLevelOneItem(PhysGrabObject owner) =>
+        !IsCart(owner) && (Gun!.GetValue(owner) is true || Melee!.GetValue(owner) is true ||
+        owner.GetComponent<ItemAttributes>() != null);
+
+    // Non-cart shop items and weapons use the configured Strength (default level 1). Supply it
     // before vanilla applies those overrides, so their built-in behavior stays
     // intact without receiving the role's level-200 input or heavy-object boost.
     // This changes a local value, never the shared grabber or stored upgrade.
@@ -80,7 +83,9 @@ internal static class LifterStrengthRuntime
 
         // Exact absolute coefficient, independent of Base/native level. The
         // rotation result is an input to vanilla torque, not final torque.
-        return StageRolesPlugin.Instance.Controller.LifterStrength(owner.rb.mass < 2f, rotation);
+        // Cart modes temporarily lower mass. The cart itself still gets the
+        // heavy-object target; cargo and mounted equipment keep their own type.
+        return StageRolesPlugin.Instance.Controller.LifterStrength(!IsCart(owner) && owner.rb.mass < 2f, rotation);
     }
 }
 

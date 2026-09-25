@@ -42,7 +42,7 @@ public sealed class GrabberCollection(PhysGrabber[] items)
 public sealed class PhysGrabObject
 {
     public UnityEngine.Rigidbody rb = new();
-    public bool isGun, isMelee;
+    public bool isGun, isMelee, isCart;
     public ItemAttributes? itemAttributes;
     public T? GetComponent<T>() where T : class => itemAttributes as T;
     public bool overrideExtraGrabStrengthDisable, overrideExtraTorqueStrengthDisable;

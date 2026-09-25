@@ -1,4 +1,5 @@
 ## 4.5.2
+- Changed Lifter to handle carts like heavy objects. Other shop equipment keeps its configured holding level.
 - Added optional retention of consumed upgrade items, off by default. Choose upgrades for the consumer or the whole team; retained levels survive role changes, stage transitions, and reloading the same save.
 - Set Mage laser spell duration to a configurable 7 seconds by default and kept its firing position fixed. The temporary staff is hidden for RoleShuffle users; unmodded guests can still see it.
 
