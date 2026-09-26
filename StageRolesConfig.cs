@@ -324,7 +324,7 @@ internal sealed class StageRolesConfig
         MageEnabled = RoleEnabled(config, "Mage");
         MageWeight = RoleWeight(config, "Mage");
         MageCastIntervalSeconds = BindFloat(config, "Mage", "CastIntervalSeconds", 3f, 0.1f, 30f, "Minimum seconds between spell activations.");
-        MageBeamDurationSeconds = BindFloat(config, "Mage", "BeamDurationSeconds", 7f, 0.1f, 30f, "Seconds the Mage laser spell fires. Does not change attacks from held staffs.");
+        MageBeamDurationSeconds = BindFloat(config, "Mage", "BeamDurationSeconds", 5f, 0.1f, 30f, "Seconds the Mage laser spell follows the caster's view while firing. Does not change attacks from held staffs.");
         MageStarExpression = ExpressionName(config, "Mage", "StarExpression", "Angry", "Star Wand");
         MageRollExpression = ExpressionName(config, "Mage", "RollExpression", "Sad", "Roll Staff");
         MageGravityExpression = ExpressionName(config, "Mage", "GravityExpression", "Suspicious", "Zero Gravity Staff");

@@ -12,11 +12,14 @@ namespace REPOJP.StageRoles;
 internal sealed class MageBeamCarrier : MonoBehaviour
 {
     internal const string SpawnMarker = "RoleShuffle.MageBeam.v1";
-    internal float BeamDurationSeconds { get; set; } = 7f;
+    internal float BeamDurationSeconds { get; set; } = 5f;
     private const float OverrideSeconds = 1f;
     private bool _initialized;
     private Vector3 _position;
     private Quaternion _rotation;
+    private PlayerAvatar? _caster;
+    private Vector3 _relativeLaserPosition;
+    private Quaternion _relativeLaserRotation;
     private Rigidbody? _body;
     private PhysGrabObject? _physics;
     private readonly List<Renderer> _hiddenRenderers = new();
@@ -58,6 +61,30 @@ internal sealed class MageBeamCarrier : MonoBehaviour
     private void FixedUpdate() => Maintain();
     private void LateUpdate() => Maintain();
 
+    internal void Follow(PlayerAvatar caster, Vector3 relativeLaserPosition, Quaternion relativeLaserRotation)
+    {
+        _caster = caster;
+        _relativeLaserPosition = relativeLaserPosition;
+        _relativeLaserRotation = relativeLaserRotation;
+        UpdateAim();
+    }
+
+    internal void UpdateAim()
+    {
+        // Guests consume the native synchronized pose. Never pin them back to
+        // the spawn pose or aim using a different player's local camera.
+        if (!_initialized || !SemiFunc.IsMasterClientOrSingleplayer()) return;
+        if (_caster != null && PlayerState.IsLiving(_caster))
+            MageSpellAim.GetBeamPose(_caster, _relativeLaserPosition, _relativeLaserRotation,
+                out _position, out _rotation);
+        if (_body != null)
+        {
+            _body.position = _position;
+            _body.rotation = _rotation;
+        }
+        transform.SetPositionAndRotation(_position, _rotation);
+    }
+
     internal void Maintain()
     {
         if (!_initialized) return;
@@ -79,8 +106,6 @@ internal sealed class MageBeamCarrier : MonoBehaviour
             _body.useGravity = false;
             _body.constraints = RigidbodyConstraints.FreezeAll;
             _body.isKinematic = true;
-            _body.position = _position;
-            _body.rotation = _rotation;
         }
         if (_physics != null)
         {
@@ -92,7 +117,7 @@ internal sealed class MageBeamCarrier : MonoBehaviour
             _physics.OverrideZeroGravity(OverrideSeconds);
             _physics.OverrideGrabDisable(OverrideSeconds);
         }
-        transform.SetPositionAndRotation(_position, _rotation);
+        UpdateAim();
     }
 }
 
@@ -113,6 +138,15 @@ internal static class MageBeamCarrierStartPatch
             StageRolesPlugin.ModLogger.LogWarning($"Mage beam carrier setup failed: {exception.Message}");
         }
     }
+}
+
+[HarmonyPatch(typeof(ValuableWizardStaff), "Update")]
+internal static class MageBeamCarrierAimPatch
+{
+    // Refresh before vanilla raycasts and supplies the beam's start/end points.
+    [HarmonyPrefix]
+    internal static void Prefix(ValuableWizardStaff __instance) =>
+        __instance.GetComponent<MageBeamCarrier>()?.UpdateAim();
 }
 
 [HarmonyPatch(typeof(ValuableWizardStaff), "FixedUpdate")]

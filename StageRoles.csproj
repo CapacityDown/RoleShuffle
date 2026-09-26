@@ -103,6 +103,7 @@
     <Compile Include="MedicRoleRuntime.cs" />
     <Compile Include="RoleHealingRuntime.cs" />
     <Compile Include="MageRoleRuntime.cs" />
+    <Compile Include="MageSpellAim.cs" />
     <Compile Include="MageStaffRuntime.cs" />
     <Compile Include="MageBeamCarrier.cs" />
     <Compile Include="GamblerRoleRuntime.cs" />

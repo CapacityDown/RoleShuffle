@@ -112,7 +112,7 @@ internal sealed class MageRoleRuntime
             return false;
         }
 
-        Vector3 direction = GetForwardDirection(assignment.Player);
+        Vector3 direction = MageSpellAim.GetDirection(assignment.Player);
         bool cast = spell switch
         {
             "star" => TryCastProjectile(
@@ -135,9 +135,7 @@ internal sealed class MageRoleRuntime
                 direction,
                 "Void",
                 _resolver.TryGetVoidProjectile),
-            "laser" => TryCastBeam(
-                GetCastOrigin(assignment.Player, direction, 3f),
-                direction),
+            "laser" => TryCastBeam(assignment.Player),
             _ => false
         };
         if (cast)
@@ -313,7 +311,7 @@ internal sealed class MageRoleRuntime
         {
             GameObject projectile = SpawnNetworkObject(
                 resolved,
-                GetCastOrigin(player, direction, 0.8f),
+                MageSpellAim.GetOrigin(player, direction, 0.8f),
                 Quaternion.LookRotation(direction));
             projectile.name = $"RoleShuffle_Mage{spellName}";
             SetGeneratedValuablePriceZero(projectile);
@@ -364,7 +362,7 @@ internal sealed class MageRoleRuntime
         }
     }
 
-    private bool TryCastBeam(Vector3 origin, Vector3 direction)
+    private bool TryCastBeam(PlayerAvatar player)
     {
         if (!_resolver.TryGetWizardStaff(out ResolvedRolePrefab resolved))
         {
@@ -382,12 +380,10 @@ internal sealed class MageRoleRuntime
             Quaternion relativeLaserRotation =
                 Quaternion.Inverse(templateRoot.rotation) *
                 templateStaff.laserTransform.rotation;
-            Quaternion rootRotation =
-                Quaternion.LookRotation(direction) *
-                Quaternion.Inverse(relativeLaserRotation);
             Vector3 relativeLaserPosition =
                 templateRoot.InverseTransformPoint(templateStaff.laserTransform.position);
-            Vector3 rootPosition = origin - rootRotation * relativeLaserPosition;
+            MageSpellAim.GetBeamPose(player, relativeLaserPosition, relativeLaserRotation,
+                out Vector3 rootPosition, out Quaternion rootRotation);
 
             GameObject carrier = SpawnNetworkObject(
                 resolved,
@@ -395,7 +391,7 @@ internal sealed class MageRoleRuntime
                 rootRotation,
                 new object[] { MageBeamCarrier.SpawnMarker });
             carrier.name = "RoleShuffle_MageBeam";
-            MageBeamCarrier.Attach(carrier);
+            MageBeamCarrier.Attach(carrier).Follow(player, relativeLaserPosition, relativeLaserRotation);
             SetGeneratedValuablePriceZero(carrier);
             StageFluxCompatibility.MarkInternalCarrier(carrier);
             _spawnedObjects.Add(carrier);
@@ -467,46 +463,6 @@ internal sealed class MageRoleRuntime
                 valuable.DollarValueSetRPC(0f);
             }
         }
-    }
-
-    private static Vector3 GetCastOrigin(
-        PlayerAvatar player,
-        Vector3 direction,
-        float forwardOffset)
-    {
-        Transform? head = player.playerAvatarVisuals?.headLookAtTransform;
-        Vector3 basePosition = head != null
-            ? head.position
-            : player.transform.position + Vector3.up;
-        return basePosition + direction * forwardOffset;
-    }
-
-    private static Vector3 GetForwardDirection(PlayerAvatar player)
-    {
-        try
-        {
-            if (player.localCamera != null)
-            {
-                Transform cameraTransform = player.localCamera.GetOverrideTransform();
-                if (cameraTransform != null && cameraTransform.forward.sqrMagnitude > 0.001f)
-                {
-                    return cameraTransform.forward.normalized;
-                }
-            }
-        }
-        catch
-        {
-            // Fall through to avatar transforms if camera state is unavailable.
-        }
-
-        Transform body = player.playerTransform != null
-            ? player.playerTransform
-            : player.transform;
-        if (body.forward.sqrMagnitude > 0.001f)
-        {
-            return body.forward.normalized;
-        }
-        return Vector3.forward;
     }
 
     private static void DestroyNetworkObject(GameObject? instance)

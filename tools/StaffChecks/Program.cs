@@ -51,6 +51,13 @@ Check(PluginType("MageStaffRuntime").Methods.Single(m => m.Name == "IsMageStaff"
 Check(Method("ValuableWizardStaff", "Start").Parameters.Count == 0 &&
     Method("ValuableWizardStaff", "FixedUpdate").Parameters.Count == 0, "Carrier setup and recoil patch targets exist in installed game");
 Check(Calls(Method("ValuableWizardStaff", "FixedUpdate")).Any(m => m.Name == "AddForce"), "Native beam applies recoil that the carrier must suppress");
+Check(Calls(Method("ValuableWizardStaff", "Update")).Any(m => m.Name == "Raycast") &&
+    Calls(Method("ValuableWizardStaff", "Update")).Any(m => m.DeclaringType.Name == "SemiLaser" && m.Name == "LaserActive"),
+    "Updating the carrier before Staff.Update steers the native raycast and beam endpoints");
+Check(Calls(PluginType("MageBeamCarrierAimPatch").Methods.Single(m => m.Name == "Prefix")).Any(m => m.Name == "UpdateAim"),
+    "Staff Update prefix refreshes current aim");
+Check(Calls(PluginType("MageRoleRuntime").Methods.Single(m => m.Name == "TryCastBeam")).Any(m => m.Name == "Follow"),
+    "Beam cast binds its own caster to the carrier");
 foreach (string method in new[] { "OverrideKinematic", "OverrideZeroGravity", "OverrideGrabDisable" })
     Check(Method("PhysGrabObject", method).IsPublic && Method("PhysGrabObject", method).Parameters.Single().ParameterType.FullName == "System.Single",
         "Carrier override uses accessible native method: " + method);

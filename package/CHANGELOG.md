@@ -1,7 +1,7 @@
 ## 4.5.2
 - Changed Lifter to handle carts and bikes like heavy objects. Other shop equipment keeps its configured holding level.
 - Added optional retention of consumed upgrade items, off by default. Choose upgrades for the consumer or the whole team; retained levels survive role changes, stage transitions, and reloading the same save.
-- Set Mage laser spell duration to a configurable 7 seconds by default and kept its firing position fixed. The temporary staff is hidden for RoleShuffle users; unmodded guests can still see it.
+- Set Mage laser spell duration to a configurable 5 seconds by default, following the caster's view. The temporary staff is hidden for RoleShuffle users; unmodded guests can still see it.
 
 ## 4.5.1
 - Added Influenza, a Danger role: after a 30-second incubation, maximum HP is fixed at 75. Irregular sneezes and ordinary voice or text chat can infect nearby players in front, replacing their role with Influenza. Sneezes also alert nearby enemies. Infection ends with the stage. Onset, HP, sneeze intervals, infection conditions, and enemy hearing are configurable.

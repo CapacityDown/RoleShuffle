@@ -370,7 +370,7 @@ All entries in this table are host-controlled.
 | `Musician.HealAmount` | `5` | `1`–`100` | Health restored to the Musician and each living player in range per instrument note. |
 | `Musician.HealRadius` | `10` | `1`–`50` | Maximum healing distance in meters from the Musician. |
 | `Mage.CastIntervalSeconds` | `3` | `0.1`–`30` | Minimum seconds between spell activations. |
-| `Mage.BeamDurationSeconds` | `7` | `0.1`–`30` | Laser spell duration in seconds. Held staff attacks are unchanged. |
+| `Mage.BeamDurationSeconds` | `5` | `0.1`–`30` | Laser spell duration in seconds. Held staff attacks are unchanged. |
 | `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `star`. |
 | `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `roll`. |
 | `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | Facial expression that casts `gravity`. |
@@ -493,7 +493,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 ### Gameplay notes
 
 - `Bomber` leaves armed grenades that can injure players and damage valuables.
-- `Mage` spells can harm players and valuables; spell names ignore case. The laser stays at its firing position. RoleShuffle users see only the beam; unmodded guests still see its temporary staff.
+- `Mage` spells can harm players and valuables; spell names ignore case. The laser follows the caster's view. RoleShuffle users see only the beam; unmodded guests still see its temporary staff.
 - `Courier` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
 - `Medic` never heals itself.
 - `Phoenix` revives itself once per stage. `Rescuer` revives other nearby players up to the configured limit. Each role uses its own configurable revival HP, with a default of 25.
@@ -870,7 +870,7 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 | `Musician.HealAmount` | `5` | `1`～`100` | 楽器で音を鳴らすたびに、本人と範囲内の各生存プレイヤーを回復する量です。 |
 | `Musician.HealRadius` | `10` | `1`～`50` | Musicianから回復可能な最大距離です。単位はメートルです。 |
 | `Mage.CastIntervalSeconds` | `3` | `0.1`～`30` | 魔法発動の最短間隔です。 |
-| `Mage.BeamDurationSeconds` | `7` | `0.1`～`30` | ビーム魔法の継続秒数。手持ちの杖には適用しません。 |
+| `Mage.BeamDurationSeconds` | `5` | `0.1`～`30` | ビーム魔法の継続秒数。手持ちの杖には適用しません。 |
 | `Mage.StarExpression` | `Angry` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `star`を発動する表情です。 |
 | `Mage.RollExpression` | `Sad` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `roll`を発動する表情です。 |
 | `Mage.GravityExpression` | `Suspicious` | `Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy` | `gravity`を発動する表情です。 |
@@ -993,7 +993,7 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 ### ゲームプレイ上の注意
 
 - `Bomber`が残す起動済みグレネードは、プレイヤーや貴重品にも被害を与えます。
-- `Mage`の魔法はプレイヤーや貴重品にも被害を与えます。魔法名の大文字・小文字は問いません。ビームは発射位置に固定され、MOD導入側では杖を表示しません。未導入の参加者には一時的な杖が見えます。
+- `Mage`の魔法はプレイヤーや貴重品にも被害を与えます。魔法名の大文字・小文字は問いません。ビームは視点に追従し、MOD導入側では杖を表示しません。未導入の参加者には一時的な杖が見えます。
 - `Courier`と`Tuna`は条件を満たしている間、実際に継続ダメージを与え、死亡する可能性があります。受けたダメージは自動回復しません。
 - `Medic`は自身を回復しません。
 - `Phoenix`は1ステージに1回だけ自己復活します。`Rescuer`は設定された回数まで周囲の別プレイヤーを復活させます。復活後HPは役職ごとに設定でき、デフォルトは25です。
