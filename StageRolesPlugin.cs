@@ -17,7 +17,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
 {
     public const string PluginGuid = "REPOJP.RoleShuffle";
     public const string PluginName = "RoleShuffle";
-    public const string PluginVersion = "4.5.2";
+    public const string PluginVersion = "4.5.3";
     public const string StageFluxGuid = "REPOJP.StagePhysicsEvents";
     public const string RepoConfigGuid = "nickklmao.repoconfig";
     public const string MenuLibGuid = "nickklmao.menulib";
