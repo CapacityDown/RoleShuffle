@@ -1,3 +1,6 @@
+## 4.5.3
+- Fixed Courier losing HP immediately after revival. Each revival grants the configured initial HP-loss pause, defaulting to 30 seconds.
+
 ## 4.5.2
 - Changed Lifter to handle carts and bikes like heavy objects. Other shop equipment keeps its configured holding level.
 - Added optional retention of consumed upgrade items, off by default. Choose upgrades for the consumer or the whole team; retained levels survive role changes, stage transitions, and reloading the same save.

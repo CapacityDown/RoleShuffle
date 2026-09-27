@@ -130,7 +130,83 @@ Clock(8); runtime.Tick(new[] { worker }, notifier);
 Check(worker.Overhaul.CarryDistance == 0 && worker.Overhaul.ContractsCompleted == 1, "Death preserves contract budget");
 worker.Player = new PlayerAvatar { Id = "p" };
 Clock(9); runtime.Tick(new[] { worker }, notifier);
-Check(worker.Overhaul.ContractsCompleted == 1 && worker.Overhaul.PaidUntil == 33, "Replacement avatar retains earned state");
+Check(worker.Overhaul.ContractsCompleted == 1 && worker.Overhaul.PaidUntil == 39, "Replacement after death retains paid work and gains fresh-life grace");
+
+// Exercise the actual HP-loss runtime with the one HP typical of a native
+// revival. Delivery polling and per-frame attrition must share one life edge.
+foreach (bool deathBetweenFrames in new[] { false, true })
+foreach (bool replacement in new[] { false, true })
+foreach (bool inTruck in new[] { false, true })
+{
+    var reviveConfig = new StageRolesConfig();
+    var reviveRuntime = new RoleOverhaulRuntime(reviveConfig);
+    var revived = new RoleAssignment();
+    UnityEngine.Object.Items = Array.Empty<PhysGrabObject>();
+    Time.deltaTime = 0.1f;
+    Clock(0); reviveRuntime.TickAttrition(revived);
+    Clock(60); revived.Player.playerHealth.Health = 1;
+    reviveRuntime.TickAttrition(revived);
+    Check(revived.Player.playerHealth.Health == 0, "Expired Courier grace can still cause ordinary lethal attrition");
+    revived.JoblessDamageTimer = 0.09f;
+    if (deathBetweenFrames) reviveRuntime.PlayerDied(revived); // Native death callback, before the next Update.
+    else
+    {
+        Clock(100); reviveRuntime.Tick(new[] { revived }, notifier);
+        Clock(200); reviveRuntime.TickAttrition(revived);
+    }
+    Check(revived.JoblessDamageTimer == 0, "Death discards damage carried from the previous life");
+    if (replacement) revived.Player = new PlayerAvatar();
+    revived.Player.playerHealth.Health = 1;
+    revived.Player.InTruck = inTruck;
+    Clock(300); reviveRuntime.Tick(new[] { revived }, notifier);
+    reviveRuntime.TickAttrition(revived);
+    Check(revived.Player.playerHealth.Health == 1 && revived.Overhaul.PaidUntil == 330,
+        "First living tick after revival grants a full 30 seconds without extra healing");
+    foreach (float time in new[] { 300.1f, 301f, 320f, 329.99f })
+    {
+        revived.Player.InTruck = false;
+        Clock(time); reviveRuntime.TickAttrition(revived);
+        reviveRuntime.Tick(new[] { revived }, notifier);
+        Check(revived.Player.playerHealth.Health == 1 && revived.Overhaul.PaidUntil == 330,
+            "Repeated setup never extends grace, and leaving the truck keeps the remaining protection");
+    }
+    Clock(330.1f); reviveRuntime.TickAttrition(revived);
+    Check(revived.Player.playerHealth.Health == 0, "Automatic HP loss resumes after revival protection expires");
+    reviveRuntime.PlayerDied(revived);
+    revived.Player.playerHealth.Health = 1;
+    Clock(400); reviveRuntime.TickAttrition(revived);
+    Check(revived.Player.playerHealth.Health == 1 && revived.Overhaul.PaidUntil == 430,
+        "Every subsequent revival also grants the configured pause");
+}
+foreach (float grace in new[] { 0f, 1f, 5f, 30f, 300f })
+{
+    var reviveConfig = new StageRolesConfig();
+    reviveConfig.JoblessInitialGrace.Value = grace;
+    var reviveRuntime = new RoleOverhaulRuntime(reviveConfig);
+    var revived = new RoleAssignment();
+    Clock(0); reviveRuntime.TickAttrition(revived);
+    reviveRuntime.PlayerDied(revived);
+    revived.Player.playerHealth.Health = 1;
+    Clock(1000); Time.deltaTime = 0.1f;
+    reviveRuntime.TickAttrition(revived);
+    Check(revived.Overhaul.PaidUntil == 1000 + grace && revived.Player.playerHealth.Health == (grace == 0 ? 0 : 1),
+        "Revival respects the configured initial pause, including an explicitly disabled pause");
+}
+var protectedWork = new RoleOverhaulState();
+protectedWork.Start(0, 30);
+protectedWork.Carry(500, 0, false, 10, 5, 120);
+protectedWork.Carry(500, 3, false, 11, 5, 120);
+protectedWork.Carry(500, 3, false, 12, 5, 120);
+Check(protectedWork.Carry(500, 0, true, 13, 5, 120), "Long delivery protection established");
+protectedWork.Carry(501, 0, false, 14, 5, 30);
+protectedWork.Carry(501, 3, false, 15, 5, 30);
+protectedWork.MarkDead(); protectedWork.MarkDead();
+Check(protectedWork.Start(20, 30) && !protectedWork.Start(21, 30), "Only the first live observation consumes the revival marker");
+Check(protectedWork.PaidUntil == 133 && protectedWork.IsDelivered(500) && protectedWork.ContractsCompleted == 1 &&
+    protectedWork.CargoId == 0 && protectedWork.CarryDistance == 0,
+    "Revival preserves longer delivery grace and spent rewards, while dropping unfinished cargo progress");
+Check(!protectedWork.Carry(500, 3, true, 22, 5, 30), "Death and revival never make delivered valuables pay again");
+Time.deltaTime = 0;
 
 runtime.Stop(); RoleHealingRuntime.Clear();
 foreach (int maximum in new[] { 100, 120, 4100, 20000 })

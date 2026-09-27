@@ -27,17 +27,70 @@ internal sealed class RoleOverhaulRuntime
             RoleOverhaulState state = assignment.Overhaul;
             if (!PlayerState.IsLiving(assignment.Player))
             {
-                state.ResetCargo();
-                _cargoPositions.Remove(assignment.SteamId);
+                PlayerDied(assignment);
                 continue;
             }
             if (assignment.Role == StageRole.Jobless)
             {
-                state.Start(Time.time, _config.JoblessInitialGrace.Value);
+                ObserveCourierLife(assignment);
                 candidates ??= UnityEngine.Object.FindObjectsOfType<PhysGrabObject>();
                 TickContract(assignment, candidates, notifier);
             }
             else state.ResetCargo();
+        }
+    }
+
+    // Called from the native death notification as well as polling, so a quick
+    // death/revival between Update frames cannot bypass the fresh-life grace.
+    internal void PlayerDied(RoleAssignment assignment)
+    {
+        assignment.Overhaul.MarkDead();
+        assignment.JoblessDamageTimer = 0f;
+        _cargoPositions.Remove(assignment.SteamId);
+    }
+
+    private bool ObserveCourierLife(RoleAssignment assignment)
+    {
+        if (!PlayerState.IsLiving(assignment.Player))
+        {
+            PlayerDied(assignment);
+            return false;
+        }
+        if (assignment.Overhaul.Start(Time.time, _config.JoblessInitialGrace.Value))
+        {
+            assignment.JoblessDamageTimer = 0f;
+            _cargoPositions.Remove(assignment.SteamId);
+        }
+        return true;
+    }
+
+    internal void TickAttrition(RoleAssignment assignment)
+    {
+        PlayerAvatar player = assignment.Player;
+        if (!ObserveCourierLife(assignment) || PlayerState.IsInTruck(player) ||
+            Time.time < assignment.Overhaul.PaidUntil)
+        {
+            assignment.JoblessDamageTimer = 0f;
+            return;
+        }
+        assignment.JoblessDamageTimer += Time.deltaTime;
+        int ticks = 0;
+        float interval = _config.ClampedJoblessInterval;
+        while (assignment.JoblessDamageTimer >= interval && ticks < 20 &&
+               PlayerState.IsLiving(player) && !PlayerState.IsInTruck(player))
+        {
+            assignment.JoblessDamageTimer -= interval;
+            ticks++;
+            try
+            {
+                player.playerHealth?.HurtOther(Math.Clamp(_config.JoblessDamage.Value, 1, 100),
+                    Vector3.zero, false);
+            }
+            catch (Exception exception)
+            {
+                StageRolesPlugin.ModLogger.LogDebug($"Courier damage was skipped: {exception.Message}");
+                break;
+            }
         }
     }
 

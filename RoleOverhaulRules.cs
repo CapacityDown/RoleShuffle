@@ -101,6 +101,7 @@ internal static class RoleOverhaulRules
 internal sealed class RoleOverhaulState
 {
     private readonly HashSet<int> _delivered = new();
+    private bool _awaitingRevival;
     internal bool Started { get; private set; }
     internal float PaidUntil { get; private set; }
     internal int ContractsCompleted => _delivered.Count;
@@ -108,12 +109,16 @@ internal sealed class RoleOverhaulState
     internal float CarryDistance { get; private set; }
     internal int KingSupportedAllies { get; set; }
 
-    internal void Start(float now, float grace)
+    internal bool Start(float now, float grace)
     {
-        if (Started) return;
+        if (Started && !_awaitingRevival) return false;
         Started = true;
-        PaidUntil = now + grace;
+        _awaitingRevival = false;
+        PaidUntil = Math.Max(PaidUntil, now + Math.Clamp(grace, 0f, 300f));
+        return true;
     }
+
+    internal void MarkDead() { _awaitingRevival = true; ResetCargo(); }
 
     internal void ResetCargo() { CargoId = 0; CarryDistance = 0; }
     internal bool IsDelivered(int cargoId) => _delivered.Contains(cargoId);

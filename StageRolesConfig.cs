@@ -273,7 +273,7 @@ internal sealed class StageRolesConfig
         JoblessDamage = BindInt(config, "Courier", "Damage", 1, 1, 100, "Damage applied per tick outside the truck.");
         JoblessDamageIntervalSeconds = BindFloat(config, "Courier", "DamageIntervalSeconds", 0.1f, 0.05f, 10f, "Seconds between damage ticks outside the truck.");
         JoblessContractDistance = BindFloat(config, "Courier", "ContractDistance", 5f, 1f, 50f, "Carry a different positive-value valuable this far outside delivery areas, then bring it into the truck or an extraction point. No stage limit; each valuable rewards each worker once.");
-        JoblessInitialGrace = BindFloat(config, "Courier", "InitialGraceSeconds", 30f, 0f, 300f, "Time without Courier attrition at stage start.");
+        JoblessInitialGrace = BindFloat(config, "Courier", "InitialGraceSeconds", 30f, 0f, 300f, "Time without Courier attrition at stage start and after each revival. Longer remaining delivery protection is preserved.");
         JoblessTinyGrace = BindFloat(config, "Courier", "TinyGraceSeconds", 30f, 0f, 300f, "Attrition exemption after delivering a vanilla Tiny valuable. Healing still applies at zero seconds.");
         JoblessSmallGrace = BindFloat(config, "Courier", "SmallGraceSeconds", 30f, 0f, 300f, "Attrition exemption after delivering a vanilla Small valuable.");
         JoblessMediumGrace = BindFloat(config, "Courier", "MediumGraceSeconds", 60f, 0f, 300f, "Attrition exemption after delivering a vanilla Medium valuable.");

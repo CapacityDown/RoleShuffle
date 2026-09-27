@@ -1,7 +1,7 @@
 using System.Reflection;
 namespace UnityEngine
 {
-    public static class Time { public static float time; public static float unscaledTime; }
+    public static class Time { public static float time; public static float unscaledTime; public static float deltaTime; }
     public class Object
     {
         public static PhysGrabObject[] Items = Array.Empty<PhysGrabObject>();
@@ -10,6 +10,7 @@ namespace UnityEngine
     }
     public readonly record struct Vector3(float x, float y, float z)
     {
+        public static Vector3 zero => new(0, 0, 0);
         public float sqrMagnitude => x*x + y*y + z*z;
         public static Vector3 operator -(Vector3 a, Vector3 b) => new(a.x-b.x,a.y-b.y,a.z-b.z);
         public static float Distance(Vector3 a, Vector3 b) => MathF.Sqrt((a-b).sqrMagnitude);
@@ -90,9 +91,12 @@ public sealed class PlayerHealth
     public int Health = 50;
     public int Maximum = 100;
     public int Requests;
+    public int DamageRequests;
     public Action<int>? OnHeal;
     public void HealOther(int amount, bool effect)
     { Requests++; if (OnHeal != null) OnHeal(amount); else Health = Math.Min(Maximum, Health + amount); }
+    public void HurtOther(int amount, UnityEngine.Vector3 direction, bool effect)
+    { DamageRequests++; Health = Math.Max(0, Health - amount); }
 }
 public sealed class ValuableObject
 {
@@ -126,6 +130,9 @@ namespace REPOJP.StageRoles
     internal sealed class StageRolesConfig
     {
         internal Entry<float> JoblessInitialGrace = new(30);
+        internal Entry<int> JoblessDamage = new(1);
+        internal Entry<float> JoblessDamageIntervalSeconds = new(0.1f);
+        internal float ClampedJoblessInterval => Math.Clamp(JoblessDamageIntervalSeconds.Value, 0.05f, 10f);
         internal Entry<float> JoblessTinyGrace = new(30);
         internal Entry<float> JoblessSmallGrace = new(30);
         internal Entry<float> JoblessMediumGrace = new(60);

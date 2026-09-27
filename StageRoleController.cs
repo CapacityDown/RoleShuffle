@@ -1408,45 +1408,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         }
     }
 
-    private void TickJobless(RoleAssignment assignment)
-    {
-        PlayerAvatar player = assignment.Player;
-        if (!PlayerState.IsLiving(player) || PlayerState.IsInTruck(player))
-        {
-            assignment.JoblessDamageTimer = 0f;
-            return;
-        }
-
-        assignment.Overhaul.Start(Time.time, _config.JoblessInitialGrace.Value);
-        if (Time.time < assignment.Overhaul.PaidUntil)
-        {
-            assignment.JoblessDamageTimer = 0f;
-            return;
-        }
-
-        assignment.JoblessDamageTimer += Time.deltaTime;
-        int ticks = 0;
-        float interval = _config.ClampedJoblessInterval;
-        while (assignment.JoblessDamageTimer >= interval && ticks < 20 &&
-               PlayerState.IsLiving(player) && !PlayerState.IsInTruck(player))
-        {
-            assignment.JoblessDamageTimer -= interval;
-            ticks++;
-            try
-            {
-                player.playerHealth?.HurtOther(
-                    Mathf.Clamp(_config.JoblessDamage.Value, 1, 100),
-                    Vector3.zero,
-                    false);
-            }
-            catch (Exception exception)
-            {
-                StageRolesPlugin.ModLogger.LogDebug(
-                    $"Jobless damage was skipped: {exception.Message}");
-                break;
-            }
-        }
-    }
+    private void TickJobless(RoleAssignment assignment) => _overhaul.TickAttrition(assignment);
 
     private void TickTuna(RoleAssignment assignment)
     {
@@ -1957,6 +1919,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
             return;
         }
         string deadSteamId = PlayerIdentity.SteamId(player);
+        RoleAssignment? deadAssignment = FindAssignment(player);
+        if (deadAssignment != null) _overhaul.PlayerDied(deadAssignment);
         RoleHealingRuntime.Forget(player);
         float triggerRadius = Mathf.Clamp(
             _config.AvengerTriggerRadius.Value,

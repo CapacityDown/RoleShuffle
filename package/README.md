@@ -88,7 +88,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | Bomber | Drops a random armed grenade every 8 m traveled. Up to 30 generated grenades remain active per Bomber, and the oldest is removed at the limit. | Grenades can injure players and damage valuables. Only Bomber can hold generated grenades. Movement inside the truck does not count while truck placement is disabled. | Distance, limit, truck placement, grenade types |
 | Medic | Heals nearby teammates for 5 HP every 2 seconds within 5 m, up to 150 total HP per stage. | Never heals the Medic. Only living teammates within range are affected. Healing stops when that Medic's stage limit is exhausted. Never selected randomly when only one player is present. | Amount, interval, radius, total limit |
 | Phoenix | Automatically revives itself with 25 HP once per stage after dying. | One use per stage. Revival HP cannot exceed the player's maximum HP. | Revival HP, revival delay, failure grace |
-| Courier | Hold a valuable worth money and carry it 5 m outside delivery areas, then put it in the truck or an extraction point. Each delivery heals HP and pauses Courier's automatic HP loss by size (below). | Starts with a 30-second pause. Otherwise loses 1 HP per 0.1 seconds outside the truck; can die. Other damage still applies. Unlimited deliveries; each item rewards each player once per stage. Early drops reset distance. Not selected solo. | Delivery and HP loss |
+| Courier | Carry a valuable worth money 5 m while holding it outside delivery areas, then place it in the truck or an extraction point. Delivery heals HP and pauses HP loss by size (below). | 30-second pause at stage start/revival. Otherwise loses 1 HP/0.1 s outside the truck; can die. Other damage still applies. Unlimited deliveries; each item rewards each player once per stage. Early drops reset distance. Not selected solo. | Delivery and HP loss |
 | Rescuer | While alive, approaching within 3 m of a dead teammate's Death Head revives the nearest eligible teammate with 25 HP. | Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present. | Revival HP, delay, radius, maximum revivals |
 | Vampire | Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50. | Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy. | Amount per tier, radius |
 | King | Crown; grants nearby allies Speed/Range +2 and up to Strength +5 within 12 m. | No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage. | Radius and bonus levels |
@@ -128,7 +128,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 | `Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed` | `1.5` / `205` | 1–10 / 5–205 | Sprint speed |
 | `Runner.StaminaMultiplier` / `Runner.MaximumStamina` | `1.5` / `2040` | 1–10 / 40–2040 | Stamina capacity |
 | `Courier.ContractDistance` | `5` | 1–50 m | Carry distance outside delivery areas. |
-| `Courier.InitialGraceSeconds` | `30` | 0–300 s | Initial attrition break. |
+| `Courier.InitialGraceSeconds` | `30` | 0–300 s | HP-loss pause at stage start/revival. |
 | `Courier.<Size>GraceSeconds` | `30/30/60/90/90/90/120` | 0–300 s | Tiny/Small/Medium/Big/Wide/Tall/VeryTall. Never shortens remaining grace. |
 | `Courier.<Size>HealAmount` | `10/25/50/100/100/100/100` | 0–10000 HP | Same size order; fixed HP, capped at maximum health. |
 | `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `2` / `2` | 0–200 | Speed / Range bonus levels. |
@@ -588,7 +588,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | Bomber | 8 m移動するごとに起動済みグレネードをランダム設置します。Bomber 1人につき最大30個まで残り、上限では最も古いものを削除します。 | グレネードはプレイヤーやValuableにも危険です。生成されたグレネードを持てるのはBomberだけです。トラック内設置が無効な場合、トラック内の移動距離は加算されません。 | 距離、上限、トラック内設置、グレネード種類 |
 | Medic | 5 m以内の仲間を2秒ごとに5 HP回復し、1ステージにつき合計150 HPまで回復します。 | Medic自身は回復しません。範囲内で生存している仲間だけが対象です。そのMedicの上限を使い切ると回復を停止します。参加者が1人だけの場合はランダム抽選されません。 | 回復量、間隔、範囲、合計上限 |
 | Phoenix | 死亡すると、1ステージに1回だけデフォルト25 HPで自動復活します。 | 1ステージにつき1回です。復活後HPはプレイヤーの最大HPを超えません。 | 復活後HP、復活遅延、失敗時猶予 |
-| Courier | 価値のある貴重品をつかんだまま搬入先の外で5m運び、トラックか納品所に入れると配達完了。サイズ別にHP回復・自動HP減少の一時停止（下表）。 | 開始時は30秒停止。効果切れ中はトラック外で0.1秒ごと1HP減少、死亡あり。敵の攻撃等は防げません。配達回数無制限、同じ品の報酬は各自1ステージ1回。途中で放すと運搬やり直し。1人では抽選対象外。 | 配達・自動HP減少 |
+| Courier | 価値のある貴重品をつかんだまま搬入先の外で5m運び、トラックか納品所に入れると配達完了。サイズ別にHP回復・自動HP減少の一時停止（下表）。 | 開始・蘇生時は30秒停止。効果切れ中はトラック外で0.1秒ごと1HP減少、死亡あり。敵の攻撃等は防げません。配達回数無制限、同じ品の報酬は各自1ステージ1回。途中で放すと運搬やり直し。1人では抽選対象外。 | 配達・自動HP減少 |
 | Rescuer | 生存中に、死亡した仲間のDeath Headから3 m以内へ近づくと、最も近い対象をデフォルト25 HPで復活させます。 | 1ステージにつき最大2回です。復活後HPは対象の最大HPを超えません。参加者が1人だけの場合はランダム抽選されません。 | 復活後HP、遅延、範囲、最大復活回数 |
 | Vampire | 10 m以内で敵が死亡すると、Tier 1は5、Tier 2は10、Tier 3は50回復します。 | 敵のバニラDanger Levelを使用します。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体を最大Tier 3まで1段階上として扱います。Vampireが生存し、死亡した敵の近くにいる必要があります。 | Tier別回復量、範囲 |
 | King | Crownと12mの強化範囲。味方へSpeed・Range各＋2、Strength最大＋5。 | 自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。 | 半径・追加レベル |
@@ -628,7 +628,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 | `Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed` | `1.5` / `205` | 1–10 / 5–205 | 走行速度 |
 | `Runner.StaminaMultiplier` / `Runner.MaximumStamina` | `1.5` / `2040` | 1–10 / 40–2040 | スタミナ容量 |
 | `Courier.ContractDistance` | `5` | 1–50m | 搬入先の外での運搬距離。 |
-| `Courier.InitialGraceSeconds` | `30` | 0–300秒 | 開始猶予。 |
+| `Courier.InitialGraceSeconds` | `30` | 0–300秒 | 開始・蘇生後のHP減少停止。 |
 | `Courier.<Size>GraceSeconds` | `30/30/60/90/90/90/120` | 0–300秒 | Tiny/Small/Medium/Big/Wide/Tall/VeryTall（極小/小/中/大/横長/縦長/超縦長）。残り猶予は短縮しません。 |
 | `Courier.<Size>HealAmount` | `10/25/50/100/100/100/100` | 0–10000HP | 同じサイズ順。固定HP回復、最大HPまで。 |
 | `King.SpeedBonusLevels` / `King.RangeBonusLevels` | `2` / `2` | 0–200 | Speed・Range追加レベル。 |
