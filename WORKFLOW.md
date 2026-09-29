@@ -12,10 +12,23 @@ historical version numbers, deployment profiles and superseded design choices.
   release artifacts so the stable version can be restored.
 - Keep the MOD name RoleShuffle. Continue the current development version (4.5.3)
   unless the user changes it. Do not revive the old overhaul setting.
-- The user has authorized repository operations and normal pushes to the
-  CapacityDown/RoleShuffle repository across branches. Do not ask again for each
-  normal commit or push. This does not mean discarding unrelated work or using
-  destructive force pushes.
+- The user's standing authorization for Git operations is permanent for
+  `https://github.com/CapacityDown/RoleShuffle.git` and is not limited to a
+  branch. It includes local commits, merges, normal pushes (including `main`),
+  and organizing branches with recoverable history. Do not ask again for each
+  ordinary operation. Do not discard unrelated work or use destructive force
+  pushes. This authorization does not override platform approval enforcement.
+- On 2026-09-30 the user explicitly requested integration of the current work
+  into `main`, including the role-safety audit, its diagnostic results and
+  hashes, and the verification tools committed as `d4c2698`.
+- Use `main` in the `RoleShuffle` working folder as the integrated development
+  baseline. The original `StageRoles` checkout remains on
+  `archive/main-before-4.5.3` at its preserved v4.4.8 state. Keep the separate
+  v4.4.7 PDF worktree and release branch unless later instructed otherwise.
+- Before bulk branch cleanup, save and verify a complete Git bundle and the
+  branch/worktree inventory. Remove only branches already contained in `main`
+  and not in use by a worktree. Keep unmerged and explicit archive/release
+  branches. Publish and verify `main` before deleting integrated remote branches.
 
 ## Builds and deployment
 
