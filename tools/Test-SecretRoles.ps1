@@ -41,8 +41,8 @@ internal class StageRolesConfig {
 internal static class RoleCatalog {
     public static readonly IReadOnlyList<StageRole> AllRoles = Enum.GetValues<StageRole>();
 __CATALOG__
-    public static bool BaseUpgradeMeetsOrExceedsRoleTarget(StageRole role,StageRolesConfig config)=>false;
-    public static bool InfluencerHasUpgradeBenefit(StageRolesConfig config,int count)=>true;
+    public static bool BaseUpgradeMeetsOrExceedsRoleTarget(StageRole role,StageRolesConfig config,string? steamId=null)=>false;
+    public static bool InfluencerHasUpgradeBenefit(StageRolesConfig config,int count,string? steamId=null)=>true;
 }
 __PLANNER__
 internal readonly record struct ConfigDefinition(string Section,string Key);

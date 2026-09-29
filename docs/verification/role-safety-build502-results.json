@@ -1,0 +1,79 @@
+{
+  "date": "2026-09-30",
+  "version": "4.5.3",
+  "build": 502,
+  "source_commit": "4360ef891fe56f332ab13db6ab25fdf730609612",
+  "method": "Unmodified production method bodies with deterministic stand-ins for time, positions, spawning and delayed health transport. Not a Unity or live Photon test.",
+  "sources": [
+    {
+      "source": "StageRoleController.cs",
+      "method": "private void TickTuna(",
+      "sha256": "9955117a191f9acfb35b3f8c3c6f8b7fa092aa34d348966dda90d77d0661756d"
+    },
+    {
+      "source": "MageRoleRuntime.cs",
+      "method": "internal bool TryCast(",
+      "sha256": "baf03b36d04c6fff4c735c6e731e5690e4327c1cabe698d8caeb2e15e9b821ed"
+    },
+    {
+      "source": "MageRoleRuntime.cs",
+      "method": "private int HealthCost(",
+      "sha256": "daef62eaa97d47598422b53073080802bbb39533dd6ed0597fbc23fa8b1cdd64"
+    },
+    {
+      "source": "EventRoleRuntime.cs",
+      "method": "private void ApplyBodyguardTransfer(",
+      "sha256": "ae4e1874897124616b8e54e83d9095c3f0f39148365295ccae6f938af0ec41fd"
+    },
+    {
+      "source": "EventRoleRuntime.cs",
+      "method": "private bool SendInternalDamage(",
+      "sha256": "d388ddcbc884dfa2f13c95cf1b70df7ff0b68fc4f941884e34f3b3b032c83524"
+    }
+  ],
+  "scenarios": [
+    {
+      "caseName": "Tuna moving at 0.5 m/s for 4 s",
+      "fps": 60,
+      "hp": 120,
+      "damageCalls": 0
+    },
+    {
+      "caseName": "Tuna moving at 0.5 m/s for 4 s",
+      "fps": 120,
+      "hp": 110,
+      "damageCalls": 10
+    },
+    {
+      "caseName": "Tuna moving at 0.5 m/s for 4 s",
+      "fps": 240,
+      "hp": 110,
+      "damageCalls": 10
+    },
+    {
+      "caseName": "Tuna stationary 1 HP revival after stage grace",
+      "deathAfterSeconds": 3.1
+    },
+    {
+      "caseName": "Mage 15 HP, two 10 HP casts 0.2 s apart",
+      "delay": false,
+      "first": true,
+      "second": false,
+      "queued": 0,
+      "hp": 5
+    },
+    {
+      "caseName": "Mage 15 HP, two 10 HP casts 0.2 s apart",
+      "delay": true,
+      "first": true,
+      "second": true,
+      "queued": 2,
+      "hp": 0
+    },
+    {
+      "caseName": "Bodyguard host HP30, owner HP5 after unsynchronized hit, receives transfer",
+      "transferred": 20,
+      "guardHp": 0
+    }
+  ]
+}
