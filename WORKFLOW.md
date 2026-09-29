@@ -21,8 +21,15 @@ historical version numbers, deployment profiles and superseded design choices.
 - On 2026-09-30 the user explicitly requested integration of the current work
   into `main`, including the role-safety audit, its diagnostic results and
   hashes, and the verification tools committed as `d4c2698`.
-- Use `main` in the `RoleShuffle` working folder as the integrated development
-  baseline. The original `StageRoles` checkout remains on
+- Perform development in `RoleShuffle` on a branch named `version/<version>`;
+  the current working branch is `version/4.5.3`. Commit and push ongoing work
+  to that version's branch instead of directly to `main`.
+- When the user changes the version, complete the relevant verification and
+  merge the outgoing version's branch into `main`, then push and verify `main`.
+  Create the incoming version's branch from the updated `main`, switch to it,
+  and make the version-number changes there. Do not merge unfinished work into
+  `main` on every ordinary commit; version changes are the integration point.
+- The original `StageRoles` checkout remains on
   `archive/main-before-4.5.3` at its preserved v4.4.8 state. Keep the separate
   v4.4.7 PDF worktree and release branch unless later instructed otherwise.
 - Before bulk branch cleanup, save and verify a complete Git bundle and the
