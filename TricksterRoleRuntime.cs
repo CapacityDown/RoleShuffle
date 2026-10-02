@@ -13,7 +13,7 @@ internal sealed class TricksterRoleRuntime
     private readonly StageRolesConfig _config;
     private readonly VanillaRolePrefabResolver _resolver;
     private readonly Dictionary<string, ActiveDecoy> _active = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _pendingPlayers = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, GameObject> _pendingObjects = new(StringComparer.Ordinal);
     private readonly Dictionary<string, float> _nextPlacementAt = new(StringComparer.Ordinal);
     private readonly List<GameObject> _spawnedObjects = new();
     private int _generation;
@@ -47,7 +47,7 @@ internal sealed class TricksterRoleRuntime
             !PlayerState.IsLiving(assignment.Player) ||
             PlayerState.IsInTruck(assignment.Player) ||
             _active.ContainsKey(assignment.SteamId) ||
-            _pendingPlayers.Contains(assignment.SteamId) ||
+            _pendingObjects.ContainsKey(assignment.SteamId) ||
             (_nextPlacementAt.TryGetValue(assignment.SteamId, out float readyAt) &&
              Time.time < readyAt) ||
             !_resolver.TryGetScreamDoll(out ResolvedRolePrefab resolved))
@@ -56,9 +56,10 @@ internal sealed class TricksterRoleRuntime
         }
 
         Vector3 position = PlacementPosition(assignment.Player);
+        GameObject? instance = null;
         try
         {
-            GameObject instance = SemiFunc.IsMultiplayer()
+            instance = SemiFunc.IsMultiplayer()
                 ? PhotonNetwork.Instantiate(
                     resolved.ResourcePath,
                     position,
@@ -77,11 +78,11 @@ internal sealed class TricksterRoleRuntime
                 120f);
             _nextPlacementAt.Remove(assignment.SteamId);
             int generation = _generation;
-            _pendingPlayers.Add(assignment.SteamId);
+            _pendingObjects[assignment.SteamId] = instance;
             _coroutineOwner.StartCoroutine(
                 InitializeAfterSpawn(
                     instance,
-                    assignment.SteamId,
+                    assignment,
                     expiresAt,
                     false,
                     generation));
@@ -89,7 +90,7 @@ internal sealed class TricksterRoleRuntime
         }
         catch (Exception exception)
         {
-            _pendingPlayers.Remove(assignment.SteamId);
+            CancelPending(assignment.SteamId, instance);
             StageRolesPlugin.ModLogger.LogWarning(
                 $"Trickster decoy placement failed: {exception.Message}");
             return false;
@@ -162,6 +163,8 @@ internal sealed class TricksterRoleRuntime
 
     internal void RemovePlayer(string steamId)
     {
+        if (_pendingObjects.TryGetValue(steamId, out GameObject? instance))
+            CancelPending(steamId, instance);
         DestroyForPlayer(steamId, startCooldown: false);
         _nextPlacementAt.Remove(steamId);
     }
@@ -216,25 +219,30 @@ internal sealed class TricksterRoleRuntime
             DestroyNetworkObject(instance);
         }
         _active.Clear();
-        _pendingPlayers.Clear();
+        _pendingObjects.Clear();
         _spawnedObjects.Clear();
         _nextPlacementAt.Clear();
     }
 
     private IEnumerator InitializeAfterSpawn(
         GameObject instance,
-        string steamId,
+        RoleAssignment assignment,
         float expiresAt,
         bool alreadyAffectedEnemy,
         int generation)
     {
+        string steamId = assignment.SteamId;
+        PlayerAvatar player = assignment.Player;
         yield return null;
-        if (instance == null || generation != _generation)
+        if (instance == null || generation != _generation ||
+            !_pendingObjects.TryGetValue(steamId, out GameObject? pending) ||
+            !ReferenceEquals(pending, instance) ||
+            !ReferenceEquals(assignment.Player, player) ||
+            !RoleCatalog.HasCapability(assignment.Role, StageRole.Trickster) ||
+            !PlayerState.IsLiving(player) || PlayerState.IsInTruck(player) ||
+            Time.time >= expiresAt)
         {
-            _pendingPlayers.Remove(steamId);
-            DestroyNetworkObject(instance);
-            _spawnedObjects.RemoveAll(
-                candidate => candidate == null || ReferenceEquals(candidate, instance));
+            CancelPending(steamId, instance);
             yield break;
         }
 
@@ -246,11 +254,9 @@ internal sealed class TricksterRoleRuntime
             instance.GetComponentInChildren<ValuableObject>(true);
         if (screamDoll == null || physObject == null)
         {
-            _pendingPlayers.Remove(steamId);
             StageRolesPlugin.ModLogger.LogWarning(
                 "Trickster decoy was removed because its vanilla components did not initialize.");
-            DestroyNetworkObject(instance);
-            _spawnedObjects.Remove(instance);
+            CancelPending(steamId, instance);
             yield break;
         }
 
@@ -270,14 +276,26 @@ internal sealed class TricksterRoleRuntime
         decoy.AffectedEnemy = alreadyAffectedEnemy ||
                               Pulse(instance.transform.position) > 0;
         _active[steamId] = decoy;
-        _pendingPlayers.Remove(steamId);
+        _pendingObjects.Remove(steamId);
         StageRolesPlugin.ModLogger.LogInfo(
             $"Trickster placed a decoy for player {steamId}.");
     }
 
+    private void CancelPending(string steamId, GameObject? instance)
+    {
+        // An old coroutine must never cancel a replacement placement belonging
+        // to the same player after a role/stage change.
+        if (_pendingObjects.TryGetValue(steamId, out GameObject? pending) &&
+            ReferenceEquals(pending, instance))
+            _pendingObjects.Remove(steamId);
+        DestroyNetworkObject(instance);
+        _spawnedObjects.RemoveAll(
+            candidate => candidate == null || ReferenceEquals(candidate, instance));
+    }
+
     private void DestroyForPlayer(string steamId, bool startCooldown)
     {
-        if (!_active.Remove(steamId, out ActiveDecoy decoy))
+        if (!_active.Remove(steamId, out ActiveDecoy? decoy))
         {
             return;
         }

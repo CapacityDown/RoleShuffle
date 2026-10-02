@@ -183,7 +183,8 @@ internal static class RoleGuideCatalog
                 $"{config.VampireTier3HealAmount.Value} HP."),
             StageRole.Tuna => (
                 $"After a 5-second grace period, standing still for {Number(config.TunaStationaryDelaySeconds.Value)} seconds causes {config.TunaDamage.Value} damage every {Number(config.TunaDamageIntervalSeconds.Value)} seconds. " +
-                "Moving resets the timer and stops the damage, but does not restore lost health."),
+                "Moving resets the timer and stops the damage, but does not restore lost health. " +
+                "Stage start and revival grant 5 seconds of grace; inactivity damage is disabled inside the truck."),
             StageRole.Musician => (
                 $"Each instrument note played by the Musician heals itself and living players within {Number(config.MusicianHealRadius.Value)} m for " +
                 $"{config.MusicianHealAmount.Value} HP. A vanilla musical valuable must be played by the Musician."),
@@ -310,7 +311,7 @@ internal static class RoleGuideCatalog
                 $"半径{Number(config.VampireRadius.Value)}m以内で敵が死亡するとHPを回復します。Danger Level 1では{config.VampireTier1HealAmount.Value}HP、" +
                 $"Level 2では{config.VampireTier2HealAmount.Value}HP、Level 3では{config.VampireTier3HealAmount.Value}HP回復します。",
             StageRole.Tuna =>
-                $"ステージ開始から5秒の猶予後、{Number(config.TunaStationaryDelaySeconds.Value)}秒間静止すると、{Number(config.TunaDamageIntervalSeconds.Value)}秒ごとに{config.TunaDamage.Value}ダメージを受けます。" +
+                $"ステージ開始・蘇生後の5秒間とトラック内は静止ダメージを受けません。猶予後、{Number(config.TunaStationaryDelaySeconds.Value)}秒間静止すると、{Number(config.TunaDamageIntervalSeconds.Value)}秒ごとに{config.TunaDamage.Value}ダメージを受けます。" +
                 "移動するとタイマーとダメージが止まりますが、失ったHPは戻りません。",
             StageRole.Musician =>
                 $"Musicianが楽器で音を鳴らすたびに、自分と半径{Number(config.MusicianHealRadius.Value)}m以内の生存中のプレイヤーを{config.MusicianHealAmount.Value}HP回復します。" +

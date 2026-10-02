@@ -893,6 +893,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void ResetAssignmentForRoleChange(RoleAssignment assignment)
     {
+        ResetTunaActivity(assignment);
         assignment.ExhaustionNotifications.Rearm();
         assignment.Overhaul.ResetCargo();
         Vector3 position = assignment.Player.transform.position;
@@ -1415,22 +1416,30 @@ internal sealed partial class StageRoleController : MonoBehaviour
         PlayerAvatar player = assignment.Player;
         Vector3 currentPosition = player.transform.position;
         Vector3 movement = currentPosition - assignment.TunaPreviousPosition;
-        assignment.TunaPreviousPosition = currentPosition;
 
         if (!PlayerState.IsLiving(player))
         {
-            assignment.TunaStationaryTimer = 0f;
-            assignment.TunaDamageTimer = 0f;
+            ResetTunaActivity(assignment);
             return;
         }
-        if (Time.time < _tunaStageGraceUntil)
+        if (!assignment.TunaWasAlive)
         {
+            assignment.TunaWasAlive = true;
+            assignment.TunaGraceUntil = Time.time + TunaStageStartGraceSeconds;
+        }
+        if (Time.time < Math.Max(_tunaStageGraceUntil, assignment.TunaGraceUntil) ||
+            PlayerState.IsInTruck(player))
+        {
+            assignment.TunaPreviousPosition = currentPosition;
             assignment.TunaStationaryTimer = 0f;
             assignment.TunaDamageTimer = 0f;
             return;
         }
+        // Measure displacement from the last meaningful movement, not from the
+        // previous frame. Small steps must accumulate at any frame/update rate.
         if (movement.sqrMagnitude > TunaMovementThresholdSquared)
         {
+            assignment.TunaPreviousPosition = currentPosition;
             assignment.TunaStationaryTimer = 0f;
             assignment.TunaDamageTimer = 0f;
             return;
@@ -1469,6 +1478,14 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private static void ResetTunaActivity(RoleAssignment assignment)
+    {
+        assignment.TunaWasAlive = false;
+        assignment.TunaPreviousPosition = assignment.Player.transform.position;
+        assignment.TunaStationaryTimer = 0f;
+        assignment.TunaDamageTimer = 0f;
     }
 
     private void TickPhoenix(RoleAssignment assignment)
@@ -1920,7 +1937,11 @@ internal sealed partial class StageRoleController : MonoBehaviour
         }
         string deadSteamId = PlayerIdentity.SteamId(player);
         RoleAssignment? deadAssignment = FindAssignment(player);
-        if (deadAssignment != null) _overhaul.PlayerDied(deadAssignment);
+        if (deadAssignment != null)
+        {
+            _overhaul.PlayerDied(deadAssignment);
+            ResetTunaActivity(deadAssignment);
+        }
         RoleHealingRuntime.Forget(player);
         float triggerRadius = Mathf.Clamp(
             _config.AvengerTriggerRadius.Value,
@@ -2151,6 +2172,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 continue;
             }
             assignment.WasAlive = true;
+            ResetTunaActivity(assignment);
             assignment.PhoenixRevivePending = false;
             assignment.PhoenixReadyAt = 0f;
             break;
@@ -3042,6 +3064,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void PrepareAssignmentForActivePlayer(RoleAssignment assignment)
     {
+        ResetTunaActivity(assignment);
         Vector3 position = assignment.Player.transform.position;
         assignment.PreviousPosition = position;
         assignment.StinkerPreviousPosition = position;
