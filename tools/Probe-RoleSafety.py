@@ -70,7 +70,6 @@ public class PlayerHealth {
 }
 public static class PlayerState {
  public static bool IsLiving(PlayerAvatar p)=>p.playerHealth.Health>0;
- public static bool IsInTruck(PlayerAvatar p)=>false;
  public static bool TryGetCurrentHealth(PlayerAvatar p,out int h) { h=p.playerHealth.Health; return true; }
 }
 public static class PlayerIdentity { public static string SteamId(PlayerAvatar p)=>p.Id; }
@@ -79,8 +78,6 @@ public class RoleAssignment {
  public PlayerAvatar Player=new(); public string SteamId=>Player.Id;
  public Vector3 TunaPreviousPosition;
  public float TunaStationaryTimer,TunaDamageTimer,MageNextCastAt;
- public bool TunaWasAlive=true;
- public float TunaGraceUntil;
 }
 public class Log { public void LogDebug(string s){} public void LogInfo(string s){} public void LogWarning(string s){} }
 public static class StageRolesPlugin { public static Log ModLogger=new(); }
@@ -96,7 +93,6 @@ public class Resolver {
 classes = '''
 class TunaProbe {
  private const float TunaMovementThresholdSquared=0.000025f;
- private const float TunaStageStartGraceSeconds=5f;
  private float _tunaStageGraceUntil=5;
  private Config _config=new();
  public void Tick(RoleAssignment a)=>TickTuna(a);

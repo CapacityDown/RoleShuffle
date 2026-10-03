@@ -1,5 +1,4 @@
 ## 4.5.3
-- Fixed Tuna taking inactivity damage while moving slowly. Revival grants a 5-second grace period, and inactivity damage pauses inside the truck.
 - Fixed Trickster decoys activating after their placement was cancelled by a role change or stage end. Placement also stops if the caster dies before it completes.
 - Fixed Courier losing HP immediately after revival. Each revival grants the configured initial HP-loss pause, defaulting to 30 seconds.
 

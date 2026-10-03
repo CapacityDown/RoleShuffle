@@ -1,4 +1,4 @@
-"""Generate Tuna/Trickster regression tests from production method bodies.
+"""Generate Trickster regression tests from production method bodies.
 Run Python, then dotnet run --project tmp/role-safety-checks/Checks.csproj -c Release.
 Unity objects, coroutine scheduling and transport are stand-ins, not a live game.
 """
@@ -18,7 +18,6 @@ def extract(file, start, end):
     sources.append(dict(file=file, method=start.strip(), sha256=hashlib.sha256(body.encode()).hexdigest()))
     return body
 
-tuna = extract('StageRoleController.cs', '    private void TickTuna(', '    private void TickPhoenix(')
 place = extract('TricksterRoleRuntime.cs', '    internal bool TryPlace(', '    internal void Tick(')
 remove = extract('TricksterRoleRuntime.cs', '    internal void RemovePlayer(', '    internal bool IsDecoy(')
 initialize = extract('TricksterRoleRuntime.cs', '    internal void Stop()', '    private int Pulse(')
@@ -66,8 +65,6 @@ public static class PlayerState {
 }
 public class RoleAssignment {
  public string SteamId="test"; public PlayerAvatar Player=new(); public StageRole Role=StageRole.Trickster;
- public Vector3 TunaPreviousPosition; public float TunaStationaryTimer,TunaDamageTimer,TunaGraceUntil;
- public bool TunaWasAlive;
 }
 public class Log { public void LogDebug(string s){} public void LogWarning(string s){} public void LogInfo(string s){} }
 public static class StageRolesPlugin { public static Log ModLogger=new(); }
@@ -101,14 +98,6 @@ namespace UnityEngine { public static class Object {
 public static class StageFluxCompatibility { public static void MarkInternalCarrier(GameObject g){} }
 '''
 classes = r'''
-public class TunaProbe {
- private const float TunaMovementThresholdSquared=0.000025f, TunaStageStartGraceSeconds=5;
- private float _tunaStageGraceUntil=5;
- private Config _config=new();
- public void Tick(RoleAssignment a)=>TickTuna(a);
- public void Revived(RoleAssignment a)=>ResetTunaActivity(a);
-''' + tuna + r'''
-}
 public class TricksterProbe {
  private const float StateRefreshSeconds=0.5f;
  private readonly MonoBehaviour _coroutineOwner=new();
@@ -136,48 +125,7 @@ tests = r'''
 public class Program {
  static int checks;
  static void Check(bool condition,string name) { if(!condition) throw new Exception(name); checks++; }
- static void Frames(TunaProbe p,RoleAssignment a,int fps,float seconds,float speed=0,bool network=false) {
-  float start=Time.time, x=a.Player.transform.position.x;
-  for(int i=1;i<=Math.Round(seconds*fps);i++) {
-   Time.deltaTime=1f/fps; Time.time=start+(float)i/fps;
-   float elapsed=network ? MathF.Floor(i/(float)fps*10)/10 : i/(float)fps;
-   a.Player.transform.position=new(x+speed*elapsed,0,0); p.Tick(a);
-  }
- }
  public static void Main() {
-  foreach(int fps in new[]{30,60,120,240}) foreach(float speed in new[]{0.02f,0.1f,0.5f,2f}) foreach(bool network in new[]{false,true}) {
-   var p=new TunaProbe(); var a=new RoleAssignment { TunaWasAlive=true }; Time.time=10;
-   Frames(p,a,fps,10,speed,network);
-   Check(a.Player.playerHealth.DamageCalls==0,$"Moving Tuna at {speed}m/s, {fps}fps, network={network}");
-   Frames(p,a,fps,4);
-   Check(a.Player.playerHealth.Health<120,"Stopping still causes the intended damage");
-   int before=a.Player.playerHealth.DamageCalls;
-   Frames(p,a,fps,1,1);
-   Check(a.Player.playerHealth.DamageCalls==before,"Resuming movement stops damage immediately");
-  }
-  foreach(int fps in new[]{30,60,120,240}) {
-   var p=new TunaProbe(); var a=new RoleAssignment(); Time.time=100;
-   a.Player.playerHealth.Health=0; p.Tick(a); a.Player.playerHealth.Health=1;
-   Frames(p,a,fps,5);
-   Check(a.Player.playerHealth.Health==1,"1HP revival gets full five-second grace");
-   Frames(p,a,fps,2.5f);
-   Check(a.Player.playerHealth.Health==1,"Stationary countdown starts after revival grace");
-   Frames(p,a,fps,1);
-   Check(a.Player.playerHealth.Health==0,"Prolonged stationary play remains lethal after grace");
-   a.Player.playerHealth.Health=1; p.Revived(a); Frames(p,a,fps,5);
-   Check(a.Player.playerHealth.Health==1,"Repeated revival resets grace without a dead frame");
-   a.Player.Truck=true; Frames(p,a,fps,60);
-   Check(a.Player.playerHealth.Health==1,"Truck never causes inactivity death");
-   a.Player.Truck=false; Frames(p,a,fps,2.5f);
-   Check(a.Player.playerHealth.Health==1,"Leaving truck starts a fresh stationary countdown");
-   Frames(p,a,fps,1); Check(a.Player.playerHealth.Health==0,"Truck protection ends on exit");
-  }
-  {
-   var p=new TunaProbe(); var a=new RoleAssignment(); Time.time=100;
-   a.Player.Disabled=true; a.Player.playerHealth.Health=1; Frames(p,a,60,20);
-   a.Player.Disabled=false; Frames(p,a,60,5);
-   Check(a.Player.playerHealth.Health==1,"Revival grace waits for a living usable avatar");
-  }
   foreach(bool multiplayer in new[]{false,true}) {
    SemiFunc.Multiplayer=multiplayer;
    foreach(string reason in new[]{"remove","infection","death","truck","replace","stage","expired","missing"}) {
@@ -226,5 +174,5 @@ public class Program {
 (out / 'Checks.cs').write_text(stubs + classes + tests, encoding='utf-8')
 (out / 'Checks.csproj').write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup></Project>', encoding='utf-8')
 (out / 'sources.json').write_text(json.dumps(sources, indent=2) + '\n', encoding='utf-8')
-print('Prepared Tuna and Trickster regressions from production method bodies.')
+print('Prepared Trickster regressions from production method bodies.')
 

@@ -4,6 +4,10 @@
 
 対象: RoleShuffle v4.5.3 build503 / `version/4.5.3`
 
+後続の指定: Tunaの変更はユーザーの指示によりbuild504で全て取り消しました。
+現在の状態は[build504の確認記録](tuna-rollback-build504.md)を参照してください。
+以下はbuild503時点の記録です。
+
 ## 修正範囲
 
 [build502の全役職監査](role-safety-build502.md)のA1・A5・A6を修正しました。

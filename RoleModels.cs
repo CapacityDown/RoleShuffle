@@ -36,8 +36,6 @@ internal sealed class RoleAssignment
     internal float JoblessDamageTimer { get; set; }
     internal float TunaStationaryTimer { get; set; }
     internal float TunaDamageTimer { get; set; }
-    internal bool TunaWasAlive { get; set; }
-    internal float TunaGraceUntil { get; set; }
     internal float MageNextCastAt { get; set; }
     // Stage-scoped: retained through revival, avatar replacement and role changes.
     internal int MageAutoRecoveryUsed { get; set; }

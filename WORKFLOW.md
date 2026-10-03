@@ -12,6 +12,10 @@ historical version numbers, deployment profiles and superseded design choices.
   release artifacts so the stable version can be restored.
 - Keep the MOD name RoleShuffle. Continue the current development version (4.5.3)
   unless the user changes it. Do not revive the old overhaul setting.
+- On 2026-10-03 the user requested a complete rollback of the Tuna changes in
+  build503. Retain Tuna's build502 behavior: per-frame movement checks, stage-start
+  grace only, and inactivity damage inside the truck. Do not reapply those safety
+  changes without a new request. The Trickster cancellation fix remains in place.
 - The user's standing authorization for Git operations is permanent for
   `https://github.com/CapacityDown/RoleShuffle.git` and is not limited to a
   branch. It includes local commits, merges, normal pushes (including `main`),
