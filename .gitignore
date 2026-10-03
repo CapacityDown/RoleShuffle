@@ -5,6 +5,7 @@
 /outputs/
 /tmp/
 *.zip
+/RoleShuffle.zip.sha256
 *.pdf
 *.pdb
 *.dll

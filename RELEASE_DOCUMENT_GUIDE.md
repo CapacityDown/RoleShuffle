@@ -120,6 +120,11 @@ Use English first and Japanese second. The two sections must describe the same r
 - State prominently that only the host needs the mod for gameplay effects and vanilla participants are supported.
 - Explain that participants who also install RoleShuffle can use the synchronized role HUD.
 - List every released role. Keep the role count, role table, and implementation in agreement.
+- Include the public 64px role thumbnails from `docs/icons/` in both language
+  tables. Use absolute GitHub raw URLs pinned to the asset commit and shared
+  Markdown image references. Both secret roles use `unknown.png`. Verify the
+  public downloads against the local thumbnails before packaging. Preserve all
+  wording and setting values when compacting Markdown to stay within the limit.
 - Use a role table with these columns:
   - Role
   - Default upgrade or effect
