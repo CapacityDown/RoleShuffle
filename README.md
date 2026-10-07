@@ -5,10 +5,10 @@ R.E.P.O.向け役職MODのソース管理用リポジトリです。
 バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
 過去タスクから引き継いだ作業方法は[作業ガイド](WORKFLOW.md)を参照してください。
 
-## v4.5.3開発
+## v4.5.4開発
 
-`feature/roleshuffle-4.5.0-overhaul`ブランチを専用worktreeで開発しています。
-現行の`StageRoles`フォルダ、`main`、既存のDLL・ZIP・ゲーム導入先は保持します。
+`version/4.5.4`ブランチで開発しています。v4.5.3は`main`へ統合済みです。
+以前のバージョンのブランチと配布ZIP、元の`StageRoles`フォルダは保持します。
 仕様・分岐元・検証状況は[開発記録](docs/OVERHAUL_4.5.0.md)を参照してください。
 Tank・Runner・Lifter・Courier・Kingの更新はv4.5.0の標準仕様です。旧仕様への切り替え設定は廃止し、設定移行時にバックアップを作成します。
 StinkerとBomberは移動による自動発生を維持し、任意停止操作は追加しません。

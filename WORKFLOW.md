@@ -10,7 +10,7 @@ historical version numbers, deployment profiles and superseded design choices.
 
 - Work in `RoleShuffle`; preserve the original `StageRoles` checkout and previous
   release artifacts so the stable version can be restored.
-- Keep the MOD name RoleShuffle. Continue the current development version (4.5.3)
+- Keep the MOD name RoleShuffle. Continue the current development version (4.5.4)
   unless the user changes it. Do not revive the old overhaul setting.
 - On 2026-10-03 the user requested a complete rollback of the Tuna changes in
   build503. Retain Tuna's build502 behavior: per-frame movement checks, stage-start
@@ -26,7 +26,7 @@ historical version numbers, deployment profiles and superseded design choices.
   into `main`, including the role-safety audit, its diagnostic results and
   hashes, and the verification tools committed as `d4c2698`.
 - Perform development in `RoleShuffle` on a branch named `version/<version>`;
-  the current working branch is `version/4.5.3`. Commit and push ongoing work
+  the current working branch is `version/4.5.4`. Commit and push ongoing work
   to that version's branch instead of directly to `main`.
 - When the user changes the version, complete the relevant verification and
   merge the outgoing version's branch into `main`, then push and verify `main`.
