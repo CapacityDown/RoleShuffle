@@ -5,6 +5,8 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleGuideCatalog
 {
+    private const string RevivalStillnessDescription = " Revival waits until the Death Head has stopped moving.";
+    private const string PhoenixWaitDescription = " An unused revival prevents game over, regardless of how long the wait takes.";
     internal const string InfluenzaSummary = "30 seconds after becoming Influenza, maximum HP is fixed at 75. Sneezes and speech can spread it to teammates, replacing their roles. Sneezes also alert enemies.";
     internal const string InfluenzaDescription = "Onset\n30 seconds after becoming Influenza, maximum HP is fixed at 75. You can spread infection only after symptoms begin.\n\nSneezing\nYou sneeze automatically every 30-90 seconds (about once a minute). Each teammate in front, within 5 m and 20 degrees to either side, has a 60% chance of infection.\nThe sound also alerts enemies in every direction: the base radius is 5 m and varies with the enemy's hearing.\n\nVoice and text chat\nAfter symptoms begin, each spoken utterance or chat message gives each teammate in front, within 3 m and 30 degrees to either side, a 30% chance of infection. Continuous speech counts as one utterance.\n\nIf infected\nThe teammate immediately loses their current role and becomes Influenza. They develop symptoms 30 seconds later and can then infect others. Death and revival do not reset the timer. Infection ends when the stage ends.";
     private const string InfluenzaSummaryJapanese = "インフルエンザになって30秒後、最大HPが75に固定されます。くしゃみや会話で仲間に感染させると、相手もこの役職に変わります。くしゃみの音は敵にも届きます。";
@@ -56,9 +58,9 @@ internal static class RoleGuideCatalog
             StageRole.Ghost => "Extends Death Head battery life.",
             StageRole.Bomber => "Drops random armed grenades while moving. The explosions can harm players and valuables.",
             StageRole.Medic => "Periodically heals nearby living teammates, but never heals the Medic.",
-            StageRole.Phoenix => "Automatically revives itself once per stage after dying.",
+            StageRole.Phoenix => "Automatically revives itself once per stage after dying." + RevivalStillnessDescription + PhoenixWaitDescription,
             StageRole.Jobless => "Deliver valuables to heal yourself and temporarily stop Courier's automatic HP loss outside the truck.",
-            StageRole.Rescuer => "Revives a nearby dead teammate by approaching their Death Head.",
+            StageRole.Rescuer => "Revives a nearby dead teammate by approaching their Death Head." + RevivalStillnessDescription,
             StageRole.Vampire => "Recovers health when an enemy dies nearby. Stronger enemies restore more health.",
             StageRole.King => "Receives the vanilla Crown for the stage. Only one King can be assigned.",
             StageRole.Tuna => "Takes continuous damage after standing still too long. Moving stops the damage.",
@@ -116,9 +118,9 @@ internal static class RoleGuideCatalog
             StageRole.Ghost => "Death Headのバッテリーが長持ちします。",
             StageRole.Bomber => "移動するとランダムな起動済みグレネードを落とします。爆発はプレイヤーやValuableにも危険です。",
             StageRole.Medic => "周囲の生存中の仲間を定期的に回復します。Medic自身は回復しません。",
-            StageRole.Phoenix => "死亡すると、ステージ中に一度だけ自動で復活します。",
+            StageRole.Phoenix => "死亡すると、頭が静止してから、ステージ中に一度だけ自動で復活します。復活回数が残っている間は、待ち時間にかかわらずゲームオーバーになりません。",
             StageRole.Jobless => "貴重品の配達でHPを回復し、トラック外で起きるCourierの自動HP減少を一時停止します。",
-            StageRole.Rescuer => "死亡した仲間のDeath Headへ近づくと、その仲間を復活させます。",
+            StageRole.Rescuer => "死亡した仲間のDeath Headへ近づくと、頭が静止してから、その仲間を復活させます。",
             StageRole.Vampire => "近くで敵が死亡するとHPを回復します。強い敵ほど回復量が増えます。",
             StageRole.King => "ステージ中、バニラのCrownを受け取ります。Kingは一人だけ割り当てられます。",
             StageRole.Tuna => "長時間静止すると継続的にダメージを受けます。移動するとダメージが止まります。",
@@ -173,10 +175,10 @@ internal static class RoleGuideCatalog
                 $"Heals living teammates within {Number(config.MedicHealRadius.Value)} m for {config.MedicHealAmount.Value} HP every {Number(config.MedicHealIntervalSeconds.Value)} seconds. " +
                 $"The Medic cannot heal itself and stops after restoring {config.MedicTotalHealingLimit.Value} total HP during the stage."),
             StageRole.Phoenix =>
-                $"Automatically revives itself once per stage after dying, returning with up to {config.PhoenixRevivalHealth.Value} HP.",
+                $"Automatically revives itself once per stage after dying, returning with up to {config.PhoenixRevivalHealth.Value} HP." + RevivalStillnessDescription + PhoenixWaitDescription,
             StageRole.Rescuer => (
                 $"Approaching within {Number(config.RescuerRadius.Value)} m of a dead teammate's Death Head revives them with up to {config.RescuerRevivalHealth.Value} HP. " +
-                $"It can revive {config.RescuerMaximumRevives.Value} times per stage."),
+                $"It can revive {config.RescuerMaximumRevives.Value} times per stage." + RevivalStillnessDescription),
             StageRole.Vampire => (
                 $"Recovers health when an enemy dies within {Number(config.VampireRadius.Value)} m. Danger Level 1 restores " +
                 $"{config.VampireTier1HealAmount.Value} HP, Level 2 restores {config.VampireTier2HealAmount.Value} HP, and Level 3 restores " +
@@ -302,9 +304,9 @@ internal static class RoleGuideCatalog
                 $"半径{Number(config.MedicHealRadius.Value)}m以内の生存中の仲間を、{Number(config.MedicHealIntervalSeconds.Value)}秒ごとに{config.MedicHealAmount.Value}HP回復します。" +
                 $"Medic自身は回復せず、ステージ中に合計{config.MedicTotalHealingLimit.Value}HPを回復すると効果が終了します。",
             StageRole.Phoenix =>
-                $"死亡すると、ステージ中に一度だけ自動で復活します。復活時のHPは最大{config.PhoenixRevivalHealth.Value}です。",
+                $"死亡すると、頭が静止してから、ステージ中に一度だけ自動で復活します。復活時のHPは最大{config.PhoenixRevivalHealth.Value}です。復活回数が残っている間は、待ち時間にかかわらずゲームオーバーになりません。",
             StageRole.Rescuer =>
-                $"死亡した仲間のDeath Headから{Number(config.RescuerRadius.Value)}m以内へ近づくと、最大{config.RescuerRevivalHealth.Value}HPで復活させます。" +
+                $"死亡した仲間のDeath Headから{Number(config.RescuerRadius.Value)}m以内へ近づくと、頭が静止してから最大{config.RescuerRevivalHealth.Value}HPで復活させます。" +
                 $"ステージごとに{config.RescuerMaximumRevives.Value}回まで使用できます。",
             StageRole.Vampire =>
                 $"半径{Number(config.VampireRadius.Value)}m以内で敵が死亡するとHPを回復します。Danger Level 1では{config.VampireTier1HealAmount.Value}HP、" +

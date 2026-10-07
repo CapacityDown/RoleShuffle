@@ -87,6 +87,7 @@
     <Compile Include="RoleEmblems.cs" />
     <Compile Include="RoleTestCommandService.cs" />
     <Compile Include="PlayerState.cs" />
+    <Compile Include="DeathHeadStillness.cs" />
     <Compile Include="PlayerIdentity.cs" />
     <Compile Include="RoleShuffleCompatibilityApi.cs" />
     <Compile Include="EliteEnemyVariantsCompatibility.cs" />

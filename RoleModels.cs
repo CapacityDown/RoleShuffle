@@ -40,6 +40,7 @@ internal sealed class RoleAssignment
     // Stage-scoped: retained through revival, avatar replacement and role changes.
     internal int MageAutoRecoveryUsed { get; set; }
     internal bool WasAlive { get; set; }
+    internal DeathHeadStillness RevivalHeadStillness { get; } = new();
     internal bool PhoenixUsed { get; set; }
     internal bool PhoenixRevivePending { get; set; }
     internal float PhoenixReadyAt { get; set; }

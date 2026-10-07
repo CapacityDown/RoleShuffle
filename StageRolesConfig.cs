@@ -266,7 +266,6 @@ internal sealed class StageRolesConfig
         PhoenixWeight = RoleWeight(config, "Phoenix");
         PhoenixRevivalHealth = BindInt(config, "Phoenix", "RevivalHealth", 25, 1, 1000, "Health restored after Phoenix revival, capped at the player's maximum health.");
         PhoenixReviveDelaySeconds = BindFloat(config, "Phoenix", "ReviveDelaySeconds", 2f, 2f, 10f, "Delay before revival. Phoenix always waits at least two seconds.");
-        PhoenixFailureGraceSeconds = BindFloat(config, "Phoenix", "FailureGraceSeconds", 5f, 1f, 15f, "Maximum time to hold a failed-stage transition while revival initializes.");
 
         JoblessEnabled = RoleEnabled(config, "Courier");
         JoblessWeight = RoleWeight(config, "Courier", 20);
@@ -636,7 +635,6 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> PhoenixWeight { get; }
     internal ConfigEntry<int> PhoenixRevivalHealth { get; }
     internal ConfigEntry<float> PhoenixReviveDelaySeconds { get; }
-    internal ConfigEntry<float> PhoenixFailureGraceSeconds { get; }
     internal ConfigEntry<bool> JoblessEnabled { get; }
     internal ConfigEntry<int> JoblessWeight { get; }
     internal ConfigEntry<int> JoblessDamage { get; }

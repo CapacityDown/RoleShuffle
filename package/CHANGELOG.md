@@ -1,3 +1,7 @@
+## 4.5.4
+- Changed Rescuer and Phoenix to wait until the target's Death Head has stopped moving before reviving. Waiting does not consume a revival use.
+- Changed Phoenix to prevent game over for as long as an unused revival is waiting to complete. Removed the failure-grace time limit setting.
+
 ## 4.5.3
 - Fixed Trickster decoys activating after their placement was cancelled by a role change or stage end. Placement also stops if the caster dies before it completes.
 - Fixed Courier losing HP immediately after revival. Each revival grants the configured initial HP-loss pause, defaulting to 30 seconds.

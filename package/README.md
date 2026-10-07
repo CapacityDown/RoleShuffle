@@ -87,9 +87,9 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 |![][i09]<br>Ghost|Sets Death Head Battery to level 50.|Never selected randomly when only one player is present.|Battery target|
 |![][i10]<br>Bomber|Drops a random armed grenade every 8 m traveled. Up to 30 generated grenades remain active per Bomber, and the oldest is removed at the limit.|Grenades can injure players and damage valuables. Only Bomber can hold generated grenades. Movement inside the truck does not count while truck placement is disabled.|Distance, limit, truck placement, grenade types|
 |![][i11]<br>Medic|Heals nearby teammates for 5 HP every 2 seconds within 5 m, up to 150 total HP per stage.|Never heals the Medic. Only living teammates within range are affected. Healing stops when that Medic's stage limit is exhausted. Never selected randomly when only one player is present.|Amount, interval, radius, total limit|
-|![][i12]<br>Phoenix|Automatically revives itself with 25 HP once per stage after dying.|One use per stage. Revival HP cannot exceed the player's maximum HP.|Revival HP, revival delay, failure grace|
+|![][i12]<br>Phoenix|Automatically revives itself with 25 HP once per stage after dying.|Requires a stationary Death Head. An unused revival prevents game over without a time limit. Revival HP cannot exceed maximum HP.|Revival HP, revival delay|
 |![][i13]<br>Courier|Carry a valuable worth money 5 m while holding it outside delivery areas, then place it in the truck or an extraction point. Delivery heals HP and pauses HP loss by size (below).|30-second pause at stage start/revival. Otherwise loses 1 HP/0.1 s outside the truck; can die. Other damage still applies. Unlimited deliveries; each item rewards each player once per stage. Early drops reset distance. Not selected solo.|Delivery and HP loss|
-|![][i14]<br>Rescuer|While alive, approaching within 3 m of a dead teammate's Death Head revives the nearest eligible teammate with 25 HP.|Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present.|Revival HP, delay, radius, maximum revivals|
+|![][i14]<br>Rescuer|While alive, approaching within 3 m of a dead teammate's Death Head revives the nearest eligible teammate with 25 HP.|Requires a stationary Death Head. Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present.|Revival HP, delay, radius, maximum revivals|
 |![][i15]<br>Vampire|Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50.|Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy.|Amount per tier, radius|
 |![][i16]<br>King|Crown; grants nearby allies Speed/Range +2 and up to Strength +5 within 12 m.|No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage.|Radius and bonus levels|
 |![][i17]<br>Tuna|After a 5-second grace period at stage start, standing still for 3 seconds causes 1 damage every 0.1 seconds until moving.|Can kill the player. The stationary timer starts after the initial grace period. Moving resets it immediately; lost health is not restored.|Delay, damage, interval|
@@ -351,12 +351,11 @@ All entries in this table are host-controlled.
 |`Medic.HealIntervalSeconds`|2|0.1–30|Seconds between each round of Medic healing.|
 |`Medic.HealRadius`|5|1–30|Maximum healing distance in meters.|
 |`Medic.TotalHealingLimit`|150|1–10000|Maximum total health restored by each Medic per stage. Only health actually missing from a target consumes the limit.|
-|`Phoenix.ReviveDelaySeconds`|2|2–10|Seconds before Phoenix revival.|
-|`Phoenix.FailureGraceSeconds`|5|1–15|Maximum seconds to hold a failed-stage transition while revival initializes.|
+|`Phoenix.ReviveDelaySeconds`|2|2–10|Minimum seconds before revival; also waits for the Death Head to stop moving.|
 |`Phoenix.RevivalHealth`|25|1–1000|Health after Phoenix revival, capped at the player's maximum health.|
 |`Courier.Damage`|1|1–100|Damage each time outside the truck.|
 |`Courier.DamageIntervalSeconds`|0.1|0.05–10|Seconds between damage outside the truck.|
-|`Rescuer.ReviveDelaySeconds`|2|0–10|Seconds a target must remain dead before rescue.|
+|`Rescuer.ReviveDelaySeconds`|2|0–10|Minimum seconds after death; also waits for the Death Head to stop moving.|
 |`Rescuer.Radius`|3|1–50|Maximum rescue distance in meters.|
 |`Rescuer.MaximumRevives`|2|1–10|Maximum revivals for each Rescuer per stage.|
 |`Rescuer.RevivalHealth`|25|1–1000|Health after a Rescuer revival, capped at the target's maximum health.|
@@ -587,9 +586,9 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 |![][i09]<br>Ghost|Death Head Batteryがレベル50になります。|参加者が1人だけの場合はランダム抽選されません。|Battery目標値|
 |![][i10]<br>Bomber|8 m移動するごとに起動済みグレネードをランダム設置します。Bomber 1人につき最大30個まで残り、上限では最も古いものを削除します。|グレネードはプレイヤーやValuableにも危険です。生成されたグレネードを持てるのはBomberだけです。トラック内設置が無効な場合、トラック内の移動距離は加算されません。|距離、上限、トラック内設置、グレネード種類|
 |![][i11]<br>Medic|5 m以内の仲間を2秒ごとに5 HP回復し、1ステージにつき合計150 HPまで回復します。|Medic自身は回復しません。範囲内で生存している仲間だけが対象です。そのMedicの上限を使い切ると回復を停止します。参加者が1人だけの場合はランダム抽選されません。|回復量、間隔、範囲、合計上限|
-|![][i12]<br>Phoenix|死亡すると、1ステージに1回だけデフォルト25 HPで自動復活します。|1ステージにつき1回です。復活後HPはプレイヤーの最大HPを超えません。|復活後HP、復活遅延、失敗時猶予|
+|![][i12]<br>Phoenix|死亡すると、1ステージに1回だけデフォルト25 HPで自動復活します。|頭が静止していることが条件です。復活回数が残っている間は、時間制限なくゲームオーバーを防ぎます。復活後HPは最大HPを超えません。|復活後HP、復活遅延|
 |![][i13]<br>Courier|価値のある貴重品をつかんだまま搬入先の外で5m運び、トラックか納品所に入れると配達完了。サイズ別にHP回復・自動HP減少の一時停止（下表）。|開始・蘇生時は30秒停止。効果切れ中はトラック外で0.1秒ごと1HP減少、死亡あり。敵の攻撃等は防げません。配達回数無制限、同じ品の報酬は各自1ステージ1回。途中で放すと運搬やり直し。1人では抽選対象外。|配達・自動HP減少|
-|![][i14]<br>Rescuer|生存中に、死亡した仲間のDeath Headから3 m以内へ近づくと、最も近い対象をデフォルト25 HPで復活させます。|1ステージにつき最大2回です。復活後HPは対象の最大HPを超えません。参加者が1人だけの場合はランダム抽選されません。|復活後HP、遅延、範囲、最大復活回数|
+|![][i14]<br>Rescuer|生存中に、死亡した仲間のDeath Headから3 m以内へ近づくと、最も近い対象をデフォルト25 HPで復活させます。|頭が静止していることが条件です。1ステージにつき最大2回です。復活後HPは対象の最大HPを超えません。参加者が1人だけの場合はランダム抽選されません。|復活後HP、遅延、範囲、最大復活回数|
 |![][i15]<br>Vampire|10 m以内で敵が死亡すると、Tier 1は5、Tier 2は10、Tier 3は50回復します。|敵のバニラDanger Levelを使用します。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体を最大Tier 3まで1段階上として扱います。Vampireが生存し、死亡した敵の近くにいる必要があります。|Tier別回復量、範囲|
 |![][i16]<br>King|Crownと12mの強化範囲。味方へSpeed・Range各＋2、Strength最大＋5。|自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。|半径・追加レベル|
 |![][i17]<br>Tuna|ステージ開始時の5秒間の猶予後、3秒間停止すると、移動するまで0.1秒ごとに1ダメージを受けます。|死亡する可能性があります。停止時間の計測は最初の猶予後に始まります。動くと即座にリセットし、失った体力は回復しません。|停止時間、ダメージ、間隔|
@@ -851,12 +850,11 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Medic.HealIntervalSeconds`|2|0.1～30|Medicの回復間隔です。|
 |`Medic.HealRadius`|5|1～30|回復可能な最大距離です。単位はメートルです。|
 |`Medic.TotalHealingLimit`|150|1～10000|Medic一人が1ステージで回復できる合計HPです。対象が実際に失っているHPだけを消費します。|
-|`Phoenix.ReviveDelaySeconds`|2|2～10|Phoenixが復活するまでの秒数です。|
-|`Phoenix.FailureGraceSeconds`|5|1～15|復活準備中に、失敗時のステージ遷移を保留する最大秒数です。|
+|`Phoenix.ReviveDelaySeconds`|2|2～10|復活までの最低待ち時間です。頭が動いている間は、さらに待機します。|
 |`Phoenix.RevivalHealth`|25|1～1000|Phoenix復活後のHPです。プレイヤーの最大HPが上限です。|
 |`Courier.Damage`|1|1～100|トラック外で1回ごとに受けるダメージです。|
 |`Courier.DamageIntervalSeconds`|0.1|0.05～10|トラック外でダメージを受ける間隔です。|
-|`Rescuer.ReviveDelaySeconds`|2|0～10|復活対象が死亡してから必要な秒数です。|
+|`Rescuer.ReviveDelaySeconds`|2|0～10|死亡後の最低待ち時間です。頭が動いている間は、さらに待機します。|
 |`Rescuer.Radius`|3|1～50|復活可能な最大距離です。単位はメートルです。|
 |`Rescuer.MaximumRevives`|2|1～10|Rescuer1人あたり、1ステージで復活できる最大回数です。|
 |`Rescuer.RevivalHealth`|25|1～1000|Rescuerによる復活後のHPです。対象の最大HPが上限です。|

@@ -82,7 +82,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private int _stageGeneration;
     private int _levelGeneratorInstanceId;
     private float _nextPlayerPresenceCheckAt;
-    private float _phoenixFailureGraceUntil;
     private float _tunaStageGraceUntil;
     private int _completedAssignmentStages;
     private int _currentAssignmentStage;
@@ -503,7 +502,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
             if (!RoleCatalog.HasCapability(
                     assignment.Role,
                     StageRole.Phoenix) ||
-                assignment.PhoenixUsed ||
                 assignment.Player == null)
             {
                 continue;
@@ -512,9 +510,16 @@ internal sealed partial class StageRoleController : MonoBehaviour
             bool alive = PlayerState.IsLiving(assignment.Player);
             if (alive)
             {
+                // A failure request queued before revival may arrive after the
+                // normal Update already consumed the charge. The player is alive.
+                pending = true;
                 CompletePhoenixRevival(assignment);
                 assignment.WasAlive = true;
                 assignment.PhoenixReadyAt = 0f;
+                continue;
+            }
+            if (assignment.PhoenixUsed)
+            {
                 continue;
             }
             if (assignment.PhoenixRevivePending)
@@ -522,45 +527,18 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 pending = true;
                 continue;
             }
-            if (!assignment.WasAlive && assignment.PhoenixReadyAt <= 0f)
+            pending = true;
+            if (StageFluxCompatibility.WillHandleSecondChance(assignment.Player))
             {
                 continue;
             }
-
-            pending = true;
             SchedulePhoenix(assignment);
             TryRevivePhoenix(assignment);
         }
 
-        if (!pending)
-        {
-            _phoenixFailureGraceUntil = 0f;
-            return false;
-        }
-        if (_phoenixFailureGraceUntil <= 0f)
-        {
-            _phoenixFailureGraceUntil = Time.time +
-                Mathf.Clamp(_config.PhoenixFailureGraceSeconds.Value, 1f, 15f);
-        }
-
-        bool revived = false;
-        foreach (RoleAssignment assignment in _assignments)
-        {
-            if (RoleCatalog.HasCapability(
-                    assignment.Role,
-                    StageRole.Phoenix) &&
-                assignment.PhoenixUsed &&
-                PlayerState.IsLiving(assignment.Player))
-            {
-                revived = true;
-            }
-        }
-        if (revived)
-        {
-            _phoenixFailureGraceUntil = 0f;
-            return true;
-        }
-        return Time.time < _phoenixFailureGraceUntil;
+        // An unused Phoenix or an in-flight revival must survive arbitrarily
+        // long motion/setup waits. Stage cleanup and player removal end the wait.
+        return pending;
     }
 
     internal void Shutdown()
@@ -1297,6 +1275,10 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 Time.time + PlayerPresenceCheckIntervalSeconds;
         }
 
+        foreach (RoleAssignment assignment in _assignments)
+        {
+            assignment.RevivalHeadStillness.Observe(assignment.Player);
+        }
         TickInfluenza();
         _eventRoles.Tick(_assignments);
         _overhaul.Tick(_assignments, _notifier);
@@ -1496,10 +1478,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             assignment.PhoenixReadyAt = 0f;
             return;
         }
-        if (assignment.WasAlive)
-        {
-            SchedulePhoenix(assignment);
-        }
+        SchedulePhoenix(assignment);
         TryRevivePhoenix(assignment);
     }
 
@@ -1530,7 +1509,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 StageFluxCompatibility.WillHandleSecondChance(target.Player) ||
                 !_rescueDeadSince.TryGetValue(target.SteamId, out float deadSince) ||
                 Time.time < deadSince + delay || PlayerState.IsLiving(target.Player) ||
-                !PlayerState.HasDeathHead(target.Player))
+                !target.RevivalHeadStillness.Observe(target.Player))
             {
                 continue;
             }
@@ -1558,7 +1537,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         try
         {
-            if (!PlayerState.TryRequestDeathHeadRevival(nearestTarget.Player))
+            if (!nearestTarget.RevivalHeadStillness.Observe(nearestTarget.Player) ||
+                !PlayerState.TryRequestDeathHeadRevival(nearestTarget.Player))
             {
                 return;
             }
@@ -2552,7 +2532,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
     {
         if (assignment.PhoenixUsed || assignment.PhoenixRevivePending ||
             assignment.PhoenixReadyAt <= 0f ||
-            Time.time < assignment.PhoenixReadyAt)
+            Time.time < assignment.PhoenixReadyAt ||
+            StageFluxCompatibility.WillHandleSecondChance(assignment.Player) ||
+            !assignment.RevivalHeadStillness.Observe(assignment.Player))
         {
             return;
         }
@@ -3042,6 +3024,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void PrepareAssignmentForActivePlayer(RoleAssignment assignment)
     {
+        assignment.RevivalHeadStillness.Reset();
         Vector3 position = assignment.Player.transform.position;
         assignment.PreviousPosition = position;
         assignment.StinkerPreviousPosition = position;
@@ -3187,7 +3170,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _levelGeneratorInstanceId = 0;
         _nextPlayerPresenceCheckAt = 0f;
         _nextExhaustionCheckAt = 0f;
-        _phoenixFailureGraceUntil = 0f;
         _tunaStageGraceUntil = 0f;
         if (deactivate && gameObject.activeSelf)
         {
