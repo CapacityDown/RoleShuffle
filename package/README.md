@@ -496,6 +496,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 - `Medic` never heals itself.
 - `Phoenix` revives itself once per stage. `Rescuer` revives dead teammates by grabbing their heads, up to the configured limit. Each role uses its own configurable revival HP, with a default of 25.
 - Role upgrades end at stage end. Base levels include retained item amounts when enabled. Throw remains permanent.
+- When a role's maximum HP bonus ends, remaining HP keeps its proportion, rounded down (at least 1 HP while alive): 300/520 becomes 69/120.
 - Setting every role to disabled or weight 0 leaves no eligible random role to assign.
 
 ## 日本語
@@ -994,6 +995,7 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 - `Medic`は自身を回復しません。
 - `Phoenix`は1ステージに1回だけ自己復活します。`Rescuer`は設定された回数まで、死亡した仲間の頭をつかんで復活させます。復活後HPは役職ごとに設定でき、デフォルトは25です。
 - 役職の強化はステージ終了時に基礎値へ戻ります。使用分の保持がONなら、その分も加算します。Throwは残ります。
+- 役職の最大HP増加が解除されると、残りHPの割合を維持して端数を切り捨てます（生存中は最低1HP）。例：300/520 → 69/120。
 - すべての役職を無効化するか、すべての`Weight`を0にすると、ランダム抽選できる役職がなくなります。
 
 [i01]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/01.png

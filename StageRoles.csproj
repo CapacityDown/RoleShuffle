@@ -95,6 +95,7 @@
     <Compile Include="StageFluxCompatibility.cs" />
     <Compile Include="VanillaRolePrefabResolver.cs" />
     <Compile Include="UpgradeService.cs" />
+    <Compile Include="HealthUpgradeReset.cs" />
     <Compile Include="UpgradeItemRetention.cs" />
     <Compile Include="UpgradeItemRetentionPatch.cs" />
     <Compile Include="RetainedUpgradeRuntime.cs" />

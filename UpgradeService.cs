@@ -142,7 +142,9 @@ internal static class UpgradeService
             int delta = targetLevel - currentLevel;
             try
             {
-                if (delta != 0)
+                if (delta < 0 && target.CommandName == "Health")
+                    HealthUpgradeReset.Apply(steamId, currentLevel, targetLevel);
+                else if (delta != 0)
                     SendUpgradeDelta(steamId, target.CommandName, delta);
                 KingUpgradeAura.Forget(steamId, target.DictionaryName);
                 if (target.CommandName == "Strength")

@@ -215,5 +215,7 @@ namespace REPOJP.StageRoles { internal readonly record struct UpgradeGrant(strin
 
 namespace REPOJP.StageRoles
 {
+    internal static class HealthUpgradeReset
+    { internal static void Apply(string id, int current, int target) => throw new NotSupportedException("Use Health reset checks."); }
     internal static class UpgradeItemRetentionPatch { internal static void ApplyPendingThrow(string steamId) { } }
 }

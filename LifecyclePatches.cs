@@ -117,6 +117,17 @@ internal static class LifecyclePatches
         }
     }
 
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(SemiFunc), nameof(SemiFunc.OnSceneSwitch))]
+    private static void SemiFuncOnSceneSwitchPrefix(bool __runOriginal)
+    {
+        // ChangeLevel saves and broadcasts stats inside OnSceneSwitch, before
+        // its postfix. Remove role HP before that save; the postfix remains a
+        // fallback for transitions that do not call OnSceneSwitch (e.g. tutorial).
+        // A Phoenix/Stage Flux cancellation never reaches this scene switch.
+        if (__runOriginal) StageRolesPlugin.Instance?.Controller?.StageEnding();
+    }
+
     private static bool IsShopContext()
     {
         try
@@ -299,10 +310,13 @@ internal static class LifecyclePatches
     [HarmonyPatch(typeof(PlayerHealth), nameof(PlayerHealth.UpdateHealthRPC))]
     private static void PlayerHealthUpdateHealthRpcPrefix(
         PlayerHealth __instance,
+        int healthMax,
         out int __state)
     {
         PlayerAvatar? player = __instance.GetComponent<PlayerAvatar>();
-        __state = PlayerState.TryGetCurrentHealth(player, out int health)
+        // Rescaling HP with its maximum is not an enemy hit or a heal.
+        __state = PlayerState.TryGetMaximumHealth(player, out int maximum) && maximum == healthMax &&
+            PlayerState.TryGetCurrentHealth(player, out int health)
             ? health
             : -1;
     }
