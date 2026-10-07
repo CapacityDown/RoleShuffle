@@ -60,7 +60,7 @@ internal static class RoleGuideCatalog
             StageRole.Medic => "Periodically heals nearby living teammates, but never heals the Medic.",
             StageRole.Phoenix => "Automatically revives itself once per stage after dying." + RevivalStillnessDescription + PhoenixWaitDescription,
             StageRole.Jobless => "Deliver valuables to heal yourself and temporarily stop Courier's automatic HP loss outside the truck.",
-            StageRole.Rescuer => "Revives a nearby dead teammate by approaching their Death Head." + RevivalStillnessDescription,
+            StageRole.Rescuer => "Revives a dead teammate by grabbing their Death Head, even while it is moving.",
             StageRole.Vampire => "Recovers health when an enemy dies nearby. Stronger enemies restore more health.",
             StageRole.King => "Receives the vanilla Crown for the stage. Only one King can be assigned.",
             StageRole.Tuna => "Takes continuous damage after standing still too long. Moving stops the damage.",
@@ -120,7 +120,7 @@ internal static class RoleGuideCatalog
             StageRole.Medic => "周囲の生存中の仲間を定期的に回復します。Medic自身は回復しません。",
             StageRole.Phoenix => "死亡すると、頭が静止してから、ステージ中に一度だけ自動で復活します。復活回数が残っている間は、待ち時間にかかわらずゲームオーバーになりません。",
             StageRole.Jobless => "貴重品の配達でHPを回復し、トラック外で起きるCourierの自動HP減少を一時停止します。",
-            StageRole.Rescuer => "死亡した仲間のDeath Headへ近づくと、頭が静止してから、その仲間を復活させます。",
+            StageRole.Rescuer => "死亡した仲間のDeath Headをつかむと、その仲間を復活させます。頭が動いていても使用できます。",
             StageRole.Vampire => "近くで敵が死亡するとHPを回復します。強い敵ほど回復量が増えます。",
             StageRole.King => "ステージ中、バニラのCrownを受け取ります。Kingは一人だけ割り当てられます。",
             StageRole.Tuna => "長時間静止すると継続的にダメージを受けます。移動するとダメージが止まります。",
@@ -177,8 +177,8 @@ internal static class RoleGuideCatalog
             StageRole.Phoenix =>
                 $"Automatically revives itself once per stage after dying, returning with up to {config.PhoenixRevivalHealth.Value} HP." + RevivalStillnessDescription + PhoenixWaitDescription,
             StageRole.Rescuer => (
-                $"Approaching within {Number(config.RescuerRadius.Value)} m of a dead teammate's Death Head revives them with up to {config.RescuerRevivalHealth.Value} HP. " +
-                $"It can revive {config.RescuerMaximumRevives.Value} times per stage." + RevivalStillnessDescription),
+                $"Grabbing a dead teammate's Death Head revives them with up to {config.RescuerRevivalHealth.Value} HP, even while the head is moving. " +
+                $"It can revive {config.RescuerMaximumRevives.Value} times per stage."),
             StageRole.Vampire => (
                 $"Recovers health when an enemy dies within {Number(config.VampireRadius.Value)} m. Danger Level 1 restores " +
                 $"{config.VampireTier1HealAmount.Value} HP, Level 2 restores {config.VampireTier2HealAmount.Value} HP, and Level 3 restores " +
@@ -306,7 +306,7 @@ internal static class RoleGuideCatalog
             StageRole.Phoenix =>
                 $"死亡すると、頭が静止してから、ステージ中に一度だけ自動で復活します。復活時のHPは最大{config.PhoenixRevivalHealth.Value}です。復活回数が残っている間は、待ち時間にかかわらずゲームオーバーになりません。",
             StageRole.Rescuer =>
-                $"死亡した仲間のDeath Headから{Number(config.RescuerRadius.Value)}m以内へ近づくと、頭が静止してから最大{config.RescuerRevivalHealth.Value}HPで復活させます。" +
+                $"死亡した仲間のDeath Headをつかむと、最大{config.RescuerRevivalHealth.Value}HPで復活させます。頭が動いていても使用できます。" +
                 $"ステージごとに{config.RescuerMaximumRevives.Value}回まで使用できます。",
             StageRole.Vampire =>
                 $"半径{Number(config.VampireRadius.Value)}m以内で敵が死亡するとHPを回復します。Danger Level 1では{config.VampireTier1HealAmount.Value}HP、" +

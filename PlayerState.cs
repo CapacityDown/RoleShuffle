@@ -112,6 +112,15 @@ internal static class PlayerState
         return true;
     }
 
+    internal static bool IsGrabbingDeathHead(PlayerAvatar? rescuer, PlayerAvatar? target)
+    {
+        PhysGrabber? grabber = rescuer != null ? rescuer.physGrabber : null;
+        return grabber != null &&
+               TryGetDeathHeadRuntime(target, out _, out PhysGrabObject? phys, out _) &&
+               phys != null && phys.playerGrabbing != null &&
+               phys.playerGrabbing.Contains(grabber);
+    }
+
     internal static bool TryMoveDeathHead(
         PlayerAvatar? player,
         Vector3 position,

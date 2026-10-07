@@ -176,5 +176,7 @@
   "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.": "重い物を持ち上げたり、向きを変えたりしやすくなります。\n重い物をつかむ力はStrength Lv0～200の最大値の{0}倍、回転力は最大値の{1}倍になります。どちらも基礎アップグレードに依存しません。",
   " Spawned uranium valuables break after {0} seconds.": "出現したウラン貴重品は{0}秒後に壊れます。",
   " Revival waits until the Death Head has stopped moving.": " 頭が静止してから復活します。",
-  " An unused revival prevents game over, regardless of how long the wait takes.": " 復活回数が残っている間は、待ち時間にかかわらずゲームオーバーになりません。"
+  " An unused revival prevents game over, regardless of how long the wait takes.": " 復活回数が残っている間は、待ち時間にかかわらずゲームオーバーになりません。",
+  "Revives a dead teammate by grabbing their Death Head, even while it is moving.": "死亡した仲間のDeath Headをつかむと、その仲間を復活させます。頭が動いていても使用できます。",
+  "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage.": "死亡した仲間のDeath Headをつかむと、最大{0}HPで復活させます。頭が動いていても使用できます。ステージごとに{1}回まで使用できます。"
 }

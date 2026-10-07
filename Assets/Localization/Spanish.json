@@ -260,5 +260,7 @@
   "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.": "Los objetos pesados son más fáciles de levantar y girar.\nLa fuerza de elevación es {0} veces el máximo de Strength entre los niveles 0 y 200; la fuerza de giro es {1} veces su máximo. Ambas son independientes de las mejoras base.",
   " Spawned uranium valuables break after {0} seconds.": " Los objetos valiosos de uranio generados se rompen tras {0} segundos.",
   " Revival waits until the Death Head has stopped moving.": " La resurrección espera hasta que el Death Head deje de moverse.",
-  " An unused revival prevents game over, regardless of how long the wait takes.": " Mientras quede una resurrección disponible, la partida no terminará, sin importar cuánto dure la espera."
+  " An unused revival prevents game over, regardless of how long the wait takes.": " Mientras quede una resurrección disponible, la partida no terminará, sin importar cuánto dure la espera.",
+  "Revives a dead teammate by grabbing their Death Head, even while it is moving.": "Revive a un compañero muerto al agarrar su Death Head, incluso mientras se mueve.",
+  "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage.": "Agarrar el Death Head de un compañero muerto lo revive con hasta {0} PV, incluso mientras la cabeza se mueve. Puede revivir {1} veces por nivel."
 }

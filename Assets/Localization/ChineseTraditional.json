@@ -260,5 +260,7 @@
   "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.": "更容易提起和轉動重物。\n抓取重物的力量為Strength等級0至200中最高值的{0}倍，轉動力量為最高值的{1}倍。兩者均不受基礎升級影響。",
   " Spawned uranium valuables break after {0} seconds.": "生成的鈾貴重品會在{0}秒後破碎。",
   " Revival waits until the Death Head has stopped moving.": " 復活會等待死亡頭顱停止移動。",
-  " An unused revival prevents game over, regardless of how long the wait takes.": " 只要還有未使用的復活次數，無論等待多久都不會遊戲結束。"
+  " An unused revival prevents game over, regardless of how long the wait takes.": " 只要還有未使用的復活次數，無論等待多久都不會遊戲結束。",
+  "Revives a dead teammate by grabbing their Death Head, even while it is moving.": "抓住已死亡隊友的死亡頭顱即可將其復活，頭顱移動時也可以。",
+  "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage.": "抓住已死亡隊友的死亡頭顱即可將其復活，最多恢復{0}點生命值，頭顱移動時也可以。每個關卡最多復活{1}次。"
 }

@@ -260,5 +260,7 @@
   "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.": "Важкі предмети легше піднімати й повертати.\nСила підняття дорівнює {0} максимуму Strength на рівнях 0–200, а сила обертання — {1} свого максимуму. Обидві не залежать від базових покращень.",
   " Spawned uranium valuables break after {0} seconds.": " Створені уранові коштовності розбиваються через {0} секунд.",
   " Revival waits until the Death Head has stopped moving.": " Воскресіння відбудеться, коли Death Head перестане рухатися.",
-  " An unused revival prevents game over, regardless of how long the wait takes.": " Поки залишається невикористане воскресіння, гра не завершиться незалежно від тривалості очікування."
+  " An unused revival prevents game over, regardless of how long the wait takes.": " Поки залишається невикористане воскресіння, гра не завершиться незалежно від тривалості очікування.",
+  "Revives a dead teammate by grabbing their Death Head, even while it is moving.": "Воскрешає загиблого товариша, якщо схопити його Death Head, навіть коли голова рухається.",
+  "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage.": "Схопивши Death Head загиблого товариша, ви воскрешаєте його із запасом до {0} ОЗ, навіть якщо голова рухається. Можна воскресити {1} разів за етап."
 }

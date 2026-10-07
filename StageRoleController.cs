@@ -1495,9 +1495,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         }
 
         float delay = Mathf.Clamp(_config.RescuerReviveDelaySeconds.Value, 0f, 10f);
-        float radius = Mathf.Clamp(_config.RescuerRadius.Value, 1f, 50f);
-        float nearestDistanceSquared = radius * radius;
-        RoleAssignment? nearestTarget = null;
+        RoleAssignment? heldTarget = null;
         foreach (RoleAssignment target in _assignments)
         {
             if (target.SteamId == rescuer.SteamId ||
@@ -1509,46 +1507,36 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 StageFluxCompatibility.WillHandleSecondChance(target.Player) ||
                 !_rescueDeadSince.TryGetValue(target.SteamId, out float deadSince) ||
                 Time.time < deadSince + delay || PlayerState.IsLiving(target.Player) ||
-                !target.RevivalHeadStillness.Observe(target.Player))
+                !PlayerState.IsGrabbingDeathHead(rescuer.Player, target.Player))
             {
                 continue;
             }
 
-            if (!PlayerState.TryGetDeathHeadPosition(
-                    target.Player,
-                    out Vector3 deathHeadPosition))
-            {
-                continue;
-            }
-            float distanceSquared =
-                (deathHeadPosition - rescuer.Player.transform.position).sqrMagnitude;
-            if (distanceSquared > nearestDistanceSquared)
-            {
-                continue;
-            }
-            nearestDistanceSquared = distanceSquared;
-            nearestTarget = target;
+            heldTarget = target;
+            break;
         }
 
-        if (nearestTarget == null)
+        if (heldTarget == null)
         {
             return;
         }
 
         try
         {
-            if (!nearestTarget.RevivalHeadStillness.Observe(nearestTarget.Player) ||
-                !PlayerState.TryRequestDeathHeadRevival(nearestTarget.Player))
+            // Use the game's synchronized grab list, including unmodded guests.
+            // Releasing the head while waiting must not leave a queued rescue.
+            if (!PlayerState.IsGrabbingDeathHead(rescuer.Player, heldTarget.Player) ||
+                !PlayerState.TryRequestDeathHeadRevival(heldTarget.Player))
             {
                 return;
             }
             rescuer.RescuerRevivesUsed++;
-            _rescueDeadSince.Remove(nearestTarget.SteamId);
-            _rescueRevivePending.Add(nearestTarget.SteamId);
-            _rescueReviverByTarget[nearestTarget.SteamId] = rescuer.SteamId;
+            _rescueDeadSince.Remove(heldTarget.SteamId);
+            _rescueRevivePending.Add(heldTarget.SteamId);
+            _rescueReviverByTarget[heldTarget.SteamId] = rescuer.SteamId;
             StageRolesPlugin.ModLogger.LogInfo(
-                $"Rescuer {rescuer.SteamId} requested one revival for nearest player " +
-                $"{nearestTarget.SteamId} " +
+                $"Rescuer {rescuer.SteamId} requested one revival for grabbed player " +
+                $"{heldTarget.SteamId} " +
                 $"({rescuer.RescuerRevivesUsed}/{maximumRevives}).");
         }
         catch (Exception exception)

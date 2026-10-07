@@ -260,5 +260,7 @@
   "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.": "무거운 물체를 더 쉽게 들고 돌릴 수 있습니다.\n무거운 물체를 잡는 힘은 Strength 0~200레벨 중 최대값의 {0}배, 돌리는 힘은 최대값의 {1}배입니다. 둘 다 기본 업그레이드와 관계없습니다.",
   " Spawned uranium valuables break after {0} seconds.": " 생성된 우라늄 귀중품은 {0}초 후에 부서집니다.",
   " Revival waits until the Death Head has stopped moving.": " 사망한 플레이어의 머리가 멈춘 뒤에 부활합니다.",
-  " An unused revival prevents game over, regardless of how long the wait takes.": " 부활 횟수가 남아 있는 동안은 대기 시간이 아무리 길어도 게임 오버가 되지 않습니다."
+  " An unused revival prevents game over, regardless of how long the wait takes.": " 부활 횟수가 남아 있는 동안은 대기 시간이 아무리 길어도 게임 오버가 되지 않습니다.",
+  "Revives a dead teammate by grabbing their Death Head, even while it is moving.": "사망한 동료의 머리를 잡으면 부활시킵니다. 머리가 움직이는 중에도 사용할 수 있습니다.",
+  "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage.": "사망한 동료의 머리를 잡으면 최대 {0} HP로 부활시킵니다. 머리가 움직이는 중에도 사용할 수 있습니다. 스테이지당 {1}회 사용할 수 있습니다."
 }

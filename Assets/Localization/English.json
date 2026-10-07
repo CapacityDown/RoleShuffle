@@ -260,5 +260,7 @@
   "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.": "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.",
   " Spawned uranium valuables break after {0} seconds.": " Spawned uranium valuables break after {0} seconds.",
   " Revival waits until the Death Head has stopped moving.": " Revival waits until the Death Head has stopped moving.",
-  " An unused revival prevents game over, regardless of how long the wait takes.": " An unused revival prevents game over, regardless of how long the wait takes."
+  " An unused revival prevents game over, regardless of how long the wait takes.": " An unused revival prevents game over, regardless of how long the wait takes.",
+  "Revives a dead teammate by grabbing their Death Head, even while it is moving.": "Revives a dead teammate by grabbing their Death Head, even while it is moving.",
+  "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage.": "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage."
 }

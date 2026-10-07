@@ -260,5 +260,7 @@
   "Heavy objects are easier to lift and turn.\nHeavy-object lifting strength is {0} times its strongest value across Strength levels 0-200; turning strength is {1} times its strongest value. Both are independent of Base upgrades.": "Ağır nesneleri kaldırmak ve döndürmek kolaylaşır.\nKaldırma gücü Strength 0-200 seviyelerindeki en yüksek değerin {0} katı, döndürme gücü kendi en yüksek değerinin {1} katıdır. İkisi de temel yükseltmelerden bağımsızdır.",
   " Spawned uranium valuables break after {0} seconds.": " Oluşturulan uranyum değerli eşyaları {0} saniye sonra kırılır.",
   " Revival waits until the Death Head has stopped moving.": " Diriliş, Death Head hareket etmeyi bırakana kadar bekler.",
-  " An unused revival prevents game over, regardless of how long the wait takes.": " Kullanılmamış bir diriliş hakkı olduğu sürece bekleme ne kadar uzarsa uzasın oyun sona ermez."
+  " An unused revival prevents game over, regardless of how long the wait takes.": " Kullanılmamış bir diriliş hakkı olduğu sürece bekleme ne kadar uzarsa uzasın oyun sona ermez.",
+  "Revives a dead teammate by grabbing their Death Head, even while it is moving.": "Ölen bir takım arkadaşının Death Head nesnesini tutarak onu diriltir; baş hareket ederken de çalışır.",
+  "Grabbing a dead teammate's Death Head revives them with up to {0} HP, even while the head is moving. It can revive {1} times per stage.": "Ölen bir takım arkadaşının Death Head nesnesini tutmak, baş hareket ederken bile onu en fazla {0} canla diriltir. Aşama başına {1} kez diriltebilir."
 }

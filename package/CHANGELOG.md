@@ -1,5 +1,6 @@
 ## 4.5.4
-- Changed Rescuer and Phoenix to wait until the target's Death Head has stopped moving before reviving. Waiting does not consume a revival use.
+- Changed Rescuer to revive the teammate whose Death Head it grabs, including moving heads. Removed automatic proximity rescue and its radius setting. Waiting does not consume a revival use.
+- Changed Phoenix to wait until its Death Head has stopped moving before reviving. Waiting does not consume its revival use.
 - Changed Phoenix to prevent game over for as long as an unused revival is waiting to complete. Removed the failure-grace time limit setting.
 
 ## 4.5.3

@@ -25,6 +25,7 @@ controller_methods = ''.join(extract('StageRoleController.cs', start, end) for s
     ('    internal bool TryPreventPhoenixRetake()', '    internal void Shutdown()'),
     ('    private void TickPhoenix(', '    private void TickRescuer('),
     ('    private void TickRescuer(', '    private void RefreshRescueDeaths()'),
+    ('    private void RefreshRescueDeaths()', '    internal bool PlayerHasRole('),
     ('    private void SchedulePhoenix(', '    private void TryRevivePhoenix('),
     ('    private void TryRevivePhoenix(', '    private void CompletePhoenixRevival('),
     ('    private void CompletePhoenixRevival(', '    private static void SetRevivalHealth('),
@@ -63,7 +64,11 @@ namespace UnityEngine {
  public class Transform { public Vector3 position; public Quaternion rotation; }
  public class Rigidbody { public Vector3 velocity; public Vector3 angularVelocity; }
 }
-public class PhysGrabObject { public Rigidbody? rb=new(); }
+public class PhysGrabber {}
+public class PhysGrabObject {
+ public Rigidbody? rb=new();
+ public List<PhysGrabber> playerGrabbing=new();
+}
 public class PlayerDeathHead {
  public bool setup=true,triggered=true,spectated=false;
  public float triggeredTimer=0;
@@ -71,6 +76,7 @@ public class PlayerDeathHead {
  public GameObject gameObject=new(); public Transform transform=new();
 }
 public class PlayerAvatar {
+ public PhysGrabber? physGrabber=new();
  public bool Alive=false,Immediate=true,SecondChance=false;
  public int ReviveCalls=0,Health=0;
  public PlayerDeathHead? playerDeathHead=new();
@@ -108,7 +114,7 @@ internal class RoleAssignment(string id,StageRole role) {
 internal class Entry<T>(T value) { internal T Value=value; }
 internal class Config {
  internal Entry<int> RescuerMaximumRevives=new(2),RescuerRevivalHealth=new(25),PhoenixRevivalHealth=new(25);
- internal Entry<float> RescuerReviveDelaySeconds=new(2),RescuerRadius=new(3),PhoenixReviveDelaySeconds=new(2);
+ internal Entry<float> RescuerReviveDelaySeconds=new(2),PhoenixReviveDelaySeconds=new(2);
 }
 internal class EventRoles { internal bool HasCorrectiveRevivalPending(PlayerAvatar player)=>false; }
 internal static class StageFluxCompatibility {
@@ -131,6 +137,7 @@ internal class Probe {
  internal void Tick(float now) {
   Time.time=now;
   foreach(var a in _assignments) a.RevivalHeadStillness.Observe(a.Player);
+  RefreshRescueDeaths();
   foreach(var a in _assignments) {
    if(RoleCatalog.HasCapability(a.Role,StageRole.Phoenix)) TickPhoenix(a);
    if(RoleCatalog.HasCapability(a.Role,StageRole.Rescuer)) TickRescuer(a);
@@ -193,21 +200,78 @@ foreach(int fps in new[]{30,60,144}) {
  Check(state.Observe(p),"Rest is detected at every tested frame rate");
 }
 
-// A moving nearest head must not block a farther stationary teammate.
+// Rescue requires this rescuer's current grab, with no radius or stillness gate.
 Probe rescue=new(); RoleAssignment rescuer=new("rescuer",StageRole.Rescuer);
 rescuer.Player.Alive=true;
-RoleAssignment moving=new("moving",StageRole.Tank),resting=new("resting",StageRole.Tank);
-moving.Player.playerDeathHead!.transform.position=new(1,0,0);
-moving.Player.playerDeathHead.physGrabObject!.rb!.velocity=new(1,0,0);
-resting.Player.playerDeathHead!.transform.position=new(2,0,0);
-rescue._assignments.AddRange(new[]{rescuer,moving,resting});
-rescue._rescueDeadSince[moving.SteamId]=0; rescue._rescueDeadSince[resting.SteamId]=0;
+RoleAssignment nearby=new("nearby",StageRole.Tank),held=new("held",StageRole.Tank);
+RoleAssignment bystander=new("bystander",StageRole.Tank); bystander.Player.Alive=true;
+nearby.Player.playerDeathHead!.transform.position=new(1,0,0);
+held.Player.playerDeathHead!.transform.position=new(10,0,0);
+held.Player.playerDeathHead.physGrabObject!.rb!.velocity=new(5,0,0);
+held.Player.playerDeathHead.physGrabObject.rb.angularVelocity=new(0,3,0);
+rescue._assignments.AddRange(new[]{rescuer,nearby,held,bystander});
 for(int i=0;i<40;i++) rescue.Tick(i*0.1f);
-Check(resting.Player.ReviveCalls==1&&moving.Player.ReviveCalls==0,"Rescuer selects nearest stationary target");
-Check(rescuer.RescuerRevivesUsed==1,"Waiting does not consume Rescuer uses");
-moving.Player.playerDeathHead.physGrabObject.rb.velocity=default;
-for(int i=40;i<50;i++) rescue.Tick(i*0.1f);
-Check(moving.Player.ReviveCalls==1&&rescuer.RescuerRevivesUsed==2,"Second rescue occurs once after settling");
+Check(nearby.Player.ReviveCalls==0&&held.Player.ReviveCalls==0&&rescuer.RescuerRevivesUsed==0,
+ "Nearby stationary heads do not auto-revive");
+held.Player.playerDeathHead.physGrabObject.playerGrabbing.Add(bystander.Player.physGrabber!);
+rescue.Tick(4);
+Check(held.Player.ReviveCalls==0,"Another player's grab cannot trigger Rescuer");
+held.Player.playerDeathHead.physGrabObject.playerGrabbing.Add(rescuer.Player.physGrabber!);
+rescue.Tick(4.1f); rescue.Tick(4.2f);
+Check(held.Player.ReviveCalls==1&&nearby.Player.ReviveCalls==0,"Only the grabbed head revives, even moving beyond the old radius");
+Check(rescuer.RescuerRevivesUsed==1&&held.Player.Health==25,"One successful grabbed-head rescue consumes one use and sets HP");
+held.Player.playerDeathHead.physGrabObject.playerGrabbing.Clear();
+
+// Release during the configured death delay leaves no queued revival.
+rescue._rescueDeadSince[nearby.SteamId]=4.3f;
+nearby.Player.playerDeathHead!.physGrabObject!.playerGrabbing.Add(rescuer.Player.physGrabber!);
+rescue.Tick(4.3f);
+Check(nearby.Player.ReviveCalls==0&&rescuer.RescuerRevivesUsed==1,"Grabbing early preserves the existing death delay and charge");
+nearby.Player.playerDeathHead.physGrabObject.playerGrabbing.Clear();
+for(int i=44;i<90;i++) rescue.Tick(i*0.1f);
+Check(nearby.Player.ReviveCalls==0&&rescuer.RescuerRevivesUsed==1,"Released heads do not revive later");
+nearby.Player.playerDeathHead.physGrabObject.playerGrabbing.Add(rescuer.Player.physGrabber!);
+rescue.Tick(9); rescue.Tick(9.1f);
+Check(nearby.Player.ReviveCalls==1&&rescuer.RescuerRevivesUsed==2&&nearby.Player.Health==25,
+ "Grabbing again revives once and the final use still applies configured HP");
+RoleAssignment exhaustedTarget=new("exhausted",StageRole.Tank);
+exhaustedTarget.Player.playerDeathHead!.physGrabObject!.playerGrabbing.Add(rescuer.Player.physGrabber!);
+rescue._assignments.Add(exhaustedTarget);
+for(int i=92;i<125;i++) rescue.Tick(i*0.1f);
+Check(exhaustedTarget.Player.ReviveCalls==0,"Grabbing with no uses left does not revive");
+
+// Two rescuers holding the same remote head must send exactly one request.
+Probe shared=new(); shared._config.RescuerMaximumRevives.Value=1; shared._config.RescuerReviveDelaySeconds.Value=0;
+RoleAssignment r1=new("r1",StageRole.Rescuer),r2=new("r2",StageRole.Rescuer),remote=new("remote",StageRole.Tank);
+r1.Player.Alive=r2.Player.Alive=true; remote.Player.Immediate=false;
+remote.Player.playerDeathHead!.physGrabObject!.playerGrabbing.AddRange(new[]{r1.Player.physGrabber!,r2.Player.physGrabber!});
+shared._assignments.AddRange(new[]{r1,r2,remote});
+for(int i=0;i<100;i++) shared.Tick(20+i*0.1f);
+Check(remote.Player.ReviveCalls==1&&r1.RescuerRevivesUsed+r2.RescuerRevivesUsed==1,
+ "Multiple rescuers and delayed transport cannot duplicate a request or consume two uses");
+remote.Player.Alive=true; shared.Tick(30);
+Check(remote.Player.Health==25,"Delayed acknowledgement receives revival HP even after the rescuer's last use");
+
+// Head setup and other revival systems keep their existing priority.
+Probe priority=new(); priority._config.RescuerReviveDelaySeconds.Value=0;
+RoleAssignment rp=new("rp",StageRole.Rescuer),tp=new("tp",StageRole.Phoenix);
+rp.Player.Alive=true; priority._assignments.AddRange(new[]{rp,tp});
+tp.Player.playerDeathHead!.physGrabObject!.playerGrabbing.Add(rp.Player.physGrabber!);
+tp.Player.playerDeathHead.physGrabObject.rb!.velocity=new(5,0,0);
+priority.Tick(40);
+Check(tp.Player.ReviveCalls==0&&rp.RescuerRevivesUsed==0,"Grab rescue does not bypass an unused Phoenix");
+tp.Role=StageRole.Tank; tp.Player.SecondChance=true; priority.Tick(40.1f);
+Check(tp.Player.ReviveCalls==0&&rp.RescuerRevivesUsed==0,"Grab rescue preserves Stage Flux priority");
+tp.Player.SecondChance=false; tp.Player.playerDeathHead.setup=false; priority.Tick(40.2f);
+Check(tp.Player.ReviveCalls==0&&rp.RescuerRevivesUsed==0,"Uninitialized head does not consume a rescue");
+rp.Player.Alive=false; tp.Player.playerDeathHead.setup=true; priority.Tick(40.3f);
+Check(tp.Player.ReviveCalls==0,"A dead rescuer cannot revive through a stale grab");
+rp.Player.Alive=true; priority.Tick(40.4f);
+Check(tp.Player.ReviveCalls==1&&rp.RescuerRevivesUsed==1,"An initialized moving head revives while held");
+Check(!PlayerState.IsGrabbingDeathHead(null,tp.Player),"Missing rescuer cannot be a grabber");
+rp.Player.physGrabber=null;
+Check(!PlayerState.IsGrabbingDeathHead(rp.Player,tp.Player),"Missing grabber cannot be treated as holding");
+Check(!PlayerState.IsGrabbingDeathHead(r1.Player,null),"Missing head target is rejected");
 
 // Long moving/setup/transport waits must keep an unused Phoenix alive in the run.
 foreach(var role in new[]{StageRole.Phoenix,StageRole.Superbot}) {

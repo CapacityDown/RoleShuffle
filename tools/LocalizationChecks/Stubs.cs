@@ -152,7 +152,6 @@ internal sealed class StageRolesConfig
     internal Entry<int> RammerSelfDamage { get; } = new(17);
     internal Entry<int> RammerTumbleDamage { get; } = new(17);
     internal Entry<int> RescuerMaximumRevives { get; } = new(17);
-    internal Entry<float> RescuerRadius { get; } = new(7.25f);
     internal Entry<int> RescuerRevivalHealth { get; } = new(17);
     internal Entry<float> RiderEnemyDamageMultiplier { get; } = new(7.25f);
     internal Entry<float> RiderPlayerKnockbackMultiplier { get; } = new(7.25f);

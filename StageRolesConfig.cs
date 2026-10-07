@@ -292,7 +292,6 @@ internal sealed class StageRolesConfig
         RescuerWeight = RoleWeight(config, "Rescuer", 80);
         RescuerRevivalHealth = BindInt(config, "Rescuer", "RevivalHealth", 25, 1, 1000, "Health restored to a player revived by Rescuer, capped at the player's maximum health.");
         RescuerReviveDelaySeconds = BindFloat(config, "Rescuer", "ReviveDelaySeconds", 2f, 0f, 10f, "Delay before reviving another player.");
-        RescuerRadius = BindFloat(config, "Rescuer", "Radius", 3f, 1f, 50f, "Maximum distance to a dead player.");
         RescuerMaximumRevives = BindInt(config, "Rescuer", "MaximumRevives", 2, 1, 10, "Maximum revivals per stage.");
 
         VampireEnabled = RoleEnabled(config, "Vampire");
@@ -643,7 +642,6 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> RescuerWeight { get; }
     internal ConfigEntry<int> RescuerRevivalHealth { get; }
     internal ConfigEntry<float> RescuerReviveDelaySeconds { get; }
-    internal ConfigEntry<float> RescuerRadius { get; }
     internal ConfigEntry<int> RescuerMaximumRevives { get; }
     internal ConfigEntry<bool> VampireEnabled { get; }
     internal ConfigEntry<int> VampireWeight { get; }
