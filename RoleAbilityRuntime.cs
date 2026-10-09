@@ -25,6 +25,7 @@ internal sealed partial class StageRoleController
             values.Add(RoleAbilityResources.Budget(metric, used, limit));
         void Seconds(AbilityMetric metric, float until) =>
             values.Add(new AbilityValue(metric, Mathf.CeilToInt(Mathf.Max(0f, until - Time.time)), 0));
+        if (Has(StageRole.Ghost)) Budget(AbilityMetric.GhostHealing, assignment.GhostHealingUsed, _config.GhostTotalHealingLimit.Value);
         if (Has(StageRole.Medic)) Budget(AbilityMetric.Medic, _medic.HealingUsed(assignment.SteamId), _config.MedicTotalHealingLimit.Value);
         if (Has(StageRole.Rescuer)) Budget(AbilityMetric.Rescuer, assignment.RescuerRevivesUsed, _config.RescuerMaximumRevives.Value);
         if (Has(StageRole.Phoenix)) Budget(AbilityMetric.Phoenix, assignment.PhoenixUsed || assignment.PhoenixRevivePending ? 1 : 0, 1);
@@ -38,7 +39,7 @@ internal sealed partial class StageRoleController
         if (Has(StageRole.Gambler)) Budget(AbilityMetric.Wager, assignment.GamblerWagersUsed, 1);
         if (Has(StageRole.Trickster)) values.Add(_trickster.Status(assignment.SteamId));
         if (Has(StageRole.Diver)) values.Add(_diver.Status(assignment.SteamId));
-        if (Has(StageRole.Avenger)) Seconds(AbilityMetric.Avenger, assignment.AvengerEmpoweredUntil);
+        if (Has(StageRole.Avenger)) Seconds(AbilityMetric.Avenger, Mathf.Max(assignment.AvengerEmpoweredUntil, assignment.AvengerHitUntil));
         if (Has(StageRole.Signalman)) Seconds(AbilityMetric.RadioCooldown, assignment.SignalmanNextTransmitAt);
         if (assignment.Role == StageRole.Twins && _twins != null && IsTwin(assignment.Player))
         {

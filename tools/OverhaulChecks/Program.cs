@@ -382,13 +382,13 @@ Check(RoleAbilityText.Format(new[] { new AbilityValue(AbilityMetric.RoyalSupport
 
 var metrics = new[] { new AbilityValue(AbilityMetric.Medic, 90, 150), new AbilityValue(AbilityMetric.MageCooldown, 2, 0) };
 var resources = new[] { AbilityMetric.Medic, AbilityMetric.Rescuer, AbilityMetric.Phoenix,
-    AbilityMetric.MageRecovery, AbilityMetric.Repair, AbilityMetric.Charge, AbilityMetric.Wager, AbilityMetric.Contracts, AbilityMetric.TwinDelivery };
+    AbilityMetric.MageRecovery, AbilityMetric.Repair, AbilityMetric.Charge, AbilityMetric.Wager, AbilityMetric.Contracts, AbilityMetric.TwinDelivery, AbilityMetric.GhostHealing };
 foreach (AbilityMetric metric in Enum.GetValues<AbilityMetric>())
     Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Only spendable budgets use the resource HUD");
 var allMetrics = Enum.GetValues<AbilityMetric>().Select(m => new AbilityValue(m, 0, 0)).ToArray();
-Check(RoleAbilityResources.ForHud(allMetrics).Count == 11 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.RadioCooldown), "Radio cooldown appears alongside eight budgets without adding other timers");
-Check(RoleAbilityResources.Select(allMetrics, true).Count == 9, "Empty and disabled budgets stay visible at zero");
-Check(RoleAbilityResources.Select(allMetrics, false).Count == allMetrics.Length - 9, "Progress/cooldown details are not duplicated");
+Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 2 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Ghost healing joins budgets plus Radio and Twin rest timers");
+Check(RoleAbilityResources.Select(allMetrics, true).Count == resources.Length, "Empty and disabled budgets stay visible at zero");
+Check(RoleAbilityResources.Select(allMetrics, false).Count == allMetrics.Length - resources.Length, "Progress/cooldown details are not duplicated");
 Check(RoleAbilityResources.Select(metrics, true).Single().Remaining == 90, "Mixed-role status selects the actual remaining budget");
 Check(RoleAbilityResources.Select(Array.Empty<AbilityValue>(), true).Count == 0, "No host data does not invent resources");
 foreach (AbilityMetric metric in resources)

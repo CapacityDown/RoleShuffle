@@ -131,4 +131,10 @@ foreach (var language in languages)
     Check(!RoleGuideCatalog.Description(StageRole.Lifter, config, language).Contains("shop"), "Removed Lifter item note stays absent");
 }
 
+config.BrawlerMeleeDamageMultiplier.Value = 3;
+config.BrawlerComboMaximum.Value = 2;
+Check(RoleGuideCatalog.Description(StageRole.Brawler, config).Contains("up to 3x"), "Brawler guide shows the effective cap when base exceeds configured cap");
+foreach (var language in languages)
+    Check(Regex.Matches(RoleGuideCatalog.Description(StageRole.Brawler, config, language), "3").Count == 2,
+        "Brawler starting multiplier and effective cap agree in " + language);
 Console.WriteLine($"Localization checks passed: {checks}");

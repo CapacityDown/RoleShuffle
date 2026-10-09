@@ -88,6 +88,16 @@ internal static class PlayerState
         return true;
     }
 
+    internal static bool TryGetActiveDeathHeadPosition(PlayerAvatar? player, out Vector3 position)
+    {
+        position = default;
+        if (player == null || !ReadBool(DeadField, player) ||
+            DeathHeadField?.GetValue(player) is not PlayerDeathHead head || head == null ||
+            !head.gameObject.activeInHierarchy || !ReadBool(DeathHeadSetupField, head)) return false;
+        position = head.transform.position;
+        return true;
+    }
+
     internal static bool TryGetDeathHeadRuntime(
         PlayerAvatar? player,
         out PlayerDeathHead? deathHead,

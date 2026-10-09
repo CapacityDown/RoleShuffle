@@ -43,6 +43,7 @@ internal static class LifecyclePatches
 
         private float EnemyStunTime { get; }
         private int EnemyDamage { get; }
+        internal int HealthBefore { get; set; } = -1;
 
         internal void Restore(HurtCollider collider)
         {
@@ -233,6 +234,7 @@ internal static class LifecyclePatches
         __state = new EnemyHitOverrideState(
             __instance.enemyStunTime,
             __instance.enemyDamage);
+        __state.HealthBefore = StageRoleController.ReadCombatEnemyHealth(__0);
         PlayerAvatar? attacker =
             HurtColliderPlayerField?.GetValue(__instance) as PlayerAvatar;
         StageRolesPlugin.Instance?.Controller?.ApplyEnemyHitRoleOverrides(
@@ -260,7 +262,7 @@ internal static class LifecyclePatches
             .ApplyRammerSelfDamageAfterEnemyHit(
                 __instance,
                 attacker);
-        StageRolesPlugin.Instance?.Controller?.RecordEnemyAttacker(__0, attacker);
+        StageRolesPlugin.Instance?.Controller?.ConfirmEnemyDamage(__instance, __0, attacker, __state.HealthBefore);
     }
 
     [HarmonyPrefix]

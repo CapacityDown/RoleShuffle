@@ -248,6 +248,11 @@ internal sealed class StageRolesConfig
         GhostEnabled = RoleEnabled(config, "Ghost");
         GhostWeight = RoleWeight(config, "Ghost", 80);
         GhostDeathHeadBatteryLevels = UpgradeLevel(config, "Ghost", "DeathHeadBatteryUpgradeLevels", 50);
+        GhostHealRadius = BindFloat(config, "Ghost", "HealRadius", 5f, 0f, 30f, "Radius around the dead Ghost's head in which living allies are healed.");
+        GhostHealAmount = BindInt(config, "Ghost", "HealAmount", 1, 0, 100, "HP restored to each nearby ally per healing interval.");
+        GhostHealInterval = BindFloat(config, "Ghost", "HealIntervalSeconds", 2f, 0.5f, 60f, "Seconds between healing pulses while Ghost is dead.");
+        GhostTotalHealingLimit = BindInt(config, "Ghost", "TotalHealingLimit", 50, 0, 10000, "Total HP Ghost can restore per stage, shared among allies and retained through revival.");
+        GhostCarrierSpeedBonus = BindInt(config, "Ghost", "CarrierSpeedBonusLevels", 1, 0, 20, "Temporary Speed levels for players grabbing Ghost's head. Multiple heads do not stack; uses the stronger of this and King's Speed aura.");
 
         BomberEnabled = RoleEnabled(config, "Bomber");
         BomberWeight = RoleWeight(config, "Bomber", 80);
@@ -357,6 +362,7 @@ internal sealed class StageRolesConfig
         HunterDoubleOrbChancePercent = BindFloat(config, "Hunter", "DoubleOrbChancePercent", 10f, 0f, 100f, "Chance for an enemy defeated by Hunter to drop twice its normal orb count.");
         HunterJackpotOrbChancePercent = BindFloat(config, "Hunter", "JackpotOrbChancePercent", 0.5f, 0f, 100f, "Chance for an enemy defeated by Hunter to drop the configured jackpot orb count.");
         HunterJackpotOrbCount = BindInt(config, "Hunter", "JackpotOrbCount", 10, 1, 30, "Orb count used when Hunter's jackpot roll succeeds.");
+        HunterGuaranteedOrbEveryKills = BindInt(config, "Hunter", "GuaranteedOrbEveryKills", 2, 0, 100, "Every this many personal kills that drop normal orbs guarantees at least one extra orb. Random rewards count toward the guarantee. Zero disables it. The count resets each stage.");
 
         StinkerEnabled = RoleEnabled(config, "Stinker");
         StinkerWeight = RoleWeight(config, "Stinker", 80);
@@ -457,10 +463,10 @@ internal sealed class StageRolesConfig
 
         SniperEnabled = RoleEnabled(config, "Sniper");
         SniperWeight = RoleWeight(config, "Sniper");
-        SniperReferenceDistance = BindFloat(config, "Sniper", "ReferenceDistance", 8f, 1f, 50f, "Distance in meters where Sniper deals normal damage.");
+        SniperReferenceDistance = BindFloat(config, "Sniper", "ReferenceDistance", 6f, 1f, 50f, "Distance in meters where Sniper deals normal damage.");
         SniperMinimumDamageMultiplier = BindFloat(config, "Sniper", "MinimumDamageMultiplier", 0.5f, 0f, 1f, "Damage multiplier at zero distance.");
         SniperMaximumDamageMultiplier = BindFloat(config, "Sniper", "MaximumDamageMultiplier", 2f, 1f, 10f, "Maximum long-range damage multiplier.");
-        SniperMaximumMultiplierDistance = BindFloat(config, "Sniper", "MaximumMultiplierDistance", 24f, 1f, 100f, "Distance in meters where Sniper reaches the maximum damage multiplier.");
+        SniperMaximumMultiplierDistance = BindFloat(config, "Sniper", "MaximumMultiplierDistance", 18f, 1f, 100f, "Distance in meters where Sniper reaches the maximum damage multiplier.");
 
         ImitatorEnabled = RoleEnabled(config, "Imitator");
         ImitatorWeight = RoleWeight(config, "Imitator");
@@ -468,13 +474,21 @@ internal sealed class StageRolesConfig
         AvengerEnabled = RoleEnabled(config, "Avenger");
         AvengerWeight = RoleWeight(config, "Avenger");
         AvengerDamageMultiplier = BindFloat(config, "Avenger", "DamageMultiplier", 1.5f, 1f, 10f, "Enemy damage multiplier after another player dies.");
-        AvengerDurationSeconds = BindFloat(config, "Avenger", "DurationSeconds", 20f, 1f, 120f, "Duration of Avenger's enemy damage bonus after another player dies.");
+        AvengerDurationSeconds = BindFloat(config, "Avenger", "DurationSeconds", 30f, 1f, 120f, "Duration of Avenger's enemy damage bonus after another player dies.");
         AvengerTriggerRadius = BindFloat(config, "Avenger", "TriggerRadius", 30f, 1f, 100f, "Maximum distance in meters from a dying player that activates Avenger.");
+        AvengerHitDamageThreshold = BindInt(config, "Avenger", "AllyHitDamageThreshold", 15, 1, 1000, "Minimum HP lost by an ally in one confirmed enemy hit to trigger the lesser damage bonus.");
+        AvengerHitTriggerRadius = BindFloat(config, "Avenger", "AllyHitTriggerRadius", 15f, 1f, 100f, "Maximum distance from the ally taking enemy damage.");
+        AvengerHitDamageMultiplier = BindFloat(config, "Avenger", "AllyHitDamageMultiplier", 1.25f, 1f, 10f, "Enemy damage multiplier triggered by an ally being hit; uses the stronger active bonus without stacking.");
+        AvengerHitDuration = BindFloat(config, "Avenger", "AllyHitDurationSeconds", 10f, 1f, 120f, "Duration of the damage bonus triggered by an ally being hit.");
+        AvengerHitCooldown = BindFloat(config, "Avenger", "AllyHitCooldownSeconds", 20f, 1f, 300f, "Cooldown between ally-hit activations; nearby deaths bypass this cooldown.");
 
         BrawlerEnabled = RoleEnabled(config, "Brawler");
         BrawlerWeight = RoleWeight(config, "Brawler");
         BrawlerMeleeDamageMultiplier = BindFloat(config, "Brawler", "MeleeDamageMultiplier", 1.25f, 0f, 10f, "Damage multiplier for identifiable melee weapon attacks.");
         BrawlerRangedDamageMultiplier = BindFloat(config, "Brawler", "RangedDamageMultiplier", 0.75f, 0f, 10f, "Damage multiplier for identifiable ranged weapon attacks.");
+        BrawlerComboStep = BindFloat(config, "Brawler", "ComboMultiplierStep", 0.25f, 0f, 5f, "Extra melee multiplier per consecutive confirmed hit against the same enemy. Does not affect friendly fire.");
+        BrawlerComboMaximum = BindFloat(config, "Brawler", "ComboMaximumMultiplier", 2f, 0f, 10f, "Maximum melee combo multiplier, never below MeleeDamageMultiplier.");
+        BrawlerComboTimeout = BindFloat(config, "Brawler", "ComboTimeoutSeconds", 4f, 0.1f, 30f, "Seconds without a successful hit before the melee combo resets. Hitting a different enemy also resets it.");
 
         InfluenzaEnabled = RoleEnabled(config, "Influenza");
         InfluenzaWeight = RoleWeight(config, "Influenza", 20);
@@ -670,6 +684,11 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> GhostEnabled { get; }
     internal ConfigEntry<int> GhostWeight { get; }
     internal ConfigEntry<int> GhostDeathHeadBatteryLevels { get; }
+    internal ConfigEntry<float> GhostHealRadius { get; }
+    internal ConfigEntry<int> GhostHealAmount { get; }
+    internal ConfigEntry<float> GhostHealInterval { get; }
+    internal ConfigEntry<int> GhostTotalHealingLimit { get; }
+    internal ConfigEntry<int> GhostCarrierSpeedBonus { get; }
     internal ConfigEntry<bool> BomberEnabled { get; }
     internal ConfigEntry<int> BomberWeight { get; }
     internal ConfigEntry<float> BomberDistance { get; }
@@ -747,6 +766,7 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> HunterDoubleOrbChancePercent { get; }
     internal ConfigEntry<float> HunterJackpotOrbChancePercent { get; }
     internal ConfigEntry<int> HunterJackpotOrbCount { get; }
+    internal ConfigEntry<int> HunterGuaranteedOrbEveryKills { get; }
     internal ConfigEntry<bool> StinkerEnabled { get; }
     internal ConfigEntry<int> StinkerWeight { get; }
     internal ConfigEntry<float> StinkerDistance { get; }
@@ -827,9 +847,17 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> AvengerDamageMultiplier { get; }
     internal ConfigEntry<float> AvengerDurationSeconds { get; }
     internal ConfigEntry<float> AvengerTriggerRadius { get; }
+    internal ConfigEntry<int> AvengerHitDamageThreshold { get; }
+    internal ConfigEntry<float> AvengerHitTriggerRadius { get; }
+    internal ConfigEntry<float> AvengerHitDamageMultiplier { get; }
+    internal ConfigEntry<float> AvengerHitDuration { get; }
+    internal ConfigEntry<float> AvengerHitCooldown { get; }
     internal ConfigEntry<bool> BrawlerEnabled { get; }
     internal ConfigEntry<int> BrawlerWeight { get; }
     internal ConfigEntry<float> BrawlerMeleeDamageMultiplier { get; }
+    internal ConfigEntry<float> BrawlerComboStep { get; }
+    internal ConfigEntry<float> BrawlerComboMaximum { get; }
+    internal ConfigEntry<float> BrawlerComboTimeout { get; }
     internal ConfigEntry<float> BrawlerRangedDamageMultiplier { get; }
     internal ConfigEntry<bool> SuperbotEnabled { get; }
     internal ConfigEntry<bool> InfluenzaEnabled { get; }

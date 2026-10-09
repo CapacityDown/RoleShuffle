@@ -47,11 +47,14 @@ internal static class KingUpgradeAura
     {
         if (!SemiFunc.IsMasterClientOrSingleplayer()) return;
         List<RoleAssignment> kings = new();
+        List<RoleAssignment> ghosts = new();
         foreach (var assignment in assignments)
         {
             assignment.Overhaul.KingSupportedAllies = 0;
             if (assignment.Role == StageRole.King && PlayerState.IsLiving(assignment.Player))
                 kings.Add(assignment);
+            if (RoleCatalog.HasCapability(assignment.Role, StageRole.Ghost) && !PlayerState.IsLiving(assignment.Player))
+                ghosts.Add(assignment);
         }
         float radiusSquared = config.KingUpgradeRadius.Value * config.KingUpgradeRadius.Value;
         HashSet<string> active = new(StringComparer.Ordinal);
@@ -64,14 +67,19 @@ internal static class KingUpgradeAura
                     if (king.SteamId != target.SteamId &&
                         (target.Player.transform.position - king.Player.transform.position).sqrMagnitude <= radiusSquared)
                         nearby.Add(king);
-            bool supported = Reconcile(target.SteamId, nearby.Count > 0 ? config : null);
+            int carryBonus = 0;
+            if (PlayerState.IsLiving(target.Player))
+                foreach (var ghost in ghosts)
+                    if (PlayerState.IsGrabbingDeathHead(target.Player, ghost.Player))
+                    { carryBonus = config.GhostCarrierSpeedBonus.Value; break; }
+            bool supported = Reconcile(target.SteamId, nearby.Count > 0 ? config : null, carryBonus);
             if (supported) foreach (var king in nearby) king.Overhaul.KingSupportedAllies++;
         }
         foreach (string steamId in new List<string>(Applied.Keys))
             if (!active.Contains(steamId)) Reconcile(steamId, null);
     }
 
-    private static bool Reconcile(string steamId, StageRolesConfig? config)
+    private static bool Reconcile(string steamId, StageRolesConfig? config, int carryBonus = 0)
     {
         if (!UpgradeService.TryGetLevels(steamId, out var current)) return false;
         if (!Applied.TryGetValue(steamId, out var applied)) applied = new(StringComparer.Ordinal);
@@ -86,6 +94,8 @@ internal static class KingUpgradeAura
                 "Range" => config.KingRangeBonus.Value,
                 _ => config.KingStrengthBonus.Value
             };
+            // Speed auras use the stronger bonus; multiple Ghost heads never stack.
+            if (command == "Speed") requested = Math.Max(requested, carryBonus);
             int desired = DesiredBonus(command, Math.Max(0, level - previous), requested);
             int delta = desired - previous;
             if (delta != 0)

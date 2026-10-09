@@ -85,6 +85,12 @@ __TARGETS__
         if (TargetUpgrades(StageRole.Tracker, tracker)[1].Level != 3) throw new Exception("Tracker Health minimum");
         count += 2;
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Mage, tracker)) throw new Exception("Non-static role scope");
+        var ghost = new StageRolesConfig {
+            Bases = new[] { new UpgradeGrant("DeathHeadBattery", 200) },
+            Targets = new[] { new UpgradeGrant("DeathHeadBattery", 50) }
+        };
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Ghost, ghost)) throw new Exception("Ghost support remains useful at capped Base battery");
+        count++;
         tracker.Bases = new[] { new UpgradeGrant("Unrelated", 9999) };
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tracker, tracker)) throw new Exception("Unrelated upgrade");
         var runner = new StageRolesConfig {

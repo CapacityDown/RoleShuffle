@@ -126,6 +126,7 @@ public sealed class RoomVolumeCheck
 }
 namespace REPOJP.StageRoles
 {
+    internal static class RoleCatalog { internal static bool HasCapability(StageRole actual, StageRole role) => actual == role; }
     internal sealed class Entry<T>(T value) { internal T Value { get; set; } = value; }
     internal sealed class StageRolesConfig
     {
@@ -150,6 +151,7 @@ namespace REPOJP.StageRoles
         internal Entry<float> JoblessContractDistance = new(5);
         internal Entry<float> KingUpgradeRadius = new(12);
         internal Entry<int> KingSpeedBonus = new(2);
+        internal Entry<int> GhostCarrierSpeedBonus = new(1);
         internal Entry<int> KingRangeBonus = new(2);
         internal Entry<int> KingStrengthBonus = new(5);
     }
@@ -164,6 +166,7 @@ namespace REPOJP.StageRoles
     internal readonly record struct RoleSnapshot(string SteamId, StageRole Role, StageRole EffectiveRole);
     internal static class PlayerState
     {
+        internal static bool IsGrabbingDeathHead(PlayerAvatar player, PlayerAvatar ghost) => false;
         internal static bool IsLiving(PlayerAvatar player) => player.Living && player.playerHealth.Health > 0;
         internal static bool IsInTruck(PlayerAvatar player) => player.InTruck;
         internal static bool TryGetCurrentHealth(PlayerAvatar player, out int health) { health = player.playerHealth.Health; return true; }

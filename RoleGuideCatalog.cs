@@ -58,7 +58,7 @@ internal static class RoleGuideCatalog
             StageRole.Climber => "Improves Tumble climbing and allows objects to be grabbed from farther away.",
             StageRole.Flyer => "Keeps Tumble Wings active longer for extended movement through the air.",
             StageRole.Tracker => "Automatically senses nearby enemies and tracks fallen teammates' Death Heads. Privately reports useful changes without items or commands.",
-            StageRole.Ghost => "Extends Death Head battery life.",
+            StageRole.Ghost => "Supports allies from its Death Head after death.",
             StageRole.Bomber => "Drops random armed grenades while moving. The explosions can harm players and valuables.",
             StageRole.Medic => "Periodically heals nearby living teammates, but never heals the Medic.",
             StageRole.Phoenix => "Automatically revives itself once per stage after dying." + RevivalStillnessDescription + PhoenixWaitDescription,
@@ -70,7 +70,7 @@ internal static class RoleGuideCatalog
             StageRole.Musician => "Heals itself and nearby living players whenever it plays an instrument note.",
             StageRole.Mage => "Uses chat or configured facial expressions to cast five vanilla attacks and recovers health after avoiding damage. Magic cast using a held staff lasts 1.3 times as long.",
             StageRole.Gambler => "Risks a held valuable for a chance to multiply its value; losing destroys it.",
-            StageRole.Hunter => "Uses less weapon battery and can gain additional orbs from enemies it kills.",
+            StageRole.Hunter => "Uses less weapon battery and earns extra orbs from personal kills.",
             StageRole.Stinker => "Leaves harmful uranium clouds behind while moving. The clouds can harm other players.",
             StageRole.Engineer => "Prevents supported effect valuables from activating while holding them.",
             StageRole.Trickster => "Uses chat or a configured facial expression to place a fixed Scream Doll decoy that draws nearby enemies.",
@@ -88,8 +88,8 @@ internal static class RoleGuideCatalog
             StageRole.Diver => "Tumbling while continuing to look down dives through the floor and enables movement below it for a limited time.",
             StageRole.Sniper => "Deals less damage to nearby enemies and progressively more damage as distance increases.",
             StageRole.Imitator => "Copies an eligible teammate's complete role by grabbing their health-transfer point.",
-            StageRole.Avenger => "Temporarily deals more damage to enemies when another player dies nearby.",
-            StageRole.Brawler => "Deals more damage with melee weapons but less damage with ranged weapons.",
+            StageRole.Avenger => "Gains temporary enemy damage bonuses when nearby allies are hurt or die.",
+            StageRole.Brawler => "Builds melee damage by repeatedly hitting the same enemy, but deals less ranged damage.",
             StageRole.Superbot => "???",
             StageRole.Disaster => "???",
             _ => "No role description is available."
@@ -110,8 +110,8 @@ internal static class RoleGuideCatalog
             StageRole.Diver => "下を向いたままタンブルすると床を抜け、制限時間内だけ床下を移動できます。",
             StageRole.Sniper => "近距離の敵には与ダメージが減少し、距離が離れるほど段階なく増加します。",
             StageRole.Imitator => "対象となる仲間へHPを渡すようにつかむと、その役職をステージ中コピーします。",
-            StageRole.Avenger => "近くにいる他のプレイヤーが死亡すると、一時的に敵へのダメージが増加します。",
-            StageRole.Brawler => "近接武器のダメージが増加する代わりに、遠隔武器のダメージが減少します。",
+            StageRole.Avenger => "近くの味方の被弾や死亡に反応して、一時的に敵へのダメージが増加します。",
+            StageRole.Brawler => "同じ敵への連続近接攻撃で威力が上がります。遠隔武器の威力は低下します。",
             StageRole.Tank => "最大HPが増加し、倒されにくくなります。",
             StageRole.Runner => "移動速度とスタミナが増加し、より速く長く走れます。",
             StageRole.Jumper => "着地するまでに使える追加ジャンプが増えます。",
@@ -120,7 +120,7 @@ internal static class RoleGuideCatalog
             StageRole.Climber => "Tumble中の登攀能力が上がり、遠くの物をつかめるようになります。",
             StageRole.Flyer => "Tumble Wingsの持続時間が延び、より長く空中を移動できます。",
             StageRole.Tracker => "近くの敵と死亡した仲間の頭を自動で探し、状況が変わると本人だけに通知します。アイテムや操作は不要です。",
-            StageRole.Ghost => "Death Headのバッテリーが長持ちします。",
+            StageRole.Ghost => "死亡後、自分のDeath Headから味方を支援します。",
             StageRole.Bomber => "移動するとランダムな起動済みグレネードを落とします。爆発はプレイヤーやValuableにも危険です。",
             StageRole.Medic => "周囲の生存中の仲間を定期的に回復します。Medic自身は回復しません。",
             StageRole.Phoenix => "死亡すると、頭が静止してから、ステージ中に一度だけ自動で復活します。復活回数が残っている間は、待ち時間にかかわらずゲームオーバーになりません。",
@@ -132,7 +132,7 @@ internal static class RoleGuideCatalog
             StageRole.Musician => "楽器で音を鳴らすたびに、自分と周囲の生存中のプレイヤーを回復します。",
             StageRole.Mage => "HPを消費して5種類のバニラ攻撃を発動し、しばらくダメージを受けなければHPを自動回復します。保持した杖で発動する魔法の効果時間は1.3倍になります。",
             StageRole.Gambler => "保持したValuableを賭け、成功すると価格を倍増させ、失敗すると破壊します。",
-            StageRole.Hunter => "武器のバッテリー消費を抑え、倒した敵から追加のオーブを得ることがあります。",
+            StageRole.Hunter => "武器のバッテリー消費を抑え、自分で倒した敵から追加オーブを獲得します。",
             StageRole.Stinker => "移動した後に有害なウラン雲を残します。雲は他のプレイヤーにも危険です。",
             StageRole.Engineer => "対応する効果付きValuableを持っている間、その効果の発動を防ぎます。",
             StageRole.Trickster => "周囲の敵を繰り返し引きつける固定式のScream Dollデコイを設置し、有効時間中は再配置できます。",
@@ -171,8 +171,7 @@ internal static class RoleGuideCatalog
                 $"Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is set to level {config.FlyerWingsLevels.Value}.",
             StageRole.Tracker =>
                 $"Automatically reports the nearest enemy within {Number(config.TrackerEnemyRange.Value)} m and warns within {Number(Math.Min(config.TrackerEnemyRange.Value, config.TrackerDangerRange.Value))} m (0 disables warnings). Tracks the nearest teammate's Death Head at any distance. Reports are private and at least {Number(config.TrackerNotificationInterval.Value)} seconds apart; close warnings can bypass this wait without repeating while danger remains nearby. Updates when the target changes, distance changes by {Number(config.TrackerDistanceChange.Value)} m, direction changes by 60 degrees, or the target moves above or below. Directions are relative to your view and straight through walls, not a route. Health is at least level {config.TrackerHealthLevels.Value} and Map Player Count at least level 1; stronger Base upgrades are preserved.",
-            StageRole.Ghost =>
-                $"Sets Death Head Battery to level {config.GhostDeathHeadBatteryLevels.Value}.",
+            StageRole.Ghost => $"Death Head Battery level {config.GhostDeathHeadBatteryLevels.Value}. While dead, heals allies within {Number(config.GhostHealRadius.Value)} m of its head for {config.GhostHealAmount.Value} HP every {Number(config.GhostHealInterval.Value)} seconds, up to {config.GhostTotalHealingLimit.Value} HP per stage. Revival does not reset this limit. Head carriers gain Speed +{config.GhostCarrierSpeedBonus.Value}; multiple heads do not stack, and the stronger King Speed bonus takes priority.",
             StageRole.Bomber => (
                 $"Drops one random enabled armed grenade every {Number(config.BomberDistance.Value)} m traveled. " +
                 $"Up to {config.BomberMaximumActiveGrenades.Value} generated grenades remain active per Bomber, and the oldest is removed at the limit. " +
@@ -208,9 +207,7 @@ internal static class RoleGuideCatalog
             StageRole.Gambler => (
                 $"When ready, holding a valuable gives it a {config.GamblerWinChancePercent.Value}% chance to become worth {Number(config.GamblerWinValueMultiplier.Value)}x as much; otherwise it is destroyed. " +
                 $"Gambit green heals {config.GamblerGambitGreenHealAmount.Value} HP, red deals {config.GamblerGambitRedDamage.Value} damage, black kills, and white fully heals and adds {config.GamblerGambitWhiteHealthUpgradeLevels.Value} Health levels for the stage."),
-            StageRole.Hunter => (
-                $"Held or equipped weapons use {config.HunterBatteryConsumptionPercent.Value}% of their normal battery. " +
-                $"Enemies killed by Hunter have a {Number(config.HunterDoubleOrbChancePercent.Value)}% chance to drop twice as many orbs and a {Number(config.HunterJackpotOrbChancePercent.Value)}% jackpot chance to drop {config.HunterJackpotOrbCount.Value}."),
+            StageRole.Hunter => $"Weapon battery use: {config.HunterBatteryConsumptionPercent.Value}%. Personal kills that drop orbs: {Number(config.HunterDoubleOrbChancePercent.Value)}% double drops, {Number(config.HunterJackpotOrbChancePercent.Value)}% chance of {config.HunterJackpotOrbCount.Value} orbs. Every {config.HunterGuaranteedOrbEveryKills.Value} such kills guarantees at least one extra orb (0 disables); random bonuses satisfy this guarantee. The count resets each stage.",
             StageRole.Stinker => (
                 $"Leaves a harmful uranium cloud every {Number(config.StinkerDistance.Value)} m traveled after moving {Number(config.StinkerSafetyDistance.Value)} m away from it. " +
                 "The clouds appear one at a time and can harm other players.") +
@@ -259,10 +256,8 @@ internal static class RoleGuideCatalog
                 $"Identifiable attacks against enemies scale continuously with distance: {Number(config.SniperMinimumDamageMultiplier.Value)}x at point-blank range, 1x at {Number(config.SniperReferenceDistance.Value)} m, and up to {Number(config.SniperMaximumDamageMultiplier.Value)}x at {Number(config.SniperMaximumMultiplierDistance.Value)} m. Vehicle impacts and Tumble Attacks are unchanged.",
             StageRole.Imitator =>
                 "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Signalman, Twins, or ???1 or ???2.",
-            StageRole.Avenger =>
-                $"When another player dies within {Number(config.AvengerTriggerRadius.Value)} m, enemy damage is multiplied by {Number(config.AvengerDamageMultiplier.Value)} for {Number(config.AvengerDurationSeconds.Value)} seconds. Another nearby death refreshes the duration without stacking the multiplier.",
-            StageRole.Brawler =>
-                $"Identifiable melee weapon damage is multiplied by {Number(config.BrawlerMeleeDamageMultiplier.Value)}, while identifiable gun, staff-projectile, and laser damage is multiplied by {Number(config.BrawlerRangedDamageMultiplier.Value)}. Vehicle impacts, Tumble Attacks, grenades, and ordinary held-object collisions are unchanged.",
+            StageRole.Avenger => $"An ally dying within {Number(config.AvengerTriggerRadius.Value)} m grants {Number(config.AvengerDamageMultiplier.Value)}x enemy damage for {Number(config.AvengerDurationSeconds.Value)} seconds. An ally within {Number(config.AvengerHitTriggerRadius.Value)} m losing at least {config.AvengerHitDamageThreshold.Value} HP to one enemy hit grants {Number(config.AvengerHitDamageMultiplier.Value)}x damage for {Number(config.AvengerHitDuration.Value)} seconds, with a {Number(config.AvengerHitCooldown.Value)}-second cooldown. Only the stronger active bonus applies. Self-damage and friendly fire do not trigger the hit bonus.",
+            StageRole.Brawler => $"Melee damage starts at {Number(config.BrawlerMeleeDamageMultiplier.Value)}x. Each consecutive hit on the same enemy adds {Number(config.BrawlerComboStep.Value)}, up to {Number(Math.Max(config.BrawlerMeleeDamageMultiplier.Value, config.BrawlerComboMaximum.Value))}x. Changing targets or going {Number(config.BrawlerComboTimeout.Value)} seconds without a hit resets the combo. Friendly fire stays at the starting multiplier. Guns, staff projectiles and lasers deal {Number(config.BrawlerRangedDamageMultiplier.Value)}x damage. Vehicle impacts, Tumble Attacks, grenades and ordinary objects are unchanged.",
             StageRole.Superbot => "???",
             StageRole.Disaster => "???",
             _ => "No role description is available."
@@ -302,8 +297,7 @@ internal static class RoleGuideCatalog
                 $"Tumble Wingsの持続時間が延び、より長く空中を移動できます。Tumble Wingsはレベル{config.FlyerWingsLevels.Value}になります。",
             StageRole.Tracker =>
                 $"{Number(config.TrackerEnemyRange.Value)}m以内の最も近い敵を自動で知らせ、{Number(Math.Min(config.TrackerEnemyRange.Value, config.TrackerDangerRange.Value))}m以内への接近を警告します（0で警告無効）。死亡した仲間の最も近い頭は距離制限なく追跡します。通知は本人だけに最短{Number(config.TrackerNotificationInterval.Value)}秒間隔で届きます。接近警告は待ち時間中でも届きますが、近くに居続ける間は連発しません。対象の変更、距離が{Number(config.TrackerDistanceChange.Value)}m変化、方向が60度変化、上下の変化で更新します。方向は視点を基準とする壁越しの直線方向で、経路案内ではありません。Healthは最低レベル{config.TrackerHealthLevels.Value}、Map Player Countは最低レベル1となり、より高い基礎強化を維持します。",
-            StageRole.Ghost =>
-                $"Death Head Batteryがレベル{config.GhostDeathHeadBatteryLevels.Value}になります。",
+            StageRole.Ghost => $"Death Head Batteryはレベル{config.GhostDeathHeadBatteryLevels.Value}。死亡中、頭から{Number(config.GhostHealRadius.Value)}m以内の味方を{Number(config.GhostHealInterval.Value)}秒ごとに{config.GhostHealAmount.Value}HP回復し、1ステージで合計{config.GhostTotalHealingLimit.Value}HPまで回復できます。蘇生しても上限は戻りません。頭を持つ味方はSpeed＋{config.GhostCarrierSpeedBonus.Value}。複数の頭では重複せず、KingのSpeed支援と重なった場合は強い方が優先されます。",
             StageRole.Bomber =>
                 $"{Number(config.BomberDistance.Value)}m移動するごとに、ランダムな起動済みグレネードを一つ落とします。Bomber一人につき最大{config.BomberMaximumActiveGrenades.Value}個まで残り、上限では最も古いものを削除します。" +
                 "爆発はプレイヤーやValuableにも危険です。",
@@ -338,9 +332,7 @@ internal static class RoleGuideCatalog
             StageRole.Gambler =>
                 $"効果が使用可能なときにValuableを持つと、{config.GamblerWinChancePercent.Value}%の確率で現在価格が{Number(config.GamblerWinValueMultiplier.Value)}倍になり、失敗すると破壊されます。" +
                 $"Gambitは緑で{config.GamblerGambitGreenHealAmount.Value}HP回復、赤で{config.GamblerGambitRedDamage.Value}ダメージ、黒で死亡、白で全回復してステージ中のHealthを{config.GamblerGambitWhiteHealthUpgradeLevels.Value}レベル増やします。",
-            StageRole.Hunter =>
-                $"保持中または装備中の武器は、バッテリー消費量が通常の{config.HunterBatteryConsumptionPercent.Value}%になります。" +
-                $"Hunterが倒した敵は{Number(config.HunterDoubleOrbChancePercent.Value)}%の確率でオーブが2倍になり、{Number(config.HunterJackpotOrbChancePercent.Value)}%の特賞では{config.HunterJackpotOrbCount.Value}個になります。",
+            StageRole.Hunter => $"武器のバッテリー消費は通常の{config.HunterBatteryConsumptionPercent.Value}％。自分で倒した、オーブを落とす敵は{Number(config.HunterDoubleOrbChancePercent.Value)}％でオーブ2倍、{Number(config.HunterJackpotOrbChancePercent.Value)}％で{config.HunterJackpotOrbCount.Value}個になります。対象の敵を{config.HunterGuaranteedOrbEveryKills.Value}体倒すごとに追加オーブを最低1個保証します（0で保証なし）。抽選で追加オーブが出た場合は保証分を兼ねます。撃破数はステージごとにリセットされます。",
             StageRole.Stinker =>
                 $"{Number(config.StinkerDistance.Value)}m移動するごとに、発生場所から{Number(config.StinkerSafetyDistance.Value)}m離れた後で有害なウラン雲を残します。" +
                 "雲は一つずつ発生し、他のプレイヤーにも危険です。" +
@@ -371,10 +363,8 @@ internal static class RoleGuideCatalog
                 $"攻撃者を特定できる敵へのダメージが距離に応じて連続変化します。密着時は{Number(config.SniperMinimumDamageMultiplier.Value)}倍、{Number(config.SniperReferenceDistance.Value)}mで1倍、{Number(config.SniperMaximumMultiplierDistance.Value)}mで最大{Number(config.SniperMaximumDamageMultiplier.Value)}倍になります。車両衝突とTumble Attackは変化しません。",
             StageRole.Imitator =>
                 "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、Influenza、Signalman、Twins、???1、???2はコピーしません。",
-            StageRole.Avenger =>
-                $"他のプレイヤーが{Number(config.AvengerTriggerRadius.Value)}m以内で死亡すると、{Number(config.AvengerDurationSeconds.Value)}秒間、敵へのダメージが{Number(config.AvengerDamageMultiplier.Value)}倍になります。効果中の再発動では倍率を重複せず、残り時間だけを更新します。",
-            StageRole.Brawler =>
-                $"攻撃者を特定できる近接武器のダメージが{Number(config.BrawlerMeleeDamageMultiplier.Value)}倍になり、銃、杖の弾、レーザーによるダメージは{Number(config.BrawlerRangedDamageMultiplier.Value)}倍になります。車両衝突、Tumble Attack、グレネード、通常の保持物による衝突は変化しません。",
+            StageRole.Avenger => $"{Number(config.AvengerTriggerRadius.Value)}m以内の味方が死亡すると、{Number(config.AvengerDurationSeconds.Value)}秒間、敵へのダメージが{Number(config.AvengerDamageMultiplier.Value)}倍になります。また、{Number(config.AvengerHitTriggerRadius.Value)}m以内の味方が敵の1回の攻撃で{config.AvengerHitDamageThreshold.Value}HP以上失うと、{Number(config.AvengerHitDuration.Value)}秒間、敵へのダメージが{Number(config.AvengerHitDamageMultiplier.Value)}倍になります。被弾による発動は{Number(config.AvengerHitCooldown.Value)}秒ごと。効果は強い方だけが適用され、自傷・味方からの攻撃では被弾効果が発動しません。",
+            StageRole.Brawler => $"近接武器は最初の一撃が{Number(config.BrawlerMeleeDamageMultiplier.Value)}倍。同じ敵に連続で当てるたびに倍率が{Number(config.BrawlerComboStep.Value)}ずつ上がり、最大{Number(Math.Max(config.BrawlerMeleeDamageMultiplier.Value, config.BrawlerComboMaximum.Value))}倍になります。別の敵に当てるか、{Number(config.BrawlerComboTimeout.Value)}秒間当てないと最初の倍率に戻ります。味方への攻撃は最初の倍率のままです。銃・杖の弾・レーザーは{Number(config.BrawlerRangedDamageMultiplier.Value)}倍。車両衝突・Tumble Attack・グレネード・通常の保持物は変化しません。",
             StageRole.Superbot => "???",
             StageRole.Disaster => "???",
             _ => "この職業の説明はありません。"

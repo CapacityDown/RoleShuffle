@@ -131,7 +131,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
             SetText(row.Remaining, value.Remaining.ToString(CultureInfo.InvariantCulture));
             SetText(row.Maximum, radio ? string.Empty : "<b>/</b>" + value.Limit.ToString(CultureInfo.InvariantCulture));
             row.Remaining.color = row.Maximum.color = row.Symbol.color = row.NativeIcon.color = ink;
-            Sprite? sprite = value.Metric == AbilityMetric.Medic ? _nativePlus?.sprite :
+            Sprite? sprite = value.Metric is AbilityMetric.Medic or AbilityMetric.GhostHealing ? _nativePlus?.sprite :
                 value.Metric == AbilityMetric.Charge ? _nativeZap?.sprite : null;
             row.NativeIcon.sprite = sprite;
             row.NativeIcon.enabled = sprite != null;

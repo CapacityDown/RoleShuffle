@@ -50,6 +50,13 @@ internal sealed class RoleAssignment
     internal float ElectricianChargePercentUsed { get; set; }
     internal float InfluencerNextTtsAt { get; set; }
     internal float AvengerEmpoweredUntil { get; set; }
+    internal float AvengerHitUntil { get; set; }
+    internal float AvengerNextHitAt { get; set; }
+    internal BrawlerCombo BrawlerCombo { get; } = new();
+    // Stage-scoped budgets survive death, revival and role changes.
+    internal int GhostHealingUsed { get; set; }
+    internal float GhostNextHealAt { get; set; }
+    internal int HunterConfirmedKills { get; set; }
     internal float ImitatorCopyNoticeAllowedAt { get; set; }
     internal float SignalmanNextTransmitAt { get; set; }
 }
@@ -181,7 +188,7 @@ internal static class RoleCatalog
         StageRolesConfig config, string? steamId = null)
     {
         if (role == StageRole.Twins) return !RoleOverhaulRules.LifterPhysicsAvailable;
-        if (role == StageRole.Tracker) return false; // Passive tracking remains useful at any Base level.
+        if (role is StageRole.Tracker or StageRole.Ghost) return false; // Passive abilities remain useful at any Base level.
         if (role < StageRole.Tank || role > StageRole.Ghost)
         {
             return false;

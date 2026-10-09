@@ -5,7 +5,7 @@ using System.Text;
 
 namespace REPOJP.StageRoles;
 
-internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, RadioCooldown, TwinRest, TwinDelivery }
+internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, RadioCooldown, TwinRest, TwinDelivery, GhostHealing }
 
 internal readonly struct AbilityValue(AbilityMetric metric, int remaining, int limit)
 {
@@ -89,7 +89,7 @@ internal static class RoleAbilityText
     {
         (string en, string ja) = metric switch
         {
-            AbilityMetric.Medic => ("Healing", "回復"),
+            AbilityMetric.Medic or AbilityMetric.GhostHealing => ("Healing", "回復"),
             AbilityMetric.Rescuer => ("Revives", "蘇生"),
             AbilityMetric.Phoenix => ("Self revive", "自己蘇生"),
             AbilityMetric.MageRecovery => ("Recovery", "自動回復"),
@@ -150,7 +150,7 @@ internal static class RoleAbilityResources
     internal static bool IsResource(AbilityMetric metric) => metric is
         AbilityMetric.Medic or AbilityMetric.Rescuer or AbilityMetric.Phoenix or
         AbilityMetric.MageRecovery or AbilityMetric.Repair or AbilityMetric.Charge or
-        AbilityMetric.Wager or AbilityMetric.Contracts or AbilityMetric.TwinDelivery;
+        AbilityMetric.Wager or AbilityMetric.Contracts or AbilityMetric.TwinDelivery or AbilityMetric.GhostHealing;
 
     internal static IReadOnlyList<AbilityValue> Select(IReadOnlyList<AbilityValue> values, bool resources)
     {
@@ -165,7 +165,7 @@ internal static class RoleAbilityResources
 
     internal static string Unit(AbilityMetric metric) => metric switch
     {
-        AbilityMetric.Medic or AbilityMetric.MageRecovery => " HP",
+        AbilityMetric.Medic or AbilityMetric.MageRecovery or AbilityMetric.GhostHealing => " HP",
         AbilityMetric.Repair or AbilityMetric.Charge => "%",
         _ => string.Empty
     };
@@ -173,6 +173,7 @@ internal static class RoleAbilityResources
     internal static StageRole Emblem(AbilityMetric metric) => metric switch
     {
         AbilityMetric.Medic => StageRole.Medic,
+        AbilityMetric.GhostHealing => StageRole.Ghost,
         AbilityMetric.Rescuer => StageRole.Rescuer,
         AbilityMetric.Phoenix => StageRole.Phoenix,
         AbilityMetric.MageRecovery => StageRole.Mage,

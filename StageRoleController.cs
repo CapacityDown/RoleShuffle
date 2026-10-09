@@ -970,6 +970,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
         assignment.ElectricianChargePercentUsed = 0f;
         assignment.InfluencerNextTtsAt = 0f;
         assignment.AvengerEmpoweredUntil = 0f;
+        assignment.AvengerHitUntil = assignment.AvengerNextHitAt = 0f;
+        assignment.BrawlerCombo.Reset();
         _rescueDeadSince.Remove(assignment.SteamId);
         _rescueRevivePending.Remove(assignment.SteamId);
         _rescueReviverByTarget.Remove(assignment.SteamId);
@@ -1360,6 +1362,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         TickSignalman();
         TickTwins();
         _tracker.Tick(_assignments);
+        TickGhostSupport();
         _eventRoles.Tick(_assignments);
         _overhaul.Tick(_assignments, _notifier);
         _mage.MaintainSpawnedObjects();
@@ -1797,7 +1800,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 100000);
         }
 
-        ApplyBrawlerEnemyDamage(collider, attacker);
+        ApplyBrawlerEnemyDamage(collider, enemy, attacker);
         ApplySniperDamage(collider, enemy, attacker);
         ApplyAvengerDamage(collider, attacker);
     }
@@ -1864,6 +1867,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void ApplyBrawlerEnemyDamage(
         HurtCollider collider,
+        Enemy enemy,
         PlayerAvatar attacker)
     {
         if (collider.enemyDamage <= 0 ||
@@ -1872,6 +1876,10 @@ internal sealed partial class StageRoleController : MonoBehaviour
         {
             return;
         }
+        RoleAssignment? assignment = FindAssignment(attacker);
+        if (assignment != null && PlayerState.IsLiving(attacker) && collider.GetComponentInParent<ItemMelee>() != null)
+            multiplier = assignment.BrawlerCombo.Multiplier(enemy.GetInstanceID(), Time.time, Time.frameCount,
+                multiplier, _config.BrawlerComboStep.Value, _config.BrawlerComboMaximum.Value, _config.BrawlerComboTimeout.Value);
         collider.enemyDamage = ScaleWeaponDamage(
             collider.enemyDamage,
             multiplier);
@@ -1943,7 +1951,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         RoleAssignment? assignment = FindAssignment(attacker);
         if (assignment == null ||
             !RoleCatalog.HasCapability(assignment.Role, StageRole.Avenger) ||
-            Time.time >= assignment.AvengerEmpoweredUntil)
+            !PlayerState.IsLiving(attacker))
         {
             return;
         }
@@ -1952,10 +1960,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
             Mathf.Max(
                 1,
                 Mathf.RoundToInt(
-                    collider.enemyDamage * Mathf.Clamp(
-                        _config.AvengerDamageMultiplier.Value,
-                        1f,
-                        10f))),
+                    collider.enemyDamage * CombatRoleRules.AvengerMultiplier(Time.time,
+                        assignment.AvengerEmpoweredUntil, assignment.AvengerHitUntil,
+                        _config.AvengerDamageMultiplier.Value, _config.AvengerHitDamageMultiplier.Value))),
             1,
             100000);
     }
@@ -1970,6 +1977,11 @@ internal sealed partial class StageRoleController : MonoBehaviour
         NotifySignalmanDeath(player);
         RoleAssignment? deadAssignment = FindAssignment(player);
         if (deadAssignment != null) _overhaul.PlayerDied(deadAssignment);
+        if (deadAssignment != null)
+        {
+            deadAssignment.BrawlerCombo.Reset();
+            deadAssignment.AvengerEmpoweredUntil = deadAssignment.AvengerHitUntil = 0f;
+        }
         RoleHealingRuntime.Forget(player);
         float triggerRadius = Mathf.Clamp(
             _config.AvengerTriggerRadius.Value,
@@ -2017,20 +2029,21 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void TickAvenger(RoleAssignment assignment)
     {
-        if (assignment.AvengerEmpoweredUntil <= 0f ||
-            Time.time < assignment.AvengerEmpoweredUntil)
+        float until = Mathf.Max(assignment.AvengerEmpoweredUntil, assignment.AvengerHitUntil);
+        if (until <= 0f || Time.time < until)
         {
             return;
         }
 
         assignment.AvengerEmpoweredUntil = 0f;
+        assignment.AvengerHitUntil = 0f;
         _notifier.NotifyConditional(
             assignment.Player,
             "AvengerEnded",
             () => RoleCatalog.HasCapability(
                       assignment.Role,
                       StageRole.Avenger) &&
-                  assignment.AvengerEmpoweredUntil <= 0f);
+                  assignment.AvengerEmpoweredUntil <= 0f && assignment.AvengerHitUntil <= 0f);
     }
 
     private void ApplySniperDamage(
@@ -2318,27 +2331,15 @@ internal sealed partial class StageRoleController : MonoBehaviour
             0f,
             100f) / 100f;
 
-        int targetDropCount;
-        string result;
-        if (UnityEngine.Random.value < jackpotChance)
-        {
-            targetDropCount = Mathf.Clamp(
-                _config.HunterJackpotOrbCount.Value,
-                1,
-                30);
-            result = "jackpot";
-        }
-        else if (UnityEngine.Random.value < doubleChance)
-        {
-            targetDropCount = Mathf.Clamp(normalDropCount * 2, 1, 100);
-            result = "double";
-        }
-        else
-        {
-            return;
-        }
-
-        int extraCount = Mathf.Max(0, targetDropCount - normalDropCount);
+        RoleAssignment? hunter = _assignments.Find(a => a.SteamId == credit.SteamId);
+        if (hunter == null) return;
+        hunter.HunterConfirmedKills++;
+        bool jackpot = UnityEngine.Random.value < jackpotChance;
+        bool doubleDrop = !jackpot && UnityEngine.Random.value < doubleChance;
+        int extraCount = CombatRoleRules.HunterExtraOrbs(normalDropCount, hunter.HunterConfirmedKills,
+            _config.HunterGuaranteedOrbEveryKills.Value, jackpot, _config.HunterJackpotOrbCount.Value, doubleDrop);
+        if (extraCount <= 0) return;
+        string result = jackpot ? "jackpot" : doubleDrop ? "double" : "guaranteed";
         int spawnedExtraCount = SpawnHunterBonusOrbs(
             enemyHealth,
             extraCount);

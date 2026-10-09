@@ -1,4 +1,9 @@
 ## 4.6.0
+- Added Ghost support after death: nearby healing with a 50 HP stage budget and Speed +1 for head carriers. Revival preserves the healing budget; high Base levels no longer exclude Ghost.
+- Added Avenger's response to nearby allies taking enemy damage, with its own cooldown. Nearby deaths grant a 30-second bonus; only the stronger active bonus applies.
+- Added Hunter's guaranteed extra orb every two qualifying personal kills, alongside its random rewards.
+- Added Brawler's same-enemy melee combo, rising from 1.25x to 2x; changing targets or a four-second gap resets it. Friendly-fire scaling is unchanged.
+- Adjusted Sniper's default distance curve to normal damage at 6 m and maximum damage at 18 m.
 - Changed Tracker into a passive scout: privately reports nearby enemies and fallen teammates' Death Heads, warns of close enemies, and updates only on meaningful changes. Detection ranges and notification intervals are configurable. Preserves stronger Base upgrades and remains eligible at high Base levels.
 - Added Twins: one fixed pair shares HP, death, revival and infection, with cooperative carrying, shared rest, reunion sprint assistance and a limited joint-delivery value bonus. Includes configurable abilities and resource HUD.
 - Added Signalman: relays ordinary chat unchanged to living teammates at any distance, excluding commands, with a configurable 20-second cooldown. Includes private teammate death alerts, a cooldown HUD, role settings and a Support emblem. Cannot be copied by Imitator.

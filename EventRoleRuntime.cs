@@ -389,6 +389,7 @@ internal sealed class EventRoleRuntime
             ApplyWerewolfDamage(hit, player, observedLoss);
             return;
         }
+        _controller.NotifyAvengerAllyHit(player, observedLoss);
         ApplyBodyguardTransfer(
             player,
             previousHealth,

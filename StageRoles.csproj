@@ -45,6 +45,8 @@
     <Compile Include="SignalmanRules.cs" />
     <Compile Include="SignalmanRuntime.cs" />
     <Compile Include="TrackerRules.cs" />
+    <Compile Include="CombatRoleRules.cs" />
+    <Compile Include="CombatRoleRuntime.cs" />
     <Compile Include="TrackerRoleRuntime.cs" />
     <Compile Include="RolePresets.cs" />
     <Compile Include="RoleSelectionSettings.cs" />
