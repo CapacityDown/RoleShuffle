@@ -57,7 +57,7 @@ internal static class RoleGuideCatalog
             StageRole.Launcher => "Launches the player farther forward when starting a Tumble.",
             StageRole.Climber => "Improves Tumble climbing and allows objects to be grabbed from farther away.",
             StageRole.Flyer => "Keeps Tumble Wings active longer for extended movement through the air.",
-            StageRole.Tracker => "Improves Health and enables Map Player Count so map tools can track another player.",
+            StageRole.Tracker => "Automatically senses nearby enemies and tracks fallen teammates' Death Heads. Privately reports useful changes without items or commands.",
             StageRole.Ghost => "Extends Death Head battery life.",
             StageRole.Bomber => "Drops random armed grenades while moving. The explosions can harm players and valuables.",
             StageRole.Medic => "Periodically heals nearby living teammates, but never heals the Medic.",
@@ -119,7 +119,7 @@ internal static class RoleGuideCatalog
             StageRole.Launcher => "Tumble開始時に、より遠くまで前方へ飛び出します。",
             StageRole.Climber => "Tumble中の登攀能力が上がり、遠くの物をつかめるようになります。",
             StageRole.Flyer => "Tumble Wingsの持続時間が延び、より長く空中を移動できます。",
-            StageRole.Tracker => "Healthが強化され、Map Player Countが有効になってマップ系アイテムで他のプレイヤーを追跡できます。",
+            StageRole.Tracker => "近くの敵と死亡した仲間の頭を自動で探し、状況が変わると本人だけに通知します。アイテムや操作は不要です。",
             StageRole.Ghost => "Death Headのバッテリーが長持ちします。",
             StageRole.Bomber => "移動するとランダムな起動済みグレネードを落とします。爆発はプレイヤーやValuableにも危険です。",
             StageRole.Medic => "周囲の生存中の仲間を定期的に回復します。Medic自身は回復しません。",
@@ -170,8 +170,7 @@ internal static class RoleGuideCatalog
             StageRole.Flyer =>
                 $"Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is set to level {config.FlyerWingsLevels.Value}.",
             StageRole.Tracker =>
-                $"Increases maximum health and allows map tools to track another player. " +
-                $"Health is set to level {config.TrackerHealthLevels.Value} and Map Player Count to level 1.",
+                $"Automatically reports the nearest enemy within {Number(config.TrackerEnemyRange.Value)} m and warns within {Number(Math.Min(config.TrackerEnemyRange.Value, config.TrackerDangerRange.Value))} m (0 disables warnings). Tracks the nearest teammate's Death Head at any distance. Reports are private and at least {Number(config.TrackerNotificationInterval.Value)} seconds apart; close warnings can bypass this wait without repeating while danger remains nearby. Updates when the target changes, distance changes by {Number(config.TrackerDistanceChange.Value)} m, direction changes by 60 degrees, or the target moves above or below. Directions are relative to your view and straight through walls, not a route. Health is at least level {config.TrackerHealthLevels.Value} and Map Player Count at least level 1; stronger Base upgrades are preserved.",
             StageRole.Ghost =>
                 $"Sets Death Head Battery to level {config.GhostDeathHeadBatteryLevels.Value}.",
             StageRole.Bomber => (
@@ -302,8 +301,7 @@ internal static class RoleGuideCatalog
             StageRole.Flyer =>
                 $"Tumble Wingsの持続時間が延び、より長く空中を移動できます。Tumble Wingsはレベル{config.FlyerWingsLevels.Value}になります。",
             StageRole.Tracker =>
-                $"最大HPが増加し、マップ系アイテムで他のプレイヤーを追跡できるようになります。" +
-                $"Healthはレベル{config.TrackerHealthLevels.Value}、Map Player Countはレベル1になります。",
+                $"{Number(config.TrackerEnemyRange.Value)}m以内の最も近い敵を自動で知らせ、{Number(Math.Min(config.TrackerEnemyRange.Value, config.TrackerDangerRange.Value))}m以内への接近を警告します（0で警告無効）。死亡した仲間の最も近い頭は距離制限なく追跡します。通知は本人だけに最短{Number(config.TrackerNotificationInterval.Value)}秒間隔で届きます。接近警告は待ち時間中でも届きますが、近くに居続ける間は連発しません。対象の変更、距離が{Number(config.TrackerDistanceChange.Value)}m変化、方向が60度変化、上下の変化で更新します。方向は視点を基準とする壁越しの直線方向で、経路案内ではありません。Healthは最低レベル{config.TrackerHealthLevels.Value}、Map Player Countは最低レベル1となり、より高い基礎強化を維持します。",
             StageRole.Ghost =>
                 $"Death Head Batteryがレベル{config.GhostDeathHeadBatteryLevels.Value}になります。",
             StageRole.Bomber =>

@@ -181,6 +181,7 @@ internal static class RoleCatalog
         StageRolesConfig config, string? steamId = null)
     {
         if (role == StageRole.Twins) return !RoleOverhaulRules.LifterPhysicsAvailable;
+        if (role == StageRole.Tracker) return false; // Passive tracking remains useful at any Base level.
         if (role < StageRole.Tank || role > StageRole.Ghost)
         {
             return false;
@@ -304,6 +305,12 @@ internal static class RoleCatalog
                 {
                     targets[index] = new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
                         RoleOverhaulRules.LifterStrengthLevel);
+                    break;
+                }
+                if (role == StageRole.Tracker)
+                {
+                    targets[index] = new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
+                        Math.Max(targets[index].Level, roleUpgrade.Level));
                     break;
                 }
                 targets[index] = RoleOverhaulRules.GrowsWithBase(role) || (role == StageRole.Superbot &&

@@ -197,8 +197,9 @@ internal sealed class RoleNotifier
     internal void NotifyResponse(PlayerAvatar player, string message) =>
         Enqueue(player, message, "automatic response");
 
-    internal bool NotifyPrivate(PlayerAvatar player, string message, Func<bool> isValid, Func<bool> dispatch) =>
-        Enqueue(player, message, "private radio", isValid, dispatch: dispatch);
+    internal bool NotifyPrivate(PlayerAvatar player, string message, Func<bool> isValid, Func<bool> dispatch,
+        Action? onFinished = null) =>
+        Enqueue(player, message, "private radio", isValid, onFinished: onFinished, dispatch: dispatch);
 
     private bool HasPendingAssignments =>
         _announcingGeneration == _generation || _assignmentQueue.Pending.Count > 0 ||

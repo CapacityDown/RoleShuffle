@@ -14,7 +14,7 @@ $testSource = @'
 using System;
 using System.Collections.Generic;
 __RULES__
-public enum StageRole { Tank, Runner, Jumper, Lifter, Launcher, Climber, Flyer, Tracker, Ghost, Mage, Superbot, Rammer }
+public enum StageRole { Tank, Runner, Jumper, Lifter, Launcher, Climber, Flyer, Tracker, Ghost, Mage, Superbot, Rammer, Twins }
 public class UpgradeGrant {
     public string CommandName;
     public string DictionaryName;
@@ -73,11 +73,17 @@ __TARGETS__
             Bases = new[] { new UpgradeGrant("Map", 1), new UpgradeGrant("Health", 1) },
             Targets = new[] { new UpgradeGrant("Map", 1), new UpgradeGrant("Health", 3) }
         };
-        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tracker, tracker)) throw new Exception("Tracker equality");
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tracker, tracker)) throw new Exception("Passive Tracker remains eligible with Map upgrade");
         tracker.Bases[0].Level = 0;
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tracker, tracker)) throw new Exception("Tracker below targets");
         tracker.Bases[1].Level = 3;
-        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tracker, tracker)) throw new Exception("Any matching target");
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tracker, tracker)) throw new Exception("Tracker remains eligible with Health upgrade");
+        tracker.Bases[1].Level = 200;
+        var trackerTargets = TargetUpgrades(StageRole.Tracker, tracker);
+        if (trackerTargets[0].Level != 1 || trackerTargets[1].Level != 200) throw new Exception("Tracker preserves stronger Base and grants Map minimum");
+        tracker.Bases[1].Level = 0;
+        if (TargetUpgrades(StageRole.Tracker, tracker)[1].Level != 3) throw new Exception("Tracker Health minimum");
+        count += 2;
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Mage, tracker)) throw new Exception("Non-static role scope");
         tracker.Bases = new[] { new UpgradeGrant("Unrelated", 9999) };
         if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Tracker, tracker)) throw new Exception("Unrelated upgrade");

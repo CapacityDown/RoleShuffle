@@ -183,6 +183,10 @@ internal sealed class StageRolesConfig
     internal Entry<float> StinkerSafetyDistance { get; } = new(7.25f);
     internal Entry<int> TankHealthLevels { get; } = new(17);
     internal Entry<int> TrackerHealthLevels { get; } = new(17);
+    internal Entry<float> TrackerEnemyRange { get; } = new(25f);
+    internal Entry<float> TrackerDangerRange { get; } = new(8f);
+    internal Entry<float> TrackerNotificationInterval { get; } = new(20f);
+    internal Entry<float> TrackerDistanceChange { get; } = new(5f);
     internal Entry<float> TricksterActiveSeconds { get; } = new(7.25f);
     internal Entry<float> TricksterCooldownSeconds { get; } = new(7.25f);
     internal Entry<string> TricksterExpression { get; } = new("Expression_token");

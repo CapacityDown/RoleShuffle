@@ -239,7 +239,11 @@ internal sealed class StageRolesConfig
 
         TrackerEnabled = RoleEnabled(config, "Tracker");
         TrackerWeight = RoleWeight(config, "Tracker");
-        TrackerHealthLevels = UpgradeLevel(config, "Tracker", "HealthUpgradeLevels", 3);
+        TrackerHealthLevels = BindInt(config, "Tracker", "HealthUpgradeLevels", 3, 0, 200, "Minimum Health upgrade level while Tracker is assigned. Stronger Base upgrades are preserved.");
+        TrackerEnemyRange = BindFloat(config, "Tracker", "EnemyDetectionRange", 25f, 1f, 100f, "Automatically reports the nearest enemy within this distance, even through walls.");
+        TrackerDangerRange = BindFloat(config, "Tracker", "DangerAlertRange", 8f, 0f, 100f, "Warns when an enemy approaches within this distance, capped at EnemyDetectionRange. Zero disables close warnings.");
+        TrackerNotificationInterval = BindFloat(config, "Tracker", "NotificationIntervalSeconds", 20f, 5f, 120f, "Minimum seconds between ordinary reports. Close warnings can bypass this wait; repeated close warnings have the same minimum interval.");
+        TrackerDistanceChange = BindFloat(config, "Tracker", "DistanceChangeThreshold", 5f, 1f, 50f, "Distance change needed for an updated report. Target changes, direction changes of at least 60 degrees, or changes above/below also qualify.");
 
         GhostEnabled = RoleEnabled(config, "Ghost");
         GhostWeight = RoleWeight(config, "Ghost", 80);
@@ -659,6 +663,10 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> TrackerEnabled { get; }
     internal ConfigEntry<int> TrackerWeight { get; }
     internal ConfigEntry<int> TrackerHealthLevels { get; }
+    internal ConfigEntry<float> TrackerEnemyRange { get; }
+    internal ConfigEntry<float> TrackerDangerRange { get; }
+    internal ConfigEntry<float> TrackerNotificationInterval { get; }
+    internal ConfigEntry<float> TrackerDistanceChange { get; }
     internal ConfigEntry<bool> GhostEnabled { get; }
     internal ConfigEntry<int> GhostWeight { get; }
     internal ConfigEntry<int> GhostDeathHeadBatteryLevels { get; }

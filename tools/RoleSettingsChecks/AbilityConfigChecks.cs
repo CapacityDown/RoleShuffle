@@ -13,6 +13,10 @@ internal static class AbilityConfigChecks
         var config = new StageRolesConfig(file);
         var cases = new (string Section, string Key, object Default, object Min, object Max)[]
         {
+            ("Tracker", "EnemyDetectionRange", 25f, 1f, 100f),
+            ("Tracker", "DangerAlertRange", 8f, 0f, 100f),
+            ("Tracker", "NotificationIntervalSeconds", 20f, 5f, 120f),
+            ("Tracker", "DistanceChangeThreshold", 5f, 1f, 50f),
             ("Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f),
             ("Twins", "CollisionReductionPercent", 50f, 0f, 100f),
             ("Twins", "RestRadius", 3f, 0.5f, 10f),

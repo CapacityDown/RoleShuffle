@@ -79,6 +79,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private DiverRoleRuntime _diver = null!;
     private RoleOverhaulRuntime _overhaul = null!;
     private RoleNotifier _notifier = null!;
+    private TrackerRoleRuntime _tracker = null!;
     private bool _stageReady;
     private bool _assignmentsInitialized;
     private int _stageGeneration;
@@ -125,6 +126,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _diver = new DiverRoleRuntime(config);
         _overhaul = new RoleOverhaulRuntime(config);
         _notifier = new RoleNotifier(this, config);
+        _tracker = new TrackerRoleRuntime(config, _notifier);
         gameObject.SetActive(false);
     }
 
@@ -943,6 +945,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void ResetAssignmentForRoleChange(RoleAssignment assignment)
     {
+        _tracker.Forget(assignment);
         assignment.ExhaustionNotifications.Rearm();
         assignment.Overhaul.ResetCargo();
         Vector3 position = assignment.Player.transform.position;
@@ -1356,6 +1359,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         TickInfluenza();
         TickSignalman();
         TickTwins();
+        _tracker.Tick(_assignments);
         _eventRoles.Tick(_assignments);
         _overhaul.Tick(_assignments, _notifier);
         _mage.MaintainSpawnedObjects();
@@ -3201,6 +3205,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         StopInfluenza();
         _signalmanGeneration++;
         _signalmanReportedDeaths.Clear();
+        _tracker?.Stop();
         _notifier?.End();
         RoleHealingRuntime.Clear();
         _bomber?.Stop();

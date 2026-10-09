@@ -63,7 +63,7 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 - By default, Showcase and Support minimums rise to four each at 24 players. Danger limits rise from one to two at 8 players and three at 16 players; Hardship limits rise from one to two at 12 players. Influencer is a Showcase role and is not treated as a Danger role. A party of four or fewer receives at most one role across both risk groups.
 - A role found among a player's five most recent assignments uses half of its normal selection weight for that player. Other players' histories do not affect that player's selection.
 - A player normally cannot receive the same role in consecutive stages. After receiving `Courier`, `Tuna`, or `Influenza`, that player is excluded from these Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
-- `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
+- `Jumper`, `Launcher`, `Climber`, `Flyer`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
 - `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, `Signalman`, and `Twins` are not selected in single-player or a one-player session.
 - `Imitator` is selected only after another active player has received a role it can copy.
@@ -82,7 +82,7 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 |![][i05]<br>Launcher|Launches the player farther forward when starting a Tumble. Launch is level 10.|Uses the vanilla Launch upgrade and has no separate active ability.|Launch target 0–100|
 |![][i06]<br>Climber|Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20.|Uses the two vanilla upgrades and has no separate active ability.|Tumble Climb and Range targets 0–100|
 |![][i07]<br>Flyer|Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10.|Uses the vanilla Tumble Wings upgrade and has no separate active ability.|Tumble Wings target 0–100|
-|![][i08]<br>Tracker|Increases maximum health and allows map tools to track another player. Health is level 3 and Map Player Count is level 1.|Map Player Count is fixed at 1. Never selected randomly when only one player is present.|Health target 0–100|
+|![][i08]<br>Tracker|Passively reports the nearest enemy within 25m, warns within 8m, and tracks the nearest teammate's Death Head at any distance. Health minimum 3; Map Player Count minimum 1; preserves stronger Base upgrades.|Private reports only on meaningful changes, normally 20s apart. Close warnings bypass the wait without repeating while danger stays nearby. Straight-line directions relative to your view, including above/below. No item or command needed; requires 2+ players.|Health 0–200; detection, warning, interval and distance-change settings below.|
 |![][i09]<br>Ghost|Sets Death Head Battery to level 50.|Never selected randomly when only one player is present.|Battery target|
 |![][i10]<br>Bomber|Drops a random armed grenade every 8 m traveled. Up to 30 generated grenades remain active per Bomber, and the oldest is removed at the limit.|Grenades can injure players and damage valuables. Only Bomber can hold generated grenades. Movement inside the truck does not count while truck placement is disabled.|Distance, limit, truck placement, grenade types|
 |![][i11]<br>Medic|Heals nearby teammates for 5 HP every 2 seconds within 5 m, up to 150 total HP per stage.|Never heals the Medic. Only living teammates within range are affected. Healing stops when that Medic's stage limit is exhausted. Never selected randomly when only one player is present.|Amount, interval, radius, total limit|
@@ -291,7 +291,11 @@ All entries in this table are host-controlled.
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
 |`Tank.HealthUpgradeLevels`|21|0–200|Minimum Health level guaranteed to Tank.|
-|`Tracker.HealthUpgradeLevels`|3|0–200|Health target while Tracker is assigned.|
+|`Tracker.HealthUpgradeLevels`|3|0–200|Minimum Health level; preserves stronger Base upgrades.|
+|`Tracker.EnemyDetectionRange`|25|1–100|Enemy detection distance (m), including through walls.|
+|`Tracker.DangerAlertRange`|8|0–100|Close warning distance (m), capped at detection range. 0 disables warnings.|
+|`Tracker.NotificationIntervalSeconds`|20|5–120|Minimum report interval (s). Close warnings bypass normal reports' wait, with their own same-length interval.|
+|`Tracker.DistanceChangeThreshold`|5|1–50|Distance change (m) for an update. Target changes, turns of 60° or above/below changes also update.|
 |`Runner.SpeedUpgradeLevels`|6|0–200|Minimum Speed level guaranteed to Runner.|
 |`Runner.StaminaUpgradeLevels`|46|0–200|Minimum Stamina level guaranteed to Runner.|
 |`Jumper.ExtraJumpUpgradeLevels`|10|0–200|Extra Jump levels granted to Jumper.|
@@ -399,7 +403,7 @@ All entries in this table are host-controlled.
 |`Brawler.MeleeDamageMultiplier`|1.25|0–10|Damage multiplier for identifiable melee weapon attacks against enemies and players.|
 |`Brawler.RangedDamageMultiplier`|0.75|0–10|Damage multiplier for identifiable gun, staff-projectile, and laser attacks against enemies and players.|
 
-The default Base level is Health 1 and 0 for other upgrades. Role upgrade settings specify the level used during that role; they are not levels added to Base. Influencer and Berserker preserve stronger upgrades when their conditions change. `Tracker` uses Map Player Count 1 with configurable Health. `Rammer` sets Launch, Tumble Climb and Tumble Wings to 0 during the stage. Throw is unaffected.
+The default Base level is Health 1 and 0 for other upgrades. Role upgrade settings specify the level used during that role; they are not levels added to Base. Influencer and Berserker preserve stronger upgrades when their conditions change. `Tracker` keeps stronger Base upgrades and remains eligible at high Base levels. `Rammer` sets Launch, Tumble Climb and Tumble Wings to 0 during the stage. Throw is unaffected.
 
 Influencer and Berserker scaling accepts comma- or semicolon-separated `condition:level` pairs. Influencer applies the last target whose player-count condition has been reached. Berserker applies the target belonging to the lowest configured HP threshold currently reached. Default expressions omit pairs whose target level would be 0; add a `condition:0` pair manually when an explicit zero override is needed. Levels are limited to 0–100, except Map Player Count which is limited to 0–1. Entries in the wrong format are ignored.
 
@@ -525,7 +529,7 @@ RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘
 - デフォルトでは、24人以上でShowcaseとSupportをそれぞれ最低4人保証します。Danger上限は8人で2人、16人で3人へ増え、Hardship上限は12人で2人へ増えます。InfluencerはShowcase役であり、Danger役として扱いません。4人以下では両リスクグループを合わせて最大1人です。
 - 各プレイヤーが直近5回に割り当てられた役職は、そのプレイヤーの次回抽選時に通常の半分のWeightで扱います。他のプレイヤーの履歴は影響しません。
 - 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Courier`、`Tuna`、`Influenza`のいずれかの後、2ステージはそのプレイヤーをこれらの役職から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
-- `Jumper`、`Launcher`、`Climber`、`Flyer`、`Tracker`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。
+- `Jumper`、`Launcher`、`Climber`、`Flyer`、`Ghost`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。
 - `Influencer`は、現在の参加人数で到達可能なアップグレード目標値が現在のBase Upgradeを1項目も上回らない場合、ランダム抽選から除外されます。
 - `Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`はシングルプレイまたは1人のセッションでは抽選されません。
 - `Imitator`は、コピー可能な役職を持つ他の参加者が確保された場合だけ抽選されます。
@@ -544,7 +548,7 @@ RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘
 |![][i05]<br>Launcher|Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。|バニラのLaunchアップグレードを使用し、別の能動的な能力はありません。|Launch目標値0～100|
 |![][i06]<br>Climber|Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。|2種類のバニラアップグレードを使用し、別の能動的な能力はありません。|Tumble ClimbとRangeの目標値0～100|
 |![][i07]<br>Flyer|Tumble Wingsの効果時間が延び、空中をより長く移動できます。Tumble Wingsはレベル10です。|バニラのTumble Wingsアップグレードを使用し、別の能動的な能力はありません。|Tumble Wings目標値0～100|
-|![][i08]<br>Tracker|最大HPが増加し、マップ系アイテムで別のプレイヤーを追跡できるようになります。Healthはレベル3、Map Player Countはレベル1です。|Map Player Countは1固定です。参加者が1人だけの場合はランダム抽選されません。|Health目標値0～100|
+|![][i08]<br>Tracker|25m以内の最も近い敵を自動通知し、8m以内への接近を警告。死亡した仲間の最も近い頭は距離制限なく追跡。Health最低3、Map Player Count最低1となり、高い基礎強化を維持します。|有意な変化があると本人だけに通常20秒間隔で通知。接近警告は待ち時間中も届きますが、危険が近くに留まる間は連発しません。視点基準の直線方向と上下を案内。アイテム・操作不要、2人以上で抽選。|Health 0～200。検知距離・警告距離・通知間隔・距離変化は下表。|
 |![][i09]<br>Ghost|Death Head Batteryがレベル50になります。|参加者が1人だけの場合はランダム抽選されません。|Battery目標値|
 |![][i10]<br>Bomber|8 m移動するごとに起動済みグレネードをランダム設置します。Bomber 1人につき最大30個まで残り、上限では最も古いものを削除します。|グレネードはプレイヤーやValuableにも危険です。生成されたグレネードを持てるのはBomberだけです。トラック内設置が無効な場合、トラック内の移動距離は加算されません。|距離、上限、トラック内設置、グレネード種類|
 |![][i11]<br>Medic|5 m以内の仲間を2秒ごとに5 HP回復し、1ステージにつき合計150 HPまで回復します。|Medic自身は回復しません。範囲内で生存している仲間だけが対象です。そのMedicの上限を使い切ると回復を停止します。参加者が1人だけの場合はランダム抽選されません。|回復量、間隔、範囲、合計上限|
@@ -753,7 +757,11 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |キー|デフォルト|範囲・値|内容|
 |---|---:|---|---|
 |`Tank.HealthUpgradeLevels`|21|0～200|Tankに保証する最低Healthレベルです。|
-|`Tracker.HealthUpgradeLevels`|3|0～200|TrackerのHealth目標値です。|
+|`Tracker.HealthUpgradeLevels`|3|0～200|Healthの最低レベル。より高い基礎強化を維持します。|
+|`Tracker.EnemyDetectionRange`|25|1～100|壁越しを含む敵の検知距離（m）。|
+|`Tracker.DangerAlertRange`|8|0～100|接近警告の距離（m）。検知距離が上限、0で警告無効。|
+|`Tracker.NotificationIntervalSeconds`|20|5～120|通常通知の最短間隔（秒）。接近警告は通常の待ち時間を無視しますが、警告同士には同じ間隔を設けます。|
+|`Tracker.DistanceChangeThreshold`|5|1～50|更新する距離変化（m）。対象変更、方向が60度変化、上下の変化でも更新。|
 |`Runner.SpeedUpgradeLevels`|6|0～200|Runnerに保証する最低Speedレベルです。|
 |`Runner.StaminaUpgradeLevels`|46|0～200|Runnerに保証する最低Staminaレベルです。|
 |`Jumper.ExtraJumpUpgradeLevels`|10|0～200|Jumperへ付与するExtra Jumpレベルです。|
@@ -861,7 +869,7 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Brawler.MeleeDamageMultiplier`|1.25|0～10|攻撃者を特定できる近接武器が敵とプレイヤーへ与えるダメージ倍率です。|
 |`Brawler.RangedDamageMultiplier`|0.75|0～10|攻撃者を特定できる銃、杖の弾、レーザーが敵とプレイヤーへ与えるダメージ倍率です。|
 
-基礎アップグレードの初期値はHealthが1、ほかが0です。役職のアップグレード設定は、その役職で使用するレベルを表し、基礎値への加算ではありません。InfluencerとBerserkerは条件が変わっても元の高い強化を維持します。`Tracker`はMap Player Countが1で、Healthを設定できます。`Rammer`はステージ中のLaunch・Tumble Climb・Tumble Wingsを0にします。Throwには影響しません。
+基礎アップグレードの初期値はHealthが1、ほかが0です。役職のアップグレード設定は、その役職で使用するレベルを表し、基礎値への加算ではありません。InfluencerとBerserkerは条件が変わっても元の高い強化を維持します。`Tracker`は高い基礎強化を維持し、基礎値が高くても抽選されます。`Rammer`はステージ中のLaunch・Tumble Climb・Tumble Wingsを0にします。Throwには影響しません。
 
 InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたはセミコロンで区切ります。Influencerは到達した人数条件のうち最後の目標値、Berserkerは現在到達している最も低いHP境界の目標値を適用します。目標値が0になる組はデフォルトの記述から省略し、明示的に0へ上書きしたい場合だけ`条件:0`を手動で追加します。レベルはMap Player Countだけ0～1、ほかは0～100です。形式が正しくない項目は無視されます。
 

@@ -44,6 +44,8 @@
     <Compile Include="TwinsPatches.cs" />
     <Compile Include="SignalmanRules.cs" />
     <Compile Include="SignalmanRuntime.cs" />
+    <Compile Include="TrackerRules.cs" />
+    <Compile Include="TrackerRoleRuntime.cs" />
     <Compile Include="RolePresets.cs" />
     <Compile Include="RoleSelectionSettings.cs" />
     <Compile Include="BaseUpgradeDrawSelection.cs" />
