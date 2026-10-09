@@ -62,6 +62,16 @@ internal static class RoleResourceSymbols
         }
         switch (metric)
         {
+            case AbilityMetric.TwinRest:
+                Circle(7,6,3); Circle(18,6,3);
+                Line(7,12,7,20,4); Line(18,12,18,20,4);
+                Line(7,16,18,16,2.5f);
+                break;
+            case AbilityMetric.TwinDelivery:
+                RoundedFrame(3,9,19,13,2);
+                Line(12.5f,2,12.5f,13,2.8f);
+                Fill(7,9,12.5f,15,18,9);
+                break;
             case AbilityMetric.RadioCooldown:
                 RoundedFrame(3,8,15,15,2.5f);
                 Line(6,8,6,2,2.4f); Circle(13,13,1.6f);

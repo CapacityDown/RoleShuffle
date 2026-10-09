@@ -43,6 +43,7 @@ internal enum StageRole
     Brawler,
     Influenza,
     Signalman,
+    Twins,
     Superbot = 1001,
     Disaster = 1002
 }
@@ -53,6 +54,19 @@ internal sealed class StageRolesConfig
     internal Entry<float> LifterHeavyRotationMultiplier { get; } = new(1f);
     internal Entry<int> LifterLightItemStrengthLevel { get; } = new(1);
     internal Entry<float> StinkerBreakGraceSeconds { get; } = new(0.5f);
+    internal Entry<float> TwinsCarryStrengthMultiplier { get; } = new(1.5f);
+    internal Entry<float> TwinsCollisionReductionPercent { get; } = new(50f);
+    internal Entry<float> TwinsRestRadius { get; } = new(3f);
+    internal Entry<float> TwinsRestHoldSeconds { get; } = new(3f);
+    internal Entry<float> TwinsRestHealPercent { get; } = new(10f);
+    internal Entry<float> TwinsRestCooldownSeconds { get; } = new(60f);
+    internal Entry<float> TwinsRendezvousStartRange { get; } = new(15f);
+    internal Entry<float> TwinsRendezvousEndRange { get; } = new(5f);
+    internal Entry<float> TwinsRendezvousSpeedMultiplier { get; } = new(1.25f);
+    internal Entry<float> TwinsDeliveryCarrySeconds { get; } = new(3f);
+    internal Entry<float> TwinsDeliveryRadius { get; } = new(5f);
+    internal Entry<float> TwinsDeliveryBonusPercent { get; } = new(10f);
+    internal Entry<int> TwinsDeliveryStageLimit { get; } = new(5000);
     internal Entry<float> SignalmanCooldownSeconds { get; } = new(20f);
     internal Entry<float> SignalmanMaximumDelaySeconds { get; } = new(5f);
     internal Entry<bool> SignalmanDeathAlerts { get; } = new(true);

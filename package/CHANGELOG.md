@@ -1,4 +1,5 @@
 ## 4.5.4
+- Added Twins: one fixed pair shares HP, death, revival and infection, with cooperative carrying, shared rest, reunion sprint assistance and a limited joint-delivery value bonus. Includes configurable abilities and resource HUD.
 - Added Signalman: relays ordinary chat unchanged to living teammates at any distance, excluding commands, with a configurable 20-second cooldown. Includes private teammate death alerts, a cooldown HUD, role settings and a Support emblem. Cannot be copied by Imitator.
 - Changed notifications and automatic speech to wait per player after initial role announcements. Different players can receive messages at the same time. Diver counts remaining time at 15-second marks, then every second from 10 to 0, interrupting previous speech.
 - Added a short notification when Imitator tries to copy an ineligible role.

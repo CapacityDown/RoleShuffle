@@ -28,6 +28,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private const int RecentRoleHistoryLimit = 5;
     private static readonly StageRole[] SoloExcludedRoles =
     {
+        StageRole.Twins,
         StageRole.Tracker,
         StageRole.Ghost,
         StageRole.Medic,
@@ -405,6 +406,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         int objectId = grabbedObject.GetInstanceID();
         if (_stageReady && IsAuthority())
+        {
+            TwinsCargoReleased(grabbedObject);
             foreach (RoleAssignment assignment in _assignments)
                 if (assignment.Player != null && assignment.Player.photonView != null &&
                     assignment.Player.photonView.ViewID == playerViewId && assignment.Overhaul.CargoId == objectId)
@@ -412,6 +415,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                     _overhaul.CargoReleased(assignment, grabbedObject, _notifier);
                     assignment.Overhaul.ResetCargo();
                 }
+        }
         if (_engineerSuppressedTrapIds.Contains(objectId) ||
             (EngineerEffectCatalog.IsEffectValuable(grabbedObject) &&
              IsAssignedRole(playerViewId, StageRole.Engineer)))
@@ -573,6 +577,20 @@ internal sealed partial class StageRoleController : MonoBehaviour
         {
             [assignment.SteamId] = role
         };
+        if (IsTwin(assignment.Player) && role != StageRole.Twins)
+        {
+            if (role == StageRole.Influenza)
+                changes[_twins!.Members[1 - TwinIndex(assignment.Player)].SteamId] = role;
+            else { response = "Change or randomize both Twins together."; return false; }
+        }
+        if (role == StageRole.Twins && !IsTwin(assignment.Player))
+        {
+            if (_twins != null) { response = "A Twins pair already exists."; return false; }
+            RoleAssignment? partner = _assignments.Find(a => a != assignment && PlayerState.IsLiving(a.Player));
+            if (partner == null || !PlayerState.IsLiving(assignment.Player))
+            { response = "Twins needs two living players."; return false; }
+            changes[partner.SteamId] = StageRole.Twins;
+        }
         ApplyRoleChanges(changes);
 
         string playerName = PlayerIdentity.Name(assignment.Player);
@@ -598,6 +616,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
             return false;
         }
 
+        if (role == StageRole.Twins && (_assignments.Count != 2 || _assignments.Exists(a => !PlayerState.IsLiving(a.Player))))
+        { response = "Twins requires exactly two living players for this command."; return false; }
+
         Dictionary<string, StageRole> changes = new(StringComparer.Ordinal);
         foreach (RoleAssignment assignment in _assignments)
         {
@@ -620,6 +641,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
         }
 
         RoleAssignment? assignment = ResolveAssignment(targetIdentifier);
+        if (assignment != null && IsTwin(assignment.Player))
+        { response = "Randomize both Twins together."; return false; }
         if (assignment == null)
         {
             response = string.IsNullOrWhiteSpace(targetIdentifier)
@@ -801,6 +824,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private void ApplyRoleChanges(
         IReadOnlyDictionary<string, StageRole> changes)
     {
+        if (_twins != null && (changes.ContainsKey(_twins.Members[0].SteamId) || changes.ContainsKey(_twins.Members[1].SteamId)))
+            StopTwins();
         _signalmanGeneration++;
         _notifier.ResetPending();
         RoleHealingRuntime.Clear();
@@ -869,6 +894,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _diver.Begin(_assignments);
         ApplyKingCrown();
         RoleAssignmentSync.Publish(_assignments);
+        BeginTwins();
     }
 
     private void ResetAssignmentForRoleChange(RoleAssignment assignment)
@@ -1259,6 +1285,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void CompleteStagePreparation()
     {
+        BeginTwins();
         foreach (RoleAssignment assignment in _assignments) StartInfluenza(assignment);
         _assignmentsInitialized = true;
         _nextPlayerPresenceCheckAt =
@@ -1284,6 +1311,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         }
         TickInfluenza();
         TickSignalman();
+        TickTwins();
         _eventRoles.Tick(_assignments);
         _overhaul.Tick(_assignments, _notifier);
         _mage.MaintainSpawnedObjects();
@@ -2679,6 +2707,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         foreach (RoleAssignment assignment in departed)
         {
+            if (IsTwin(assignment.Player)) StopTwins();
             _bomber.RemovePlayer(assignment.SteamId);
             _medic.RemovePlayer(
                 assignment.SteamId,
@@ -3119,6 +3148,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         bool restoreBaseUpgrades,
         bool deactivate)
     {
+        StopTwins();
         CaptureRoleHistory();
         _stageReady = false;
         _assignmentsInitialized = false;

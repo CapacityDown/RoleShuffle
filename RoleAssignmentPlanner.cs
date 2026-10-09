@@ -50,6 +50,7 @@ internal sealed class RoleAssignmentPlanner
         StageRole.Disaster
     };
 
+    private bool _selectingPair;
     private readonly StageRolesConfig _config;
     private readonly IReadOnlyDictionary<string, StageRole> _previousRoles;
     private readonly IReadOnlyDictionary<string, List<StageRole>>
@@ -77,10 +78,11 @@ internal sealed class RoleAssignmentPlanner
     {
         Dictionary<string, StageRole> result = new(StringComparer.Ordinal);
         List<PlayerSlot> remaining = new();
+        HashSet<string> identities = new(StringComparer.Ordinal);
         foreach (PlayerAvatar player in players)
         {
             string steamId = PlayerIdentity.SteamId(player);
-            if (!string.IsNullOrEmpty(steamId))
+            if (!string.IsNullOrEmpty(steamId) && identities.Add(steamId))
             {
                 remaining.Add(new PlayerSlot(steamId, player));
             }
@@ -89,6 +91,7 @@ internal sealed class RoleAssignmentPlanner
 
         List<StageRole> selectedRoles = new();
         int playerCount = remaining.Count;
+        AssignTwinsPair(remaining, enabledRoles, selectedRoles, result, playerCount);
         AssignGuarantee(
             ShowcaseRoles,
             _config.ShowcaseMinimumForPlayerCount(playerCount),
@@ -126,6 +129,35 @@ internal sealed class RoleAssignmentPlanner
             selectedRoles.Add(role.Value);
         }
         return result;
+    }
+
+    // A weighted pair offer precedes category guarantees. It reserves two slots
+    // atomically; guarantees then use the remaining slots. No fallback/join draw
+    // may create a lone twin, even with uniqueness disabled or only Twins enabled.
+    private void AssignTwinsPair(List<PlayerSlot> remaining, IReadOnlyList<StageRole> enabledRoles,
+        List<StageRole> selected, IDictionary<string, StageRole> result, int playerCount)
+    {
+        if (playerCount < 2) return;
+        _selectingPair = true;
+        try
+        {
+            List<PlayerSlot> eligible = new();
+            foreach (PlayerSlot slot in remaining)
+                if (PlayerState.IsLiving(slot.Player) && Candidates(slot.SteamId, enabledRoles, selected, playerCount,
+                    true, true, true, null).Contains(StageRole.Twins)) eligible.Add(slot);
+            if (eligible.Count < 2) return;
+            PlayerSlot first = eligible[0];
+            List<StageRole> offer = Candidates(first.SteamId, enabledRoles, selected, playerCount,
+                true, true, true, null);
+            if (PickWeightedRole(first.SteamId, offer) != StageRole.Twins) return;
+            PlayerSlot second = eligible[UnityEngine.Random.Range(1, eligible.Count)];
+            result[first.SteamId] = result[second.SteamId] = StageRole.Twins;
+            selected.Add(StageRole.Twins);
+            selected.Add(StageRole.Twins);
+            remaining.Remove(first);
+            remaining.Remove(second);
+        }
+        finally { _selectingPair = false; }
     }
 
     internal StageRole? PlanJoinedAssignment(
@@ -304,6 +336,7 @@ internal sealed class RoleAssignmentPlanner
         List<StageRole> result = new();
         foreach (StageRole role in enabledRoles)
         {
+            if (role == StageRole.Twins && (!_selectingPair || playerCount < 2 || Contains(selectedRoles, StageRole.Twins))) continue;
             if (role == StageRole.Disaster && playerCount <= 1)
             {
                 continue;

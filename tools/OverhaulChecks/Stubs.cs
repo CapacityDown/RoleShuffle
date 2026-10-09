@@ -177,7 +177,13 @@ namespace REPOJP.StageRoles
     internal static class UtilityRoleRuntime
     { internal static bool IsHeldBy(PhysGrabObject item, RoleAssignment assignment) => item.HeldBy == assignment.SteamId; }
     internal sealed class TestLog { internal void LogDebug(string message) { } internal void LogWarning(string message) { } }
-    internal static class StageRolesPlugin { internal static TestLog ModLogger = new(); }
+    internal static class StageRolesPlugin
+    {
+        internal static TestLog ModLogger = new();
+        internal static Plugin? Instance => null;
+        internal sealed class Plugin { internal Controller? Controller => null; }
+        internal sealed class Controller { internal void ForgetTwinsSpeed(string id, string key) { } }
+    }
 }
 
 public sealed class StatsManager

@@ -141,6 +141,13 @@ namespace REPOJP.StageRoles
     internal sealed class Logger { internal void LogInfo(string text) {} internal void LogDebug(string text) {} }
     internal sealed partial class StageRoleController
     {
+        internal RoleAssignment? TwinA, TwinB;
+        private RoleAssignment? UnlinkTwinForInfection(RoleAssignment a)
+        {
+            var partner=a==TwinA?TwinB:a==TwinB?TwinA:null;
+            if(partner!=null){TwinA=null;TwinB=null;}
+            return partner;
+        }
         private readonly List<RoleAssignment> _assignments = new();
         private readonly Dictionary<string, RoleAssignment> _departedAssignments = new();
         private bool _stageReady=true, _assignmentsInitialized=true;

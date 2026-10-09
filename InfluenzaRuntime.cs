@@ -137,6 +137,7 @@ internal sealed partial class StageRoleController
 
     private void InfectWithInfluenza(RoleAssignment assignment)
     {
+        RoleAssignment? twin = UnlinkTwinForInfection(assignment);
         StageRole previous = assignment.Role;
         // Remove only this player's persistent effects; other players' budgets,
         // hazards and pending actions must retain their stage state.
@@ -158,6 +159,7 @@ internal sealed partial class StageRoleController
         _notifier.NotifyConditional(assignment.Player, "Influenza",
             () => _stageReady && assignment.Role == StageRole.Influenza);
         StageRolesPlugin.ModLogger.LogInfo($"Influenza infection: {assignment.SteamId}, {previous} -> Influenza.");
+        if (twin != null && twin.Role != StageRole.Influenza) InfectWithInfluenza(twin);
     }
 }
 

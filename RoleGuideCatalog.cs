@@ -5,6 +5,7 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleGuideCatalog
 {
+    internal const string TwinsSummary = "Two teammates share one HP pool and infection. Cooperate to carry, rest, reunite and earn delivery bonuses.";
     private const string RevivalStillnessDescription = " Revival waits until the Death Head has stopped moving.";
     private const string PhoenixWaitDescription = " An unused revival prevents game over, regardless of how long the wait takes.";
     internal const string InfluenzaSummary = "30 seconds after becoming Influenza, maximum HP is fixed at 75. Sneezes and speech can spread it to teammates, replacing their roles. Sneezes also alert enemies.";
@@ -33,8 +34,8 @@ internal static class RoleGuideCatalog
 
     private static string RevealedSuperbotText(RoleGuideLanguage language) =>
         language == RoleGuideLanguage.Japanese
-            ? "Influenza、Bomber、Stinker、Werewolf、Courier、Tuna、\nKing、Diver、Imitator、Sniper、Brawlerを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
-            : "Combines role upgrades and abilities except Influenza, Bomber, Stinker, Werewolf, Courier, Tuna, King, Diver, Imitator, Sniper, and Brawler. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
+            ? "Influenza、Bomber、Stinker、Werewolf、Courier、Tuna、\nKing、Diver、Imitator、Sniper、Brawler、Twinsを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
+            : "Combines role upgrades and abilities except Influenza, Bomber, Stinker, Werewolf, Courier, Tuna, King, Diver, Imitator, Sniper, Brawler, and Twins. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
 
     internal static string GenericDescription(
         StageRole role,
@@ -47,6 +48,7 @@ internal static class RoleGuideCatalog
         role switch
         {
             StageRole.Influenza => InfluenzaSummary,
+            StageRole.Twins => TwinsSummary,
             StageRole.Signalman => "Relays ordinary chat to living teammates at any distance. Commands are excluded; radio has a cooldown. Privately receives teammate death alerts.",
             StageRole.Tank => "Increases maximum health, making the player harder to defeat.",
             StageRole.Runner => "Increases movement speed and stamina for faster, longer sprints.",
@@ -97,6 +99,7 @@ internal static class RoleGuideCatalog
         role switch
         {
             StageRole.Influenza => InfluenzaSummaryJapanese,
+            StageRole.Twins => "2人1組でHPと感染を共有します。一緒に運ぶ・休む・合流する・納品することで能力を発揮します。",
             StageRole.Signalman => "通常チャットを、距離に関係なく生存中の仲間へ届けます。コマンドは除外し、通信後は再使用待ちになります。仲間の死亡通知も受け取ります。",
             StageRole.Rider => "運転中の車両が敵へ与える衝突ダメージと、プレイヤーへのノックバックが増加します。",
             StageRole.Influencer => "近くの仲間が多いほど強化されますが、物音が広がり、定期的にTTSで発言します。",
@@ -156,6 +159,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaDescription,
             StageRole.Signalman => SignalmanDescription(config, false),
+            StageRole.Twins => TwinsDescription(config, false),
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
             StageRole.Launcher =>
@@ -255,7 +259,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"Identifiable attacks against enemies scale continuously with distance: {Number(config.SniperMinimumDamageMultiplier.Value)}x at point-blank range, 1x at {Number(config.SniperReferenceDistance.Value)} m, and up to {Number(config.SniperMaximumDamageMultiplier.Value)}x at {Number(config.SniperMaximumMultiplierDistance.Value)} m. Vehicle impacts and Tumble Attacks are unchanged.",
             StageRole.Imitator =>
-                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Signalman, or ???1 or ???2.",
+                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Signalman, Twins, or ???1 or ???2.",
             StageRole.Avenger =>
                 $"When another player dies within {Number(config.AvengerTriggerRadius.Value)} m, enemy damage is multiplied by {Number(config.AvengerDamageMultiplier.Value)} for {Number(config.AvengerDurationSeconds.Value)} seconds. Another nearby death refreshes the duration without stacking the multiplier.",
             StageRole.Brawler =>
@@ -272,6 +276,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaDescriptionJapanese,
             StageRole.Signalman => SignalmanDescription(config, true),
+            StageRole.Twins => TwinsDescription(config, true),
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",
             StageRole.Influencer =>
@@ -367,7 +372,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"攻撃者を特定できる敵へのダメージが距離に応じて連続変化します。密着時は{Number(config.SniperMinimumDamageMultiplier.Value)}倍、{Number(config.SniperReferenceDistance.Value)}mで1倍、{Number(config.SniperMaximumMultiplierDistance.Value)}mで最大{Number(config.SniperMaximumDamageMultiplier.Value)}倍になります。車両衝突とTumble Attackは変化しません。",
             StageRole.Imitator =>
-                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、Influenza、Signalman、???1、???2はコピーしません。",
+                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、Influenza、Signalman、Twins、???1、???2はコピーしません。",
             StageRole.Avenger =>
                 $"他のプレイヤーが{Number(config.AvengerTriggerRadius.Value)}m以内で死亡すると、{Number(config.AvengerDurationSeconds.Value)}秒間、敵へのダメージが{Number(config.AvengerDamageMultiplier.Value)}倍になります。効果中の再発動では倍率を重複せず、残り時間だけを更新します。",
             StageRole.Brawler =>
@@ -376,6 +381,13 @@ internal static class RoleGuideCatalog
             StageRole.Disaster => "???",
             _ => "この職業の説明はありません。"
         };
+
+    private static string TwinsDescription(StageRolesConfig c, bool japanese)
+    {
+        return japanese
+            ? $"2人以上で最大1組。2人の現在HP・最大HPを合算し、被弾と回復を共有します。片方の死亡で2人とも死亡し、片方への蘇生で2人とも復活します。相方へのHP渡しは無効です。片方への感染で2人ともInfluenzaになり、共有を解除します。ステージ終了・相方の離脱でも解除し、残りHPの割合を保ちます。\n\n共同運搬：同じ貴重品を2人でつかむ間、掴む力{Number(c.TwinsCarryStrengthMultiplier.Value)}倍、衝突による価値減少を{Number(c.TwinsCollisionReductionPercent.Value)}％軽減。購入装備は対象外です。\n共同休憩：{Number(c.TwinsRestRadius.Value)}m以内で2人ともしゃがみ、被弾せず{Number(c.TwinsRestHoldSeconds.Value)}秒静止すると共有最大HPの{Number(c.TwinsRestHealPercent.Value)}％を回復し、両者のスタミナを全回復します。再使用は{Number(c.TwinsRestCooldownSeconds.Value)}秒後。\n合流支援：{Number(c.TwinsRendezvousStartRange.Value)}m以上離れると、相方へ走る間の速度を約{Number(c.TwinsRendezvousSpeedMultiplier.Value)}倍にします。{Number(c.TwinsRendezvousEndRange.Value)}m以内で終了。\n共同納品：納品エリア外で同じ貴重品を{Number(c.TwinsDeliveryCarrySeconds.Value)}秒共同運搬し、2人がその品の{Number(c.TwinsDeliveryRadius.Value)}m以内にいる状態でトラック・納品所へ入れると価値＋{Number(c.TwinsDeliveryBonusPercent.Value)}％。1品1回、ステージ合計上限${c.TwinsDeliveryStageLimit.Value}。"
+            : $"At least two players; at most one pair. Combine current and maximum HP and share damage and healing. Either death kills both; either revival revives both. HP transfers within the pair are disabled. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving also ends sharing, preserving each player's remaining HP proportion.\n\nCarry: holding the same valuable together gives {Number(c.TwinsCarryStrengthMultiplier.Value)}x grab strength and reduces collision value loss by {Number(c.TwinsCollisionReductionPercent.Value)}%. Shop equipment is excluded.\nRest: both crouch within {Number(c.TwinsRestRadius.Value)} m and stay still without damage for {Number(c.TwinsRestHoldSeconds.Value)} seconds to heal {Number(c.TwinsRestHealPercent.Value)}% of shared maximum HP and refill both players' stamina. Pair cooldown: {Number(c.TwinsRestCooldownSeconds.Value)} seconds.\nReunite: after separating by {Number(c.TwinsRendezvousStartRange.Value)} m, sprint toward your partner at about {Number(c.TwinsRendezvousSpeedMultiplier.Value)}x speed until within {Number(c.TwinsRendezvousEndRange.Value)} m.\nDeliver: carry a valuable together outside delivery areas for {Number(c.TwinsDeliveryCarrySeconds.Value)} seconds, then bring it into the truck or extraction area with both players within {Number(c.TwinsDeliveryRadius.Value)} m of it. Value +{Number(c.TwinsDeliveryBonusPercent.Value)}%, once per item; stage bonus cap ${c.TwinsDeliveryStageLimit.Value}.";
+    }
 
     private static string SignalmanDescription(StageRolesConfig config, bool japanese)
     {

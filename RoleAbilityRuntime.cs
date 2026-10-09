@@ -40,6 +40,11 @@ internal sealed partial class StageRoleController
         if (Has(StageRole.Diver)) values.Add(_diver.Status(assignment.SteamId));
         if (Has(StageRole.Avenger)) Seconds(AbilityMetric.Avenger, assignment.AvengerEmpoweredUntil);
         if (Has(StageRole.Signalman)) Seconds(AbilityMetric.RadioCooldown, assignment.SignalmanNextTransmitAt);
+        if (assignment.Role == StageRole.Twins && _twins != null && IsTwin(assignment.Player))
+        {
+            Seconds(AbilityMetric.TwinRest, _twins.Cooperation.RestReadyAt);
+            Budget(AbilityMetric.TwinDelivery, _twins.Cooperation.DeliveryBonusUsed, _config.TwinsDeliveryStageLimit.Value);
+        }
         if (Has(StageRole.Stinker)) values.Add(new AbilityValue(AbilityMetric.CloudDistance,
             Mathf.FloorToInt(assignment.StinkerTravelDistance), Mathf.CeilToInt(_config.ClampedStinkerDistance)));
         if (Has(StageRole.Bomber)) values.Add(new AbilityValue(AbilityMetric.GrenadeDistance,

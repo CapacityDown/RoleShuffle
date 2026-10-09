@@ -39,6 +39,9 @@
     <Compile Include="StageRole.cs" />
     <Compile Include="InfluenzaRules.cs" />
     <Compile Include="InfluenzaRuntime.cs" />
+    <Compile Include="TwinsRules.cs" />
+    <Compile Include="TwinsRuntime.cs" />
+    <Compile Include="TwinsPatches.cs" />
     <Compile Include="SignalmanRules.cs" />
     <Compile Include="SignalmanRuntime.cs" />
     <Compile Include="RolePresets.cs" />

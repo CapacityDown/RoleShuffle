@@ -23,7 +23,8 @@ namespace UnityEngine {
 }
 namespace REPOJP.StageRoles {
 __ENUM__
-internal class PlayerAvatar { public string Id = "p"; }
+internal class PlayerAvatar { public string Id = "p"; public bool Living=true; }
+internal static class PlayerState { public static bool IsLiving(PlayerAvatar player)=>player.Living; }
 internal class Logger { public void LogDebug(string text) { } }
 internal static class StageRolesPlugin { public static readonly Logger ModLogger = new(); }
 internal static class PlayerIdentity { public static string SteamId(PlayerAvatar p)=>p.Id; }
@@ -61,7 +62,7 @@ __PARSE__
         Check(TryParseRole("???2",out parsed) && parsed==StageRole.Disaster,"command secret alias 2");
         Check(TryParseRole("Disaster",out parsed) && parsed==StageRole.Disaster,"command real name");
         Check(!TryParseRole("999",out parsed) && !TryParseRole("1000",out parsed),"old IDs no longer assigned");
-        Check(!TryParseRole("43",out parsed),"hidden roles have no ordinary numeric alias");
+        Check(!TryParseRole("44",out parsed),"hidden roles have no ordinary numeric alias");
         Check(TryParseRole("42",out parsed) && parsed==StageRole.Signalman,"Signalman appended without renumbering existing roles");
         Check(TryParseRole("41",out parsed) && parsed==StageRole.Influenza,"Influenza appended without renumbering existing roles");
         Check(TryParseRole("40",out parsed) && parsed==StageRole.Brawler,"standard IDs preserved");
@@ -76,6 +77,16 @@ __PARSE__
         var planner=new RoleAssignmentPlanner(config,new Dictionary<string,StageRole>(),new Dictionary<string,List<StageRole>>(),new Dictionary<string,int>(),1);
         var secrets=new[]{StageRole.Superbot,StageRole.Disaster};
         config.UniqueRoles.Value=false;
+        Check(TryParseRole("43",out parsed) && parsed==StageRole.Twins,"Twins ID appended");
+        Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Twins) && !RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Twins),"Twins cannot be copied or inherited");
+        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Twins},Array.Empty<StageRole>(),3)==null,"Joining cannot create lone Twins even in fallback");
+        Check(planner.PlanInitialAssignments(new[]{new PlayerAvatar{Id="a"}},new[]{StageRole.Twins}).Count==0,"No solo Twins draw");
+        Check(planner.PlanInitialAssignments(new[]{new PlayerAvatar{Id="a"},new PlayerAvatar{Id="a"}},new[]{StageRole.Twins}).Count==0,"Duplicate identities cannot form a pair");
+        Check(planner.PlanInitialAssignments(new[]{new PlayerAvatar{Id="a"},new PlayerAvatar{Id="b",Living=false}},new[]{StageRole.Twins}).Count==0,"Dead players cannot be drawn as a new pair");
+        var pair=planner.PlanInitialAssignments(new[]{new PlayerAvatar{Id="a"},new PlayerAvatar{Id="b"}},new[]{StageRole.Twins});
+        Check(pair.Count==2 && pair["a"]==StageRole.Twins && pair["b"]==StageRole.Twins,"Pair draw reserves both slots");
+        var many=planner.PlanInitialAssignments(new[]{new PlayerAvatar{Id="a"},new PlayerAvatar{Id="b"},new PlayerAvatar{Id="c"},new PlayerAvatar{Id="d"}},new[]{StageRole.Twins,StageRole.Runner});
+        Check(new List<StageRole>(many.Values).FindAll(r=>r==StageRole.Twins).Count==2 && many.Count==4,"At most one pair and remaining players still get roles");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},Array.Empty<StageRole>(),1)==null,"Signalman excluded in solo including fallback");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},Array.Empty<StageRole>(),2)==StageRole.Signalman,"Signalman available for two players");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},new[]{StageRole.Signalman},2)==null,"Signalman maximum one even with uniqueness off and fallback");

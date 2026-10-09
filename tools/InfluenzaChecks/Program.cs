@@ -267,4 +267,15 @@ carrierA.Player.MessageBusy=false;concurrent.Tick(201);
 Check(carrierA.Player.Spoken.Contains("Achoo!") && EnemyDirector.instance.Investigations.Count==2,
     "Delayed sneeze resumes with enemy alert once its own message ends");
 concurrent.Stop();
+Time.time=0;
+var twins=new StageRoleController();
+twins._config.InfluenzaSpeechChance.Value=100;
+var spreader=new RoleAssignment("spreader",StageRole.Influenza,0,0);
+var twinA=new RoleAssignment("twin-a",StageRole.Twins,0,1);
+var twinB=new RoleAssignment("twin-b",StageRole.Twins,0,100);
+twins.TwinA=twinA;twins.TwinB=twinB;twins.Add(spreader,twinA,twinB);twins.Tick(30);
+twins.OnInfluenzaChat(spreader.Player,"hello",new(){Sender=spreader.Player.photonView.Owner});
+Check(twinA.Role==StageRole.Influenza&&twinB.Role==StageRole.Influenza,"One infected twin replaces both roles despite distance");
+Check(twins.Onset("twin-a")==twins.Onset("twin-b"),"Paired infection starts at the same time");
+twins.Stop();
 Console.WriteLine($"Influenza: {count} checks passed (production rules and runtime).");

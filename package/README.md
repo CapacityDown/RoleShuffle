@@ -39,7 +39,7 @@ Choose `PRESETS` and apply a play style to replace the role switches. Presets pr
 
 |Preset|Enabled roles|Play style|
 |---|---|---|
-|Standard|44|Every role, including both secret roles; restores the default ON/OFF selection.|
+|Standard|45|Every role, including both secret roles; restores the default ON/OFF selection.|
 |Beginner|20|Basic upgrades, recovery and protection without passive hazard or hardship roles.|
 |Cooperative|17|Team support, healing, repairs and shared survival.|
 |Chaos|15|Explosions, magic, gambles and unpredictable effects.|
@@ -65,7 +65,7 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 - A player normally cannot receive the same role in consecutive stages. After receiving `Courier`, `Tuna`, or `Influenza`, that player is excluded from these Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
 - `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
-- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, and `Signalman` are not selected in single-player or a one-player session.
+- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, `Signalman`, and `Twins` are not selected in single-player or a one-player session.
 - `Imitator` is selected only after another active player has received a role it can copy.
 - By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` when no melee weapon is available. Weapon-like valuables do not count as weapons for either role's assignment, and staffs do not count for Sniper assignment.
 - Players who leave are removed from the role list. Returning players regain their previous role; new players receive a role, its upgrades and an announcement.
@@ -112,11 +112,12 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 |![][i35]<br>Rammer|Tumble Attack deals 100 damage to enemies and deals 15 damage to Rammer after a successful hit.|Launch, Tumble Climb, and Tumble Wings are fixed at level 0 for the stage regardless of Base Upgrades.|Tumble Attack and self damage|
 |![][i36]<br>Diver|Tumbling while continuing to look down at a fixed floor enables movement below it for up to 10 seconds.|Failing to return through a floor in time kills Diver. Returning above the floor starts a cooldown equal to 1.5 times the previous dive time. The countdown and ready state are announced by TTS.|Underfloor duration, movement force|
 |![][i37]<br>Sniper|Enemy damage changes continuously with distance: 0.5x at point-blank range, 1x at 8 m, and up to 2x at 24 m.|Applies only when Sniper can be identified as the attacker. Vehicle impacts and Tumble Attacks are unchanged.|Reference distance, minimum and maximum multipliers, maximum-multiplier distance|
-|![][i38]<br>Imitator|Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator.|Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Signalman, or ???1 or ???2; announces `CannotCopy` on an ineligible attempt. The first valid copy is fixed for the stage. Never selected randomly when only one player is present.|Selection only|
+|![][i38]<br>Imitator|Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator.|Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Signalman, Twins, or ???1 or ???2; announces `CannotCopy` on an ineligible attempt. The first valid copy is fixed for the stage. Never selected randomly when only one player is present.|Selection only|
 |![][i39]<br>Avenger|When another player dies within 30 m, deals 1.5x damage to enemies for 20 seconds.|Activation, duration refreshes, and expiration are announced by TTS. Another nearby death refreshes the duration without stacking the multiplier. Its own death does not activate the effect. Never selected randomly when only one player is present.|Trigger radius, damage multiplier, and duration|
 |![][i40]<br>Brawler|Deals 1.25x damage with identifiable melee weapon attacks and 0.75x damage with identifiable guns, staff projectiles, and lasers.|Vehicle impacts, Tumble Attacks, grenades, and ordinary held-object collisions are unchanged.|Melee and ranged damage multipliers|
 |![][i41]<br>Influenza|**Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance.|**If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws.|Onset, HP, sneeze intervals, infection range/angle/chance, hearing|
 |![][i42]<br>Signalman|Relays ordinary chat unchanged to every living teammate at any distance, in each receiver's own TTS voice. Receives private teammate death alerts. Radio cooldown: 20 seconds.|Commands and automatic notices are excluded. Cooldown posts stay ordinary chat and are never relayed later. Waits for each receiver; countdowns have priority. Drops messages after 5 seconds waiting. At least two players; at most one drawn. Normal VC range is unchanged.|Cooldown, waiting limit, death alerts, command exclusions|
+|![][i43]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together gives 1.5x grab strength and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -141,6 +142,8 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 Ability resources appear below stamina in one column and shrink to fit when necessary. The role list shows each player's role. Install the same RoleShuffle version as the host to use the resource HUD.
 
 ### Ability tuning
+
+Twins uses the `Twins` section. Defaults: `CarryStrengthMultiplier=1.5`, `CollisionReductionPercent=50`, `RestRadius=3`, `RestHoldSeconds=3`, `RestHealPercent=10`, `RestCooldownSeconds=60`, `RendezvousStartRange=15`, `RendezvousEndRange=5`, `RendezvousSpeedMultiplier=1.25`, `DeliveryCarrySeconds=3`, `DeliveryRadius=5`, `DeliveryBonusPercent=10`, `DeliveryStageLimit=5000`. Distances are metres, waits are seconds, and the delivery cap is dollars.
 
 Host: REPOConfig → RoleShuffle → role name. Defaults preserve the abilities above. Holding strength, HP and infection checks use current settings. Incubation changes apply to new infections; an already scheduled sneeze keeps its deadline. Stinker delay applies to new valuables. Existing settings are preserved.
 
@@ -279,53 +282,7 @@ Default draw weights are Stamina 40; Speed, Range and Crouch Rest 30; Health and
 
 #### Role selection
 
-Host-controlled. Each standard role has an `Enabled` switch (true/false) and a relative `Weight` (0–1000). OFF or weight 0 excludes it from random assignment. The two secret roles have fixed weights. Exact keys and defaults are listed below.
-
-|Enabled key and default|Weight key and default|
-|---|---|
-|`Tank.Enabled = true`|`Tank.Weight = 100`|
-|`Runner.Enabled = true`|`Runner.Weight = 100`|
-|`Jumper.Enabled = true`|`Jumper.Weight = 100`|
-|`Lifter.Enabled = true`|`Lifter.Weight = 100`|
-|`Launcher.Enabled = true`|`Launcher.Weight = 100`|
-|`Climber.Enabled = true`|`Climber.Weight = 100`|
-|`Flyer.Enabled = true`|`Flyer.Weight = 100`|
-|`Tracker.Enabled = true`|`Tracker.Weight = 100`|
-|`Ghost.Enabled = true`|`Ghost.Weight = 80`|
-|`Bomber.Enabled = true`|`Bomber.Weight = 80`|
-|`Medic.Enabled = true`|`Medic.Weight = 100`|
-|`Phoenix.Enabled = true`|`Phoenix.Weight = 100`|
-|`Courier.Enabled = true`|`Courier.Weight = 20`|
-|`Rescuer.Enabled = true`|`Rescuer.Weight = 80`|
-|`Vampire.Enabled = true`|`Vampire.Weight = 100`|
-|`King.Enabled = true`|`King.Weight = 100`|
-|`Tuna.Enabled = true`|`Tuna.Weight = 50`|
-|`Musician.Enabled = true`|`Musician.Weight = 60`|
-|`Mage.Enabled = true`|`Mage.Weight = 100`|
-|`Gambler.Enabled = true`|`Gambler.Weight = 100`|
-|`Hunter.Enabled = true`|`Hunter.Weight = 80`|
-|`Stinker.Enabled = true`|`Stinker.Weight = 80`|
-|`Engineer.Enabled = true`|`Engineer.Weight = 70`|
-|`Trickster.Enabled = true`|`Trickster.Weight = 100`|
-|`Mechanic.Enabled = true`|`Mechanic.Weight = 100`|
-|`Electrician.Enabled = true`|`Electrician.Weight = 80`|
-|`Warden.Enabled = true`|`Warden.Weight = 100`|
-|`Ninja.Enabled = true`|`Ninja.Weight = 100`|
-|`Executioner.Enabled = true`|`Executioner.Weight = 100`|
-|`Rider.Enabled = true`|`Rider.Weight = 60`|
-|`Influencer.Enabled = true`|`Influencer.Weight = 100`|
-|`Werewolf.Enabled = true`|`Werewolf.Weight = 40`|
-|`Berserker.Enabled = true`|`Berserker.Weight = 100`|
-|`Bodyguard.Enabled = true`|`Bodyguard.Weight = 80`|
-|`Rammer.Enabled = true`|`Rammer.Weight = 100`|
-|`Diver.Enabled = true`|`Diver.Weight = 100`|
-|`Sniper.Enabled = true`|`Sniper.Weight = 100`|
-|`Imitator.Enabled = true`|`Imitator.Weight = 100`|
-|`Avenger.Enabled = true`|`Avenger.Weight = 100`|
-|`Brawler.Enabled = true`|`Brawler.Weight = 100`|
-|`Influenza.Enabled = true`|`Influenza.Weight = 20`|
-|`???1.Enabled = true`|Fixed|
-|`???2.Enabled = true`|Fixed|
+Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight = 100` (range 0–1000). OFF or weight 0 excludes it from random assignment. Use `Courier` for Courier's section. The two hidden roles use `???1.Enabled` and `???2.Enabled`, both true by default, with fixed weights. These switches apply from the next assignment. Twins is selected as one pair of two players, even when unique roles are enabled.
 
 #### Upgrade and special-role settings
 
@@ -493,6 +450,8 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 ### Gameplay notes
 
+- Twins supports host-only play. Simultaneous damage or healing can cause some difference in the shared HP result.
+
 - `Bomber` leaves armed grenades that can injure players and damage valuables.
 - `Mage` spells can harm players and valuables; spell names ignore case. The laser follows the caster's view. RoleShuffle users see only the beam; unmodded guests still see its temporary staff.
 - `Courier` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
@@ -532,7 +491,7 @@ RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘
 - MOD未導入の参加者にも対応しており、RoleShuffleの導入は不要です。
 - MOD導入済みの参加者には全員の役職を確認できるHUDと、Escメニュー内のスクロール可能な`Roles`ページが表示されます。HUDの配置は各プレイヤーが個別に変更できます。
 - MageとTricksterは表情の解除では能力を発動しません。ホスト自身のメニュー終了時の表情復帰も除外しますが、参加者のメニュー終了時に復帰した表情では能力が発動する場合があります。
-- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`、`Signalman`がランダム抽選から除外されます。
+- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`、`Signalman`、`Twins`がランダム抽選から除外されます。
 
 ### ロール選択とプリセット
 
@@ -542,7 +501,7 @@ RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
-|標準|44|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
+|標準|45|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
 |初心者向け|20|基本強化・回復・防御が中心。自動で危害を加える役やハンデ役を除外します。|
 |協力重視|17|チーム支援・回復・修理を中心に協力して生き残ります。|
 |カオス|15|爆発・魔法・ギャンブルなど、予測しづらい展開を楽しみます。|
@@ -615,11 +574,12 @@ RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘
 |![][i35]<br>Rammer|Tumble Attackで敵へ100ダメージを与え、命中後に自身が15ダメージを受けます。|ステージ中はBase Upgradeにかかわらず、Launch、Tumble Climb、Tumble Wingsがレベル0に固定されます。|Tumble Attack・自傷ダメージ|
 |![][i36]<br>Diver|固定された床で下を向いたままタンブルすると床を抜け、最大10秒間、床下を移動できます。|時間内に床を抜けて戻れないと死亡します。床上へ戻ると直前の潜航時間の1.5倍のクールダウンが始まり、残り時間と再使用可能状態はTTSで通知されます。|床下制限時間、移動力|
 |![][i37]<br>Sniper|敵へのダメージが距離に応じて連続変化し、密着時は0.5倍、8 mで1倍、24 mで最大2倍になります。|Sniperが攻撃者と特定できる場合だけ適用します。車両衝突とTumble Attackは変化しません。|基準距離、最低・最高倍率、最高倍率到達距離|
-|![][i38]<br>Imitator|最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。|Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、Influenza、Signalman、???1、???2はコピーしません。対象外をつかむと`CannotCopy`（コピー不可）と通知します。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。|抽選設定のみ|
+|![][i38]<br>Imitator|最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。|Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、Influenza、Signalman、Twins、???1、???2はコピーしません。対象外をつかむと`CannotCopy`（コピー不可）と通知します。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。|抽選設定のみ|
 |![][i39]<br>Avenger|他のプレイヤーが30m以内で死亡すると、20秒間、敵へのダメージが1.5倍になります。|発動、残り時間の更新、終了はTTSで通知されます。効果中に近くで別のプレイヤーが死亡した場合は、倍率を重複せず残り時間だけを更新します。自身の死亡では発動しません。1人のセッションでは抽選されません。|発動範囲、ダメージ倍率、持続時間|
 |![][i40]<br>Brawler|攻撃者を特定できる近接武器のダメージが1.25倍になり、銃、杖の弾、レーザーによるダメージは0.75倍になります。|車両衝突、Tumble Attack、グレネード、通常の保持物による衝突は変化しません。|近接・遠隔ダメージ倍率|
 |![][i41]<br>Influenza|**発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。|**感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。|発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音|
 |![][i42]<br>Signalman|通常チャットの本文を変えずに、生存中の仲間全員へ距離制限なく届けます。受信者自身の読み上げ音声で再生し、仲間の死亡通知も受け取ります。通信後は20秒待機。|コマンドと自動通知は除外。待機中の投稿は通常チャットのみで、後から転送しません。相手の発話を待ち、カウントダウンを優先。5秒待った通信は破棄。2人以上で最大1人を抽選。通常VCの距離は変わりません。|再使用待ち・待機上限・死亡通知・コマンド除外|
+|![][i43]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむと掴む力1.5倍、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -644,6 +604,8 @@ RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘
 能力の残量はスタミナ直下に縦1列で表示し、項目が多い場合は収まるよう縮小します。役職一覧には各プレイヤーの役職を表示します。残量HUDを使う場合は、ホストと同じバージョンのRoleShuffleを導入してください。
 
 ### 能力の調整
+
+Twinsの能力はREPOConfigの`Twins`欄で変更できます。初期値は、共同運搬の力1.5倍・衝突損失軽減50％、休憩距離3m・静止3秒・回復10％・待ち時間60秒、合流開始15m・終了5m・速度約1.25倍、共同納品の運搬3秒・距離5m・価値加算10％・上限$5,000です。
 
 ホストがREPOConfig → RoleShuffle → 役職名から設定します。初期値は上記の能力です。保持する力・HP・感染判定には現在の値を使用します。発症時間は新しい感染から適用し、予約済みのくしゃみの時刻は維持します。Stinkerの猶予は新しく出現する貴重品から適用します。既存設定は保持します。
 
@@ -782,53 +744,7 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 
 #### 役職の抽選設定
 
-ホスト設定です。通常役職には`Enabled`（true/false）と相対的な`Weight`（0～1000）があり、OFFまたは重み0でランダム抽選から除外します。隠し役職2種類の重みは固定です。正確なキーと初期値は次のとおりです。
-
-|Enabledキーとデフォルト|Weightキーとデフォルト|
-|---|---|
-|`Tank.Enabled = true`|`Tank.Weight = 100`|
-|`Runner.Enabled = true`|`Runner.Weight = 100`|
-|`Jumper.Enabled = true`|`Jumper.Weight = 100`|
-|`Lifter.Enabled = true`|`Lifter.Weight = 100`|
-|`Launcher.Enabled = true`|`Launcher.Weight = 100`|
-|`Climber.Enabled = true`|`Climber.Weight = 100`|
-|`Flyer.Enabled = true`|`Flyer.Weight = 100`|
-|`Tracker.Enabled = true`|`Tracker.Weight = 100`|
-|`Ghost.Enabled = true`|`Ghost.Weight = 80`|
-|`Bomber.Enabled = true`|`Bomber.Weight = 80`|
-|`Medic.Enabled = true`|`Medic.Weight = 100`|
-|`Phoenix.Enabled = true`|`Phoenix.Weight = 100`|
-|`Courier.Enabled = true`|`Courier.Weight = 20`|
-|`Rescuer.Enabled = true`|`Rescuer.Weight = 80`|
-|`Vampire.Enabled = true`|`Vampire.Weight = 100`|
-|`King.Enabled = true`|`King.Weight = 100`|
-|`Tuna.Enabled = true`|`Tuna.Weight = 50`|
-|`Musician.Enabled = true`|`Musician.Weight = 60`|
-|`Mage.Enabled = true`|`Mage.Weight = 100`|
-|`Gambler.Enabled = true`|`Gambler.Weight = 100`|
-|`Hunter.Enabled = true`|`Hunter.Weight = 80`|
-|`Stinker.Enabled = true`|`Stinker.Weight = 80`|
-|`Engineer.Enabled = true`|`Engineer.Weight = 70`|
-|`Trickster.Enabled = true`|`Trickster.Weight = 100`|
-|`Mechanic.Enabled = true`|`Mechanic.Weight = 100`|
-|`Electrician.Enabled = true`|`Electrician.Weight = 80`|
-|`Warden.Enabled = true`|`Warden.Weight = 100`|
-|`Ninja.Enabled = true`|`Ninja.Weight = 100`|
-|`Executioner.Enabled = true`|`Executioner.Weight = 100`|
-|`Rider.Enabled = true`|`Rider.Weight = 60`|
-|`Influencer.Enabled = true`|`Influencer.Weight = 100`|
-|`Werewolf.Enabled = true`|`Werewolf.Weight = 40`|
-|`Berserker.Enabled = true`|`Berserker.Weight = 100`|
-|`Bodyguard.Enabled = true`|`Bodyguard.Weight = 80`|
-|`Rammer.Enabled = true`|`Rammer.Weight = 100`|
-|`Diver.Enabled = true`|`Diver.Weight = 100`|
-|`Sniper.Enabled = true`|`Sniper.Weight = 100`|
-|`Imitator.Enabled = true`|`Imitator.Weight = 100`|
-|`Avenger.Enabled = true`|`Avenger.Weight = 100`|
-|`Brawler.Enabled = true`|`Brawler.Weight = 100`|
-|`Influenza.Enabled = true`|`Influenza.Weight = 20`|
-|`???1.Enabled = true`|固定|
-|`???2.Enabled = true`|固定|
+各通常役職にはホスト設定`<役職名>.Enabled = true`と`<役職名>.Weight = 100`（範囲0～1000）があり、OFFまたは重み0でランダム抽選から除外します。Courierの設定名は`Courier`です。隠し役職は`???1.Enabled`と`???2.Enabled`で、初期値はともにtrue、重みは固定です。ON/OFFは次の抽選から適用します。Twinsは役職重複なしの設定でも2人1組として抽選します。
 
 #### アップグレード・特殊役職設定
 
@@ -996,6 +912,8 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 
 ### ゲームプレイ上の注意
 
+- Twinsはホストのみ導入で動作します。同時に被弾・回復したとき、共有HPへの反映量に多少の差が出る場合があります。
+
 - `Bomber`が残す起動済みグレネードは、プレイヤーや貴重品にも被害を与えます。
 - `Mage`の魔法はプレイヤーや貴重品にも被害を与えます。魔法名の大文字・小文字は問いません。ビームは視点に追従し、MOD導入側では杖を表示しません。未導入の参加者には一時的な杖が見えます。
 - `Courier`と`Tuna`は条件を満たしている間、実際に継続ダメージを与え、死亡する可能性があります。受けたダメージは自動回復しません。
@@ -1048,3 +966,4 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 [i41]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/41.png
 [iu]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/unknown.png
 [i42]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/2207c9a37f217fcea8399ef3efdc0945ce62a04e/docs/icons/42.png
+[i43]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/d5f615a8cf9ee60a6b0ae98104a051d2ad64a193/docs/icons/43.png

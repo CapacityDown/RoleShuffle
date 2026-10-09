@@ -65,6 +65,8 @@ internal static class LifterStrengthRuntime
         PhysGrabObject owner, PhysGrabber grabber, bool rotation)
     {
         float vanilla = Mathf.Lerp(raw, reduced, blend);
+        if (owner != null && grabber != null && grabber.playerAvatar != null)
+            vanilla *= StageRolesPlugin.Instance?.Controller?.TwinsGrabMultiplier(owner, grabber.playerAvatar) ?? 1f;
         if (!RoleOverhaulRules.LifterPhysicsAvailable || owner == null || owner.rb == null ||
             grabber == null || grabber.playerAvatar == null ||
             StageRolesPlugin.Instance?.Controller?.UsesFixedLifterStrength(grabber.playerAvatar) != true)

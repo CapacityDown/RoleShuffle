@@ -147,6 +147,7 @@ internal static class UpgradeService
                 else if (delta != 0)
                     SendUpgradeDelta(steamId, target.CommandName, delta);
                 KingUpgradeAura.Forget(steamId, target.DictionaryName);
+                StageRolesPlugin.Instance?.Controller?.ForgetTwinsSpeed(steamId, target.DictionaryName);
                 if (target.CommandName == "Strength")
                     ReconcileGrabStrength(steamId, targetLevel);
             }

@@ -86,7 +86,8 @@ File.WriteAllText(oldLifterPath, oldLifterText);
 var lifterFile = new ConfigFile(oldLifterPath, false) { SaveOnConfigSet = false };
 var lifterConfig = new StageRolesConfig(lifterFile); lifterFile.Save();
 string lifterText = File.ReadAllText(oldLifterPath);
-Check(!lifterText.Contains("StrengthMultiplier") && !lifterText.Contains("MaximumEffectiveStrength"), "Remove unused Lifter growth settings");
+string migratedLifterSection = lifterText.Split("[Lifter]")[1].Split("\n[")[0];
+Check(!migratedLifterSection.Contains("StrengthMultiplier") && !migratedLifterSection.Contains("MaximumEffectiveStrength"), "Remove unused Lifter growth settings");
 Check(!lifterText.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
     "Fixed Lifter migration removes the unused level setting and preserves selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
@@ -188,7 +189,7 @@ RoleConfigMigration.Apply(courierFile);
 Check(File.ReadAllText(courierPath) == courierText, "Courier migration is idempotent");
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();
-Check(roles.Length == 44 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");
+Check(roles.Length == 45 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");
 foreach (StageRole role in roles)
 {
     var entry = config.RoleEnabledEntry(role);

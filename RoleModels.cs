@@ -132,6 +132,7 @@ internal static class RoleCatalog
                capability != StageRole.Imitator &&
                capability != StageRole.Sniper &&
                capability != StageRole.Brawler &&
+                 capability != StageRole.Twins &&
                capability != StageRole.Influenza;
     }
 
@@ -145,6 +146,7 @@ internal static class RoleCatalog
         role != StageRole.Tuna &&
         role != StageRole.Influenza &&
         role != StageRole.Signalman &&
+        role != StageRole.Twins &&
         !IsSecretRole(role);
 
     internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(
@@ -178,6 +180,7 @@ internal static class RoleCatalog
         StageRole role,
         StageRolesConfig config, string? steamId = null)
     {
+        if (role == StageRole.Twins) return !RoleOverhaulRules.LifterPhysicsAvailable;
         if (role < StageRole.Tank || role > StageRole.Ghost)
         {
             return false;

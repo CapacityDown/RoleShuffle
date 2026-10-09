@@ -13,6 +13,19 @@ internal static class AbilityConfigChecks
         var config = new StageRolesConfig(file);
         var cases = new (string Section, string Key, object Default, object Min, object Max)[]
         {
+            ("Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f),
+            ("Twins", "CollisionReductionPercent", 50f, 0f, 100f),
+            ("Twins", "RestRadius", 3f, 0.5f, 10f),
+            ("Twins", "RestHoldSeconds", 3f, 1f, 30f),
+            ("Twins", "RestHealPercent", 10f, 0f, 100f),
+            ("Twins", "RestCooldownSeconds", 60f, 1f, 600f),
+            ("Twins", "RendezvousStartRange", 15f, 1f, 100f),
+            ("Twins", "RendezvousEndRange", 5f, 0.5f, 100f),
+            ("Twins", "RendezvousSpeedMultiplier", 1.25f, 1f, 2f),
+            ("Twins", "DeliveryCarrySeconds", 3f, 1f, 30f),
+            ("Twins", "DeliveryRadius", 5f, 0.5f, 20f),
+            ("Twins", "DeliveryBonusPercent", 10f, 0f, 100f),
+            ("Twins", "DeliveryStageLimit", 5000, 0, 10000),
             ("Signalman", "CooldownSeconds", 20f, 1f, 300f),
             ("Signalman", "MaximumDelaySeconds", 5f, 1f, 30f),
             ("Mage", "BeamDurationSeconds", 5f, 0.1f, 30f),

@@ -487,6 +487,22 @@ internal sealed class StageRolesConfig
         InfluenzaSpeechSilenceSeconds = BindFloat(config, "Influenza", "SpeechSilenceSeconds", 0.75f, 0.1f, 5f, "Silent gap required before voice counts as a new utterance. Text chat always uses one check per message.");
         InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
+        TwinsEnabled = RoleEnabled(config, "Twins");
+        TwinsWeight = RoleWeight(config, "Twins");
+        TwinsCarryStrengthMultiplier = BindFloat(config, "Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f, "Grab strength while both twins directly hold the same valuable. Shop equipment is excluded.");
+        TwinsCollisionReductionPercent = BindFloat(config, "Twins", "CollisionReductionPercent", 50f, 0f, 100f, "Percentage of collision value loss prevented during cooperative carrying.");
+        TwinsRestRadius = BindFloat(config, "Twins", "RestRadius", 3f, 0.5f, 10f, "Maximum distance between twins while resting together.");
+        TwinsRestHoldSeconds = BindFloat(config, "Twins", "RestHoldSeconds", 3f, 1f, 30f, "Seconds both twins must crouch and stay still without damage.");
+        TwinsRestHealPercent = BindFloat(config, "Twins", "RestHealPercent", 10f, 0f, 100f, "Percentage of shared maximum HP restored by one completed rest.");
+        TwinsRestCooldownSeconds = BindFloat(config, "Twins", "RestCooldownSeconds", 60f, 1f, 600f, "Pair-shared cooldown after successful rest. Interrupted rest spends nothing.");
+        TwinsRendezvousStartRange = BindFloat(config, "Twins", "RendezvousStartRange", 15f, 1f, 100f, "Distance that enables reunion sprint assistance.");
+        TwinsRendezvousEndRange = BindFloat(config, "Twins", "RendezvousEndRange", 5f, 0.5f, 100f, "Distance that ends reunion assistance. The smaller distance is always the end range.");
+        TwinsRendezvousSpeedMultiplier = BindFloat(config, "Twins", "RendezvousSpeedMultiplier", 1.25f, 1f, 2f, "Sprint speed multiplier while moving toward a distant partner. Rounded up to a native Speed upgrade level.");
+        TwinsDeliveryCarrySeconds = BindFloat(config, "Twins", "DeliveryCarrySeconds", 3f, 1f, 30f, "Continuous cooperative carrying outside delivery areas needed to qualify a valuable.");
+        TwinsDeliveryRadius = BindFloat(config, "Twins", "DeliveryRadius", 5f, 0.5f, 20f, "Both twins must be within this distance of the valuable at delivery.");
+        TwinsDeliveryBonusPercent = BindFloat(config, "Twins", "DeliveryBonusPercent", 10f, 0f, 100f, "Value bonus for a qualified valuable entering the truck or extraction area. Each valuable pays only once.");
+        TwinsDeliveryStageLimit = BindInt(config, "Twins", "DeliveryStageLimit", 5000, 0, 10000, "Maximum total extra value for joint delivery per pair and stage.");
+
         SignalmanEnabled = RoleEnabled(config, "Signalman");
         SignalmanWeight = RoleWeight(config, "Signalman");
         SignalmanCooldownSeconds = BindFloat(config, "Signalman", "CooldownSeconds", 20f, 1f, 300f, "Seconds between relayed chat posts. Commands and posts during cooldown remain ordinary chat and do not extend the cooldown.");
@@ -498,6 +514,22 @@ internal sealed class StageRolesConfig
         SuperbotEnabled = BindBool(config, "???1", "Enabled", true, "???");
         DisasterEnabled = BindBool(config, "???2", "Enabled", true, "???");
     }
+
+    internal ConfigEntry<bool> TwinsEnabled { get; }
+    internal ConfigEntry<int> TwinsWeight { get; }
+    internal ConfigEntry<float> TwinsCarryStrengthMultiplier { get; }
+    internal ConfigEntry<float> TwinsCollisionReductionPercent { get; }
+    internal ConfigEntry<float> TwinsRestRadius { get; }
+    internal ConfigEntry<float> TwinsRestHoldSeconds { get; }
+    internal ConfigEntry<float> TwinsRestHealPercent { get; }
+    internal ConfigEntry<float> TwinsRestCooldownSeconds { get; }
+    internal ConfigEntry<float> TwinsRendezvousStartRange { get; }
+    internal ConfigEntry<float> TwinsRendezvousEndRange { get; }
+    internal ConfigEntry<float> TwinsRendezvousSpeedMultiplier { get; }
+    internal ConfigEntry<float> TwinsDeliveryCarrySeconds { get; }
+    internal ConfigEntry<float> TwinsDeliveryRadius { get; }
+    internal ConfigEntry<float> TwinsDeliveryBonusPercent { get; }
+    internal ConfigEntry<int> TwinsDeliveryStageLimit { get; }
 
     internal ConfigEntry<bool> SignalmanEnabled { get; }
     internal ConfigEntry<int> SignalmanWeight { get; }
@@ -854,6 +886,7 @@ internal sealed class StageRolesConfig
         StageRole.Brawler => BrawlerEnabled,
         StageRole.Influenza => InfluenzaEnabled,
         StageRole.Signalman => SignalmanEnabled,
+        StageRole.Twins => TwinsEnabled,
         StageRole.Superbot => SuperbotEnabled,
         StageRole.Disaster => DisasterEnabled,
         _ => null
@@ -903,6 +936,7 @@ internal sealed class StageRolesConfig
         StageRole.Brawler => BrawlerWeight.Value,
         StageRole.Influenza => InfluenzaWeight.Value,
         StageRole.Signalman => SignalmanWeight.Value,
+        StageRole.Twins => TwinsWeight.Value,
         StageRole.Superbot => 1,
         StageRole.Disaster => 1,
         _ => 0

@@ -2,7 +2,7 @@
   "method": "Preserve native alpha or remove perimeter-connected near-black exterior; normalize category interiors through a color-region mask",
   "generator": "Python / Pillow / NumPy",
   "black_limit": 64,
-  "count": 45,
+  "count": 46,
   "assets": [
     {
       "name": "01-Tank",
@@ -1565,6 +1565,41 @@
       "rgb_pixels_unchanged": true,
       "central_interior_opaque": true,
       "central_alpha": 255
+    },
+    {
+      "name": "43-Twins",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\43-Twins.png",
+      "source_sha256": "97b405cb115121cd4f32252d76a6453b28943d4f0968c7b650b272ea2033a19e",
+      "master_sha256": "7a5e52a7e7110d105b83edde7e0550991303f7a1be88c89922337dba8945ce48",
+      "runtime_sha256": "153fa58db94d94fab951aae8c251a0221ea96c30994644cd72aa8e1b48c334a9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.387373,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 40222,
+      "native_source_alpha": true,
+      "rgb_pixels_unchanged": false,
+      "central_interior_opaque": false,
+      "central_alpha": 254,
+      "category": "Special",
+      "background_color": "#50356E",
+      "detected_background_rgb": [
+        86,
+        49,
+        115
+      ],
+      "background_color_tolerance": 24,
+      "background_core_pixels": 327013,
+      "background_mask_pixels": 353296,
+      "outside_mask_pixels_unchanged": true,
+      "alpha_preserved_during_recolor": true,
+      "runtime_background_core_pixels": 12210
     }
   ]
 }
