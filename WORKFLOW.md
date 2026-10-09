@@ -70,7 +70,9 @@ historical version numbers, deployment profiles and superseded design choices.
   Follow the remaining-time deadline and interrupt the preceding utterance.
 - Keep role notices short and without spaces (for example `CannotCopy`). The
   user reported that spaces interrupt notifications. Do not include role names
-  or explanations when a concise status is sufficient.
+  or explanations when a concise status is sufficient. Signalman relays are an
+  exception: preserve the player's original message, including spaces and punctuation.
+  Commands are excluded; cooldown defaults to 20 seconds.
 
 ## Artwork
 

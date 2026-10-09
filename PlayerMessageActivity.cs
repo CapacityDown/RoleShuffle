@@ -13,6 +13,15 @@ internal static class PlayerMessageActivity
     private const float QuietSeconds = 0.25f;
     private static readonly FieldInfo? VoiceChatField = AccessTools.Field(typeof(PlayerAvatar), "voiceChat");
     private static readonly Dictionary<PlayerAvatar, Playback> Active = new();
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<PlayerAvatar, SpeechVersion> Versions = new();
+    private sealed class SpeechVersion { internal long Value; }
+    internal static long Version(PlayerAvatar player) => Versions.GetOrCreateValue(player).Value;
+    internal static void ObserveNative(PlayerAvatar player)
+    {
+        // Listener-specific stop messages are not new utterances from the speaker.
+        if (!PrivatePlayerSpeech.IsDispatching) Versions.GetOrCreateValue(player).Value++;
+        Observe(player);
+    }
 
     private sealed class Playback
     {
@@ -20,6 +29,7 @@ internal static class PlayerMessageActivity
         internal bool Observed;
         internal float LastPlayingAt;
         internal float PriorityUntil;
+        internal float RemoteUntil;
     }
 
     internal static void Observe(PlayerAvatar player, float prioritySeconds = 0f)
@@ -53,11 +63,18 @@ internal static class PlayerMessageActivity
             playback.LastPlayingAt = now;
             return true;
         }
-        if (now < playback.PriorityUntil ||
+        if (now < playback.PriorityUntil || now < playback.RemoteUntil ||
             (playback.Observed ? now - playback.LastPlayingAt < QuietSeconds : now < playback.AwaitUntil))
             return true;
         Active.Remove(player);
         return false;
+    }
+
+    internal static void ReserveRemote(PlayerAvatar player, float seconds)
+    {
+        AnyBusy();
+        Active[player] = new Playback { Observed = true, LastPlayingAt = Time.realtimeSinceStartup,
+            RemoteUntil = Time.realtimeSinceStartup + seconds };
     }
 
     internal static bool AnyBusy()

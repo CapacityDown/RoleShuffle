@@ -13,7 +13,8 @@ OUTPUT = ROOT / "docs/icons"
 def main():
     public = sorted(p for p in SOURCE.glob("[0-9]*-*.png")
                     if int(p.stem.split("-", 1)[0]) < 1000)
-    assert len(public) == 41
+    from build_icon_catalog import roles
+    assert len(public) == sum(role_id < 1000 for role_id, _, _ in roles())
     images = [(p, f"{int(p.stem.split('-', 1)[0]):02}.png") for p in public]
     images.append((SOURCE / "Unrevealed.png", "unknown.png"))
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -29,7 +30,7 @@ def main():
         with Image.open(OUTPUT / name) as saved:
             assert saved.size == (64, 64) and saved.mode == "RGBA"
     assert set(p.name for p in OUTPUT.glob("*.png")) == {name for _, name in images}
-    print("Verified 42 public README thumbnails; original game artwork unchanged.")
+    print(f"Verified {len(images)} public README thumbnails; original game artwork unchanged.")
 
 
 if __name__ == "__main__":

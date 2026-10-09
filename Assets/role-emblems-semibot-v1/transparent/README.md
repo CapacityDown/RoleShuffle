@@ -1,6 +1,6 @@
 # Transparent role emblems
 
-The active set contains 43 role icons and the shared Unrevealed icon. The cream
+The active set contains 44 role icons and the shared Unrevealed icon. The cream
 hexagonal frame, character, props and dark outlines follow the approved source
 artwork. Only the exterior is transparent. Role interiors use the exact primary
 category palette in `../selected/prompts.json` and `../../../ROLE_ICON_GUIDE.md`.
@@ -16,8 +16,8 @@ It never overwrites selected source artwork or generation prompts.
 - Opaque sources: remove only near-black exterior connected to image corners.
   When a prop crosses the cream frame, seal narrow channels in the detection
   mask to preserve its interior dark outline.
-- Native-alpha sources (Courier and Influenza): retain source alpha directly;
-  never color-key them. Their central alpha can be 254/255.
+- Native-alpha sources (Courier, Influenza and Signalman): retain source alpha
+  directly; never color-key them. Their central alpha can be 253–255.
 - Detect the dominant background color region, exclude the black/cream/orange
   artwork, and apply the category color with a narrow antialiased transition.
   Pixels outside the background mask remain unchanged in the full-size master.
@@ -27,8 +27,8 @@ It never overwrites selected source artwork or generation prompts.
 
 ## Outputs and review
 
-- `masters/`: 44 full-size RGBA PNGs, generated locally and ignored by Git.
-- `runtime/`: 44 runtime PNGs, embedded by `StageRoles.csproj` and shared by the
+- `masters/`: 45 full-size RGBA PNGs, generated locally and ignored by Git.
+- `runtime/`: 45 runtime PNGs, embedded by `StageRoles.csproj` and shared by the
   HUD, Current Roles and Role Guide.
 - `previews/`: background masks and source/light/dark comparison sheets. These
   are local review artifacts and are not embedded in the MOD.

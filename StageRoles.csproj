@@ -39,6 +39,8 @@
     <Compile Include="StageRole.cs" />
     <Compile Include="InfluenzaRules.cs" />
     <Compile Include="InfluenzaRuntime.cs" />
+    <Compile Include="SignalmanRules.cs" />
+    <Compile Include="SignalmanRuntime.cs" />
     <Compile Include="RolePresets.cs" />
     <Compile Include="RoleSelectionSettings.cs" />
     <Compile Include="BaseUpgradeDrawSelection.cs" />

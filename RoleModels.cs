@@ -51,6 +51,7 @@ internal sealed class RoleAssignment
     internal float InfluencerNextTtsAt { get; set; }
     internal float AvengerEmpoweredUntil { get; set; }
     internal float ImitatorCopyNoticeAllowedAt { get; set; }
+    internal float SignalmanNextTransmitAt { get; set; }
 }
 
 internal readonly struct UpgradeGrant

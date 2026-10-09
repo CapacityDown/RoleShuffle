@@ -116,7 +116,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
         {
             if (string.IsNullOrEmpty(id) || !string.Equals(id, role.SteamId, StringComparison.Ordinal)) continue;
             AbilitySnapshot? state = RoleAbilitySync.Read(role);
-            if (state != null) _values = RoleAbilityResources.Select(state.Values, resources: true);
+            if (state != null) _values = RoleAbilityResources.ForHud(state.Values);
             break;
         }
         _rowWidth = _iconInset + _native!.rectTransform.rect.width;
@@ -126,9 +126,10 @@ internal sealed class RoleResourceHud : MonoBehaviour
             ResourceRow row = _rows[i];
             AbilityValue value = _values[i];
             row.Rect.gameObject.SetActive(true);
-            Color ink = value.Remaining == 0 ? Color.red : ResourceColor;
+            bool radio = value.Metric == AbilityMetric.RadioCooldown;
+            Color ink = value.Remaining == 0 && !radio ? Color.red : ResourceColor;
             SetText(row.Remaining, value.Remaining.ToString(CultureInfo.InvariantCulture));
-            SetText(row.Maximum, "<b>/</b>" + value.Limit.ToString(CultureInfo.InvariantCulture));
+            SetText(row.Maximum, radio ? string.Empty : "<b>/</b>" + value.Limit.ToString(CultureInfo.InvariantCulture));
             row.Remaining.color = row.Maximum.color = row.Symbol.color = row.NativeIcon.color = ink;
             Sprite? sprite = value.Metric == AbilityMetric.Medic ? _nativePlus?.sprite :
                 value.Metric == AbilityMetric.Charge ? _nativeZap?.sprite : null;

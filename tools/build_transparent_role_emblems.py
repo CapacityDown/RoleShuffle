@@ -110,7 +110,9 @@ def extract(path: Path, category: tuple[str, str] | None = None) -> dict:
         alpha = np.array(saved.getchannel("A"))
         assert alpha.min() == 0 and alpha.max() == 255
         assert np.any((alpha > 0) & (alpha < 255)), path
-        assert alpha[RUNTIME_SIZE // 2, RUNTIME_SIZE // 2] >= 254
+        # Native-alpha generated masters can retain a nearly opaque interior.
+        # Preserve that alpha instead of repainting the selected illustration.
+        assert alpha[RUNTIME_SIZE // 2, RUNTIME_SIZE // 2] >= (250 if native_alpha else 254)
         assert not alpha[[0, 0, -1, -1], [0, -1, 0, -1]].any()
     assert sha256(path) == source_hash, path
     return {

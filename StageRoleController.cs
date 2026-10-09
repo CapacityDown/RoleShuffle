@@ -801,6 +801,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private void ApplyRoleChanges(
         IReadOnlyDictionary<string, StageRole> changes)
     {
+        _signalmanGeneration++;
         _notifier.ResetPending();
         RoleHealingRuntime.Clear();
         RestoreKingCrown();
@@ -885,6 +886,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         assignment.TunaStationaryTimer = 0f;
         assignment.TunaDamageTimer = 0f;
         assignment.MageNextCastAt = 0f;
+        assignment.SignalmanNextTransmitAt = 0f;
         assignment.WasAlive = PlayerState.IsLiving(assignment.Player);
         assignment.PhoenixUsed = false;
         assignment.PhoenixRevivePending = false;
@@ -1281,6 +1283,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             assignment.RevivalHeadStillness.Observe(assignment.Player);
         }
         TickInfluenza();
+        TickSignalman();
         _eventRoles.Tick(_assignments);
         _overhaul.Tick(_assignments, _notifier);
         _mage.MaintainSpawnedObjects();
@@ -1888,6 +1891,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             return;
         }
         string deadSteamId = PlayerIdentity.SteamId(player);
+        NotifySignalmanDeath(player);
         RoleAssignment? deadAssignment = FindAssignment(player);
         if (deadAssignment != null) _overhaul.PlayerDied(deadAssignment);
         RoleHealingRuntime.Forget(player);
@@ -2833,6 +2837,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private static void RemoveSoloIncompatibleRoles(List<StageRole> roles)
     {
+        roles.Remove(StageRole.Signalman);
         foreach (StageRole role in SoloExcludedRoles)
         {
             roles.Remove(role);
@@ -3120,6 +3125,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _stageGeneration++;
         StopAllCoroutines();
         StopInfluenza();
+        _signalmanGeneration++;
+        _signalmanReportedDeaths.Clear();
         _notifier?.End();
         RoleHealingRuntime.Clear();
         _bomber?.Stop();

@@ -47,7 +47,8 @@ internal sealed class RoleNotifier
             float reservationSeconds,
             Func<bool>? isValid = null,
             Action? onSent = null,
-            Action? onFinished = null)
+            Action? onFinished = null,
+            Func<bool>? dispatch = null)
         {
             Generation = generation;
             Player = player;
@@ -57,6 +58,7 @@ internal sealed class RoleNotifier
             IsValid = isValid;
             OnSent = onSent;
             OnFinished = onFinished;
+            Dispatch = dispatch;
         }
 
         internal int Generation { get; }
@@ -67,6 +69,7 @@ internal sealed class RoleNotifier
         internal Func<bool>? IsValid { get; }
         internal Action? OnSent { get; }
         internal Action? OnFinished { get; }
+        internal Func<bool>? Dispatch { get; }
     }
 
     internal RoleNotifier(MonoBehaviour coroutineOwner, StageRolesConfig config)
@@ -194,6 +197,9 @@ internal sealed class RoleNotifier
     internal void NotifyResponse(PlayerAvatar player, string message) =>
         Enqueue(player, message, "automatic response");
 
+    internal bool NotifyPrivate(PlayerAvatar player, string message, Func<bool> isValid, Func<bool> dispatch) =>
+        Enqueue(player, message, "private radio", isValid, dispatch: dispatch);
+
     private bool HasPendingAssignments =>
         _announcingGeneration == _generation || _assignmentQueue.Pending.Count > 0 ||
         _assignmentQueue.RunnerGeneration == _generation;
@@ -232,7 +238,8 @@ internal sealed class RoleNotifier
         float reservationSeconds = ReservationSeconds,
         Action? onSent = null,
         Action? onFinished = null,
-        bool shared = false)
+        bool shared = false,
+        Func<bool>? dispatch = null)
     {
         if (player == null || !player.gameObject.activeInHierarchy ||
             player.photonView == null || string.IsNullOrEmpty(message))
@@ -261,7 +268,8 @@ internal sealed class RoleNotifier
             reservationSeconds,
             isValid,
             onSent,
-            onFinished));
+            onFinished,
+            dispatch));
         if (queue.RunnerGeneration == generation)
         {
             return true;
@@ -379,11 +387,14 @@ internal sealed class RoleNotifier
                     yield return new WaitForSecondsRealtime(PollIntervalSeconds);
 
                 float deadline = Time.realtimeSinceStartup +
-                                 QueueHeadWaitTimeoutSeconds;
+                                 (pending.Dispatch != null
+                                     ? _config.SignalmanMaximumDelaySeconds.Value
+                                     : QueueHeadWaitTimeoutSeconds);
                 bool reserved = false;
                 while (generation == _generation &&
                        Time.realtimeSinceStartup < deadline)
                 {
+                    if (!IsStillValid(pending)) break;
                     bool available = shared
                         ? !AnyNotificationBusy() && StageFluxCompatibility.TryReserveNotificationWindow(
                             NotificationOwner, pending.ReservationSeconds)
@@ -463,6 +474,7 @@ internal sealed class RoleNotifier
     {
         try
         {
+            if (pending.Dispatch != null) return pending.Dispatch();
             StageFluxCompatibility.ExpectNotification(
                 pending.Player,
                 pending.Message);

@@ -9,6 +9,14 @@ Directory.CreateDirectory(directory);
 string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
+Check(config.SignalmanEnabled.Value && config.SignalmanWeight.Value == 100, "Signalman defaults on with normal weight");
+Check(config.SignalmanCooldownSeconds.Value == 20 && config.SignalmanDeathAlerts.Value, "Signalman cooldown and private death alert defaults");
+config.SignalmanExcludedCommands.Value = "test,secret";
+config.SignalmanExcludedPrefixes.Value = "!,#";
+config.SignalmanDeathAlerts.Value = false;
+file.Save();
+var radioReload = new StageRolesConfig(new ConfigFile(path, false) { SaveOnConfigSet = false });
+Check(radioReload.SignalmanExcludedCommands.Value == "test,secret" && radioReload.SignalmanExcludedPrefixes.Value == "!,#" && !radioReload.SignalmanDeathAlerts.Value, "Signalman exclusions and alerts persist");
 Console.WriteLine($"Ability configuration checks passed: {AbilityConfigChecks.Run(directory)}");
 Check(!config.KeepUpgradeItems.Value && Equals(config.KeepUpgradeItems.DefaultValue, false), "Consumed upgrade retention defaults off");
 Check(config.KeepUpgradeItems.Definition.Section == "Base Upgrades" && config.KeepUpgradeItems.Definition.Key == "KeepUpgradeItems", "Retention is bound in REPOConfig");
@@ -180,7 +188,7 @@ RoleConfigMigration.Apply(courierFile);
 Check(File.ReadAllText(courierPath) == courierText, "Courier migration is idempotent");
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();
-Check(roles.Length == 43 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");
+Check(roles.Length == 44 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");
 foreach (StageRole role in roles)
 {
     var entry = config.RoleEnabledEntry(role);

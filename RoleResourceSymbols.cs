@@ -62,6 +62,12 @@ internal static class RoleResourceSymbols
         }
         switch (metric)
         {
+            case AbilityMetric.RadioCooldown:
+                RoundedFrame(3,8,15,15,2.5f);
+                Line(6,8,6,2,2.4f); Circle(13,13,1.6f);
+                Line(7,17,14,17,1.8f); Line(7,20,14,20,1.8f);
+                Line(20,5,22,7,1.8f); Line(18,2,23,7,1.8f);
+                break;
             case AbilityMetric.Medic: Cross(3,3,19,5.5f); break; // Prefer the native Plus sprite.
             case AbilityMetric.MageRecovery:
                 Cross(2.5f,9,13.5f,4);

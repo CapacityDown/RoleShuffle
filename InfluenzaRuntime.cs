@@ -177,6 +177,10 @@ internal static class InfluenzaChatPatches
     private static void EndSubmission(bool __state) => LocalSubmission = __state;
 
     [HarmonyPostfix, HarmonyPatch(typeof(PlayerAvatar), nameof(PlayerAvatar.ChatMessageSendRPC))]
-    private static void ReceiveChat(PlayerAvatar __instance, string _message, PhotonMessageInfo _info) =>
+    private static void ReceiveChat(PlayerAvatar __instance, string _message, PhotonMessageInfo _info)
+    {
+        if (PrivatePlayerSpeech.IsDispatching) return;
         StageRolesPlugin.Instance?.Controller?.OnInfluenzaChat(__instance, _message, _info);
+        StageRolesPlugin.Instance?.Controller?.OnSignalmanChat(__instance, _message, _info);
+    }
 }

@@ -47,6 +47,7 @@ internal static class RoleGuideCatalog
         role switch
         {
             StageRole.Influenza => InfluenzaSummary,
+            StageRole.Signalman => "Relays ordinary chat to living teammates at any distance. Commands are excluded; radio has a cooldown. Privately receives teammate death alerts.",
             StageRole.Tank => "Increases maximum health, making the player harder to defeat.",
             StageRole.Runner => "Increases movement speed and stamina for faster, longer sprints.",
             StageRole.Jumper => "Adds extra jumps that can be used before landing.",
@@ -96,6 +97,7 @@ internal static class RoleGuideCatalog
         role switch
         {
             StageRole.Influenza => InfluenzaSummaryJapanese,
+            StageRole.Signalman => "通常チャットを、距離に関係なく生存中の仲間へ届けます。コマンドは除外し、通信後は再使用待ちになります。仲間の死亡通知も受け取ります。",
             StageRole.Rider => "運転中の車両が敵へ与える衝突ダメージと、プレイヤーへのノックバックが増加します。",
             StageRole.Influencer => "近くの仲間が多いほど強化されますが、物音が広がり、定期的にTTSで発言します。",
             StageRole.Werewolf => "自身が攻撃者と特定できる、他のプレイヤーへのダメージが増加します。",
@@ -153,6 +155,7 @@ internal static class RoleGuideCatalog
         RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.English) ?? role switch
         {
             StageRole.Influenza => InfluenzaDescription,
+            StageRole.Signalman => SignalmanDescription(config, false),
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
             StageRole.Launcher =>
@@ -268,6 +271,7 @@ internal static class RoleGuideCatalog
         RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.Japanese) ?? role switch
         {
             StageRole.Influenza => InfluenzaDescriptionJapanese,
+            StageRole.Signalman => SignalmanDescription(config, true),
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",
             StageRole.Influencer =>
@@ -372,6 +376,14 @@ internal static class RoleGuideCatalog
             StageRole.Disaster => "???",
             _ => "この職業の説明はありません。"
         };
+
+    private static string SignalmanDescription(StageRolesConfig config, bool japanese)
+    {
+        string alerts = config.SignalmanDeathAlerts.Value ? "ON" : "OFF";
+        return japanese
+        ? $"通常チャットの本文を変えずに、生存中の仲間全員へ距離制限なく通知し、受信者自身の読み上げ音声で再生します。通信後は{Number(config.SignalmanCooldownSeconds.Value)}秒待ちます。待機中の投稿は通常チャットのままで、後から転送しません。コマンドや自動通知は転送しません。\n受信者の発話を待ち、カウントダウンを優先します。{Number(config.SignalmanMaximumDelaySeconds.Value)}秒以上待った通信は破棄します。\n仲間の死亡通知：{alerts}。1人では抽選されず、同時に抽選されるSignalmanは1人までです。通常VCの距離は変わりません。"
+        : $"Relays your ordinary chat unchanged to all living teammates at any distance, using their own text-to-speech voices. Cooldown: {Number(config.SignalmanCooldownSeconds.Value)} seconds. Posts during cooldown stay ordinary chat and are never relayed later. Commands and automatic notices are excluded. Waits for each listener's speech, with countdowns taking priority; drops messages after {Number(config.SignalmanMaximumDelaySeconds.Value)} seconds of waiting. Teammate death alerts: {alerts}. Requires at least two players; at most one Signalman is drawn. Ordinary voice-chat range is unchanged.";
+    }
 
     private static string Number(float value) =>
         value.ToString("0.##", CultureInfo.InvariantCulture);

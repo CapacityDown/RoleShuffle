@@ -445,8 +445,11 @@ internal static class LifecyclePatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerAvatar), "ChatMessageSpeak")]
-    private static void PlayerAvatarChatMessageSpeakPrefix(PlayerAvatar __instance) =>
-        PlayerMessageActivity.Observe(__instance);
+    private static void PlayerAvatarChatMessageSpeakPrefix(PlayerAvatar __instance, string _message)
+    {
+        if (PrivatePlayerSpeech.IsDispatching && string.IsNullOrEmpty(_message)) return;
+        PlayerMessageActivity.ObserveNative(__instance);
+    }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerAvatar), nameof(PlayerAvatar.ChatMessageSendRPC))]

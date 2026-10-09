@@ -2,7 +2,7 @@
   "method": "Preserve native alpha or remove perimeter-connected near-black exterior; normalize category interiors through a color-region mask",
   "generator": "Python / Pillow / NumPy",
   "black_limit": 64,
-  "count": 44,
+  "count": 45,
   "assets": [
     {
       "name": "01-Tank",
@@ -1438,6 +1438,41 @@
       "alpha_preserved_during_recolor": true,
       "runtime_background_core_pixels": 16804,
       "background_color_tolerance": 24
+    },
+    {
+      "name": "42-Signalman",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\42-Signalman.png",
+      "source_sha256": "5c59ad75b20f8817c792c23951fa0ee00130c0c14fef504452ac530a43c89292",
+      "master_sha256": "31613b9e2d00570824f3adf3fefbd4c1dc17ad12763446e53957aa226074e5c1",
+      "runtime_sha256": "8a3c262a07ef5b14120bc303c142b57ebd67f28765fd8ec69e0389687724b72d",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        256,
+        256
+      ],
+      "transparent_fraction": 0.407635,
+      "outline_channel_closing": 0,
+      "runtime_edge_pixels": 39040,
+      "native_source_alpha": true,
+      "rgb_pixels_unchanged": false,
+      "central_interior_opaque": false,
+      "central_alpha": 253,
+      "category": "Support",
+      "background_color": "#24563E",
+      "detected_background_rgb": [
+        40,
+        95,
+        66
+      ],
+      "background_color_tolerance": 24,
+      "background_core_pixels": 441487,
+      "background_mask_pixels": 468985,
+      "outside_mask_pixels_unchanged": true,
+      "alpha_preserved_during_recolor": true,
+      "runtime_background_core_pixels": 16680
     },
     {
       "name": "1001-Superbot",

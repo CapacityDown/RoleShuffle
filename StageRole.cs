@@ -43,6 +43,7 @@ internal enum StageRole
     Avenger,
     Brawler,
     Influenza,
+    Signalman,
     Superbot = 1001,
     Disaster = 1002
 }

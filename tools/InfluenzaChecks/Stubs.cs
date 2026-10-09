@@ -69,6 +69,7 @@ public sealed class PlayerAvatar
 public sealed class ChatManager {}
 namespace REPOJP.StageRoles
 {
+    internal static class PrivatePlayerSpeech { internal static bool IsDispatching => false; }
     internal sealed class Entry<T>(T value) { internal T Value = value; }
     internal sealed class Config
     {
@@ -152,6 +153,7 @@ namespace REPOJP.StageRoles
         private void ResetAssignmentForRoleChange(RoleAssignment a) {}
         private void RestoreKingCrown() {}
         internal void Add(params RoleAssignment[] players) { _assignments.AddRange(players);foreach(var a in players) StartInfluenza(a); }
+        internal void OnSignalmanChat(PlayerAvatar sender, string message, Photon.Pun.PhotonMessageInfo info) {}
         internal void Tick(float now) { Time.time=now;TickInfluenza(); }
         internal void Change(RoleAssignment a, StageRole role) { EndInfluenza(a);a.Role=a.AssignedRole=role; }
         internal void Stop() { _stageReady=false;StopInfluenza(); }

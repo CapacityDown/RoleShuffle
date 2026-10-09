@@ -4,7 +4,7 @@
 
 ### Overview
 
-RoleShuffle gives each player a random role at the start of a stage. Roles offer movement, healing, combat and other abilities until the stage ends. Base upgrades stay active between stages and can grow as the run progresses.
+RoleShuffle assigns stage-long movement, healing, combat and other roles. Base Upgrades persist between stages and can grow during the run.
 
 Only the host needs RoleShuffle for gameplay effects. Sessions of up to 30 players are supported. Players without the mod receive their role, upgrades, effects, and vanilla chat/TTS announcement normally. Participants who also install RoleShuffle can use the full role HUD.
 
@@ -30,7 +30,6 @@ Install with a compatible mod manager, or place `RoleShuffle.dll` in the profile
 - Vanilla participants are fully supported and do not need RoleShuffle.
 - Installed participants receive the full role HUD and the scrollable `Roles` page in the Escape menu; each player can choose their own HUD layout.
 - Mage and Trickster do not activate abilities when an expression is cleared. The host's own menu expression restoration is also ignored; other players' expressions restored after closing a menu can still activate an ability.
-- Single-player uses the same role system, but `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, and `Influenza` are excluded from random assignment when only one player is present.
 
 ### Role selection and presets
 
@@ -40,13 +39,13 @@ Choose `PRESETS` and apply a play style to replace the role switches. Presets pr
 
 |Preset|Enabled roles|Play style|
 |---|---|---|
-|Standard|43|Every role, including both secret roles; restores the default ON/OFF selection.|
-|Beginner|19|Basic upgrades, recovery and protection without passive hazard or hardship roles.|
-|Cooperative|16|Team support, healing, repairs and shared survival.|
+|Standard|44|Every role, including both secret roles; restores the default ON/OFF selection.|
+|Beginner|20|Basic upgrades, recovery and protection without passive hazard or hardship roles.|
+|Cooperative|17|Team support, healing, repairs and shared survival.|
 |Chaos|15|Explosions, magic, gambles and unpredictable effects.|
 |Challenge|15|Risky and specialized roles without dedicated healing or revival roles.|
 
-Party-size, context and balance restrictions still apply. The screen identifies a disabled global assignment setting and an empty candidate pool; selecting a preset does not override either `General.Enabled` or zero weights.
+Party-size, context and balance restrictions still apply. Presets do not override `General.Enabled` or zero weights.
 
 ### Role command
 
@@ -60,13 +59,13 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 - Enabled roles are selected by relative `Weight`.
 - With `General.UniqueRoles = true`, duplicate roles are avoided until every eligible role has been used once.
 - `King` is assigned to at most one player per stage.
-- By default, Showcase roles (`Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, `Diver`) and Support roles (`Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`) receive configurable minimum guarantees based on party size.
+- By default, Showcase roles (`Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, `Diver`) and Support roles (`Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, `Signalman`) receive configurable minimum guarantees based on party size.
 - By default, Showcase and Support minimums rise to four each at 24 players. Danger limits rise from one to two at 8 players and three at 16 players; Hardship limits rise from one to two at 12 players. Influencer is a Showcase role and is not treated as a Danger role. A party of four or fewer receives at most one role across both risk groups.
 - A role found among a player's five most recent assignments uses half of its normal selection weight for that player. Other players' histories do not affect that player's selection.
 - A player normally cannot receive the same role in consecutive stages. After receiving `Courier`, `Tuna`, or `Influenza`, that player is excluded from these Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
 - `Jumper`, `Launcher`, `Climber`, `Flyer`, `Tracker`, and `Ghost` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
-- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, and `Influenza` are not selected in single-player or a one-player session.
+- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, and `Signalman` are not selected in single-player or a one-player session.
 - `Imitator` is selected only after another active player has received a role it can copy.
 - By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` when no melee weapon is available. Weapon-like valuables do not count as weapons for either role's assignment, and staffs do not count for Sniper assignment.
 - Players who leave are removed from the role list. Returning players regain their previous role; new players receive a role, its upgrades and an announcement.
@@ -117,6 +116,7 @@ Party-size, context and balance restrictions still apply. The screen identifies 
 |![][i39]<br>Avenger|When another player dies within 30 m, deals 1.5x damage to enemies for 20 seconds.|Activation, duration refreshes, and expiration are announced by TTS. Another nearby death refreshes the duration without stacking the multiplier. Its own death does not activate the effect. Never selected randomly when only one player is present.|Trigger radius, damage multiplier, and duration|
 |![][i40]<br>Brawler|Deals 1.25x damage with identifiable melee weapon attacks and 0.75x damage with identifiable guns, staff projectiles, and lasers.|Vehicle impacts, Tumble Attacks, grenades, and ordinary held-object collisions are unchanged.|Melee and ranged damage multipliers|
 |![][i41]<br>Influenza|**Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance.|**If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws.|Onset, HP, sneeze intervals, infection range/angle/chance, hearing|
+|![][i42]<br>Signalman|Relays ordinary chat unchanged to every living teammate at any distance, in each receiver's own TTS voice. Receives private teammate death alerts. Radio cooldown: 20 seconds.|Commands and automatic notices are excluded. Cooldown posts stay ordinary chat and are never relayed later. Waits for each receiver; countdowns have priority. Drops messages after 5 seconds waiting. At least two players; at most one drawn. Normal VC range is unchanged.|Cooldown, waiting limit, death alerts, command exclusions|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -157,6 +157,9 @@ Host: REPOConfig → RoleShuffle → role name. Defaults preserve the abilities 
 |`Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent`|60 / 30|0–100%|Chance per teammate per sneeze / utterance or message.|
 |`Influenza.SpeechSilenceSeconds`|0.75|0.1–5 s|Silent gap that starts a new utterance.|
 |`Influenza.SneezeNoiseRadius`|5|0–100 m|Enemy hearing distance, modified by enemy hearing. Zero disables the alert.|
+|`Signalman.CooldownSeconds` / `Signalman.MaximumDelaySeconds`|20 / 5|1–300 / 1–30 s|Radio cooldown / maximum wait for a busy receiver.|
+|`Signalman.DeathAlerts`|true|true, false|Private teammate death notices; also follows `Notifications.Enabled`.|
+|`Signalman.ExcludedCommands` / `Signalman.ExcludedPrefixes`|`star,roll,gravity,void,laser,decoy` / `!`|Comma-separated|Extra exact commands / prefixes to exclude. Slash commands and exact built-in spell names are always excluded.|
 
 ### Configuration
 
@@ -190,7 +193,7 @@ All settings are available through REPOConfig. Host-controlled settings affect t
 
 All entries in this table are host-controlled.
 
-Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, and `Bodyguard`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
+Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, and `Signalman`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
 
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
@@ -447,17 +450,17 @@ Influencer and Berserker scaling accepts comma- or semicolon-separated `conditio
 
 Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` or `DRAW HISTORY`.
 
-- **HUD editor:** `TOOLS` → `HUD EDITOR` opens a sample using the actual HUD layout. Drag it to move it; adjust the anchor, alignment, text size, icon size, overall scale, display mode, and HUD visibility. `SAVE` keeps the local settings. `CANCEL` or Escape discards them; `RESET` restores defaults in the preview. The editor uses mouse input and remains available in the lobby.
-- **Bug report:** open `TOOLS` → `REPORT A PROBLEM`, then copy or open the report. Check its contents, add the steps that caused the problem, and submit it through `OPEN GITHUB ISSUES`. The report contains your mod versions, settings and recent activity. Reports are saved in `BepInEx/RoleShuffleReports` and are not sent automatically.
-- **Language:** change `UI.GuideLanguage` in MOD settings or use the existing language toggle in Roles. Both controls share the same saved choice. The default is English; an existing selection is preserved. Choices use native names: English, 日本語, 한국어, 简体中文, 繁體中文, Français, Deutsch, Español, Português (Brasil), Italiano, Русский, Polski, Türkçe, Українська. The menu, role explanations, HUD editor, draw history and sync status follow this selection. Role names, upgrade identifiers, chat commands and diagnostic report contents remain in English.
-- **Sync status:** `TOOLS` shows whether the role list, guide, Base Upgrades and history are up to date. If the display is delayed, use `REFRESH DISPLAY DATA`. This refreshes the information shown without changing your role or upgrades.
-- **Draw history:** `DRAW HISTORY` shows the latest 50 completed truck draws, newest first, including level, selected upgrade, rolled change, and actual before/after Base Upgrade targets. Zero changes and capped outcomes are retained. History is saved with the host's run and shared with installed participants. Cancelled draws are not recorded.
+- **HUD editor:** in `TOOLS`, drag the HUD sample and adjust its anchor, alignment, text/icon size, scale, mode and visibility. `SAVE` keeps local settings; `CANCEL` or Esc discards them; `RESET` previews defaults. Mouse controls also work in the lobby.
+- **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports contain mod versions, settings and recent activity, are saved in `BepInEx/RoleShuffleReports`, and are never sent automatically.
+- **Language:** `UI.GuideLanguage` and the Roles toggle share a saved choice, defaulting to English. All 14 languages appear by native name. Menus, role descriptions, HUD editor, history and sync status follow it; role names, upgrade identifiers, commands and diagnostics remain English.
+- **Sync status:** `TOOLS` shows whether roles, guide, Base Upgrades and history are current. `REFRESH DISPLAY DATA` refreshes these displays without changing roles or upgrades.
+- **Draw history:** shows the latest 50 completed truck draws, including level, target, rolled change and actual before/after targets. Zero/capped results are retained; cancelled draws are omitted. History is saved with the host’s run and shared with installed participants.
 
 `HUD.FontSize` defaults to 28 (range 16–48). `UI.GuideLanguage` defaults to `English`. Both are personal settings. The default HUD display mode is `NameOnly`.
 
 ### Notifications and HUD
 
-- **Resources:** the remaining healing, revives, repair, charge and wagers appear below stamina as cyan icons and numbers in one column. The display fits the available space, and empty resources turn red. It appears while you are alive and have the mod installed. Adjust it with `HUD.ResourceHud*`.
+- **Resources:** the remaining healing, revives, repair, charge and wagers appear below stamina as cyan icons and numbers in one column. The display fits the available space, and empty resources turn red. It appears while you are alive and have the mod installed. Adjust it with `HUD.ResourceHud*`. Signalman also shows its radio cooldown here.
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
@@ -503,7 +506,7 @@ Elite Enemy Variants is optional and is not required to install RoleShuffle.
 
 ### 概要
 
-RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、移動・回復・戦闘などの能力を付与します。役職はステージ終了まで有効です。基礎アップグレードはステージ外でも維持され、ランの進行に応じて強化できます。
+RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘などの能力を付与します。基礎アップグレードはステージ外でも維持され、ランの進行に応じて強化できます。
 
 ゲームプレイ効果はホストだけの導入で利用でき、最大30人のセッションをサポートします。MODを導入していない参加者にも、役職、アップグレード、効果、バニラのチャット／TTS通知が適用されます。RoleShuffleを導入している参加者は、すべての役職を確認できるHUDも利用できます。
 
@@ -529,7 +532,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 - MOD未導入の参加者にも対応しており、RoleShuffleの導入は不要です。
 - MOD導入済みの参加者には全員の役職を確認できるHUDと、Escメニュー内のスクロール可能な`Roles`ページが表示されます。HUDの配置は各プレイヤーが個別に変更できます。
 - MageとTricksterは表情の解除では能力を発動しません。ホスト自身のメニュー終了時の表情復帰も除外しますが、参加者のメニュー終了時に復帰した表情では能力が発動する場合があります。
-- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`がランダム抽選から除外されます。
+- シングルプレイでも同じ役職システムを使用しますが、参加者が1人だけのときは`Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`、`Signalman`がランダム抽選から除外されます。
 
 ### ロール選択とプリセット
 
@@ -539,9 +542,9 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
-|標準|43|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
-|初心者向け|19|基本強化・回復・防御が中心。自動で危害を加える役やハンデ役を除外します。|
-|協力重視|16|チーム支援・回復・修理を中心に協力して生き残ります。|
+|標準|44|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
+|初心者向け|20|基本強化・回復・防御が中心。自動で危害を加える役やハンデ役を除外します。|
+|協力重視|17|チーム支援・回復・修理を中心に協力して生き残ります。|
 |カオス|15|爆発・魔法・ギャンブルなど、予測しづらい展開を楽しみます。|
 |高難度|15|専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。|
 
@@ -559,7 +562,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 - 有効な役職を相対的な`Weight`に基づいて抽選します。
 - `General.UniqueRoles = true`の場合、抽選可能な役職を一巡するまで重複を避けます。
 - `King`は1ステージにつき最大1人です。
-- デフォルトでは、Showcase役（`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`）とSupport役（`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`）を、参加人数に応じて設定された最低人数まで優先的に割り当てます。
+- デフォルトでは、Showcase役（`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`）とSupport役（`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Signalman`）を、参加人数に応じて設定された最低人数まで優先的に割り当てます。
 - デフォルトでは、24人以上でShowcaseとSupportをそれぞれ最低4人保証します。Danger上限は8人で2人、16人で3人へ増え、Hardship上限は12人で2人へ増えます。InfluencerはShowcase役であり、Danger役として扱いません。4人以下では両リスクグループを合わせて最大1人です。
 - 各プレイヤーが直近5回に割り当てられた役職は、そのプレイヤーの次回抽選時に通常の半分のWeightで扱います。他のプレイヤーの履歴は影響しません。
 - 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Courier`、`Tuna`、`Influenza`のいずれかの後、2ステージはそのプレイヤーをこれらの役職から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
@@ -616,6 +619,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 |![][i39]<br>Avenger|他のプレイヤーが30m以内で死亡すると、20秒間、敵へのダメージが1.5倍になります。|発動、残り時間の更新、終了はTTSで通知されます。効果中に近くで別のプレイヤーが死亡した場合は、倍率を重複せず残り時間だけを更新します。自身の死亡では発動しません。1人のセッションでは抽選されません。|発動範囲、ダメージ倍率、持続時間|
 |![][i40]<br>Brawler|攻撃者を特定できる近接武器のダメージが1.25倍になり、銃、杖の弾、レーザーによるダメージは0.75倍になります。|車両衝突、Tumble Attack、グレネード、通常の保持物による衝突は変化しません。|近接・遠隔ダメージ倍率|
 |![][i41]<br>Influenza|**発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。|**感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。|発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音|
+|![][i42]<br>Signalman|通常チャットの本文を変えずに、生存中の仲間全員へ距離制限なく届けます。受信者自身の読み上げ音声で再生し、仲間の死亡通知も受け取ります。通信後は20秒待機。|コマンドと自動通知は除外。待機中の投稿は通常チャットのみで、後から転送しません。相手の発話を待ち、カウントダウンを優先。5秒待った通信は破棄。2人以上で最大1人を抽選。通常VCの距離は変わりません。|再使用待ち・待機上限・死亡通知・コマンド除外|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -656,6 +660,9 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 |`Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent`|60 / 30|0～100％|くしゃみ／発話・投稿ごとの、仲間1人あたりの感染確率。|
 |`Influenza.SpeechSilenceSeconds`|0.75|0.1～5秒|別の発話として判定する無音時間。|
 |`Influenza.SneezeNoiseRadius`|5|0～100m|敵に聞こえる基本距離。敵の聴力で変化。0で反応なし。|
+|`Signalman.CooldownSeconds` / `Signalman.MaximumDelaySeconds`|20 / 5|1～300 / 1～30秒|通信の再使用待ち／受信者の発話を待つ上限。|
+|`Signalman.DeathAlerts`|true|true, false|仲間の死亡を本人へ通知。`Notifications.Enabled`にも従います。|
+|`Signalman.ExcludedCommands` / `Signalman.ExcludedPrefixes`|`star,roll,gravity,void,laser,decoy` / `!`|カンマ区切り|除外する入力全文／先頭文字を追加。`/`で始まる入力と既存の魔法名の単独入力は常に除外。|
 
 ### 設定
 
@@ -689,7 +696,7 @@ RoleShuffleはステージ開始時に各プレイヤーへ役職を抽選し、
 
 この表はすべてホスト設定です。
 
-Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
+Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Signalman`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
 
 |キー|デフォルト|範囲・値|内容|
 |---|---:|---|---|
@@ -946,17 +953,17 @@ InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたは�
 
 Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW HISTORY`を選択します。
 
-- **HUD編集：** `TOOLS` → `HUD編集モード`で、実際のHUDと同じレイアウトのサンプルを表示します。ドラッグで移動し、基準位置・整列・文字サイズ・アイコンサイズ・全体倍率・表示形式・HUDの表示／非表示を調整できます。「保存」でローカル設定に反映し、「取消」またはEscで破棄します。「初期値」はプレビューを初期設定に戻します。マウスで操作でき、ロビーでも使用できます。
-- **不具合レポート：** `TOOLS` → `不具合レポート`からレポートをコピーするか、保存したファイルを開きます。内容を確認して発生手順を追記し、「GitHub Issuesを開く」から投稿してください。レポートにはMODのバージョン・設定・最近の動作状況が含まれます。保存先は`BepInEx/RoleShuffleReports`で、自動送信は行いません。
-- **言語：** MOD設定の`UI.GuideLanguage`と、Roles内の既存の言語トグルの両方から変更できます。同じ選択値を保存し、メニューの再表示やゲーム再起動時にも復元します。初期値は英語で、既存の選択は引き継ぎます。選択肢は各言語の名称で表示します：English、日本語、한국어、简体中文、繁體中文、Français、Deutsch、Español、Português (Brasil)、Italiano、Русский、Polski、Türkçe、Українська。メニュー、役職説明、HUD編集、抽選履歴、同期状態に適用します。役職名、アップグレード識別名、チャットコマンド、不具合レポートの診断本文は英語表記です。
-- **同期状態：** `TOOLS`で、役職一覧・ガイド・Base Upgrade・履歴が最新の状態か確認できます。表示が遅れている場合は「表示データを再取得」を使ってください。表示だけを更新し、役職や強化値は変わりません。
-- **抽選履歴：** `DRAW HISTORY`で、完了したトラック抽選の直近50回を新しい順に表示します。レベル・抽選対象・抽選値・実際のBase Upgrade目標値の前後を確認でき、変化なしや上限・下限に達した結果も記録します。ホストのセーブに保存し、MOD導入済み参加者にも共有します。中断した抽選は記録しません。
+- **HUD編集：** `TOOLS`でサンプルをドラッグし、基準位置・整列・文字／アイコンサイズ・全体倍率・表示形式・表示切替を調整します。「保存」で個人設定を保存、「取消」またはEscで破棄、「初期値」で初期状態をプレビューします。ロビーでもマウスで操作できます。
+- **不具合レポート：** `TOOLS`からコピーまたはファイルを開き、内容と発生手順を確認してGitHub Issuesへ投稿します。MODのバージョン・設定・最近の動作状況を含み、`BepInEx/RoleShuffleReports`へ保存します。自動送信はしません。
+- **言語：** `UI.GuideLanguage`とRoles内の切替は同じ選択を保存します。初期値は英語、全14言語を各言語の名称で表示します。メニュー・説明・HUD編集・履歴・同期状態に適用し、役職名・アップグレード識別名・コマンド・診断本文は英語です。
+- **同期状態：** `TOOLS`で役職・ガイド・Base Upgrade・履歴が最新か確認します。「表示データを再取得」は表示だけを更新し、役職や強化値を変えません。
+- **抽選履歴：** 完了したトラック抽選の直近50回を表示します。レベル・対象・抽選値・実際の目標値の前後を記録し、変化なしや上限到達も残します。ホストのセーブに保存してMOD導入済み参加者と共有し、中断した抽選は記録しません。
 
 `HUD.FontSize`の初期値は28（範囲16～48）、`UI.GuideLanguage`の初期値は`English`です。どちらも個人設定です。HUDの初期表示形式は`NameOnly`です。
 
 ### 通知とHUD
 
-- **残量HUD：** 回復・蘇生・修理・充電・賭けの残量を、スタミナの下に水色のアイコンと数字で縦1列に表示します。画面に収まるよう大きさを調整し、使い切った項目は赤く表示します。MODを導入している本人の生存中に表示され、`HUD.ResourceHud*`で調整できます。
+- **残量HUD：** 回復・蘇生・修理・充電・賭けの残量を、スタミナの下に水色のアイコンと数字で縦1列に表示します。画面に収まるよう大きさを調整し、使い切った項目は赤く表示します。MODを導入している本人の生存中に表示され、`HUD.ResourceHud*`で調整できます。Signalmanの通信待ち時間も表示します。
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示できます。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
 - ステージ開始時、各プレイヤーは割り当てられた英語の役職名をバニラのチャット／TTSで発言します。
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持します。
@@ -966,7 +973,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - Influencerの発言とInfluenzaのくしゃみは本人のメッセージを待ち、敵にも聞こえます。Diverは残り時間を15秒刻み（30、15）、残り10秒から0秒までは毎秒発話します。前の発話を中断してカウントを優先し、通常の通知を待機させます。
 - `ROLES`一覧は初期設定で左下に名前のみを表示し、自分を固定して5秒ごとにページを切り替えます。`HUD.PlayersPerPage`が6以上なら多言語・アイコン付きでも6人分を確保し、6未満は設定を優先します。長いプレイヤー名は、役職名が見えるよう短く表示します。表示・サイズ設定は上表を参照してください。
 - Base Upgradeの抽選演出は、ホストとRoleShuffleを導入している参加者に表示されます。
-- Escメニュー・ロビーの右上にある`ROLES`ボタンからRolesページを開けます。Escメニューからは`CURRENT ROLES`、ロビーからは`ROLE GUIDE`を最初に表示し、ロビーでは`CURRENT ROLES`を無効にします。左カラムから利用可能な表示や`BASE UPGRADES`へ切り替えられます。`CURRENT ROLES`では自分を先頭に表示し、画面を開いた時点で自分の役職説明を展開します。プレイヤーをクリックすると、その役職の説明を表示または非表示にできます。`BASE UPGRADES`では、各アップグレードの現在の共有目標値、設定上の目標値、トラック抽選で累積した追加値を確認できます。MOD導入済み参加者にはホストの現在値を表示します。
+- Esc／ロビー右上の`ROLES`から開きます。Escでは`CURRENT ROLES`、ロビーでは`ROLE GUIDE`を表示します。自分が先頭に並び、プレイヤーをクリックすると説明を開閉できます。`BASE UPGRADES`では共有目標・設定値・累積抽選値を確認し、参加者にはホストの値を表示します。
 - `ROLE GUIDE`では有効な役職の説明を選択した言語で表示します。マルチプレイではホストの設定値に沿った説明になります。選択言語の説明がない場合は英語で表示します。シングルプレイでは自分の設定を使用します。
 
 ### 互換性
@@ -1040,3 +1047,4 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 [i40]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/40.png
 [i41]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/41.png
 [iu]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/unknown.png
+[i42]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/2207c9a37f217fcea8399ef3efdc0945ce62a04e/docs/icons/42.png

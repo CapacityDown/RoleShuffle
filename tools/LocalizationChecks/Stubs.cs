@@ -42,6 +42,7 @@ internal enum StageRole
     Avenger,
     Brawler,
     Influenza,
+    Signalman,
     Superbot = 1001,
     Disaster = 1002
 }
@@ -52,6 +53,9 @@ internal sealed class StageRolesConfig
     internal Entry<float> LifterHeavyRotationMultiplier { get; } = new(1f);
     internal Entry<int> LifterLightItemStrengthLevel { get; } = new(1);
     internal Entry<float> StinkerBreakGraceSeconds { get; } = new(0.5f);
+    internal Entry<float> SignalmanCooldownSeconds { get; } = new(20f);
+    internal Entry<float> SignalmanMaximumDelaySeconds { get; } = new(5f);
+    internal Entry<bool> SignalmanDeathAlerts { get; } = new(true);
     internal Entry<float> InfluenzaIncubationSeconds { get; } = new(30f);
     internal Entry<int> InfluenzaMaximumHealth { get; } = new(75);
     internal Entry<float> InfluenzaSneezeMinimumSeconds { get; } = new(30f);

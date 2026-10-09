@@ -386,6 +386,7 @@ var resources = new[] { AbilityMetric.Medic, AbilityMetric.Rescuer, AbilityMetri
 foreach (AbilityMetric metric in Enum.GetValues<AbilityMetric>())
     Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Only spendable budgets use the resource HUD");
 var allMetrics = Enum.GetValues<AbilityMetric>().Select(m => new AbilityValue(m, 0, 0)).ToArray();
+Check(RoleAbilityResources.ForHud(allMetrics).Count == 9 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.RadioCooldown), "Radio cooldown appears alongside eight budgets without adding other timers");
 Check(RoleAbilityResources.Select(allMetrics, true).Count == 8, "Empty and disabled budgets stay visible at zero");
 Check(RoleAbilityResources.Select(allMetrics, false).Count == allMetrics.Length - 8, "Progress/cooldown details are not duplicated");
 Check(RoleAbilityResources.Select(metrics, true).Single().Remaining == 90, "Mixed-role status selects the actual remaining budget");
@@ -424,7 +425,7 @@ Check(superbotHud.Scale > 0.6f && superbotHud.Scale < 1 && superbotHud.Left == 0
     "Seven Superbot resources shrink together in one column with room below for the role list");
 Check(RoleResourceLayout.MaximumOffset(99, 50) == 50 && RoleResourceLayout.MaximumOffset(10000, 50) == 90,
     "Maximum text follows vanilla's twenty-unit shift per extra digit");
-foreach (var metric in resources)
+foreach (var metric in resources.Append(AbilityMetric.RadioCooldown))
 {
     var glyph = RoleResourceSymbols.Get(metric);
     Check(glyph.Count > 0 && glyph.Count % 3 == 0 && glyph.All(p => p.X >= 0 && p.X <= 25 && p.Y >= 0 && p.Y <= 25),
@@ -451,6 +452,11 @@ Check(IconCovers(AbilityMetric.Wager,4,12) && !IconCovers(AbilityMetric.Wager,8,
 if (args.Length == 2 && args[0] == "--export-hud-icons")
     File.WriteAllText(args[1], System.Text.Json.JsonSerializer.Serialize(resources.ToDictionary(m => m.ToString(), m => RoleResourceSymbols.Get(m))));
 var snapshot = new AbilitySnapshot("p|日本語", StageRole.Imitator, StageRole.Medic, metrics);
+var radioSnapshot = new AbilitySnapshot("radio", StageRole.Signalman, StageRole.Signalman,
+    new[] { new AbilityValue(AbilityMetric.RadioCooldown, 20, 0) });
+var radioDecoded = RoleAbilityCodec.Decode(RoleAbilityCodec.Encode(new[] { radioSnapshot }));
+Check(radioDecoded["radio"].Effective == StageRole.Signalman && radioDecoded["radio"].Values.Single().Remaining == 20,
+    "Signalman and its cooldown survive the HUD wire format");
 string encoded = RoleAbilityCodec.Encode(new[] { snapshot });
 var decoded = RoleAbilityCodec.Decode(encoded);
 Check(decoded.Count == 1 && decoded[snapshot.SteamId].Effective == StageRole.Medic && decoded[snapshot.SteamId].Values[0].Remaining == 90,

@@ -1,8 +1,8 @@
 {
   "generationMode": "Built-in image_gen",
-  "count": 43,
-  "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha",
-  "status": "43 role emblems integrated",
+  "count": 44,
+  "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha; Signalman uses native transparent alpha",
+  "status": "44 role emblems integrated",
   "references": {
     "anatomy": "D:/Documents/R.E.P.O. MOD/StagePhysicsEvents/Assets/Semibot_reference.png",
     "style": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
@@ -37,7 +37,8 @@
         "Engineer",
         "Electrician",
         "Warden",
-        "Bodyguard"
+        "Bodyguard",
+        "Signalman"
       ]
     ],
     [
@@ -478,6 +479,20 @@
       "prompt": "Use case: precise-object-edit. Edit target: the attached approved Influenza role emblem. Change ONLY the colored interior backdrop inside the hexagonal frame from green to a perfectly uniform solid muted burgundy red #762C37, the established Danger category color for RoleShuffle. Preserve the EXACT existing character, pose, proportions, head, separate shallow jaw/neck band below the mouth, short tapered cone arms, eyes, forehead cooling patch, blue sweat, peach blush, cream sneeze puff, orange rays, black outlines, cream hexagonal border, layout and margins. No redesign, no new details, no repositioning, no silhouette changes. Outside the hexagonal badge stays genuinely transparent alpha. Inside the frame must be fully opaque. Background must have NO mosaic, blocks, grain, texture, gradient, speckles or cloudy patches. Crisp smooth edges and flat game-icon rendering. Return only one square finished icon, no text and no comparison board.",
       "source_sha256": "68f21fd33e919bb5be0924051e39686b5d830e86303a7526bc3250ff3fc92d65",
       "generationMode": "Built-in image_gen (category background edit)"
+    },
+    {
+      "id": "42",
+      "role": "Signalman",
+      "file": "42-Signalman.png",
+      "category": "Support",
+      "background": "#24563E",
+      "path": "C:\\Users\\Code-\\.codex\\generated_images\\01a0a1f3-aaf0-7cd0-809b-f9921d54fa09\\exec-05e4aa37-ceef-4193-8f9d-8a866cdc242d.png",
+      "prompt": "Edit only the raised arm on the LEFT of this Signalman Semibot role emblem: replace that entire bent arm with ONE simple straight tapered conical cream arm pointing diagonally DOWN and outward, mirroring the right arm. Both arms must now point down. No elbows, no wrists, no hands, no joint seam. Preserve the original hexagonal cream border, green interior, headset microphone, antenna and orange radio waves, eyes, head, shallow neck band, cylindrical body and cone legs EXACTLY as shown. Keep genuine transparent exterior alpha. No text. Crisp clean shapes at icon size.",
+      "prompt_history": {
+        "initial": "Edit the attached Tank emblem into the new Signalman (communications soldier) role emblem for the same R.E.P.O. RoleShuffle icon set. Use this image as the anatomy, linework, framing and palette reference. Preserve the cream rounded point-up hexagonal frame and the unmistakable cream Semibot anatomy: dome head, two large protruding circular eyes, narrow mouth gap, a distinct shallow cylindrical jaw/neck band immediately below the mouth, cylindrical torso, high-attached short tapered one-piece arms, two pointed cone feet. Remove the heart and health bar entirely. Show one single Semibot centered and filling the emblem, wearing a dark compact headset with a small boom microphone beside its mouth and a compact backpack radio with a tall antenna rising behind one shoulder. One tapered arm raised near the headset, the other arm simple. Add three simple orange curved radio signal marks above the antenna. No guns, no human fingers, wrists or elbows, no other characters, no text, letters or numbers. Flat smooth colors, simple clean shading and bold dark outlines matching the reference; absolutely no pixelation, checkerboard pattern, gritty texture, mosaic or blur. Interior of hexagon must be a single flat Support category forest-green color #24563E. Only the exterior beyond the cream hexagon frame is truly transparent. Square canvas, full badge comfortably inside canvas with small even margins. This is a new role variant, save separately from original.",
+        "correction": "Make one precise correction to this Signalman badge. The raised arm on the viewer's left must be ONE single simple tapered cream limb attached high to the side of the cylindrical torso, directly below the neck band, pointing diagonally upward toward the headset. Remove the extra horizontal upper-arm cylinder and elbow-looking connection. It must have no elbow joint, no wrist, no hand. Keep all other artwork, head, eyes, distinct jaw/neck band, headset, backpack antenna, signal marks, pose, cream hexagonal frame, sizes and colors unchanged. Keep outside the hexagon truly transparent. Keep the green background flat #24563E, without noise or patterns.",
+        "final": "Edit only the raised arm on the LEFT of this Signalman Semibot role emblem: replace that entire bent arm with ONE simple straight tapered conical cream arm pointing diagonally DOWN and outward, mirroring the right arm. Both arms must now point down. No elbows, no wrists, no hands, no joint seam. Preserve the original hexagonal cream border, green interior, headset microphone, antenna and orange radio waves, eyes, head, shallow neck band, cylindrical body and cone legs EXACTLY as shown. Keep genuine transparent exterior alpha. No text. Crisp clean shapes at icon size."
+      }
     },
     {
       "id": "1001",

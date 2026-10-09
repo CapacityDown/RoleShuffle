@@ -29,7 +29,8 @@ internal sealed class RoleAssignmentPlanner
         StageRole.Mechanic,
         StageRole.Electrician,
         StageRole.Warden,
-        StageRole.Bodyguard
+        StageRole.Bodyguard,
+        StageRole.Signalman
     };
 
     private static readonly HashSet<StageRole> DangerRoles = new()
@@ -330,6 +331,8 @@ internal sealed class RoleAssignmentPlanner
             {
                 continue;
             }
+            if (role == StageRole.Signalman &&
+                (playerCount < 2 || Contains(selectedRoles, StageRole.Signalman))) continue;
             if (enforceUnique && _config.UniqueRoles.Value &&
                 Contains(selectedRoles, role))
             {

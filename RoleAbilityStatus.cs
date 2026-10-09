@@ -5,7 +5,7 @@ using System.Text;
 
 namespace REPOJP.StageRoles;
 
-internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport }
+internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, RadioCooldown }
 
 internal readonly struct AbilityValue(AbilityMetric metric, int remaining, int limit)
 {
@@ -108,6 +108,7 @@ internal static class RoleAbilityText
             AbilityMetric.DiveActive => ("Dive remaining", "潜行残り"),
             AbilityMetric.DiveCooldown => ("Dive", "潜行"),
             AbilityMetric.Wager => ("Wagers", "賭け"),
+            AbilityMetric.RadioCooldown => ("Radio", "通信"),
             _ => ("Revenge", "復讐")
         };
         return RoleText.Get(en, language, ja);
@@ -122,7 +123,7 @@ internal static class RoleAbilityText
             string label = Label(value.Metric, language);
             bool seconds = value.Metric is AbilityMetric.MageCooldown or AbilityMetric.Grace or
                 AbilityMetric.DecoyActive or AbilityMetric.DecoyCooldown or AbilityMetric.DiveActive or
-                AbilityMetric.DiveCooldown or AbilityMetric.Avenger;
+                AbilityMetric.DiveCooldown or AbilityMetric.Avenger or AbilityMetric.RadioCooldown;
             string amount = seconds ? $"{value.Remaining}s" : $"{value.Remaining}/{value.Limit}";
             if (value.Metric == AbilityMetric.RoyalSupport) amount = value.Remaining.ToString(CultureInfo.InvariantCulture);
             if (value.Metric is AbilityMetric.Carry or AbilityMetric.CloudDistance or AbilityMetric.GrenadeDistance) amount += "m";
@@ -135,6 +136,14 @@ internal static class RoleAbilityText
 
 internal static class RoleAbilityResources
 {
+    internal static IReadOnlyList<AbilityValue> ForHud(IReadOnlyList<AbilityValue> values)
+    {
+        List<AbilityValue> result = new();
+        foreach (AbilityValue value in values)
+            if (IsResource(value.Metric) || value.Metric == AbilityMetric.RadioCooldown) result.Add(value);
+        return result;
+    }
+
     // Explicit membership: a distance target or cooldown is not a spendable budget.
     internal static bool IsResource(AbilityMetric metric) => metric is
         AbilityMetric.Medic or AbilityMetric.Rescuer or AbilityMetric.Phoenix or

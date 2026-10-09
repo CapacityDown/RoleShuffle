@@ -498,7 +498,8 @@ internal sealed class RoleTestCommandService : MonoBehaviour
             role = (StageRole)number;
             return true;
         }
-        if (number >= 1 && number <= (int)StageRole.Influenza + 1)
+        if (number >= 1 && number <= RoleCatalog.AllRoles.Count &&
+            !RoleCatalog.IsSecretRole(RoleCatalog.AllRoles[number - 1]))
         {
             role = RoleCatalog.AllRoles[number - 1];
             return true;
