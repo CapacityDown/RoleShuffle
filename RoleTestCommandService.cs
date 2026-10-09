@@ -12,6 +12,7 @@ internal sealed class RoleTestCommandService : MonoBehaviour
 {
     private const string FullCommand = "setrole";
     private const string ShortCommand = "sr";
+    internal const string TwinsCommandUsage = "Usage: /setrole Twins <player1> <player2> (player numbers or Steam IDs)";
     private const string HudPlayersCommand = "hudplayers";
     private const string HudPlayersShortCommand = "hp";
     private const string HudMultibyteCommand = "hudmultibyte";
@@ -378,7 +379,8 @@ internal sealed class RoleTestCommandService : MonoBehaviour
         {
             Respond(
                 $"Usage: /setrole <role name|1-{RoleCatalog.AllRoles.Count - 1}|" +
-                "random|rd> [player number|player name|Steam ID|all]",
+                "random|rd> [player number|player name|Steam ID|all]; " +
+                TwinsCommandUsage,
                 success: false);
             return;
         }
@@ -413,6 +415,18 @@ internal sealed class RoleTestCommandService : MonoBehaviour
             return;
         }
 
+        if (role == StageRole.Twins)
+        {
+            if (args.Length != 3)
+            {
+                Respond(TwinsCommandUsage, success: false);
+                return;
+            }
+            bool twinsSuccess = _controller.TrySetTwins(args[1], args[2], out string twinsResponse);
+            Respond(twinsResponse, twinsSuccess);
+            return;
+        }
+
         bool success = allPlayers
             ? _controller.TrySetRoleForAll(role, out string response)
             : _controller.TrySetRole(targetIdentifier, role, out response);
@@ -428,11 +442,24 @@ internal sealed class RoleTestCommandService : MonoBehaviour
         string filter = partial ?? string.Empty;
         if (args.Length > 1)
         {
-            AddSuggestion(suggestions, "all", filter);
+            bool twins = TryParseRole(args[0], out StageRole role) && role == StageRole.Twins;
+            if (twins && args.Length > 3)
+            {
+                return suggestions;
+            }
+            if (!twins)
+            {
+                AddSuggestion(suggestions, "all", filter);
+            }
             foreach (RoleSnapshot snapshot in RoleAssignmentSync.Read())
             {
                 if (snapshot.PlayerNumber > 0)
                 {
+                    if (twins && args.Length == 3 &&
+                        (args[1] == snapshot.PlayerNumber.ToString() || args[1] == snapshot.SteamId))
+                    {
+                        continue;
+                    }
                     AddSuggestion(suggestions, snapshot.PlayerNumber.ToString(), filter);
                 }
             }

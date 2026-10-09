@@ -562,6 +562,11 @@ internal sealed partial class StageRoleController : MonoBehaviour
         {
             return false;
         }
+        if (role == StageRole.Twins)
+        {
+            response = RoleTestCommandService.TwinsCommandUsage;
+            return false;
+        }
 
         RoleAssignment? assignment = ResolveAssignment(targetIdentifier);
         if (assignment == null)
@@ -583,14 +588,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 changes[_twins!.Members[1 - TwinIndex(assignment.Player)].SteamId] = role;
             else { response = "Change or randomize both Twins together."; return false; }
         }
-        if (role == StageRole.Twins && !IsTwin(assignment.Player))
-        {
-            if (_twins != null) { response = "A Twins pair already exists."; return false; }
-            RoleAssignment? partner = _assignments.Find(a => a != assignment && PlayerState.IsLiving(a.Player));
-            if (partner == null || !PlayerState.IsLiving(assignment.Player))
-            { response = "Twins needs two living players."; return false; }
-            changes[partner.SteamId] = StageRole.Twins;
-        }
         ApplyRoleChanges(changes);
 
         string playerName = PlayerIdentity.Name(assignment.Player);
@@ -601,6 +598,53 @@ internal sealed partial class StageRoleController : MonoBehaviour
         response = $"{playerName}: {RoleCatalog.AssignmentName(previousRole)} -> " +
                    RoleCatalog.AssignmentName(role);
         StageRolesPlugin.ModLogger.LogInfo($"Test role changed: {response}.");
+        return true;
+    }
+
+    internal bool TrySetTwins(string firstIdentifier, string secondIdentifier, out string response)
+    {
+        if (!CanChangeRoles(out response))
+        {
+            return false;
+        }
+        // Validate both targets before touching roles, upgrades or shared HP.
+        if (string.IsNullOrWhiteSpace(firstIdentifier) || string.IsNullOrWhiteSpace(secondIdentifier) ||
+            string.Equals(firstIdentifier, "all", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(secondIdentifier, "all", StringComparison.OrdinalIgnoreCase))
+        {
+            response = RoleTestCommandService.TwinsCommandUsage;
+            return false;
+        }
+        RoleAssignment? first = ResolveAssignment(firstIdentifier);
+        RoleAssignment? second = ResolveAssignment(secondIdentifier);
+        if (first == null || second == null)
+        {
+            response = $"Player not found or ambiguous: {(first == null ? firstIdentifier : secondIdentifier)}";
+            return false;
+        }
+        if (first == second || first.SteamId == second.SteamId || first.Player == second.Player)
+        {
+            response = "Specify two different players.";
+            return false;
+        }
+        if (!PlayerState.IsLiving(first.Player) || !PlayerState.IsLiving(second.Player))
+        {
+            response = "Twins needs two living players.";
+            return false;
+        }
+        if (_assignments.Exists(a => a != first && a != second &&
+                (a.Role == StageRole.Twins || a.AssignedRole == StageRole.Twins)))
+        {
+            response = "A Twins pair already exists. Randomize all roles before choosing a new pair.";
+            return false;
+        }
+        ApplyRoleChanges(new Dictionary<string, StageRole>(StringComparer.Ordinal)
+        {
+            [first.SteamId] = StageRole.Twins,
+            [second.SteamId] = StageRole.Twins
+        });
+        response = $"Players {_assignments.IndexOf(first) + 1} + {_assignments.IndexOf(second) + 1}: Twins";
+        StageRolesPlugin.ModLogger.LogInfo($"Test roles changed: {response}.");
         return true;
     }
 
@@ -616,8 +660,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
             return false;
         }
 
-        if (role == StageRole.Twins && (_assignments.Count != 2 || _assignments.Exists(a => !PlayerState.IsLiving(a.Player))))
-        { response = "Twins requires exactly two living players for this command."; return false; }
+        if (role == StageRole.Twins)
+        { response = RoleTestCommandService.TwinsCommandUsage; return false; }
 
         Dictionary<string, StageRole> changes = new(StringComparer.Ordinal);
         foreach (RoleAssignment assignment in _assignments)
@@ -3421,6 +3465,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 ? _assignments[playerNumber - 1]
                 : null;
         }
+        RoleAssignment? exactMatch = null;
         foreach (RoleAssignment assignment in _assignments)
         {
             if (string.Equals(assignment.SteamId, target, StringComparison.OrdinalIgnoreCase) ||
@@ -3429,8 +3474,16 @@ internal sealed partial class StageRoleController : MonoBehaviour
                     target,
                     StringComparison.OrdinalIgnoreCase))
             {
-                return assignment;
+                if (exactMatch != null)
+                {
+                    return null;
+                }
+                exactMatch = assignment;
             }
+        }
+        if (exactMatch != null)
+        {
+            return exactMatch;
         }
 
         RoleAssignment? partialMatch = null;
