@@ -144,6 +144,7 @@ internal static class RoleCatalog
         role != StageRole.Jobless &&
         role != StageRole.Tuna &&
         role != StageRole.Influenza &&
+        role != StageRole.Signalman &&
         !IsSecretRole(role);
 
     internal static IReadOnlyList<UpgradeGrant> BaseUpgrades(

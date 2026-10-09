@@ -79,7 +79,10 @@ __PARSE__
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},Array.Empty<StageRole>(),1)==null,"Signalman excluded in solo including fallback");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},Array.Empty<StageRole>(),2)==StageRole.Signalman,"Signalman available for two players");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},new[]{StageRole.Signalman},2)==null,"Signalman maximum one even with uniqueness off and fallback");
-        Check(RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Signalman) && RoleCatalog.CanBeCopiedByImitator(StageRole.Signalman),"Signalman remains compatible with combined and copied roles");
+        Check(RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Signalman),"Superbot retains Signalman capability");
+        Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Signalman),"Signalman cannot be copied by Imitator");
+        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Imitator},new[]{StageRole.Signalman},2)==null,"Signalman alone cannot enable an Imitator draw, including fallback");
+        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Imitator},new[]{StageRole.Signalman,StageRole.Tank},3)==StageRole.Imitator,"Another eligible teammate still enables Imitator");
         config.UniqueRoles.Value=true;
         Check(planner.PlanJoinedAssignment("p",secrets,Array.Empty<StageRole>(),2)==null,"two secrets cannot fill empty pool");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Disaster},Array.Empty<StageRole>(),2)==null,"Disaster alone not fallback");
