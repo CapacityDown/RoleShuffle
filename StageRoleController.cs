@@ -1343,7 +1343,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 bool exhausted = IsAbilityExhausted(assignment, ability);
                 AbilityExhaustionState state = assignment.ExhaustionNotifications;
                 if (exhausted && (!_config.AnnouncementsEnabled.Value ||
-                    !_notifier.CanQueueNotification || !PlayerState.IsLiving(assignment.Player)))
+                    !_notifier.CanQueueNotification(assignment.Player) || !PlayerState.IsLiving(assignment.Player)))
                     continue;
                 int key = (int)ability;
                 if (!state.TryQueue(key, exhausted)) continue;
@@ -2049,8 +2049,11 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     internal IReadOnlyList<RoleAssignment> Assignments => _assignments;
 
-    internal bool HasPendingAutomaticNotifications =>
-        _notifier?.HasPendingNotifications == true;
+    internal bool HasPendingAutomaticNotifications(PlayerAvatar player) =>
+        _notifier?.HasPendingNotificationsFor(player) == true;
+
+    internal bool TrySendPlayerMessage(PlayerAvatar player, string message) =>
+        _notifier.TrySendPlayerMessage(player, message);
 
     internal bool RoleAssignmentsReady =>
         _stageReady && _assignmentsInitialized && IsAuthority();

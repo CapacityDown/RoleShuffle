@@ -75,7 +75,7 @@ internal sealed class EventRoleRuntime
     private readonly Dictionary<string, ScalingCache> _scalingCache =
         new(StringComparer.Ordinal);
     private float _nextDynamicCheckAt;
-    private float _lastTtsActivityAt;
+    private readonly Dictionary<string, float> _lastTtsActivityAt = new(StringComparer.Ordinal);
 
     internal EventRoleRuntime(
         StageRoleController controller,
@@ -89,9 +89,9 @@ internal sealed class EventRoleRuntime
     {
         Stop();
         _nextDynamicCheckAt = 0f;
-        _lastTtsActivityAt = Time.time;
         foreach (RoleAssignment assignment in assignments)
         {
+            _lastTtsActivityAt[assignment.SteamId] = Time.time;
             PrepareAssignment(assignment);
         }
     }
@@ -117,6 +117,7 @@ internal sealed class EventRoleRuntime
         _pendingRevivals.Remove(steamId);
         _internalDamage.Clear(steamId);
         _scalingCache.Remove(steamId);
+        _lastTtsActivityAt.Remove(steamId);
     }
 
     internal void Stop()
@@ -142,7 +143,7 @@ internal sealed class EventRoleRuntime
         _riderKnockbackAllowedAt.Clear();
         _scalingCache.Clear();
         _nextDynamicCheckAt = 0f;
-        _lastTtsActivityAt = 0f;
+        _lastTtsActivityAt.Clear();
     }
 
     internal void Tick(IReadOnlyList<RoleAssignment> assignments)
@@ -202,41 +203,32 @@ internal sealed class EventRoleRuntime
 
     internal void LateTick(IReadOnlyList<RoleAssignment> assignments)
     {
-        if (_controller.HasPendingAutomaticNotifications ||
-            RoleNotifier.AnyNotificationBusy())
-        {
-            _lastTtsActivityAt = Time.time;
-            return;
-        }
+        if (!RoleNotifier.CanNotify()) return;
         float quietPeriod = Mathf.Clamp(
             _config.InfluencerTtsQuietPeriodSeconds.Value,
             0f,
             10f);
-        if (Time.time - _lastTtsActivityAt < quietPeriod ||
-            !RoleNotifier.CanNotify())
-        {
-            return;
-        }
-
         foreach (RoleAssignment assignment in assignments)
         {
             if (assignment.Role != StageRole.Influencer ||
-                !PlayerState.IsLiving(assignment.Player) ||
-                Time.time < assignment.InfluencerNextTtsAt)
+                !PlayerState.IsLiving(assignment.Player))
             {
                 continue;
             }
+            if (_controller.HasPendingAutomaticNotifications(assignment.Player) ||
+                PlayerMessageActivity.IsBusy(assignment.Player))
+            {
+                _lastTtsActivityAt[assignment.SteamId] = Time.time;
+                continue;
+            }
+            if (!_lastTtsActivityAt.TryGetValue(assignment.SteamId, out float lastActivity))
+                _lastTtsActivityAt[assignment.SteamId] = lastActivity = Time.time;
+            if (Time.time - lastActivity < quietPeriod || Time.time < assignment.InfluencerNextTtsAt) continue;
             string message = InfluencerMessages[
                 UnityEngine.Random.Range(0, InfluencerMessages.Length)];
-            if (!StageFluxCompatibility.TryReserveNotificationWindow(
-                    "RoleShuffle.Influencer",
-                    8f))
-            {
-                return;
-            }
             try
             {
-                assignment.Player.ChatMessageSend(message);
+                if (!_controller.TrySendPlayerMessage(assignment.Player, message)) continue;
                 EnemyDirector.instance?.SetInvestigate(
                     assignment.Player.transform.position,
                     Mathf.Clamp(
@@ -245,14 +237,13 @@ internal sealed class EventRoleRuntime
                         100f));
                 assignment.InfluencerNextTtsAt =
                     Time.time + NextInfluencerInterval();
-                _lastTtsActivityAt = Time.time;
+                _lastTtsActivityAt[assignment.SteamId] = Time.time;
             }
             catch (Exception exception)
             {
                 StageRolesPlugin.ModLogger.LogDebug(
                     $"Influencer TTS was delayed: {exception.Message}");
             }
-            break;
         }
     }
 

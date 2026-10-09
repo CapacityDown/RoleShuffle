@@ -444,6 +444,11 @@ internal static class LifecyclePatches
             .ShouldSuppressEngineerTrap(__instance) != true;
 
     [HarmonyPrefix]
+    [HarmonyPatch(typeof(PlayerAvatar), "ChatMessageSpeak")]
+    private static void PlayerAvatarChatMessageSpeakPrefix(PlayerAvatar __instance) =>
+        PlayerMessageActivity.Observe(__instance);
+
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerAvatar), nameof(PlayerAvatar.ChatMessageSendRPC))]
     private static void PlayerAvatarChatMessageSendRpcPrefix(
         PlayerAvatar __instance,

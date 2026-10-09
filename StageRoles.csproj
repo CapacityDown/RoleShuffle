@@ -118,6 +118,7 @@
     <Compile Include="PendingDamageBudget.cs" />
     <Compile Include="DiverRoleRuntime.cs" />
     <Compile Include="RoleNotifier.cs" />
+    <Compile Include="PlayerMessageActivity.cs" />
     <Compile Include="NotificationEnemyReactionGuard.cs" />
     <Compile Include="NotificationEnemyReactionPatches.cs" />
     <Compile Include="StageRoleController.cs" />

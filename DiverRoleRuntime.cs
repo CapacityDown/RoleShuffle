@@ -35,8 +35,6 @@ internal sealed class DiverRoleRuntime
     private readonly StageRolesConfig _config;
     private readonly Dictionary<string, DiveState> _states =
         new(StringComparer.Ordinal);
-    private static readonly int[] CountdownMilestones =
-        { 30, 20, 10, 5, 4, 3, 2, 1, 0 };
 
     internal AbilityValue Status(string steamId)
     {
@@ -128,35 +126,7 @@ internal sealed class DiverRoleRuntime
                 continue;
             }
 
-            if (state.Underfloor)
-            {
-                int remaining = Mathf.Max(
-                    0,
-                    Mathf.CeilToInt(state.ExpiresAt - now));
-                foreach (int milestone in CountdownMilestones)
-                {
-                    if (milestone >= state.LastCountdownSecond ||
-                        milestone < remaining)
-                    {
-                        continue;
-                    }
-
-                    int announcedSecond = milestone;
-                    bool queued = notifier.NotifyCountdown(
-                        player,
-                        announcedSecond.ToString(
-                            System.Globalization.CultureInfo.InvariantCulture),
-                        () => state.Underfloor || state.PendingDeath,
-                        announcedSecond == 0
-                            ? () => state.ZeroCountdownSent = true
-                            : null);
-                    if (announcedSecond == 0 && !queued)
-                    {
-                        state.ZeroCountdownSent = true;
-                    }
-                }
-                state.LastCountdownSecond = remaining;
-            }
+            TickCountdown(state, player, now, notifier);
 
             if (state.Underfloor && now >= state.ExpiresAt)
             {
@@ -194,6 +164,34 @@ internal sealed class DiverRoleRuntime
                     Vector3.zero,
                     savingGrace: false);
             }
+        }
+    }
+
+    private static void TickCountdown(
+        DiveState state,
+        PlayerAvatar player,
+        float now,
+        RoleNotifier notifier)
+    {
+        if (!state.Underfloor) return;
+
+        // Follow the deadline, not the length of the previous utterance. After
+        // a stalled frame, announce only the current count, never stale counts.
+        int remaining = Mathf.Max(0, Mathf.CeilToInt(state.ExpiresAt - now));
+        bool changed = remaining < state.LastCountdownSecond;
+        state.LastCountdownSecond = remaining;
+        if (!changed || (remaining > 10 && remaining % 15 != 0)) return;
+
+        bool sent = notifier.NotifyCountdown(
+            player,
+            remaining.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            () => state.Underfloor || state.PendingDeath,
+            remaining == 0 ? () => state.ZeroCountdownSent = true : null);
+        if (remaining == 0 && !sent)
+        {
+            // Disabling announcements or losing speech transport must not
+            // prevent the existing timeout consequence from completing.
+            state.ZeroCountdownSent = true;
         }
     }
 

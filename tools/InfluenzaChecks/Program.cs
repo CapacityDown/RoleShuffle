@@ -255,4 +255,16 @@ Check(InfluenzaRules.InRange(1, -1, true, sneezeAngle: 360) && !InfluenzaRules.I
 Check(!InfluenzaRules.Infects(0, true, 0, 100) && InfluenzaRules.Infects(0.999, false, 0, 100) &&
     InfluenzaRules.Infects(1, true, 100, 0) && !InfluenzaRules.Infects(1, false, 100, 0), "Zero and 100 percent settings include Unity random endpoints");
 
+Time.time=0; EnemyDirector.instance=new();
+var concurrent=new StageRoleController();
+var carrierA=new RoleAssignment("carrier-a",StageRole.Influenza,0,0);
+var carrierB=new RoleAssignment("carrier-b",StageRole.Influenza,0,20);
+concurrent.Add(carrierA,carrierB);concurrent.Tick(30);
+carrierA.Player.MessageBusy=true;concurrent.Tick(200);
+Check(carrierA.Player.Spoken.Count==0 && carrierB.Player.Spoken.Contains("Achoo!") &&
+    EnemyDirector.instance.Investigations.Count==1,"Only the speaking carrier delays its sneeze and enemy alert");
+carrierA.Player.MessageBusy=false;concurrent.Tick(201);
+Check(carrierA.Player.Spoken.Contains("Achoo!") && EnemyDirector.instance.Investigations.Count==2,
+    "Delayed sneeze resumes with enemy alert once its own message ends");
+concurrent.Stop();
 Console.WriteLine($"Influenza: {count} checks passed (production rules and runtime).");

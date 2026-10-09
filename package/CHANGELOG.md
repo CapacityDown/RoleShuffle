@@ -1,4 +1,5 @@
 ## 4.5.4
+- Changed notifications and automatic speech to wait per player after initial role announcements. Different players can receive messages at the same time. Diver counts remaining time at 15-second marks, then every second from 10 to 0, interrupting previous speech.
 - Added a short notification when Imitator tries to copy an ineligible role.
 - Fixed HP becoming full when a role's extra maximum HP is removed. Remaining HP now keeps the same proportion, rounded down with at least 1 HP for living players.
 - Changed Rescuer to revive the teammate whose Death Head it grabs, including moving heads. Removed automatic proximity rescue and its radius setting. Waiting does not consume a revival use.

@@ -45,11 +45,10 @@ internal sealed partial class StageRoleController
             }
             EnforceInfluenzaHealth(assignment, state);
             if (speechStarted) SpreadInfluenza(assignment, sneeze: false);
-            if (Time.time < state.NextSneezeAt) continue;
+            if (Time.time < state.NextSneezeAt || _notifier.IsPlayerBusy(player)) continue;
             state.NextSneezeAt = NextInfluenzaSneeze();
             // Standard TTS reaches unmodded guests. This is not ordinary chat input.
-            try { player.ChatMessageSend("Achoo!"); }
-            catch (Exception error) { StageRolesPlugin.ModLogger.LogDebug($"Sneeze voice unavailable: {error.Message}"); }
+            _notifier.TrySendPlayerMessage(player, "Achoo!");
             // Alert enemies on the host even if TTS fails or notification audio is suppressed.
             // Hearing is omnidirectional and separate from the forward infection fan.
             if (_config.InfluenzaSneezeNoiseRadius.Value > 0f)

@@ -58,7 +58,7 @@ public sealed class PlayerAvatar
     public Photon.Pun.PhotonView photonView = new();
     public PlayerVoiceChat voiceChat = new();
     public List<string> Spoken = new();
-    public bool FailChat;
+    public bool FailChat, MessageBusy;
     public void ChatMessageSend(string text)
     {
         if (FailChat) throw new InvalidOperationException("TTS unavailable");
@@ -124,7 +124,13 @@ namespace REPOJP.StageRoles
     }
     internal static class KingUpgradeAura { internal static void Tick(Config config, IReadOnlyList<RoleAssignment> assignments) {} }
     internal static class RoleAssignmentSync { internal static int Publishes;internal static void Publish(object assignments) => Publishes++; }
-    internal sealed class Notifier { internal void NotifyConditional(PlayerAvatar player, string text, Func<bool> valid) { if(valid()) player.Spoken.Add(text); } }
+    internal sealed class Notifier
+    {
+        internal bool IsPlayerBusy(PlayerAvatar player) => player.MessageBusy;
+        internal bool TrySendPlayerMessage(PlayerAvatar player, string text)
+        { try { player.ChatMessageSend(text); return true; } catch { return false; } }
+        internal void NotifyConditional(PlayerAvatar player, string text, Func<bool> valid) { if(valid()) player.Spoken.Add(text); }
+    }
     internal sealed class StageRolesPlugin
     {
         internal static StageRolesPlugin? Instance;

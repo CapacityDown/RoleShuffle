@@ -59,6 +59,15 @@ historical version numbers, deployment profiles and superseded design choices.
 
 ## In-game notifications
 
+- Only initial role announcements use a shared sequence. Later notifications,
+  replies and automatic speech must avoid overlap per player; one player's
+  message must not block a different player. Respect that player's native TTS,
+  including text chat and other mods, while retaining enemy hearing for abilities.
+- Countdown speech takes priority: do not skip counts because that player is
+  already speaking. Counts may interrupt speech; ordinary notices wait until
+  the countdown's speaking window ends. Above 10 seconds, announce remaining
+  multiples of 15 (for example 30, 15); from 10 through 0, announce every second.
+  Follow the remaining-time deadline and interrupt the preceding utterance.
 - Keep role notices short and without spaces (for example `CannotCopy`). The
   user reported that spaces interrupt notifications. Do not include role names
   or explanations when a concise status is sufficient.

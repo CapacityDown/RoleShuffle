@@ -418,7 +418,7 @@ All entries in this table are host-controlled.
 |`Influencer.TTSInvestigateRadius`|20|1–100|Enemy investigation radius of periodic TTS.|
 |`Influencer.MinimumTTSIntervalSeconds`|20|1–300|Minimum randomly selected periodic TTS interval.|
 |`Influencer.MaximumTTSIntervalSeconds`|40|1–300|Maximum randomly selected periodic TTS interval. Values are safely swapped when configured below the minimum.|
-|`Influencer.TTSQuietPeriodSeconds`|1.5|0–10|Quiet time required after any TTS, including Stage Flux, before periodic TTS fires.|
+|`Influencer.TTSQuietPeriodSeconds`|1.5|0–10|Quiet time after this player's TTS before periodic speech.|
 |`Influencer.<Upgrade>UpgradeScaling`|Per upgrade|`count:level` pairs|Sets that upgrade's minimum target by nearby-player count without lowering its pre-role level. Example: Strength defaults to `1:1,2:4,3:9,4:13,5:20`. Available upgrades match Base Upgrades. Blank grants no level.|
 |`Werewolf.PlayerDamageMultiplier`|2|1–10|Multiplier for identifiable damage Werewolf deals to another player.|
 |`Berserker.<Upgrade>UpgradeScaling`|Per upgrade|`HP%:level` pairs|Sets that upgrade's minimum target while remaining HP is at or below the percentage, without lowering its pre-role level. Example: Strength defaults to `80:1,60:4,40:9,20:13,10:20`. Available upgrades match Base Upgrades except Health. Blank grants no level.|
@@ -463,8 +463,8 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
 - When Stage Flux is present, RoleShuffle uses the separate Stage Flux announcement delay to avoid overlapping stage-start messages.
 - RoleShuffle waits until Stage Flux TTS has finished and remains quiet for 1.5 seconds before announcing roles.
-- Role assignments, role-effect notices, and automatic role-query responses are spoken one at a time and do not overlap Stage Flux announcements.
-- Influencer TTS also waits for other announcements, but intentionally remains audible to enemies as part of the role ability.
+- Initial role announcements play one at a time. Later notices and replies wait only for the same player's chat/TTS; different players can speak together.
+- Influencer speech and Influenza sneezes wait for their own player's messages and remain audible to enemies. Diver counts at 15-second marks (30, 15), then every second from 10 to 0, interrupting previous speech; normal notices wait.
 - The local `ROLES` list defaults to names at the bottom left, with your role pinned and pages rotating every 5 seconds. It fits six multilingual/icon rows when `HUD.PlayersPerPage` is 6 or higher; smaller limits are respected. Long player names are shortened to keep role names visible. See HUD settings above.
 - The Base Upgrade draw animation is shown to the host and participants who have RoleShuffle installed.
 - Open `ROLES` at the top-right of Escape (`CURRENT ROLES`) or the lobby (`ROLE GUIDE`; current roles unavailable). Your role appears first and expanded; click players to toggle descriptions. The left column also opens `BASE UPGRADES`: host targets, configured targets and accumulated truck-draw bonuses.
@@ -477,7 +477,7 @@ Stage Flux is optional and is not required to install RoleShuffle.
 - Second Chance takes priority over Phoenix, Rescuer, and Bodyguard revival effects. Revival effects that are not needed remain available.
 - If Second Chance or Phoenix prevents a failed stage transition, current roles remain active.
 - During Value Surge or Value Crash, Mechanic repairs only the value that was actually lost.
-- RoleShuffle announcements and Influencer TTS wait for Stage Flux announcements instead of overlapping them.
+- Initial roles wait for Stage Flux announcements. Later messages wait for Stage Flux speech by the same player.
 - Enemy Purge defeats do not activate Hunter rewards.
 - Dangerous Valuables respects valuables protected by Engineer.
 
@@ -917,7 +917,7 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Influencer.TTSInvestigateRadius`|20|1～100|定期TTSが発生させる敵探知範囲です。|
 |`Influencer.MinimumTTSIntervalSeconds`|20|1～300|定期TTS間隔を抽選する最小秒数です。|
 |`Influencer.MaximumTTSIntervalSeconds`|40|1～300|定期TTS間隔を抽選する最大秒数です。最小値より小さい場合は、小さい方を最小値として使用します。|
-|`Influencer.TTSQuietPeriodSeconds`|1.5|0～10|Stage Fluxを含む他のTTS終了後に必要な無音時間です。|
+|`Influencer.TTSQuietPeriodSeconds`|1.5|0～10|本人のTTS終了後、定期発言までに必要な無音時間です。|
 |`Influencer.<Upgrade>UpgradeScaling`|アップグレードごと|`人数:レベル`の組|周囲人数に応じた最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`1:1,2:4,3:9,4:13,5:20`です。対象はBase Upgradesと同じで、空欄ならレベルを付与しません。|
 |`Werewolf.PlayerDamageMultiplier`|2|1～10|Werewolfが他のプレイヤーへ与える特定可能なダメージ倍率です。|
 |`Berserker.<Upgrade>UpgradeScaling`|アップグレードごと|`HP割合:レベル`の組|残りHPが指定割合以下の間に使う最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`80:1,60:4,40:9,20:13,10:20`です。対象はHealthを除くBase Upgradesと同じで、空欄ならレベルを付与しません。|
@@ -962,8 +962,8 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持します。
 - Stage Flux導入時は、ステージ開始通知が重ならないようStage Flux用の通知遅延を使用します。
 - Stage FluxのTTS終了後、1.5秒間の無音を確認してから役職を通知します。
-- 役職割り当て、役職効果通知、役職照会への自動応答は1件ずつ順番に発話し、Stage Fluxの通知とも重なりません。
-- InfluencerのTTSもほかの通知が終わるまで待機しますが、役職能力として意図的に敵へ聞こえる状態を維持します。
+- 最初の役職通知は全員で1件ずつ順番に発話します。以後の通知・応答は本人のチャット／TTSだけを待ち、別の人とは同時に発話できます。
+- Influencerの発言とInfluenzaのくしゃみは本人のメッセージを待ち、敵にも聞こえます。Diverは残り時間を15秒刻み（30、15）、残り10秒から0秒までは毎秒発話します。前の発話を中断してカウントを優先し、通常の通知を待機させます。
 - `ROLES`一覧は初期設定で左下に名前のみを表示し、自分を固定して5秒ごとにページを切り替えます。`HUD.PlayersPerPage`が6以上なら多言語・アイコン付きでも6人分を確保し、6未満は設定を優先します。長いプレイヤー名は、役職名が見えるよう短く表示します。表示・サイズ設定は上表を参照してください。
 - Base Upgradeの抽選演出は、ホストとRoleShuffleを導入している参加者に表示されます。
 - Escメニュー・ロビーの右上にある`ROLES`ボタンからRolesページを開けます。Escメニューからは`CURRENT ROLES`、ロビーからは`ROLE GUIDE`を最初に表示し、ロビーでは`CURRENT ROLES`を無効にします。左カラムから利用可能な表示や`BASE UPGRADES`へ切り替えられます。`CURRENT ROLES`では自分を先頭に表示し、画面を開いた時点で自分の役職説明を展開します。プレイヤーをクリックすると、その役職の説明を表示または非表示にできます。`BASE UPGRADES`では、各アップグレードの現在の共有目標値、設定上の目標値、トラック抽選で累積した追加値を確認できます。MOD導入済み参加者にはホストの現在値を表示します。
@@ -976,7 +976,7 @@ Stage Fluxは任意の対応MODであり、RoleShuffleの必須MODではあり�
 - Second ChanceをPhoenix、Rescuer、Bodyguardの復活効果より優先し、使用されなかった復活効果は維持します。
 - Second ChanceまたはPhoenixが失敗時のステージ移行を止めた場合、現在の役職は維持されます。
 - Value SurgeまたはValue Crash中も、Mechanicは実際に失われた貴重品価値だけを修復します。
-- RoleShuffleの通知とInfluencerのTTSは、Stage Fluxの通知と重ならず順番に再生されます。
+- 最初の役職通知はStage Fluxの通知を待ちます。以後は、同じプレイヤーによるStage Fluxの発話だけを待ちます。
 - Enemy Purgeによる撃破ではHunterの報酬は発生しません。
 - Dangerous ValuablesはEngineerが保護している貴重品へ効果を与えません。
 

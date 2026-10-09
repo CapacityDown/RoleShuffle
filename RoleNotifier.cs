@@ -19,15 +19,23 @@ internal sealed class RoleNotifier
     private const float ReservationSeconds = 2f;
     private const float PlaybackStartGraceSeconds = 2f;
     private const float PlaybackQuietPeriodSeconds = 0.25f;
+    private const float CountdownPrioritySeconds = 1.25f;
     private const int MaximumQueuedNotifications = 64;
     private const string NotificationOwner = "RoleShuffle.Notifications";
     private static readonly FieldInfo? VoiceChatField =
         AccessTools.Field(typeof(PlayerAvatar), "voiceChat");
     private readonly MonoBehaviour _coroutineOwner;
     private readonly StageRolesConfig _config;
-    private readonly Queue<PendingNotification> _pendingNotifications = new();
+    private readonly NotificationQueue _assignmentQueue = new();
+    private readonly Dictionary<PlayerAvatar, NotificationQueue> _playerQueues = new();
     private int _generation;
-    private int _queueRunnerGeneration = -1;
+    private int _announcingGeneration = -1;
+
+    private sealed class NotificationQueue
+    {
+        internal readonly Queue<PendingNotification> Pending = new();
+        internal int RunnerGeneration = -1;
+    }
 
     private sealed class PendingNotification
     {
@@ -75,6 +83,7 @@ internal sealed class RoleNotifier
             return;
         }
         int generation = _generation;
+        _announcingGeneration = generation;
         _coroutineOwner.StartCoroutine(Announce(assignments, generation));
     }
 
@@ -91,14 +100,20 @@ internal sealed class RoleNotifier
     private void ClearPending(bool clearExternalState)
     {
         _generation++;
-        foreach (PendingNotification pending in _pendingNotifications)
-            InvokeCallback(pending.OnFinished);
-        _pendingNotifications.Clear();
-        _queueRunnerGeneration = -1;
+        ClearQueue(_assignmentQueue);
+        foreach (NotificationQueue queue in _playerQueues.Values) ClearQueue(queue);
+        _playerQueues.Clear();
+        _announcingGeneration = -1;
         if (clearExternalState)
         {
             StageFluxCompatibility.ClearNotifications();
         }
+    }
+
+    private static void ClearQueue(NotificationQueue queue)
+    {
+        while (queue.Pending.Count > 0) InvokeCallback(queue.Pending.Dequeue().OnFinished);
+        queue.RunnerGeneration = -1;
     }
 
     internal void ResetPending() => End();
@@ -124,11 +139,13 @@ internal sealed class RoleNotifier
         Enqueue(player, message, "role effect", isValid);
     }
 
-    internal bool CanQueueNotification => _pendingNotifications.Count < MaximumQueuedNotifications;
+    internal bool CanQueueNotification(PlayerAvatar player) =>
+        !_playerQueues.TryGetValue(player, out var queue) ||
+        queue.Pending.Count < MaximumQueuedNotifications;
 
     internal bool NotifyExhaustion(PlayerAvatar player, string message,
         Func<bool> isValid, Action onSent, Action onFinished) =>
-        _config.AnnouncementsEnabled.Value && CanQueueNotification &&
+        _config.AnnouncementsEnabled.Value && CanQueueNotification(player) &&
         Enqueue(player, message, "ability exhausted", isValid,
             ReservationSeconds, onSent, onFinished);
 
@@ -142,7 +159,7 @@ internal sealed class RoleNotifier
         {
             return false;
         }
-        if (player == null || !player.gameObject.activeInHierarchy ||
+        if (!CanNotify() || player == null || !player.gameObject.activeInHierarchy ||
             player.photonView == null || string.IsNullOrEmpty(message))
         {
             return false;
@@ -155,6 +172,9 @@ internal sealed class RoleNotifier
             }
             StageFluxCompatibility.ExpectNotification(player, message);
             player.ChatMessageSend(message);
+            // Counts are time-critical: replace current speech, and keep normal
+            // notices out of the gaps between the final one-second counts.
+            PlayerMessageActivity.Observe(player, CountdownPrioritySeconds);
             StageRolesPlugin.ModLogger.LogDebug(
                 $"Sent immediate countdown through player view " +
                 $"{player.photonView.ViewID}: {message}");
@@ -174,9 +194,35 @@ internal sealed class RoleNotifier
     internal void NotifyResponse(PlayerAvatar player, string message) =>
         Enqueue(player, message, "automatic response");
 
-    internal bool HasPendingNotifications =>
-        _pendingNotifications.Count > 0 ||
-        _queueRunnerGeneration == _generation;
+    private bool HasPendingAssignments =>
+        _announcingGeneration == _generation || _assignmentQueue.Pending.Count > 0 ||
+        _assignmentQueue.RunnerGeneration == _generation;
+
+    internal bool HasPendingNotificationsFor(PlayerAvatar player) =>
+        HasPendingAssignments ||
+        (_playerQueues.TryGetValue(player, out var queue) &&
+         (queue.Pending.Count > 0 || queue.RunnerGeneration == _generation));
+
+    internal bool IsPlayerBusy(PlayerAvatar player) =>
+        HasPendingNotificationsFor(player) || PlayerMessageActivity.IsBusy(player);
+
+    // Ability speech remains audible to enemies and independent of notification settings.
+    internal bool TrySendPlayerMessage(PlayerAvatar player, string message)
+    {
+        if (!CanNotify() || player == null || !player.gameObject.activeInHierarchy ||
+            player.photonView == null || string.IsNullOrEmpty(message) || IsPlayerBusy(player)) return false;
+        try
+        {
+            player.ChatMessageSend(message);
+            PlayerMessageActivity.Observe(player);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            StageRolesPlugin.ModLogger.LogDebug($"Player message was delayed: {exception.Message}");
+            return false;
+        }
+    }
 
     private bool Enqueue(
         PlayerAvatar player,
@@ -185,14 +231,20 @@ internal sealed class RoleNotifier
         Func<bool>? isValid = null,
         float reservationSeconds = ReservationSeconds,
         Action? onSent = null,
-        Action? onFinished = null)
+        Action? onFinished = null,
+        bool shared = false)
     {
         if (player == null || !player.gameObject.activeInHierarchy ||
             player.photonView == null || string.IsNullOrEmpty(message))
         {
             return false;
         }
-        if (_pendingNotifications.Count >= MaximumQueuedNotifications)
+        NotificationQueue queue;
+        if (shared) queue = _assignmentQueue;
+        else if (_playerQueues.TryGetValue(player, out var existing)) queue = existing;
+        else
+            _playerQueues[player] = queue = new NotificationQueue();
+        if (queue.Pending.Count >= MaximumQueuedNotifications)
         {
             StageRolesPlugin.ModLogger.LogWarning(
                 $"Role notification queue is full; skipped {source} for " +
@@ -201,7 +253,7 @@ internal sealed class RoleNotifier
         }
 
         int generation = _generation;
-        _pendingNotifications.Enqueue(new PendingNotification(
+        queue.Pending.Enqueue(new PendingNotification(
             generation,
             player,
             message,
@@ -210,16 +262,24 @@ internal sealed class RoleNotifier
             isValid,
             onSent,
             onFinished));
-        if (_queueRunnerGeneration == generation)
+        if (queue.RunnerGeneration == generation)
         {
             return true;
         }
-        _queueRunnerGeneration = generation;
-        _coroutineOwner.StartCoroutine(ProcessQueue(generation));
+        queue.RunnerGeneration = generation;
+        _coroutineOwner.StartCoroutine(ProcessQueue(queue, shared ? null : player, generation));
         return true;
     }
 
     private IEnumerator Announce(
+        IReadOnlyList<RoleAssignment> assignments,
+        int generation)
+    {
+        try { yield return AnnounceRoles(assignments, generation); }
+        finally { if (_announcingGeneration == generation) _announcingGeneration = -1; }
+    }
+
+    private IEnumerator AnnounceRoles(
         IReadOnlyList<RoleAssignment> assignments,
         int generation)
     {
@@ -286,7 +346,7 @@ internal sealed class RoleNotifier
                 RoleCatalog.AssignmentName(
                     assignment.AssignedRole,
                     assignment.Role),
-                "role assignment");
+                "role assignment", shared: true);
             queued++;
         }
 
@@ -294,23 +354,29 @@ internal sealed class RoleNotifier
             $"Queued {queued}/{assignments.Count} assigned roles for sequential player chat.");
     }
 
-    private IEnumerator ProcessQueue(int generation)
+    private IEnumerator ProcessQueue(NotificationQueue queue, PlayerAvatar? player, int generation)
     {
+        bool shared = ReferenceEquals(player, null);
         try
         {
-            while (generation == _generation && _pendingNotifications.Count > 0)
+            while (generation == _generation && queue.Pending.Count > 0)
             {
-                PendingNotification pending = _pendingNotifications.Peek();
+                PendingNotification pending = queue.Pending.Peek();
                 if (pending.Generation != generation ||
                     pending.Player == null ||
                     !pending.Player.gameObject.activeInHierarchy ||
                     pending.Player.photonView == null ||
                     !IsStillValid(pending))
                 {
-                    _pendingNotifications.Dequeue();
+                    queue.Pending.Dequeue();
                     InvokeCallback(pending.OnFinished);
                     continue;
                 }
+
+                // Initial roles own the shared channel; do not expire a player's
+                // response simply because a large party is still being announced.
+                while (generation == _generation && !shared && HasPendingAssignments)
+                    yield return new WaitForSecondsRealtime(PollIntervalSeconds);
 
                 float deadline = Time.realtimeSinceStartup +
                                  QueueHeadWaitTimeoutSeconds;
@@ -318,10 +384,11 @@ internal sealed class RoleNotifier
                 while (generation == _generation &&
                        Time.realtimeSinceStartup < deadline)
                 {
-                    if (CanNotify() && !AnyNotificationBusy() &&
-                        StageFluxCompatibility.TryReserveNotificationWindow(
-                            NotificationOwner,
-                            pending.ReservationSeconds))
+                    bool available = shared
+                        ? !AnyNotificationBusy() && StageFluxCompatibility.TryReserveNotificationWindow(
+                            NotificationOwner, pending.ReservationSeconds)
+                        : !HasPendingAssignments && !PlayerMessageActivity.IsBusy(player);
+                    if (CanNotify() && available)
                     {
                         reserved = true;
                         break;
@@ -334,14 +401,14 @@ internal sealed class RoleNotifier
                     yield break;
                 }
 
-                _pendingNotifications.Dequeue();
+                queue.Pending.Dequeue();
                 if (!reserved || !IsStillValid(pending))
                 {
                     InvokeCallback(pending.OnFinished);
                     if (!reserved)
                     {
                         StageRolesPlugin.ModLogger.LogWarning(
-                            $"Role notification expired while waiting for a shared " +
+                            $"Role notification expired while waiting for a " +
                             $"notification window ({pending.Source}): {pending.Message}");
                     }
                     continue;
@@ -352,21 +419,25 @@ internal sealed class RoleNotifier
                 InvokeCallback(pending.OnFinished);
                 if (sent)
                 {
-                    yield return WaitForNotificationCompletion(generation);
+                    yield return WaitForNotificationCompletion(player, generation);
                 }
             }
         }
         finally
         {
-            if (_queueRunnerGeneration == generation)
+            if (queue.RunnerGeneration == generation)
             {
-                _queueRunnerGeneration = -1;
+                queue.RunnerGeneration = -1;
+                if (!shared && _playerQueues.TryGetValue(player!, out var current) &&
+                    ReferenceEquals(current, queue)) _playerQueues.Remove(player!);
             }
         }
     }
 
     private static bool IsStillValid(PendingNotification pending)
     {
+        if (pending.Player == null || !pending.Player.gameObject.activeInHierarchy ||
+            pending.Player.photonView == null) return false;
         try
         {
             return pending.IsValid?.Invoke() != false;
@@ -396,6 +467,7 @@ internal sealed class RoleNotifier
                 pending.Player,
                 pending.Message);
             pending.Player.ChatMessageSend(pending.Message);
+            PlayerMessageActivity.Observe(pending.Player);
             StageRolesPlugin.ModLogger.LogDebug(
                 $"Sent queued {pending.Source} through player view " +
                 $"{pending.Player.photonView.ViewID}: {pending.Message}");
@@ -411,7 +483,7 @@ internal sealed class RoleNotifier
         }
     }
 
-    private IEnumerator WaitForNotificationCompletion(int generation)
+    private IEnumerator WaitForNotificationCompletion(PlayerAvatar? player, int generation)
     {
         float playbackDeadline = Time.realtimeSinceStartup +
                                  PlaybackStartGraceSeconds;
@@ -419,7 +491,7 @@ internal sealed class RoleNotifier
         bool activityObserved = false;
         while (generation == _generation)
         {
-            bool busy = AnyNotificationBusy();
+            bool busy = ReferenceEquals(player, null) ? AnyNotificationBusy() : PlayerMessageActivity.IsBusy(player);
             if (busy)
             {
                 activityObserved = true;
@@ -467,7 +539,9 @@ internal sealed class RoleNotifier
 
     internal static bool AnyNotificationBusy()
     {
-        bool ttsPlaying = AnyTtsPlaying();
+        // Sample tracked players even when a native audio source is playing.
+        bool trackedBusy = PlayerMessageActivity.AnyBusy();
+        bool ttsPlaying = AnyTtsPlaying() || trackedBusy;
         return StageFluxCompatibility.TryGetNotificationBusy(out bool busy)
             ? busy || ttsPlaying
             : NotificationEnemyReactionGuard.HasActiveNotifications() ||

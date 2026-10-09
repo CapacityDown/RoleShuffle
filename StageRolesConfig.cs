@@ -416,7 +416,7 @@ internal sealed class StageRolesConfig
         InfluencerTtsInvestigateRadius = BindFloat(config, "Influencer", "TTSInvestigateRadius", 20f, 1f, 100f, "Enemy investigation radius produced by periodic Influencer TTS.");
         InfluencerMinimumTtsIntervalSeconds = BindFloat(config, "Influencer", "MinimumTTSIntervalSeconds", 20f, 1f, 300f, "Minimum randomly selected interval between periodic TTS messages.");
         InfluencerMaximumTtsIntervalSeconds = BindFloat(config, "Influencer", "MaximumTTSIntervalSeconds", 40f, 1f, 300f, "Maximum randomly selected interval between periodic TTS messages.");
-        InfluencerTtsQuietPeriodSeconds = BindFloat(config, "Influencer", "TTSQuietPeriodSeconds", 1.5f, 0f, 10f, "Required quiet period after any TTS before Influencer may speak.");
+        InfluencerTtsQuietPeriodSeconds = BindFloat(config, "Influencer", "TTSQuietPeriodSeconds", 1.5f, 0f, 10f, "Required quiet period after this player's TTS before Influencer may speak.");
         InfluencerUpgradeScaling = UpgradeScalingEntries(
             config,
             "Influencer",
