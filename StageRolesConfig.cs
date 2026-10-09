@@ -362,7 +362,7 @@ internal sealed class StageRolesConfig
         HunterDoubleOrbChancePercent = BindFloat(config, "Hunter", "DoubleOrbChancePercent", 10f, 0f, 100f, "Chance for an enemy defeated by Hunter to drop twice its normal orb count.");
         HunterJackpotOrbChancePercent = BindFloat(config, "Hunter", "JackpotOrbChancePercent", 0.5f, 0f, 100f, "Chance for an enemy defeated by Hunter to drop the configured jackpot orb count.");
         HunterJackpotOrbCount = BindInt(config, "Hunter", "JackpotOrbCount", 10, 1, 30, "Orb count used when Hunter's jackpot roll succeeds.");
-        HunterGuaranteedOrbEveryKills = BindInt(config, "Hunter", "GuaranteedOrbEveryKills", 2, 0, 100, "Every this many personal kills that drop normal orbs guarantees at least one extra orb. Random rewards count toward the guarantee. Zero disables it. The count resets each stage.");
+        HunterGuaranteedOrbEveryKills = BindInt(config, "Hunter", "GuaranteedOrbEveryKills", 5, 0, 100, "Every this many personal kills that drop normal orbs guarantees at least one extra orb. Random rewards count toward the guarantee. Zero disables it. The count resets each stage.");
 
         StinkerEnabled = RoleEnabled(config, "Stinker");
         StinkerWeight = RoleWeight(config, "Stinker", 80);

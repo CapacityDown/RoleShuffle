@@ -18,7 +18,7 @@ internal static class AbilityConfigChecks
             ("Ghost", "HealIntervalSeconds", 2f, 0.5f, 60f),
             ("Ghost", "TotalHealingLimit", 50, 0, 10000),
             ("Ghost", "CarrierSpeedBonusLevels", 1, 0, 20),
-            ("Hunter", "GuaranteedOrbEveryKills", 2, 0, 100),
+            ("Hunter", "GuaranteedOrbEveryKills", 5, 0, 100),
             ("Avenger", "AllyHitDamageThreshold", 15, 1, 1000),
             ("Avenger", "AllyHitTriggerRadius", 15f, 1f, 100f),
             ("Avenger", "AllyHitDamageMultiplier", 1.25f, 1f, 10f),
