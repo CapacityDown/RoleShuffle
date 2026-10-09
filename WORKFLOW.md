@@ -57,6 +57,12 @@ historical version numbers, deployment profiles and superseded design choices.
 - Do not stop a running game or replace its loaded DLL. Prepare the files and
   state that deployment is pending until the game exits.
 
+## In-game notifications
+
+- Keep role notices short and without spaces (for example `CannotCopy`). The
+  user reported that spaces interrupt notifications. Do not include role names
+  or explanations when a concise status is sufficient.
+
 ## Artwork
 
 - Follow [ROLE_ICON_GUIDE.md](ROLE_ICON_GUIDE.md) for the approved hexagonal

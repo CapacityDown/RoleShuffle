@@ -50,6 +50,7 @@ internal sealed class RoleAssignment
     internal float ElectricianChargePercentUsed { get; set; }
     internal float InfluencerNextTtsAt { get; set; }
     internal float AvengerEmpoweredUntil { get; set; }
+    internal float ImitatorCopyNoticeAllowedAt { get; set; }
 }
 
 internal readonly struct UpgradeGrant

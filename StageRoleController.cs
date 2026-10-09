@@ -23,6 +23,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private const float TunaMovementThresholdSquared = 0.000025f;
     private const float TunaStageStartGraceSeconds = 5f;
     private const float RoleQueryCooldownSeconds = 2f;
+    private const float ImitatorCopyNoticeCooldownSeconds = 2f;
     private const float HunterKillCreditLifetimeSeconds = 10f;
     private const int RecentRoleHistoryLimit = 5;
     private static readonly StageRole[] SoloExcludedRoles =
@@ -2865,10 +2866,20 @@ internal sealed partial class StageRoleController : MonoBehaviour
         RoleAssignment? target = FindAssignment(targetPlayer);
         if (mimic == null || target == null ||
             mimic.AssignedRole != StageRole.Imitator ||
-            mimic.Role != StageRole.Imitator ||
-            !RoleCatalog.CanBeCopiedByImitator(target.AssignedRole) ||
+            mimic.Role != StageRole.Imitator)
+        {
+            return;
+        }
+        if (!RoleCatalog.CanBeCopiedByImitator(target.AssignedRole) ||
             target.Role == StageRole.Imitator)
         {
+            if (Time.time >= mimic.ImitatorCopyNoticeAllowedAt)
+            {
+                mimic.ImitatorCopyNoticeAllowedAt = Time.time + ImitatorCopyNoticeCooldownSeconds;
+                _notifier.NotifyConditional(mimic.Player, "CannotCopy",
+                    () => _stageReady && mimic.AssignedRole == StageRole.Imitator &&
+                          mimic.Role == StageRole.Imitator);
+            }
             return;
         }
 
