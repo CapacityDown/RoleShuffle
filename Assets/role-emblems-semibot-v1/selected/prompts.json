@@ -1,8 +1,8 @@
 {
   "generationMode": "Built-in image_gen",
-  "count": 46,
+  "count": 47,
   "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha; Signalman uses native transparent alpha",
-  "status": "46 role emblems integrated",
+  "status": "47 role emblems integrated",
   "references": {
     "anatomy": "D:/Documents/R.E.P.O. MOD/StagePhysicsEvents/Assets/Semibot_reference.png",
     "style": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
@@ -52,7 +52,8 @@
         "Rider",
         "Rammer",
         "Sniper",
-        "Brawler"
+        "Brawler",
+        "DualWielder"
       ]
     ],
     [
@@ -529,6 +530,14 @@
       "background": "#24563E",
       "prompt": "Create ONE new RoleShuffle role badge for Porter, matching the two reference badges as an existing icon set. References are style/anatomy only, not edit targets. Square transparent PNG, clear clean flat vector-like illustration, dark thin outlines, cream edging around a pointed-top pointed-bottom hexagonal frame filling the square. Solid interior support-category green #24563E. Show a single cream R.E.P.O. Semibot porter in 3/4 view, walking slightly bent forward under a large loaded backpack or cargo sack, visibly holding small valuables (a vase and small gold bar) inside the open top of the pack. Simple readable silhouette at 64 px. True Semibot anatomy: rounded dome head, two protruding circular eyes above a small horizontal mouth slit, separate shallow cylindrical jaw/neck band visibly between head and body, cylindrical torso, two short cone legs. Short tapered pointy arms attached high just below neck band, NO human hands/fingers/elbows/wrists. Keep the eyes expressive but simple. Cargo fits inside the hexagon; no other character. Exactly match reference cream robot, cream border, dark outline weights, simple two-tone shading and uncluttered visual density. No text, letters, numbers, watermark, pixelation, gradients, glow, photorealism or extra decorations. Preserve truly transparent exterior of the badge.",
       "method": "Built-in image_gen with Tank and Medic references; native alpha preserved and background normalized using existing region-mask tool."
+    },
+    {
+      "role": "DualWielder",
+      "file": "45-DualWielder.png",
+      "category": "Combat",
+      "background": "#80451F",
+      "prompt": "Create one production-ready role emblem for a R.E.P.O. mod role \"DualWielder\". No lettering or text anywhere. Use the two attached existing approved icons solely as visual/style/anatomy references, not edit targets. Square 1024x1024 raster, centered full badge, true transparent exterior. Preserve their exact design language: tall pointy hexagonal badge with thin dark outline and thick warm cream edging, flat solid colors, smooth clean dark outlines, minimal shading, no grain, mosaic, blur, gradients or realistic rendering. Interior background is Combat category solid #80451F. A single cream Semibot in the center, with dome head, two protruding round eyes above a horizontal mouth slit, clearly visible shallow cylindrical jaw/neck band, short cylinder torso, two small tapering cone legs. Short tapered arms attach just below the neck band, with NO human elbows, hands, fingers or wrists. Role action: the Semibot is wielding two identical orange-red baseball bats, one on each side, visibly separated in a strong symmetric V-shaped ready stance. Keep both eyes and the entire neck band unobstructed. Two bats exactly, same size and appearance. No third weapon, no shield, no floating symbols, no extra character. Fill the badge for readability at 64px. Match reference line weight, cream color and flat editorial cartoon style. Exterior must be alpha transparent; the brown interior must remain opaque.",
+      "method": "Built-in image_gen; native alpha preserved, background normalized with existing region-mask tool."
     }
   ],
   "influenza": {

@@ -1,0 +1,22 @@
+{
+  "category": "Combat",
+  "background_color": "#80451F",
+  "detected_background_rgb": [
+    126,
+    67,
+    31
+  ],
+  "background_color_tolerance": 24,
+  "background_core_pixels": 458300,
+  "background_mask_pixels": 484703,
+  "outside_mask_pixels_unchanged": true,
+  "alpha_preserved_during_recolor": true,
+  "prompt": "Create one production-ready role emblem for a R.E.P.O. mod role \"DualWielder\". No lettering or text anywhere. Use the two attached existing approved icons solely as visual/style/anatomy references, not edit targets. Square 1024x1024 raster, centered full badge, true transparent exterior. Preserve their exact design language: tall pointy hexagonal badge with thin dark outline and thick warm cream edging, flat solid colors, smooth clean dark outlines, minimal shading, no grain, mosaic, blur, gradients or realistic rendering. Interior background is Combat category solid #80451F. A single cream Semibot in the center, with dome head, two protruding round eyes above a horizontal mouth slit, clearly visible shallow cylindrical jaw/neck band, short cylinder torso, two small tapering cone legs. Short tapered arms attach just below the neck band, with NO human elbows, hands, fingers or wrists. Role action: the Semibot is wielding two identical orange-red baseball bats, one on each side, visibly separated in a strong symmetric V-shaped ready stance. Keep both eyes and the entire neck band unobstructed. Two bats exactly, same size and appearance. No third weapon, no shield, no floating symbols, no extra character. Fill the badge for readability at 64px. Match reference line weight, cream color and flat editorial cartoon style. Exterior must be alpha transparent; the brown interior must remain opaque.",
+  "source": "C:/Users/Code-/.codex/generated_images/01a0a1f3-aaf0-7cd0-809b-f9921d54fa09/exec-af471887-54e6-4764-800c-cacccebef37b.png",
+  "method": "Built-in image_gen",
+  "sha256": {
+    "Assets\\role-emblems-semibot-v1\\selected\\45-DualWielder.png": "5ba0a6185bc962a1925e7a31c7d57d5018d504341874658c84486fb34137d46d",
+    "Assets\\role-emblems-semibot-v1\\transparent\\master\\45-DualWielder.png": "fb0281e5d6f2436b437807546c178e9bb956358b3820b551d6f511a755213398",
+    "Assets\\role-emblems-semibot-v1\\transparent\\runtime\\45-DualWielder.png": "cb57cf41d6578b4d6dfdfd614c0f96c11e8dc8dc802cb378f0231e47476f6301"
+  }
+}
