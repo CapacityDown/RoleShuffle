@@ -20,7 +20,7 @@ text='using System;\nusing UnityEngine;\nnamespace REPOJP.StageRoles;\ninternal 
 out=root/'tmp/combat-checks';out.mkdir(exist_ok=True,parents=True);(out/'Extracted.cs').write_text(text,encoding='utf-8')
 # Check event routing and lifecycle contracts that surround the extracted methods.
 event=(root/'EventRoleRuntime.cs').read_text();observe=event[event.index('internal void ObserveHealthUpdate'):event.index('private void ApplyWerewolfDamage')]
-assert observe.index('if (!hit.EnemyOrigin)') < observe.index('NotifyAvengerAllyHit') < observe.index('ApplyBodyguardTransfer')
+assert observe.index('if (!hit.EnemyOrigin)') < observe.index('NotifyAvengerAllyHit') < observe.index('PorterEnemyHit') < observe.index('ApplyBodyguardTransfer')
 patch=(root/'LifecyclePatches.cs').read_text();assert 'ConfirmEnemyDamage(__instance, __0, attacker, __state.HealthBefore)' in patch
 reset=source[source.index('private void ResetAssignmentForRoleChange'):source.index('internal bool IsRoleQueryRequest')]
 assert 'BrawlerCombo.Reset()' in reset and 'GhostHealingUsed =' not in reset and 'HunterConfirmedKills =' not in reset

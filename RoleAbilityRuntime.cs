@@ -26,6 +26,13 @@ internal sealed partial class StageRoleController
         void Seconds(AbilityMetric metric, float until) =>
             values.Add(new AbilityValue(metric, Mathf.CeilToInt(Mathf.Max(0f, until - Time.time)), 0));
         if (Has(StageRole.Ghost)) Budget(AbilityMetric.GhostHealing, assignment.GhostHealingUsed, _config.GhostTotalHealingLimit.Value);
+        if (assignment.Role == StageRole.Porter)
+        {
+            values.Add(new AbilityValue(AbilityMetric.PorterLoad, Mathf.CeilToInt(_porter.Weight(assignment.SteamId) * 10),
+                Mathf.CeilToInt(_config.PorterCapacity.Value * 10)));
+            float readyAt = _porter.UnloadReadyAt(assignment.SteamId);
+            if (readyAt > Time.time) Seconds(AbilityMetric.PorterUnload, readyAt);
+        }
         if (Has(StageRole.Medic)) Budget(AbilityMetric.Medic, _medic.HealingUsed(assignment.SteamId), _config.MedicTotalHealingLimit.Value);
         if (Has(StageRole.Rescuer)) Budget(AbilityMetric.Rescuer, assignment.RescuerRevivesUsed, _config.RescuerMaximumRevives.Value);
         if (Has(StageRole.Phoenix)) Budget(AbilityMetric.Phoenix, assignment.PhoenixUsed || assignment.PhoenixRevivePending ? 1 : 0, 1);

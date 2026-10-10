@@ -45,6 +45,7 @@ internal enum StageRole
     Influenza,
     Signalman,
     Twins,
+    Porter,
     Superbot = 1001,
     Disaster = 1002
 }

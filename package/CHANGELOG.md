@@ -1,4 +1,5 @@
 ## 4.6.0
+- Added Porter: passively stores small valuables up to a combined weight of 15, drops one on enemy damage, and unloads in delivery areas with a weight-based wait (10 seconds at full load). Includes configurable sizes and capacity, cargo HUD, and private capacity and unloading notices.
 - Added Ghost support after death: nearby healing with a 50 HP stage budget and Speed +1 for head carriers. Revival preserves the healing budget; high Base levels no longer exclude Ghost.
 - Added Avenger's response to nearby allies taking enemy damage, with its own cooldown. Nearby deaths grant a 30-second bonus; only the stronger active bonus applies.
 - Added Hunter's guaranteed extra orb every five qualifying personal kills, alongside its random rewards.

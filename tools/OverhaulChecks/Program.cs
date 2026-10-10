@@ -382,11 +382,14 @@ Check(RoleAbilityText.Format(new[] { new AbilityValue(AbilityMetric.RoyalSupport
 
 var metrics = new[] { new AbilityValue(AbilityMetric.Medic, 90, 150), new AbilityValue(AbilityMetric.MageCooldown, 2, 0) };
 var resources = new[] { AbilityMetric.Medic, AbilityMetric.Rescuer, AbilityMetric.Phoenix,
-    AbilityMetric.MageRecovery, AbilityMetric.Repair, AbilityMetric.Charge, AbilityMetric.Wager, AbilityMetric.Contracts, AbilityMetric.TwinDelivery, AbilityMetric.GhostHealing };
+    AbilityMetric.MageRecovery, AbilityMetric.Repair, AbilityMetric.Charge, AbilityMetric.Wager, AbilityMetric.Contracts, AbilityMetric.TwinDelivery, AbilityMetric.GhostHealing, AbilityMetric.PorterLoad };
 foreach (AbilityMetric metric in Enum.GetValues<AbilityMetric>())
-    Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Only spendable budgets use the resource HUD");
+    Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Budgets and cargo weight use the resource HUD");
 var allMetrics = Enum.GetValues<AbilityMetric>().Select(m => new AbilityValue(m, 0, 0)).ToArray();
-Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 2 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Ghost healing joins budgets plus Radio and Twin rest timers");
+Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 3 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Budgets and cargo plus Radio, Twin rest and unload timers");
+Check(RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterLoad, 75, 150), false) == "7.5" &&
+    RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterLoad, 75, 150), true) == "15", "Cargo HUD uses decimal weight without units");
+Check(RoleResourceLayout.MaximumOffset("15.5", 50) == 70, "Decimal cargo weight leaves room before its capacity");
 Check(RoleAbilityResources.Select(allMetrics, true).Count == resources.Length, "Empty and disabled budgets stay visible at zero");
 Check(RoleAbilityResources.Select(allMetrics, false).Count == allMetrics.Length - resources.Length, "Progress/cooldown details are not duplicated");
 Check(RoleAbilityResources.Select(metrics, true).Single().Remaining == 90, "Mixed-role status selects the actual remaining budget");
@@ -425,7 +428,7 @@ Check(superbotHud.Scale > 0.6f && superbotHud.Scale < 1 && superbotHud.Left == 0
     "Seven Superbot resources shrink together in one column with room below for the role list");
 Check(RoleResourceLayout.MaximumOffset(99, 50) == 50 && RoleResourceLayout.MaximumOffset(10000, 50) == 90,
     "Maximum text follows vanilla's twenty-unit shift per extra digit");
-foreach (var metric in resources.Append(AbilityMetric.RadioCooldown).Append(AbilityMetric.TwinRest))
+foreach (var metric in resources.Append(AbilityMetric.RadioCooldown).Append(AbilityMetric.TwinRest).Append(AbilityMetric.PorterUnload))
 {
     var glyph = RoleResourceSymbols.Get(metric);
     Check(glyph.Count > 0 && glyph.Count % 3 == 0 && glyph.All(p => p.X >= 0 && p.X <= 25 && p.Y >= 0 && p.Y <= 25),

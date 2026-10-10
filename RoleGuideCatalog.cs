@@ -34,8 +34,8 @@ internal static class RoleGuideCatalog
 
     private static string RevealedSuperbotText(RoleGuideLanguage language) =>
         language == RoleGuideLanguage.Japanese
-            ? "Influenza、Bomber、Stinker、Werewolf、Courier、Tuna、\nKing、Diver、Imitator、Sniper、Brawler、Twinsを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
-            : "Combines role upgrades and abilities except Influenza, Bomber, Stinker, Werewolf, Courier, Tuna, King, Diver, Imitator, Sniper, Brawler, and Twins. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
+            ? "Influenza、Bomber、Stinker、Werewolf、Courier、Tuna、\nKing、Diver、Imitator、Sniper、Brawler、Twins、Porterを除く役職のアップグレードと能力を併せ持ちます。RammerはTumble Attackのダメージだけが適用され、Tumble系アップグレードの0固定は発生しません。Influencerは人数連動強化だけが適用され、物音の増加と定期TTSは発生しません。"
+            : "Combines role upgrades and abilities except Influenza, Bomber, Stinker, Werewolf, Courier, Tuna, King, Diver, Imitator, Sniper, Brawler, Twins, and Porter. Rammer contributes only its Tumble Attack damage without the level-0 Tumble upgrade locks. Only Influencer's nearby-player upgrades apply; louder noises and periodic TTS are excluded.";
 
     internal static string GenericDescription(
         StageRole role,
@@ -49,6 +49,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaSummary,
             StageRole.Twins => TwinsSummary,
+            StageRole.Porter => "Stores small valuables for hands-free transport. Capacity is limited by total weight; enemy hits spill cargo and unloading takes time.",
             StageRole.Signalman => "Relays ordinary chat to living teammates at any distance. Commands are excluded; radio has a cooldown. Privately receives teammate death alerts.",
             StageRole.Tank => "Increases maximum health, making the player harder to defeat.",
             StageRole.Runner => "Increases movement speed and stamina for faster, longer sprints.",
@@ -100,6 +101,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaSummaryJapanese,
             StageRole.Twins => "2人1組でHPと感染を共有します。一緒に運ぶ・休む・合流する・納品することで能力を発揮します。",
+            StageRole.Porter => "小さな貴重品を収納し、手ぶらで運びます。総重量に上限があり、敵からの被弾で荷物を落とし、荷下ろしには時間がかかります。",
             StageRole.Signalman => "通常チャットを、距離に関係なく生存中の仲間へ届けます。コマンドは除外し、通信後は再使用待ちになります。仲間の死亡通知も受け取ります。",
             StageRole.Rider => "運転中の車両が敵へ与える衝突ダメージと、プレイヤーへのノックバックが増加します。",
             StageRole.Influencer => "近くの仲間が多いほど強化されますが、物音が広がり、定期的にTTSで発言します。",
@@ -160,6 +162,7 @@ internal static class RoleGuideCatalog
             StageRole.Influenza => InfluenzaDescription,
             StageRole.Signalman => SignalmanDescription(config, false),
             StageRole.Twins => TwinsDescription(config, false),
+            StageRole.Porter => PorterDescription(config, false),
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
             StageRole.Launcher =>
@@ -271,6 +274,7 @@ internal static class RoleGuideCatalog
             StageRole.Influenza => InfluenzaDescriptionJapanese,
             StageRole.Signalman => SignalmanDescription(config, true),
             StageRole.Twins => TwinsDescription(config, true),
+            StageRole.Porter => PorterDescription(config, true),
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",
             StageRole.Influencer =>
@@ -375,6 +379,14 @@ internal static class RoleGuideCatalog
         return japanese
             ? $"2人以上で最大1組。2人の現在HP・最大HPを合算し、被弾と回復を共有します。片方の死亡で2人とも死亡し、片方への蘇生で2人とも復活します。相方へのHP渡しは無効です。片方への感染で2人ともInfluenzaになり、共有を解除します。ステージ終了・相方の離脱でも解除し、残りHPの割合を保ちます。\n\n共同運搬：同じ貴重品を2人でつかむ間、掴む力{Number(c.TwinsCarryStrengthMultiplier.Value)}倍、衝突による価値減少を{Number(c.TwinsCollisionReductionPercent.Value)}％軽減。購入装備は対象外です。\n共同休憩：{Number(c.TwinsRestRadius.Value)}m以内で2人ともしゃがみ、被弾せず{Number(c.TwinsRestHoldSeconds.Value)}秒静止すると共有最大HPの{Number(c.TwinsRestHealPercent.Value)}％を回復し、両者のスタミナを全回復します。再使用は{Number(c.TwinsRestCooldownSeconds.Value)}秒後。\n合流支援：{Number(c.TwinsRendezvousStartRange.Value)}m以上離れると、相方へ走る間の速度を約{Number(c.TwinsRendezvousSpeedMultiplier.Value)}倍にします。{Number(c.TwinsRendezvousEndRange.Value)}m以内で終了。\n共同納品：納品エリア外で同じ貴重品を{Number(c.TwinsDeliveryCarrySeconds.Value)}秒共同運搬し、2人がその品の{Number(c.TwinsDeliveryRadius.Value)}m以内にいる状態でトラック・納品所へ入れると価値＋{Number(c.TwinsDeliveryBonusPercent.Value)}％。1品1回、ステージ合計上限${c.TwinsDeliveryStageLimit.Value}。"
             : $"At least two players; at most one pair. Combine current and maximum HP and share damage and healing. Either death kills both; either revival revives both. HP transfers within the pair are disabled. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving also ends sharing, preserving each player's remaining HP proportion.\n\nCarry: holding the same valuable together gives {Number(c.TwinsCarryStrengthMultiplier.Value)}x grab strength and reduces collision value loss by {Number(c.TwinsCollisionReductionPercent.Value)}%. Shop equipment is excluded.\nRest: both crouch within {Number(c.TwinsRestRadius.Value)} m and stay still without damage for {Number(c.TwinsRestHoldSeconds.Value)} seconds to heal {Number(c.TwinsRestHealPercent.Value)}% of shared maximum HP and refill both players' stamina. Pair cooldown: {Number(c.TwinsRestCooldownSeconds.Value)} seconds.\nReunite: after separating by {Number(c.TwinsRendezvousStartRange.Value)} m, sprint toward your partner at about {Number(c.TwinsRendezvousSpeedMultiplier.Value)}x speed until within {Number(c.TwinsRendezvousEndRange.Value)} m.\nDeliver: carry a valuable together outside delivery areas for {Number(c.TwinsDeliveryCarrySeconds.Value)} seconds, then bring it into the truck or extraction area with both players within {Number(c.TwinsDeliveryRadius.Value)} m of it. Value +{Number(c.TwinsDeliveryBonusPercent.Value)}%, once per item; stage bonus cap ${c.TwinsDeliveryStageLimit.Value}.";
+    }
+
+    private static string PorterDescription(StageRolesConfig c, bool japanese)
+    {
+        string drop = c.PorterDropOnEnemyHit.Value ? "ON" : "OFF";
+        return japanese
+            ? $"貴重品を1人で{Number(c.PorterHoldSeconds.Value)}秒つかみ続けると自動収納します。収納できるサイズ：{c.PorterAllowedSizes.Value}。合計重量は{Number(c.PorterCapacity.Value)}までで、個数制限はありません。トラック・納品所に入ると自動で荷下ろしを始め、満載時は{Number(c.PorterUnloadSeconds.Value)}秒、軽いほど短時間で取り出します。エリアから出るか被弾で荷物を落とすと待ち時間がリセットされます。敵の攻撃でHPが減ると最初に収納した1個を落とす：{drop}。死亡・役職変更・退出時は全て放出します。移動速度は変わりません。購入装備は収納できません。"
+            : $"Hold a valuable alone for {Number(c.PorterHoldSeconds.Value)} seconds to store it. Allowed sizes: {c.PorterAllowedSizes.Value}. Total weight limit: {Number(c.PorterCapacity.Value)}; no item-count limit. Enter the truck or extraction area to unload automatically; a full load takes {Number(c.PorterUnloadSeconds.Value)} seconds, proportionally less for lighter loads. Leaving the area or spilling cargo restarts unloading. Enemy damage drops the oldest stored item: {drop}. Death, role changes or disconnects release all cargo. Movement speed is unchanged. Shop equipment cannot be stored.";
     }
 
     private static string SignalmanDescription(StageRolesConfig config, bool japanese)

@@ -2,7 +2,7 @@
   "method": "Preserve native alpha or remove perimeter-connected near-black exterior; normalize category interiors through a color-region mask",
   "generator": "Python / Pillow / NumPy",
   "black_limit": 64,
-  "count": 46,
+  "count": 47,
   "assets": [
     {
       "name": "01-Tank",
@@ -1600,6 +1600,36 @@
       "outside_mask_pixels_unchanged": true,
       "alpha_preserved_during_recolor": true,
       "runtime_background_core_pixels": 12210
+    },
+    {
+      "category": "Support",
+      "background_color": "#24563E",
+      "detected_background_rgb": [
+        40,
+        89,
+        66
+      ],
+      "background_color_tolerance": 24,
+      "background_core_pixels": 373109,
+      "background_mask_pixels": 396012,
+      "outside_mask_pixels_unchanged": true,
+      "alpha_preserved_during_recolor": true,
+      "background_alpha_holes_filled": 24324,
+      "name": "44-Porter",
+      "source": "Assets/role-emblems-semibot-v1/selected/44-Porter.png",
+      "native_source_alpha": true,
+      "rgb_pixels_unchanged": false,
+      "source_sha256": "ae171c365d3189f39646821b3a188e71f79f6662918cd6e6c50bbf03168378af",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "master_sha256": "4bbc707180a41b74ad58dfd026fbca9defc0d47c285dbdf5e49766c21a256bc4",
+      "runtime_sha256": "ecfc695691d6ee0f43697cb12066ecd3d55eae4e00cbfd412999fac867deb7c4",
+      "runtime_size": [
+        256,
+        256
+      ]
     }
   ]
 }

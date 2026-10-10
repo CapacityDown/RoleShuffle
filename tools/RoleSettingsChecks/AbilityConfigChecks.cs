@@ -13,6 +13,9 @@ internal static class AbilityConfigChecks
         var config = new StageRolesConfig(file);
         var cases = new (string Section, string Key, object Default, object Min, object Max)[]
         {
+            ("Porter", "Capacity", 15f, 1f, 100f),
+            ("Porter", "HoldSeconds", 3f, 1f, 30f),
+            ("Porter", "FullUnloadSeconds", 10f, 0f, 60f),
             ("Ghost", "HealRadius", 5f, 0f, 30f),
             ("Ghost", "HealAmount", 1, 0, 100),
             ("Ghost", "HealIntervalSeconds", 2f, 0.5f, 60f),
@@ -86,9 +89,13 @@ internal static class AbilityConfigChecks
                 : (float)item.Min + ((float)item.Max - (float)item.Min) / 3f;
             saved.Add(definition, entry.BoxedValue);
         }
+        Check(config.PorterDropOnEnemyHit.Value && config.PorterAllowedSizes.Value == "Tiny,Small,Medium", "Porter drawback and size defaults");
+        config.PorterDropOnEnemyHit.Value = false;
+        config.PorterAllowedSizes.Value = "Small,Medium,Big";
         file.Save();
         var reloaded = new ConfigFile(path, false) { SaveOnConfigSet = false };
         var loaded = new StageRolesConfig(reloaded);
+        Check(!loaded.PorterDropOnEnemyHit.Value && loaded.PorterAllowedSizes.Value == "Small,Medium,Big", "Porter drawback and sizes survive reload");
         var reloadedEntries = reloaded.ToDictionary(pair => pair.Key, pair => pair.Value);
         foreach (var pair in saved)
         {

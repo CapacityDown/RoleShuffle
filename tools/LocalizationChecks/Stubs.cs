@@ -44,12 +44,18 @@ internal enum StageRole
     Influenza,
     Signalman,
     Twins,
+    Porter,
     Superbot = 1001,
     Disaster = 1002
 }
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal Entry<float> PorterHoldSeconds { get; } = new(3f);
+    internal Entry<float> PorterCapacity { get; } = new(15f);
+    internal Entry<float> PorterUnloadSeconds { get; } = new(10f);
+    internal Entry<string> PorterAllowedSizes { get; } = new("Tiny,Small,Medium");
+    internal Entry<bool> PorterDropOnEnemyHit { get; } = new(true);
     internal Entry<float> LifterHeavyGripMultiplier { get; } = new(1f);
     internal Entry<float> LifterHeavyRotationMultiplier { get; } = new(1f);
     internal Entry<int> LifterLightItemStrengthLevel { get; } = new(1);

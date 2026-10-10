@@ -62,6 +62,12 @@ internal static class RoleResourceSymbols
         }
         switch (metric)
         {
+            case AbilityMetric.PorterLoad:
+            case AbilityMetric.PorterUnload:
+                RoundedFrame(4,7,17,16,3);
+                Line(9,7,9,3,2.5f); Line(16,7,16,3,2.5f); Line(9,3,16,3,2.5f);
+                Line(8,15,17,15,2.5f);
+                break;
             case AbilityMetric.TwinRest:
                 Circle(7,6,3); Circle(18,6,3);
                 Line(7,12,7,20,4); Line(18,12,18,20,4);

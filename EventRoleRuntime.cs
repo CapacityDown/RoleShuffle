@@ -390,6 +390,7 @@ internal sealed class EventRoleRuntime
             return;
         }
         _controller.NotifyAvengerAllyHit(player, observedLoss);
+        _controller.PorterEnemyHit(player, observedLoss);
         ApplyBodyguardTransfer(
             player,
             previousHealth,

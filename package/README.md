@@ -6,9 +6,9 @@
 
 RoleShuffle assigns stage-long movement, healing, combat and other roles. Base Upgrades persist between stages and can grow during the run.
 
-Only the host needs RoleShuffle for gameplay effects. Sessions of up to 30 players are supported. Players without the mod receive their role, upgrades, effects, and vanilla chat/TTS announcement normally. Participants who also install RoleShuffle can use the full role HUD.
+Only the host needs RoleShuffle for gameplay, with up to 30 players. Vanilla guests receive roles, upgrades, effects and chat/TTS announcements. Installed participants also get the full role HUD.
 
-By default, upgrade items are removed from the shop pool so stage roles remain the source of temporary upgrades.
+Upgrade items are removed from shops by default; roles grant temporary upgrades.
 
 ### Contact
 
@@ -26,26 +26,26 @@ Install with a mod manager or place `RoleShuffle.dll` in the profile's `BepInEx/
 
 ### Multiplayer
 
-- The host assigns roles and controls all gameplay settings.
-- Vanilla participants are fully supported and do not need RoleShuffle.
+- The host assigns roles and controls gameplay settings.
+- Vanilla participants do not need RoleShuffle.
 - Installed participants receive the full role HUD and the scrollable `Roles` page in the Escape menu; each player can choose their own HUD layout.
 - Mage and Trickster do not activate abilities when an expression is cleared. The host's own menu expression restoration is also ignored; other players' expressions restored after closing a menu can still activate an ability.
 
 ### Role selection and presets
 
-Open `ROLES` → `ROLE SETTINGS` in the lobby or Escape menu. Hosts toggle any role, including disabled and secret roles. Switches share MOD settings and affect future assignments, including new arrivals; current roles stay. Participants can view but cannot edit. Older hosts may show settings as unavailable.
+Open `ROLES` → `ROLE SETTINGS` from the lobby or Escape menu. Hosts toggle any role, including secret roles, for future assignments and arrivals. Current roles stay. These switches share MOD settings; participants can only view them. Older hosts may not support them.
 
-Applying `PRESETS` replaces only role switches, preserving weights, abilities, balance, Base Upgrades and HUD settings. Weight 0 remains excluded even when ON. Manual choices show `Custom`. Existing selections stay until a preset is applied.
+`PRESETS` replaces role switches only. Weights, abilities, balance, Base Upgrades and HUD settings stay. Weight 0 stays excluded. Manual selections show `Custom` and remain until applying a preset.
 
 |Preset|Enabled roles|Play style|
 |---|---|---|
-|Standard|45|Every role, including both secret roles; restores the default ON/OFF selection.|
+|Standard|46|Every role, including both secret roles; restores the default ON/OFF selection.|
 |Beginner|20|Basic upgrades, recovery and protection without passive hazard or hardship roles.|
-|Cooperative|17|Team support, healing, repairs and shared survival.|
+|Cooperative|18|Team support, healing, repairs and shared survival.|
 |Chaos|15|Explosions, magic, gambles and unpredictable effects.|
 |Challenge|15|Risky and specialized roles without dedicated healing or revival roles.|
 
-Party-size, context and balance restrictions still apply. Presets do not override `General.Enabled` or zero weights.
+Party-size, context and balance restrictions apply; presets preserve `General.Enabled` and zero weights.
 
 ### Role command
 
@@ -57,19 +57,19 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 
 - One role is selected for each player at the start of a playable stage.
 - Enabled roles are selected by relative `Weight`.
-- With `General.UniqueRoles = true`, duplicate roles are avoided until every eligible role has been used once.
+- `General.UniqueRoles = true` avoids duplicates until all eligible roles have been used.
 - `King` is assigned to at most one player per stage.
 - Showcase and Support groups have configurable minimum assignments by party size; see Role balance.
-- By default, Showcase and Support minimums rise to four each at 24 players. Danger limits rise from one to two at 8 players and three at 16 players; Hardship limits rise from one to two at 12 players. Influencer is a Showcase role and is not treated as a Danger role. A party of four or fewer receives at most one role across both risk groups.
-- A role found among a player's five most recent assignments uses half of its normal selection weight for that player. Other players' histories do not affect that player's selection.
-- A player normally cannot receive the same role in consecutive stages. After receiving `Courier`, `Tuna`, or `Influenza`, that player is excluded from these Hardship roles for the next two stages. These restrictions are relaxed only when needed to avoid leaving a player without a role.
+- Default minimums: Showcase and Support each reach four at 24 players. Danger maximum: one, two at 8 players, three at 16. Hardship maximum: one, two at 12. Parties of four or fewer get at most one role across both risk groups. Influencer is Showcase, outside Danger.
+- Roles in a player's last five assignments use half weight for that player; others' histories have no effect.
+- No consecutive repeat roles. After `Courier`, `Tuna`, or `Influenza`, that player avoids all three for two stages. Restrictions relax only as needed to assign everyone a role.
 - `Jumper`, `Launcher`, `Climber`, and `Flyer` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
 - `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, `Signalman`, and `Twins` are not selected in single-player or a one-player session.
-- `Imitator` is selected only after another active player has received a role it can copy.
+- `Imitator` requires another active player with a copyable role.
 - By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` when no melee weapon is available. Weapon-like valuables do not count as weapons for either role's assignment, and staffs do not count for Sniper assignment.
-- Players who leave are removed from the role list. Returning players regain their previous role; new players receive a role, its upgrades and an announcement.
-- Roles and their stage effects are cleared only when the stage actually ends. They remain active if a failed-stage transition is canceled by a revival effect.
+- Leaving removes a player from the role list. Returning restores their role; new arrivals receive a role, upgrades and announcement.
+- Roles and effects end with the stage. They stay if revival cancels a failed-stage transition.
 
 ### Roles
 
@@ -77,11 +77,11 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 |---|---|---|---|
 |![][i01]<br>Tank|Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit.|Health minimum 21.|Minimum, multiplier, cap|
 |![][i02]<br>Runner|Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040.|Minimum Speed 6, Stamina 46.|Minimums, multipliers, caps|
-|![][i03]<br>Jumper|Adds up to 10 extra jumps before landing by setting Extra Jump to level 10.|Uses the vanilla Extra Jump upgrade and has no separate active ability.|Extra Jump target 0–100|
+|![][i03]<br>Jumper|Adds up to 10 extra jumps before landing by setting Extra Jump to level 10.|Vanilla upgrades; no separate active ability.|Extra Jump target 0–100|
 |![][i04]<br>Lifter|Heavy objects, carts and bikes use peak lifting/turning strength from Strength Lv0–200.|Strength displays Lv200. Excluded if Base meets both strength targets (default: Lv50).|Holding strength|
-|![][i05]<br>Launcher|Launches the player farther forward when starting a Tumble. Launch is level 10.|Uses the vanilla Launch upgrade and has no separate active ability.|Launch target 0–100|
-|![][i06]<br>Climber|Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20.|Uses the two vanilla upgrades and has no separate active ability.|Tumble Climb and Range targets 0–100|
-|![][i07]<br>Flyer|Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10.|Uses the vanilla Tumble Wings upgrade and has no separate active ability.|Tumble Wings target 0–100|
+|![][i05]<br>Launcher|Launches the player farther forward when starting a Tumble. Launch is level 10.|Vanilla upgrades; no separate active ability.|Launch target 0–100|
+|![][i06]<br>Climber|Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20.|Vanilla upgrades; no separate active ability.|Tumble Climb and Range targets 0–100|
+|![][i07]<br>Flyer|Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10.|Vanilla upgrades; no separate active ability.|Tumble Wings target 0–100|
 |![][i08]<br>Tracker|Passively reports the nearest enemy within 25m, warns within 8m, and tracks the nearest teammate's Death Head at any distance. Health minimum 3; Map Player Count minimum 1; preserves stronger Base upgrades.|Private reports only on meaningful changes, normally 20s apart. Close warnings bypass the wait without repeating while danger stays nearby. Straight-line directions relative to your view, including above/below. No item or command needed; requires 2+ players.|Health 0–200; detection, warning, interval and distance-change settings below.|
 |![][i09]<br>Ghost|Death Head Battery Lv50. While dead, heals living allies within 5 m of its head for 1 HP every 2 seconds, up to 50 HP per stage. Head carriers gain Speed +1.|Revival does not replenish healing. Multiple heads do not stack; the stronger King Speed bonus takes priority. Excluded with one player; high Base levels do not exclude it.|Battery, healing, carrier Speed|
 |![][i10]<br>Bomber|Drops a random armed grenade every 8 m traveled. Up to 30 generated grenades remain active per Bomber, and the oldest is removed at the limit.|Grenades can injure players and damage valuables. Only Bomber can hold generated grenades. Movement inside the truck does not count while truck placement is disabled.|Distance, limit, truck placement, grenade types|
@@ -118,6 +118,7 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 |![][i41]<br>Influenza|**Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance.|**If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws.|Onset, HP, sneeze intervals, infection range/angle/chance, hearing|
 |![][i42]<br>Signalman|Relays ordinary chat unchanged to every living teammate at any distance, in each receiver's own TTS voice. Receives private teammate death alerts. Radio cooldown: 20 seconds.|Commands and automatic notices are excluded. Cooldown posts stay ordinary chat and are never relayed later. Waits for each receiver; countdowns have priority. Drops messages after 5 seconds waiting. At least two players; at most one drawn. Normal VC range is unchanged.|Cooldown, waiting limit, death alerts, command exclusions|
 |![][i43]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together gives 1.5x grab strength and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
+|![][i44]<br>Porter|Hold a Tiny/Small/Medium valuable alone for 3 seconds outside delivery areas to store it. Total weight up to 15; no item-count limit. Enter the truck or extraction area to unload: 10 seconds at full load, 5 at half.|Enemy HP damage drops the oldest stored item. Leaving the area or losing cargo to a hit restarts unloading. Death, role change, disconnect or stage end returns all cargo immediately. Shop equipment excluded; no slowdown. Private capacity/rejection and unload-completion notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -139,16 +140,19 @@ Party-size, context and balance restrictions still apply. Presets do not overrid
 |`HUD.ResourceHudScalePercent`|100|50–200|Resource HUD scale; fits the screen automatically.|
 |`HUD.ResourceHudOffsetX` / `ResourceHudOffsetY`|0 / 0|0–3840 / 0–2160|Moves the resource display right or down from below stamina.|
 
-Ability resources appear below stamina in one column and shrink to fit when necessary. The role list shows each player's role. Install the same RoleShuffle version as the host to use the resource HUD.
+Ability resources appear below stamina in one column and shrink to fit when necessary. The role list shows each player's role. The resource HUD requires the host's RoleShuffle version.
 
 ### Ability tuning
 
-Twins uses the `Twins` section. Defaults: `CarryStrengthMultiplier=1.5`, `CollisionReductionPercent=50`, `RestRadius=3`, `RestHoldSeconds=3`, `RestHealPercent=10`, `RestCooldownSeconds=60`, `RendezvousStartRange=15`, `RendezvousEndRange=5`, `RendezvousSpeedMultiplier=1.25`, `DeliveryCarrySeconds=3`, `DeliveryRadius=5`, `DeliveryBonusPercent=10`, `DeliveryStageLimit=5000`. Distances are metres, waits are seconds, and the delivery cap is dollars.
-
-Host: REPOConfig → RoleShuffle → role name. Defaults preserve the abilities above. Holding strength, HP and infection checks use current settings. Incubation changes apply to new infections; an already scheduled sneeze keeps its deadline. Stinker delay applies to new valuables. Existing settings are preserved.
+Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Strength, HP and infection checks use current settings. Incubation changes affect new infections; scheduled sneezes keep their deadlines. Stinker delay affects new valuables. Existing settings stay.
 
 |Setting|Default|Range|Effect|
 |---|---|---|---|
+|`Porter.Capacity`|15|1–100|Total cargo weight limit; no item-count limit. Weight and unloading time appear in the resource HUD.|
+|`Porter.HoldSeconds`|3|1–30 s|Continuous solo hold before storage.|
+|`Porter.FullUnloadSeconds`|10|0–60 s|Full-load unloading time; scales with weight. 0 unloads immediately.|
+|`Porter.DropOnEnemyHit`|true|Boolean|Enemy HP damage drops the oldest item.|
+|`Porter.AllowedSizes`|Tiny,Small,Medium|Comma-separated: Tiny, Small, Medium, Big, Wide, Tall, VeryTall|Allowed sizes; empty/unknown entries allow no additional sizes.|
 |`Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier`|1 / 1|0.1–5|Lifting / turning strength relative to the maximum across Strength Lv0–200.|
 |`Lifter.LightItemStrengthLevel`|1|0–200|Holding level for light objects/shop equipment, excluding carts/bikes.|
 |`Stinker.BreakGraceSeconds`|0.5|0–10 s|Delay before a spawned uranium valuable breaks.|
@@ -196,7 +200,7 @@ All settings are available through REPOConfig. Host-controlled settings affect t
 
 All settings below are host-controlled.
 
-Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, and `Signalman`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
+Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, `Signalman`, and `Porter`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
 
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
@@ -251,18 +255,18 @@ Manual adjustments persist per save. Each +/- click changes the total by 1, with
 |`Base Upgrade Draw.CappedUpgradeWeightMultiplier`|0.25|0–1|Upgrade weights decrease as their combined configured and truck levels approach the draw maximum, reaching this multiplier at the maximum. 0 excludes capped upgrades; 1 disables the decrease. All Upgrades is unaffected.|
 |`Base Upgrade Draw.WeightFalloffExponent`|2|0.1–10|Controls the weight decrease curve. 1 decreases evenly; larger values preserve more weight until near the maximum.|
 |`Base Upgrade Draw.ChangeAmountWeights`|`-1:10,0:15,1:60,2:15`|`change amount:weight` pairs; amount `-200`–200, weight 0–1000|Relative weights for the possible change amounts.|
-|`Base Upgrade Draw Selection.Health`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.Stamina`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.ExtraJump`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.Speed`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.Strength`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.Range`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.Launch`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.TumbleClimb`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.TumbleWings`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.CrouchRest`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.MapPlayerCount`|true|true, false|Include in future draws.|
-|`Base Upgrade Draw Selection.DeathHeadBattery`|true|true, false|Include in future draws.|
+|`Base Upgrade Draw Selection.Health`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.Stamina`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.ExtraJump`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.Speed`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.Strength`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.Range`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.Launch`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.TumbleClimb`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.TumbleWings`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.CrouchRest`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.MapPlayerCount`|true|true, false|Include in draws.|
+|`Base Upgrade Draw Selection.DeathHeadBattery`|true|true, false|Include in draws.|
 |`Base Upgrade Draw Selection.AllUpgrades`|true|true, false|Enables the combined positive result for enabled types only.|
 |`Base Upgrade Draw Weights.Health`|20|0–1000|Health weight.|
 |`Base Upgrade Draw Weights.Stamina`|40|0–1000|Stamina weight.|
@@ -470,11 +474,8 @@ Elite Enemy Variants is optional and not required.
 
 - Twins supports host-only play. Simultaneous damage or healing can cause some difference in the shared HP result.
 
-- `Bomber` leaves armed grenades that can injure players and damage valuables.
 - `Mage` spells can harm players and valuables; spell names ignore case. The laser follows the caster's view. RoleShuffle users see only the beam; unmodded guests still see its temporary staff.
 - `Courier` and `Tuna` continuously deal real damage under their stated conditions and can kill their owner. The damage is not automatically restored.
-- `Medic` never heals itself.
-- `Phoenix` revives itself once per stage. `Rescuer` revives dead teammates by grabbing their heads, up to the configured limit. Each role uses its own configurable revival HP, with a default of 25.
 - Role upgrades end at stage end. Base levels include retained item amounts when enabled. Throw remains permanent.
 - When a role's maximum HP bonus ends, remaining HP keeps its proportion, rounded down (at least 1 HP while alive): 300/520 becomes 69/120.
 - Setting every role to disabled or weight 0 leaves no eligible random role to assign.
@@ -518,9 +519,9 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
-|標準|45|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
+|標準|46|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
 |初心者向け|20|基本強化・回復・防御が中心。自動で危害を加える役やハンデ役を除外します。|
-|協力重視|17|チーム支援・回復・修理を中心に協力して生き残ります。|
+|協力重視|18|チーム支援・回復・修理を中心に協力して生き残ります。|
 |カオス|15|爆発・魔法・ギャンブルなど、予測しづらい展開を楽しみます。|
 |高難度|15|専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。|
 
@@ -597,6 +598,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i41]<br>Influenza|**発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。|**感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。|発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音|
 |![][i42]<br>Signalman|通常チャットの本文を変えずに、生存中の仲間全員へ距離制限なく届けます。受信者自身の読み上げ音声で再生し、仲間の死亡通知も受け取ります。通信後は20秒待機。|コマンドと自動通知は除外。待機中の投稿は通常チャットのみで、後から転送しません。相手の発話を待ち、カウントダウンを優先。5秒待った通信は破棄。2人以上で最大1人を抽選。通常VCの距離は変わりません。|再使用待ち・待機上限・死亡通知・コマンド除外|
 |![][i43]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむと掴む力1.5倍、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
+|![][i44]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。合計重量15まで、個数制限なし。トラック・納品所内で自動荷下ろし。満載10秒、半分なら5秒。|敵からHPダメージを受けると最初に収納した1個が落下。エリア外へ出る・被弾で荷物が落ちると待ち直し。死亡・役職変更・離脱・ステージ終了は即座に全返却。購入装備は対象外。移動速度は通常。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -622,12 +624,15 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 ### 能力の調整
 
-Twinsの能力はREPOConfigの`Twins`欄で変更可能です。初期値は、共同運搬の力1.5倍・衝突損失軽減50％、休憩距離3m・静止3秒・回復10％・待ち時間60秒、合流開始15m・終了5m・速度約1.25倍、共同納品の運搬3秒・距離5m・価値加算10％・上限$5,000です。
-
 ホストがREPOConfig → RoleShuffle → 役職名から設定。初期値は上記の能力です。保持する力・HP・感染判定には現在の値を使用します。発症時間は新しい感染から適用し、予約済みのくしゃみの時刻は維持。Stinkerの猶予は新しく出現する貴重品から適用。既存設定は保持します。
 
 |設定|初期値|範囲|効果|
 |---|---|---|---|
+|`Porter.Capacity`|15|1～100|収納重量の上限。個数制限なし。重量・荷下ろし残り時間は残量HUDに表示。|
+|`Porter.HoldSeconds`|3|1～30秒|収納まで1人でつかみ続ける時間。|
+|`Porter.FullUnloadSeconds`|10|0～60秒|満載時の荷下ろし時間。重量に比例。0なら即座に完了。|
+|`Porter.DropOnEnemyHit`|true|真偽値|敵からHPダメージを受けると最初に収納した品が落下。|
+|`Porter.AllowedSizes`|Tiny,Small,Medium|Tiny・Small・Medium・Big・Wide・Tall・VeryTallをカンマ区切り|収納可能サイズ。空欄・不明な名前は追加許可しない。|
 |`Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier`|1 / 1|0.1～5|Strength Lv0～200の最大値に対する、つかむ力／回転力の倍率。|
 |`Lifter.LightItemStrengthLevel`|1|0～200|軽量品・ショップ装備（カート・バイクを除く）を保持するStrengthレベル。|
 |`Stinker.BreakGraceSeconds`|0.5|0～10秒|出現したウラン貴重品が壊れるまでの猶予。|
@@ -675,7 +680,7 @@ Twinsの能力はREPOConfigの`Twins`欄で変更可能です。初期値は、�
 
 この表はすべてホスト設定。
 
-Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Signalman`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
+Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Signalman`、`Porter`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
 
 |キー|デフォルト|範囲・値|内容|
 |---|---:|---|---|
@@ -730,18 +735,18 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Base Upgrade Draw.CappedUpgradeWeightMultiplier`|0.25|0～1|アップグレードが抽選上限に近づくほどWeightが低下し、上限でこの倍率になります。設定分とトラック抽選分の合計を使用します。0では上限到達後に対象外となり、1では低下しません。All Upgradesは対象外です。|
 |`Base Upgrade Draw.WeightFalloffExponent`|2|0.1～10|抽選Weightの低下カーブです。1は一定のペースで低下し、大きい値ほど上限付近まで重みを維持。|
 |`Base Upgrade Draw.ChangeAmountWeights`|`-1:10,0:15,1:60,2:15`|`増減値:重み`の組、増減値`-200`～200、重み0～1000|抽選される増減値の相対Weightです。|
-|`Base Upgrade Draw Selection.Health`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.Stamina`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.ExtraJump`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.Speed`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.Strength`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.Range`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.Launch`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.TumbleClimb`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.TumbleWings`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.CrouchRest`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.MapPlayerCount`|true|true, false|この種類を抽選対象にする。|
-|`Base Upgrade Draw Selection.DeathHeadBattery`|true|true, false|この種類を抽選対象にする。|
+|`Base Upgrade Draw Selection.Health`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.Stamina`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.ExtraJump`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.Speed`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.Strength`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.Range`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.Launch`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.TumbleClimb`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.TumbleWings`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.CrouchRest`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.MapPlayerCount`|true|true, false|抽選対象にする。|
+|`Base Upgrade Draw Selection.DeathHeadBattery`|true|true, false|抽選対象にする。|
 |`Base Upgrade Draw Selection.AllUpgrades`|true|true, false|ONの種類だけを対象に、正の一括抽選を有効化。|
 |`Base Upgrade Draw Weights.Health`|20|0～1000|Healthの相対Weightです。|
 |`Base Upgrade Draw Weights.Stamina`|40|0～1000|Staminaの相対Weightです。|
@@ -1002,3 +1007,5 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 [iu]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/unknown.png
 [i42]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/2207c9a37f217fcea8399ef3efdc0945ce62a04e/docs/icons/42.png
 [i43]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/d5f615a8cf9ee60a6b0ae98104a051d2ad64a193/docs/icons/43.png
+
+[i44]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/06ef1e70cf0efdaba265cee9138ba3af5eea994d/docs/icons/44.png

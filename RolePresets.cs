@@ -32,7 +32,7 @@ internal static class RolePresets
             StageRole.Tank, StageRole.Runner, StageRole.Lifter, StageRole.Tracker, StageRole.Ghost,
             StageRole.Medic, StageRole.Phoenix, StageRole.Rescuer, StageRole.Musician, StageRole.Engineer,
             StageRole.Trickster, StageRole.Mechanic, StageRole.Electrician, StageRole.Warden,
-            StageRole.Influencer, StageRole.Bodyguard, StageRole.Signalman),
+            StageRole.Influencer, StageRole.Bodyguard, StageRole.Signalman, StageRole.Porter),
         new RolePresetDefinition(RolePreset.Chaos, "Chaos",
             "Explosions, magic and risky roles.",
             StageRole.Bomber, StageRole.King, StageRole.Tuna, StageRole.Mage, StageRole.Gambler,

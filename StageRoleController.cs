@@ -80,6 +80,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private RoleOverhaulRuntime _overhaul = null!;
     private RoleNotifier _notifier = null!;
     private TrackerRoleRuntime _tracker = null!;
+    private PorterRuntime _porter = null!;
     private bool _stageReady;
     private bool _assignmentsInitialized;
     private int _stageGeneration;
@@ -127,6 +128,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _overhaul = new RoleOverhaulRuntime(config);
         _notifier = new RoleNotifier(this, config);
         _tracker = new TrackerRoleRuntime(config, _notifier);
+        _porter = new PorterRuntime(config);
         gameObject.SetActive(false);
     }
 
@@ -945,6 +947,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void ResetAssignmentForRoleChange(RoleAssignment assignment)
     {
+        _porter.ReleaseAll(assignment.SteamId);
         _tracker.Forget(assignment);
         assignment.ExhaustionNotifications.Rearm();
         assignment.Overhaul.ResetCargo();
@@ -1361,6 +1364,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         TickInfluenza();
         TickSignalman();
         TickTwins();
+        _porter.Tick(_assignments, _notifier);
         _tracker.Tick(_assignments);
         TickGhostSupport();
         _eventRoles.Tick(_assignments);
@@ -1977,6 +1981,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         NotifySignalmanDeath(player);
         RoleAssignment? deadAssignment = FindAssignment(player);
         if (deadAssignment != null) _overhaul.PlayerDied(deadAssignment);
+        if (deadAssignment != null) _porter.ReleaseAll(deadAssignment.SteamId);
         if (deadAssignment != null)
         {
             deadAssignment.BrawlerCombo.Reset();
@@ -2756,6 +2761,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         foreach (RoleAssignment assignment in departed)
         {
+            _porter.ReleaseAll(assignment.SteamId);
             if (IsTwin(assignment.Player)) StopTwins();
             _bomber.RemovePlayer(assignment.SteamId);
             _medic.RemovePlayer(
@@ -3207,6 +3213,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _signalmanGeneration++;
         _signalmanReportedDeaths.Clear();
         _tracker?.Stop();
+        _porter?.Stop();
         _notifier?.End();
         RoleHealingRuntime.Clear();
         _bomber?.Stop();

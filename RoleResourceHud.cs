@@ -126,10 +126,11 @@ internal sealed class RoleResourceHud : MonoBehaviour
             ResourceRow row = _rows[i];
             AbilityValue value = _values[i];
             row.Rect.gameObject.SetActive(true);
-            bool radio = value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest;
-            Color ink = value.Remaining == 0 && !radio ? Color.red : ResourceColor;
-            SetText(row.Remaining, value.Remaining.ToString(CultureInfo.InvariantCulture));
-            SetText(row.Maximum, radio ? string.Empty : "<b>/</b>" + value.Limit.ToString(CultureInfo.InvariantCulture));
+            bool radio = value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload;
+            bool exhausted = value.Metric == AbilityMetric.PorterLoad ? value.Remaining >= value.Limit : value.Remaining == 0;
+            Color ink = exhausted && !radio ? Color.red : ResourceColor;
+            SetText(row.Remaining, RoleAbilityResources.Number(value, false));
+            SetText(row.Maximum, radio ? string.Empty : "<b>/</b>" + RoleAbilityResources.Number(value, true));
             row.Remaining.color = row.Maximum.color = row.Symbol.color = row.NativeIcon.color = ink;
             Sprite? sprite = value.Metric is AbilityMetric.Medic or AbilityMetric.GhostHealing ? _nativePlus?.sprite :
                 value.Metric == AbilityMetric.Charge ? _nativeZap?.sprite : null;
@@ -137,7 +138,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
             row.NativeIcon.enabled = sprite != null;
             row.Symbol.enabled = sprite == null;
             row.Symbol.SetMetric(value.Metric);
-            float maximumX = RoleResourceLayout.MaximumOffset(value.Remaining, _maximumOffset);
+            float maximumX = RoleResourceLayout.MaximumOffset(RoleAbilityResources.Number(value, false), _maximumOffset);
             row.Maximum.rectTransform.anchoredPosition = new Vector2(_iconInset + maximumX, _maximumY);
             _rowWidth = Mathf.Max(_rowWidth, _iconInset + maximumX + row.Maximum.GetPreferredValues(row.Maximum.text).x + 4);
         }

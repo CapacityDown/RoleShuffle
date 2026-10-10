@@ -506,6 +506,13 @@ internal sealed class StageRolesConfig
         InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
         TwinsEnabled = RoleEnabled(config, "Twins");
+        PorterEnabled = RoleEnabled(config, "Porter");
+        PorterWeight = RoleWeight(config, "Porter");
+        PorterCapacity = BindFloat(config, "Porter", "Capacity", 15f, 1f, 100f, "Maximum combined weight of stored valuables. No item-count limit.");
+        PorterHoldSeconds = BindFloat(config, "Porter", "HoldSeconds", 3f, 1f, 30f, "Continuous solo holding outside delivery areas required to store a valuable.");
+        PorterUnloadSeconds = BindFloat(config, "Porter", "FullUnloadSeconds", 10f, 0f, 60f, "Seconds to unload a full load inside the truck or extraction area; scales with stored weight. Leaving the area or losing cargo to an enemy hit restarts the wait.");
+        PorterDropOnEnemyHit = BindBool(config, "Porter", "DropOnEnemyHit", true, "Drop the oldest stored valuable on a confirmed enemy hit that reduces HP. Death releases all cargo. Movement speed is unchanged.");
+        PorterAllowedSizes = config.Bind("Porter", "AllowedSizes", "Tiny,Small,Medium", "Comma-separated allowed valuable sizes: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Empty or unknown entries allow no additional sizes. Shop equipment is excluded.");
         TwinsWeight = RoleWeight(config, "Twins");
         TwinsCarryStrengthMultiplier = BindFloat(config, "Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f, "Grab strength while both twins directly hold the same valuable. Shop equipment is excluded.");
         TwinsCollisionReductionPercent = BindFloat(config, "Twins", "CollisionReductionPercent", 50f, 0f, 100f, "Percentage of collision value loss prevented during cooperative carrying.");
@@ -534,6 +541,13 @@ internal sealed class StageRolesConfig
     }
 
     internal ConfigEntry<bool> TwinsEnabled { get; }
+    internal ConfigEntry<bool> PorterEnabled { get; }
+    internal ConfigEntry<int> PorterWeight { get; }
+    internal ConfigEntry<float> PorterCapacity { get; }
+    internal ConfigEntry<float> PorterHoldSeconds { get; }
+    internal ConfigEntry<float> PorterUnloadSeconds { get; }
+    internal ConfigEntry<bool> PorterDropOnEnemyHit { get; }
+    internal ConfigEntry<string> PorterAllowedSizes { get; }
     internal ConfigEntry<int> TwinsWeight { get; }
     internal ConfigEntry<float> TwinsCarryStrengthMultiplier { get; }
     internal ConfigEntry<float> TwinsCollisionReductionPercent { get; }
@@ -923,6 +937,7 @@ internal sealed class StageRolesConfig
         StageRole.Influenza => InfluenzaEnabled,
         StageRole.Signalman => SignalmanEnabled,
         StageRole.Twins => TwinsEnabled,
+        StageRole.Porter => PorterEnabled,
         StageRole.Superbot => SuperbotEnabled,
         StageRole.Disaster => DisasterEnabled,
         _ => null
@@ -973,6 +988,7 @@ internal sealed class StageRolesConfig
         StageRole.Influenza => InfluenzaWeight.Value,
         StageRole.Signalman => SignalmanWeight.Value,
         StageRole.Twins => TwinsWeight.Value,
+        StageRole.Porter => PorterWeight.Value,
         StageRole.Superbot => 1,
         StageRole.Disaster => 1,
         _ => 0

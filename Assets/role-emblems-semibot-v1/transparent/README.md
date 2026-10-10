@@ -1,6 +1,6 @@
 # Transparent role emblems
 
-The active set contains 44 role icons and the shared Unrevealed icon. The cream
+The active set contains 46 role icons and the shared Unrevealed icon. The cream
 hexagonal frame, character, props and dark outlines follow the approved source
 artwork. Only the exterior is transparent. Role interiors use the exact primary
 category palette in `../selected/prompts.json` and `../../../ROLE_ICON_GUIDE.md`.
@@ -28,7 +28,7 @@ It never overwrites selected source artwork or generation prompts.
 ## Outputs and review
 
 - `masters/`: 45 full-size RGBA PNGs, generated locally and ignored by Git.
-- `runtime/`: 45 runtime PNGs, embedded by `StageRoles.csproj` and shared by the
+- `runtime/`: 47 runtime PNGs, embedded by `StageRoles.csproj` and shared by the
   HUD, Current Roles and Role Guide.
 - `previews/`: background masks and source/light/dark comparison sheets. These
   are local review artifacts and are not embedded in the MOD.

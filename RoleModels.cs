@@ -139,6 +139,7 @@ internal static class RoleCatalog
                capability != StageRole.Imitator &&
                capability != StageRole.Sniper &&
                capability != StageRole.Brawler &&
+               capability != StageRole.Porter &&
                  capability != StageRole.Twins &&
                capability != StageRole.Influenza;
     }

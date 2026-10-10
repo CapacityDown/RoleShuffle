@@ -22,5 +22,8 @@ internal static class RoleResourceLayout
     }
 
     internal static float MaximumOffset(int remaining, float nativeOffset) =>
-        nativeOffset + Math.Max(0, remaining.ToString(System.Globalization.CultureInfo.InvariantCulture).Length - 3) * 20;
+        MaximumOffset(remaining.ToString(System.Globalization.CultureInfo.InvariantCulture), nativeOffset);
+
+    internal static float MaximumOffset(string remaining, float nativeOffset) =>
+        nativeOffset + Math.Max(0, remaining.Length - 3) * 20;
 }

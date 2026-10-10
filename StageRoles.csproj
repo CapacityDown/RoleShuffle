@@ -42,6 +42,8 @@
     <Compile Include="TwinsRules.cs" />
     <Compile Include="TwinsRuntime.cs" />
     <Compile Include="TwinsPatches.cs" />
+    <Compile Include="PorterRules.cs" />
+    <Compile Include="PorterRuntime.cs" />
     <Compile Include="SignalmanRules.cs" />
     <Compile Include="SignalmanRuntime.cs" />
     <Compile Include="TrackerRules.cs" />
