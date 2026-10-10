@@ -30,6 +30,7 @@ internal sealed partial class StageRoleController
         {
             values.Add(new AbilityValue(AbilityMetric.PorterLoad, Mathf.CeilToInt(_porter.Weight(assignment.SteamId) * 10),
                 Mathf.CeilToInt(_config.PorterCapacity.Value * 10)));
+            values.Add(new AbilityValue(AbilityMetric.PorterValue, _porter.Value(assignment.SteamId), 0));
             float readyAt = _porter.UnloadReadyAt(assignment.SteamId);
             if (readyAt > Time.time) Seconds(AbilityMetric.PorterUnload, readyAt);
         }

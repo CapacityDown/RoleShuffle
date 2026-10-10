@@ -86,7 +86,7 @@ internal static class KingUpgradeAura
         foreach (string command in Commands)
         {
             string key = "playerUpgrade" + command;
-            int level = current.GetValueOrDefault(key, 0);
+            int level = PorterSpeed.WithoutPenalty(steamId, key, current.GetValueOrDefault(key, 0));
             int previous = Math.Min(Math.Max(0, level), applied.GetValueOrDefault(key, 0));
             int requested = config == null ? 0 : command switch
             {
@@ -104,7 +104,7 @@ internal static class KingUpgradeAura
                 // A retry must never stack another copy of an already applied grant.
                 UpgradeService.AddLevelsHostAuthoritative(steamId, command, delta);
                 if (!UpgradeService.TryGetLevels(steamId, out var after)) continue;
-                previous = Math.Clamp(previous + after.GetValueOrDefault(key, 0) - level, 0, 200);
+                previous = Math.Clamp(previous + PorterSpeed.WithoutPenalty(steamId, key, after.GetValueOrDefault(key, 0)) - level, 0, 200);
             }
             applied[key] = previous;
         }

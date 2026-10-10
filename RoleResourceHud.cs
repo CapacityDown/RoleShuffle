@@ -126,7 +126,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
             ResourceRow row = _rows[i];
             AbilityValue value = _values[i];
             row.Rect.gameObject.SetActive(true);
-            bool radio = value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload;
+            bool radio = value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload or AbilityMetric.PorterValue;
             bool exhausted = value.Metric == AbilityMetric.PorterLoad ? value.Remaining >= value.Limit : value.Remaining == 0;
             Color ink = exhausted && !radio ? Color.red : ResourceColor;
             SetText(row.Remaining, RoleAbilityResources.Number(value, false));
@@ -141,6 +141,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
             float maximumX = RoleResourceLayout.MaximumOffset(RoleAbilityResources.Number(value, false), _maximumOffset);
             row.Maximum.rectTransform.anchoredPosition = new Vector2(_iconInset + maximumX, _maximumY);
             _rowWidth = Mathf.Max(_rowWidth, _iconInset + maximumX + row.Maximum.GetPreferredValues(row.Maximum.text).x + 4);
+            _rowWidth = Mathf.Max(_rowWidth, _iconInset + row.Remaining.GetPreferredValues(row.Remaining.text).x + 4);
         }
         for (int i = _values.Count; i < _rows.Count; i++) _rows[i].Rect.gameObject.SetActive(false);
     }

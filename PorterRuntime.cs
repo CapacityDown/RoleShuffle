@@ -28,6 +28,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
 
     private sealed class Carrier(PlayerAvatar player)
     {
+        internal readonly string SteamId = PlayerIdentity.SteamId(player);
         internal readonly PlayerAvatar Player = player;
         internal readonly PorterLoad Load = new();
         internal readonly PorterHold Hold = new();
@@ -89,6 +90,15 @@ internal sealed class PorterRuntime(StageRolesConfig config)
     }
 
     internal float Weight(string steamId) => _carriers.TryGetValue(steamId, out Carrier? carrier) ? carrier.Load.Weight : 0;
+    internal int Value(string steamId)
+    {
+        double total = 0;
+        if (_carriers.TryGetValue(steamId, out Carrier? carrier))
+            foreach (Cargo cargo in carrier.Cargo)
+                if (cargo.Physics != null && cargo.Physics.GetComponent<ValuableObject>() is ValuableObject valuable &&
+                    CurrentValue?.GetValue(valuable) is float value && PorterRules.Finite(value) && value > 0) total += value;
+        return (int)Math.Min(int.MaxValue, Math.Floor(total));
+    }
     internal float UnloadReadyAt(string steamId) => _carriers.TryGetValue(steamId, out Carrier? carrier) && carrier.Unload.Active
         ? carrier.Unload.ReadyAt : 0;
 
@@ -112,12 +122,14 @@ internal sealed class PorterRuntime(StageRolesConfig config)
             Vector3 position = carrier.Player.transform.position;
             if (Physics.Raycast(position + Vector3.up * 0.2f, Vector3.down, 3f,
                 LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore)) carrier.LastPosition = position;
+            int dropIndex = 0;
             foreach (Cargo cargo in new List<Cargo>(carrier.Cargo))
             {
                 if (cargo.Physics == null) Remove(carrier, cargo);
-                else if (cargo.PendingReturn) Drop(carrier, cargo, 0);
+                else if (cargo.PendingReturn) Drop(carrier, cargo, dropIndex++);
                 else cargo.Maintain();
             }
+            UpdateSpeed(carrier);
         }
         if (Time.time < _nextScan || _carriers.Count == 0) return;
         _nextScan = Time.time + 0.1f;
@@ -186,6 +198,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
             Photon.Pun.PhotonView? view = physics.GetComponent<Photon.Pun.PhotonView>();
             carrier.Player.physGrabber.OverrideGrabRelease(view != null ? view.ViewID : -1, 0.5f);
             cargo.Store();
+            UpdateSpeed(carrier);
             return true;
         }
         catch (Exception error)
@@ -205,19 +218,23 @@ internal sealed class PorterRuntime(StageRolesConfig config)
     {
         if (!config.PorterDropOnEnemyHit.Value || !PlayerState.IsLiving(player) ||
             !_carriers.TryGetValue(PlayerIdentity.SteamId(player), out Carrier? carrier) || carrier.Cargo.Count == 0) return;
-        // Oldest first: a hit always releases exactly one item, without a random loss.
+        // Scatter every original object; failed returns remain owned and are retried.
         carrier.Unload.Reset();
         carrier.Hold.Reset();
         foreach (Cargo cargo in new List<Cargo>(carrier.Cargo))
             if (cargo.Physics == null) Remove(carrier, cargo);
         if (carrier.Cargo.Count == 0) return;
-        if (Drop(carrier, carrier.Cargo[0], 0)) notifier.NotifyResponse(player, "CargoDropped");
+        int count = carrier.Cargo.Count;
+        foreach (Cargo cargo in carrier.Cargo) cargo.PendingReturn = true;
+        DropAll(carrier);
+        if (carrier.Cargo.Count < count) notifier.NotifyResponse(player, "CargoDropped");
     }
 
     internal void ReleaseAll(string steamId)
     {
         if (!_carriers.TryGetValue(steamId, out Carrier? carrier)) return;
         carrier.Retiring = true;
+        PorterSpeed.Update(steamId, 0, config.PorterCapacity.Value);
         DropAll(carrier);
         if (carrier.Cargo.Count == 0) _carriers.Remove(steamId);
     }
@@ -226,6 +243,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
     {
         int index = 0;
         foreach (Cargo cargo in new List<Cargo>(carrier.Cargo)) Drop(carrier, cargo, index++);
+        UpdateSpeed(carrier);
         carrier.Hold.Reset();
         carrier.Unload.Reset();
     }
@@ -249,7 +267,12 @@ internal sealed class PorterRuntime(StageRolesConfig config)
     }
 
     private void Remove(Carrier carrier, Cargo cargo)
-    { carrier.Load.Remove(cargo.Id); carrier.Cargo.Remove(cargo); _stored.Remove(cargo.Id); }
+    {
+        carrier.Load.Remove(cargo.Id); carrier.Cargo.Remove(cargo); _stored.Remove(cargo.Id);
+    }
+
+    private void UpdateSpeed(Carrier carrier) => PorterSpeed.Update(carrier.SteamId,
+        carrier.Retiring ? 0 : carrier.Load.Weight, config.PorterCapacity.Value);
 
     private static Vector3 DropPosition(Carrier carrier, int index)
     {

@@ -93,3 +93,5 @@ namespace REPOJP.StageRoles
         internal void GhostTick()=>TickGhostSupport();
     }
 }
+
+namespace REPOJP.StageRoles { internal static class PorterSpeed { internal static int WithoutPenalty(string id, string key, int level) => level; } }

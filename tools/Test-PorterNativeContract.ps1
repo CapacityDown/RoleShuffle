@@ -46,6 +46,12 @@ try {
     Check ([bool]($release | Where-Object { $_.Operand -is [string] -and $_.Operand -eq 'ReleaseObjectRPC' })) 'Native owner grab-release RPC changed'
     $nativeRelease = $grabber.Methods | Where-Object Name -eq ReleaseObjectRPC
     Check ([bool]($nativeRelease.CustomAttributes | Where-Object { $_.AttributeType.Name -eq 'PunRPC' })) 'Native owner release receiver missing'
+    $pun = $game.MainModule.Types | Where-Object Name -eq PunManager
+    $speed = $pun.Methods | Where-Object Name -eq UpgradePlayerSprintSpeed
+    Check ($speed.IsPublic -and $speed.Parameters.Count -eq 2 -and $speed.Parameters[1].ParameterType.FullName -eq 'System.Int32') 'Native Speed delta API changed'
+    Check ([bool]($speed.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'UpdateSprintSpeedRightAway' })) 'Speed changes no longer immediately update movement'
+    $command = $pun.Methods | Where-Object Name -eq TesterUpgradeCommandRPC
+    Check ([bool]($command.CustomAttributes | Where-Object { $_.AttributeType.Name -eq 'PunRPC' }) -and [bool]($command.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'UpgradePlayerSprintSpeed' })) 'Vanilla peers cannot receive Speed deltas'
     $image = $plugin.MainModule.Resources | Where-Object { $_.Name.EndsWith('44-Porter.png') }
     Check ($null -ne $image) 'Porter emblem missing in the built DLL'
     $sha = [Security.Cryptography.SHA256]::Create()

@@ -157,6 +157,8 @@ namespace REPOJP.StageRoles
         internal StageRolesConfig _config = new();
         internal bool Ready = true, Authority = true;
         internal bool RoleAssignmentsReady => Ready && Authority;
+        internal float TwinsGrabMultiplier(PhysGrabObject item, PlayerAvatar player) => 1f;
+        internal void ForgetTwinsSpeed(string id, string key) { }
         internal bool PlayerHasRole(PlayerAvatar player, StageRole role) => player.Role == role || player.Role == StageRole.Superbot;
     }
     internal static class PlayerState { internal static bool IsLiving(PlayerAvatar player) => player.Living; }

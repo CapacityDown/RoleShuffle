@@ -118,7 +118,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i41]<br>Influenza|**Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance.|**If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws.|Onset, HP, sneeze intervals, infection range/angle/chance, hearing|
 |![][i42]<br>Signalman|Relays ordinary chat unchanged to every living teammate at any distance, in each receiver's own TTS voice. Receives private teammate death alerts. Radio cooldown: 20 seconds.|Commands and automatic notices are excluded. Cooldown posts stay ordinary chat and are never relayed later. Waits for each receiver; countdowns have priority. Drops messages after 5 seconds waiting. At least two players; at most one drawn. Normal VC range is unchanged.|Cooldown, waiting limit, death alerts, command exclusions|
 |![][i43]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together gives 1.5x grab strength and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
-|![][i44]<br>Porter|Hold a Tiny/Small/Medium valuable alone for 3 seconds outside delivery areas to store it. Total weight up to 15; no item-count limit. Enter the truck or extraction area to unload: 10 seconds at full load, 5 at half.|Enemy HP damage drops the oldest stored item. Leaving the area or losing cargo to a hit restarts unloading. Death, role change, disconnect or stage end returns all cargo immediately. Shop equipment excluded; no slowdown. Private capacity/rejection and unload-completion notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
+|![][i44]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In the truck/extraction area, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -148,10 +148,10 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 
 |Setting|Default|Range|Effect|
 |---|---|---|---|
-|`Porter.Capacity`|15|1–100|Total cargo weight limit; no item-count limit. Weight and unloading time appear in the resource HUD.|
+|`Porter.Capacity`|15|1–100|Total cargo weight limit; no item-count limit. HUD: weight, current cargo value and unloading time.|
 |`Porter.HoldSeconds`|3|1–30 s|Continuous solo hold before storage.|
 |`Porter.FullUnloadSeconds`|10|0–60 s|Full-load unloading time; scales with weight. 0 unloads immediately.|
-|`Porter.DropOnEnemyHit`|true|Boolean|Enemy HP damage drops the oldest item.|
+|`Porter.DropOnEnemyHit`|true|Boolean|Enemy HP damage scatters all cargo.|
 |`Porter.AllowedSizes`|Tiny,Small,Medium|Comma-separated: Tiny, Small, Medium, Big, Wide, Tall, VeryTall|Allowed sizes; empty/unknown entries allow no additional sizes.|
 |`Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier`|1 / 1|0.1–5|Lifting / turning strength relative to the maximum across Strength Lv0–200.|
 |`Lifter.LightItemStrengthLevel`|1|0–200|Holding level for light objects/shop equipment, excluding carts/bikes.|
@@ -598,7 +598,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i41]<br>Influenza|**発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。|**感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。|発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音|
 |![][i42]<br>Signalman|通常チャットの本文を変えずに、生存中の仲間全員へ距離制限なく届けます。受信者自身の読み上げ音声で再生し、仲間の死亡通知も受け取ります。通信後は20秒待機。|コマンドと自動通知は除外。待機中の投稿は通常チャットのみで、後から転送しません。相手の発話を待ち、カウントダウンを優先。5秒待った通信は破棄。2人以上で最大1人を抽選。通常VCの距離は変わりません。|再使用待ち・待機上限・死亡通知・コマンド除外|
 |![][i43]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむと掴む力1.5倍、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
-|![][i44]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。合計重量15まで、個数制限なし。トラック・納品所内で自動荷下ろし。満載10秒、半分なら5秒。|敵からHPダメージを受けると最初に収納した1個が落下。エリア外へ出る・被弾で荷物が落ちると待ち直し。死亡・役職変更・離脱・ステージ終了は即座に全返却。購入装備は対象外。移動速度は通常。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
+|![][i44]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -628,10 +628,10 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 |設定|初期値|範囲|効果|
 |---|---|---|---|
-|`Porter.Capacity`|15|1～100|収納重量の上限。個数制限なし。重量・荷下ろし残り時間は残量HUDに表示。|
+|`Porter.Capacity`|15|1～100|収納重量の上限。個数制限なし。HUDに重量・収納品の現在合計金額・荷下ろし残り時間を表示。|
 |`Porter.HoldSeconds`|3|1～30秒|収納まで1人でつかみ続ける時間。|
 |`Porter.FullUnloadSeconds`|10|0～60秒|満載時の荷下ろし時間。重量に比例。0なら即座に完了。|
-|`Porter.DropOnEnemyHit`|true|真偽値|敵からHPダメージを受けると最初に収納した品が落下。|
+|`Porter.DropOnEnemyHit`|true|真偽値|敵からHPダメージで全収納品をばらまく。|
 |`Porter.AllowedSizes`|Tiny,Small,Medium|Tiny・Small・Medium・Big・Wide・Tall・VeryTallをカンマ区切り|収納可能サイズ。空欄・不明な名前は追加許可しない。|
 |`Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier`|1 / 1|0.1～5|Strength Lv0～200の最大値に対する、つかむ力／回転力の倍率。|
 |`Lifter.LightItemStrengthLevel`|1|0～200|軽量品・ショップ装備（カート・バイクを除く）を保持するStrengthレベル。|

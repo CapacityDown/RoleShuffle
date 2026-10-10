@@ -13,9 +13,12 @@
     <Compile Include="../../RoleAbilityStatus.cs" Link="RoleAbilityStatus.cs" />
     <Compile Include="../../RoleResourceLayout.cs" Link="RoleResourceLayout.cs" />
     <Compile Include="../../RoleResourceSymbols.cs" Link="RoleResourceSymbols.cs" />
+    <Compile Include="../../RoleResourceRaster.cs" Link="RoleResourceRaster.cs" />
     <Compile Include="../../RoleAbilitySync.cs" Link="RoleAbilitySync.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
     <EmbeddedResource Include="../../Assets/Localization/*.json" LogicalName="REPOJP.StageRoles.Localization.%(Filename)%(Extension)" />
+      <Compile Include="../../PorterSpeed.cs" Link="PorterSpeed.cs" />
+    <Compile Include="../../PorterRules.cs" Link="PorterRules.cs" />
   </ItemGroup>
 </Project>

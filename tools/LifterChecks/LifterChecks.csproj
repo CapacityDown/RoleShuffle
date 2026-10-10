@@ -14,5 +14,7 @@
     <Compile Include="../../LifterStrengthRuntime.cs" Link="LifterStrengthRuntime.cs" />
     <Compile Include="../../LifterStrengthPatch.cs" Link="LifterStrengthPatch.cs" />
     <Compile Include="../../UpgradeService.cs" Link="UpgradeService.cs" />
+      <Compile Include="../../PorterSpeed.cs" Link="PorterSpeed.cs" />
+    <Compile Include="../../PorterRules.cs" Link="PorterRules.cs" />
   </ItemGroup>
 </Project>

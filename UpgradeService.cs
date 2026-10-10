@@ -33,6 +33,8 @@ internal static class UpgradeService
         }
         try
         {
+            if (SemiFunc.IsMasterClientOrSingleplayer() && PorterSpeed.TryAdd(steamId, commandName, levels, out bool result))
+                return result;
             SendUpgradeDelta(steamId, commandName, levels);
             return true;
         }
@@ -49,6 +51,13 @@ internal static class UpgradeService
         string steamId,
         string commandName,
         int levels)
+    {
+        if (!Ready || !SemiFunc.IsMasterClientOrSingleplayer() || string.IsNullOrEmpty(steamId) || levels == 0) return false;
+        return PorterSpeed.TryAdd(steamId, commandName, levels, out bool result) ? result :
+            AddLevelsHostAuthoritativeRaw(steamId, commandName, levels);
+    }
+
+    internal static bool AddLevelsHostAuthoritativeRaw(string steamId, string commandName, int levels)
     {
         if (!Ready || string.IsNullOrEmpty(steamId) || levels == 0 ||
             !SemiFunc.IsMasterClientOrSingleplayer())
@@ -135,7 +144,8 @@ internal static class UpgradeService
         {
             int targetLevel = Math.Max(0, target.Level);
             int currentLevel = currentUpgrades.GetValueOrDefault(target.DictionaryName, 0);
-            if (preserveHigherLevels && KingUpgradeAura.WithoutBonus(steamId, target.DictionaryName, currentLevel) >= targetLevel)
+            if (preserveHigherLevels && KingUpgradeAura.WithoutBonus(steamId, target.DictionaryName,
+                PorterSpeed.WithoutPenalty(steamId, target.DictionaryName, currentLevel)) >= targetLevel)
             {
                 continue;
             }
@@ -147,6 +157,7 @@ internal static class UpgradeService
                 else if (delta != 0)
                     SendUpgradeDelta(steamId, target.CommandName, delta);
                 KingUpgradeAura.Forget(steamId, target.DictionaryName);
+                PorterSpeed.Forget(steamId, target.DictionaryName);
                 StageRolesPlugin.Instance?.Controller?.ForgetTwinsSpeed(steamId, target.DictionaryName);
                 if (target.CommandName == "Strength")
                     ReconcileGrabStrength(steamId, targetLevel);

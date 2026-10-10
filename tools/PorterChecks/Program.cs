@@ -35,17 +35,30 @@ void Grab(PhysGrabObject item){foreach(var other in UnityEngine.Object.FindObjec
 var first=Item(7.5f);Tick(0);Tick(3.01f);
 Check(first.Stored&&runtime.Weight(player.Id)==7.5f&&player.physGrabber.Releases==1,"Authority stores original and releases owner grip");
 Check(!first.GetComponent<ValuableTestEffect>()!.enabled&&first.GetComponent<ValuableObject>()!.dollarValueCurrent==100,"Pause special effect and preserve original value");
+Check(UpgradeService.Speeds[player.Id]==5,"Half cargo halves Speed levels");
 var second=Item(7.5f);Tick(4);Tick(7.01f);Check(runtime.Weight(player.Id)==15,"Multiple cargo reaches exact capacity");
+Check(UpgradeService.Speeds[player.Id]==0,"Full cargo removes all Speed upgrades");
+first.GetComponent<ValuableObject>()!.dollarValueCurrent=7000.5f;
+second.GetComponent<ValuableObject>()!.dollarValueCurrent=5234.8f;
+Check(runtime.Value(player.Id)==12235,"Cargo totals current native values above 10000 without per-item rounding");
+second.GetComponent<ValuableObject>()!.dollarValueCurrent=float.PositiveInfinity;
+Check(runtime.Value(player.Id)==7000,"Invalid cargo value cannot poison HUD");
+second.GetComponent<ValuableObject>()!.dollarValueCurrent=float.MaxValue;
+Check(runtime.Value(player.Id)==int.MaxValue,"Extreme total saturates without integer overflow");
+second.GetComponent<ValuableObject>()!.dollarValueCurrent=100;
 Check(notices.Messages.Count(x=>x=="CargoFull")==1,"Reaching weight limit notifies exactly once");
 var excess=Item(.1f);Tick(8);Tick(12);Check(!excess.Stored&&notices.Messages.Count(x=>x=="TooHeavy")==1,"Overflow rejection does not spam");
 excess.playerGrabbing.Clear();
 Time.time=13;runtime.EnemyHit(player,notices);
-Check(!first.Stored&&second.Stored&&runtime.Weight(player.Id)==7.5f,"One hit spills exactly the oldest item");
+Check(!first.Stored&&!second.Stored&&runtime.Weight(player.Id)==0,"One hit scatters every item");
+Check(first.transform.position.x!=second.transform.position.x,"Spilled originals are spread around the carrier");
+Check(UpgradeService.Speeds[player.Id]==10&&runtime.Value(player.Id)==0,"Spill restores speed and clears cargo value");
 Check(first.GetComponent<ValuableTestEffect>()!.enabled&&first.Teleports==1,"Returned object resumes original effect once");
 Grab(first);Tick(13.2f);Tick(15.5f);Check(!first.Stored,"Spilled item cannot be reabsorbed immediately");first.playerGrabbing.Clear();
-player.RoomVolumeCheck.CurrentRooms.Add(new RoomVolume{Extraction=true});Tick(16);Tick(20.9f);Check(second.Stored,"Half-load waits five seconds");Tick(21.01f);
+Grab(second);Tick(16.1f);Tick(19.2f);Check(second.Stored,"Dropped cargo can be stored again after the block");
+player.RoomVolumeCheck.CurrentRooms.Add(new RoomVolume{Extraction=true});Tick(19.4f);Tick(24.3f);Check(second.Stored,"Half-load waits five seconds");Tick(24.5f);
 Check(!second.Stored&&runtime.Weight(player.Id)==0&&notices.Messages.Contains("Unloaded"),"Unload all in delivery area after wait");
-Tick(21.2f);Check(notices.Messages.Count(x=>x=="Unloaded")==1,"Empty delivery area never repeats completion notice");
+Tick(24.7f);Check(notices.Messages.Count(x=>x=="Unloaded")==1,"Empty delivery area never repeats completion notice");
 Grab(first);Tick(25);Tick(30);Check(!first.Stored,"Never store inside delivery area");
 player.RoomVolumeCheck.CurrentRooms.Clear();Tick(31);Tick(34.01f);Check(first.Stored,"Storage available again after leaving");
 config.PorterDropOnEnemyHit.Value=false;runtime.EnemyHit(player,notices);Check(first.Stored,"Spill can be disabled in config");config.PorterDropOnEnemyHit.Value=true;
@@ -66,4 +79,22 @@ failedRollback.FailStore=false;failedRollback.FailRestore=false;Tick(74);
 Check(runtime.Weight(player.Id)==0&&!failedRollback.Stored&&failedRollback.GetComponent<ValuableTestEffect>()!.enabled,"Failed rollback is retried before new storage");
 var retiring=Item(2);Tick(75);Tick(78.01f);retiring.FailRestore=true;runtime.ReleaseAll(player.Id);
 retiring.FailRestore=false;Tick(79);Check(runtime.Weight(player.Id)==0&&!retiring.Stored,"Retired carrier retries even when the role remains Porter");
+Check(UpgradeService.Speeds[player.Id]==10,"Cleanup restores speed");
+var spillRetry=Item(4);Tick(80);Tick(83.1f);
+var spillOther=Item(5);Tick(84);Tick(87.1f);spillRetry.FailRestore=true;
+runtime.EnemyHit(player,notices);
+Check(spillRetry.Stored&&!spillOther.Stored&&runtime.Weight(player.Id)==4,"A failed return cannot block spilling the other cargo");
+spillRetry.FailRestore=false;Tick(88);
+Check(!spillRetry.Stored&&runtime.Weight(player.Id)==0&&UpgradeService.Speeds[player.Id]==10,"Failed enemy spill automatically retries and restores Speed");runtime.Stop();
+for(int baseline=0;baseline<=200;baseline++)
+{
+    int previous=baseline;
+    for(int step=0;step<=60;step++)
+    {
+        int level=PorterRules.SpeedLevel(baseline,step/4f,15);
+        Check(level>=0&&level<=previous,"Speed falls monotonically with stored weight");
+        previous=level;
+    }
+    Check(PorterRules.SpeedLevel(baseline,0,15)==baseline&&previous==0,"Empty restores and full zeros every baseline");
+}
 Console.WriteLine($"PASS: {checks} Porter accounting, native-adapter lifecycle and interruption checks.");

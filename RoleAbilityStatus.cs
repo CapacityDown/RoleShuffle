@@ -5,12 +5,12 @@ using System.Text;
 
 namespace REPOJP.StageRoles;
 
-internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, RadioCooldown, TwinRest, TwinDelivery, GhostHealing, PorterLoad, PorterUnload }
+internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, RadioCooldown, TwinRest, TwinDelivery, GhostHealing, PorterLoad, PorterUnload, PorterValue }
 
 internal readonly struct AbilityValue(AbilityMetric metric, int remaining, int limit)
 {
     internal AbilityMetric Metric { get; } = metric;
-    internal int Remaining { get; } = Math.Clamp(remaining, 0, 10000);
+    internal int Remaining { get; } = Math.Clamp(remaining, 0, metric == AbilityMetric.PorterValue ? int.MaxValue : 10000);
     internal int Limit { get; } = Math.Clamp(limit, 0, 10000);
 }
 
@@ -69,7 +69,8 @@ internal static class RoleAbilityCodec
                 string[] parts = encoded.Split(',');
                 if (parts.Length != 3 || !Number(parts[0], out int code) ||
                     !Enum.IsDefined(typeof(AbilityMetric), code) ||
-                    !Number(parts[1], out int remaining) || remaining is < 0 or > 10000 ||
+                    !Number(parts[1], out int remaining) || remaining < 0 ||
+                    (code != (int)AbilityMetric.PorterValue && remaining > 10000) ||
                     !Number(parts[2], out int limit) || limit is < 0 or > 10000 ||
                     !seen.Add((AbilityMetric)code)) { valid = false; break; }
                 values.Add(new AbilityValue((AbilityMetric)code, remaining, limit));
@@ -113,6 +114,7 @@ internal static class RoleAbilityText
             AbilityMetric.TwinDelivery => ("Joint delivery", "共同納品"),
             AbilityMetric.PorterLoad => ("Cargo weight", "収納重量"),
             AbilityMetric.PorterUnload => ("Unloading", "荷下ろし"),
+            AbilityMetric.PorterValue => ("Cargo value", "収納金額"),
             _ => ("Revenge", "復讐")
         };
         return RoleText.Get(en, language, ja);
@@ -130,6 +132,7 @@ internal static class RoleAbilityText
                 AbilityMetric.DiveCooldown or AbilityMetric.Avenger or AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload;
             string amount = seconds ? $"{value.Remaining}s" : $"{value.Remaining}/{value.Limit}";
             if (value.Metric == AbilityMetric.PorterLoad) amount = RoleAbilityResources.Number(value, false) + "/" + RoleAbilityResources.Number(value, true);
+            if (value.Metric == AbilityMetric.PorterValue) amount = "$" + RoleAbilityResources.Number(value, false);
             if (value.Metric == AbilityMetric.RoyalSupport) amount = value.Remaining.ToString(CultureInfo.InvariantCulture);
             if (value.Metric is AbilityMetric.Carry or AbilityMetric.CloudDistance or AbilityMetric.GrenadeDistance) amount += "m";
             if (value.Metric is AbilityMetric.Repair or AbilityMetric.Charge) amount += "%";
@@ -145,7 +148,7 @@ internal static class RoleAbilityResources
     {
         List<AbilityValue> result = new();
         foreach (AbilityValue value in values)
-            if (IsResource(value.Metric) || value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload) result.Add(value);
+            if (IsResource(value.Metric) || value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload or AbilityMetric.PorterValue) result.Add(value);
         return result;
     }
 
@@ -157,7 +160,7 @@ internal static class RoleAbilityResources
 
     internal static string Number(AbilityValue value, bool limit) => value.Metric == AbilityMetric.PorterLoad
         ? ((limit ? value.Limit : value.Remaining) / 10f).ToString("0.#", CultureInfo.InvariantCulture)
-        : (limit ? value.Limit : value.Remaining).ToString(CultureInfo.InvariantCulture);
+        : (limit ? value.Limit : value.Remaining).ToString(value.Metric == AbilityMetric.PorterValue ? "N0" : "0", CultureInfo.InvariantCulture);
 
     internal static IReadOnlyList<AbilityValue> Select(IReadOnlyList<AbilityValue> values, bool resources)
     {
@@ -188,7 +191,7 @@ internal static class RoleAbilityResources
         AbilityMetric.Charge => StageRole.Electrician,
         AbilityMetric.Wager => StageRole.Gambler,
         AbilityMetric.TwinRest or AbilityMetric.TwinDelivery => StageRole.Twins,
-        AbilityMetric.PorterLoad or AbilityMetric.PorterUnload => StageRole.Porter,
+        AbilityMetric.PorterLoad or AbilityMetric.PorterUnload or AbilityMetric.PorterValue => StageRole.Porter,
         _ => StageRole.Jobless
     };
 }

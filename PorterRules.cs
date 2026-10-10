@@ -23,6 +23,10 @@ internal static class PorterRules
     internal static float UnloadSeconds(float weight, float capacity, float fullSeconds) =>
         !Finite(weight) || !Finite(capacity) || !Finite(fullSeconds) || capacity <= 0
             ? 0 : Math.Clamp(weight / capacity, 0f, 1f) * Math.Max(0, fullSeconds);
+
+    internal static int SpeedLevel(int baseline, float weight, float capacity) =>
+        !Finite(weight) || !Finite(capacity) || capacity <= 0 ? Math.Max(0, baseline) :
+        (int)Math.Floor(Math.Max(0, baseline) * (1d - Math.Clamp((double)weight / capacity, 0, 1)) + 0.000001);
 }
 
 internal sealed class PorterUnload

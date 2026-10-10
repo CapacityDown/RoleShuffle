@@ -4,7 +4,7 @@ from fontTools.ttLib import TTFont
 from collect_localization_strings import catalog
 root=Path(__file__).resolve().parents[1]
 generated=catalog()
-keys=[next(k for k in generated if k.startswith(p)) for p in ['Stores small valuables','Hold a valuable alone']]+['Cargo weight','Unloading']
+keys=[next(k for k in generated if k.startswith(p)) for p in ['Stores small valuables','Hold a valuable alone']]+['Cargo weight','Unloading','Cargo value']
 english=json.loads((root/'Assets/Localization/English.json').read_text(encoding='utf-8'))
 fonts={p.stem:set(TTFont(p).getBestCmap()) for p in (root/'Assets/Fonts/Localization').iterdir() if p.suffix in ('.otf','.ttf')}
 count=0

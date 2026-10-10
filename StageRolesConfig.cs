@@ -511,7 +511,7 @@ internal sealed class StageRolesConfig
         PorterCapacity = BindFloat(config, "Porter", "Capacity", 15f, 1f, 100f, "Maximum combined weight of stored valuables. No item-count limit.");
         PorterHoldSeconds = BindFloat(config, "Porter", "HoldSeconds", 3f, 1f, 30f, "Continuous solo holding outside delivery areas required to store a valuable.");
         PorterUnloadSeconds = BindFloat(config, "Porter", "FullUnloadSeconds", 10f, 0f, 60f, "Seconds to unload a full load inside the truck or extraction area; scales with stored weight. Leaving the area or losing cargo to an enemy hit restarts the wait.");
-        PorterDropOnEnemyHit = BindBool(config, "Porter", "DropOnEnemyHit", true, "Drop the oldest stored valuable on a confirmed enemy hit that reduces HP. Death releases all cargo. Movement speed is unchanged.");
+        PorterDropOnEnemyHit = BindBool(config, "Porter", "DropOnEnemyHit", true, "Scatter all stored valuables on a confirmed enemy hit that reduces HP. Death releases all cargo.");
         PorterAllowedSizes = config.Bind("Porter", "AllowedSizes", "Tiny,Small,Medium", "Comma-separated allowed valuable sizes: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Empty or unknown entries allow no additional sizes. Shop equipment is excluded.");
         TwinsWeight = RoleWeight(config, "Twins");
         TwinsCarryStrengthMultiplier = BindFloat(config, "Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f, "Grab strength while both twins directly hold the same valuable. Shop equipment is excluded.");

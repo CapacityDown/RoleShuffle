@@ -110,3 +110,15 @@ namespace REPOJP.StageRoles
     internal sealed partial class StageRoleController
     { private bool _stageReady=true,_assignmentsInitialized=true;private readonly PorterRuntime _porter=new(new());private readonly RoleNotifier _notifier=new();private bool IsAuthority()=>true; }
 }
+
+namespace REPOJP.StageRoles
+{
+    internal static class UpgradeService
+    {
+        internal static readonly Dictionary<string,int> Speeds = new();
+        internal static bool TryGetLevels(string id,out Dictionary<string,int> levels)
+        { levels=new(){{"playerUpgradeSpeed",Speeds.GetValueOrDefault(id,10)}};return true; }
+        internal static bool AddLevelsHostAuthoritativeRaw(string id,string command,int delta)
+        { Speeds[id]=Math.Max(0,Speeds.GetValueOrDefault(id,10)+delta);return true; }
+    }
+}

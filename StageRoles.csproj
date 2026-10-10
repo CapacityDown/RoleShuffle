@@ -44,6 +44,7 @@
     <Compile Include="TwinsPatches.cs" />
     <Compile Include="PorterRules.cs" />
     <Compile Include="PorterRuntime.cs" />
+    <Compile Include="PorterSpeed.cs" />
     <Compile Include="SignalmanRules.cs" />
     <Compile Include="SignalmanRuntime.cs" />
     <Compile Include="TrackerRules.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="RoleResourceLayout.cs" />
     <Compile Include="RoleResourceIcon.cs" />
     <Compile Include="RoleResourceSymbols.cs" />
+    <Compile Include="RoleResourceRaster.cs" />
     <Compile Include="RoleHudTestPreview.cs" />
     <Compile Include="RoleHudEditor.cs" />
     <Compile Include="PlayerUtilitiesCore.cs" />

@@ -368,6 +368,35 @@ PhotonView.FailSend = false; runtime.Stop();
 PhotonAccess.FailOnRead = true; KingUpgradeAura.Stop(); PhotonAccess.FailOnRead = false;
 SemiFunc.Multiplayer = false;
 
+
+// Porter deductions compose with King, native item increments and absolute resets.
+var porterKing=new RoleAssignment{Role=StageRole.King,Player=new PlayerAvatar{Id="pk"}};
+var porterAlly=new RoleAssignment{Role=StageRole.Porter,Player=new PlayerAvatar{Id="pc"}};
+void PorterAura()=>KingUpgradeAura.Tick(config,new[]{porterKing,porterAlly});
+Set("pc","Speed",10);
+PorterSpeed.Update("pc",7.5f,15);Check(Level("pc","Speed")==5,"Porter half load");
+PorterAura();Check(Level("pc","Speed")==6,"King's levels are subject to cargo weight");
+PorterAura();PorterSpeed.Update("pc",7.5f,15);Check(Level("pc","Speed")==6,"No compounded deduction");
+PorterSpeed.Update("pc",15,15);Check(Level("pc","Speed")==0,"Full load suppresses aura too");
+porterKing.Player.Living=false;PorterAura();
+Check(Level("pc","Speed")==0&&PorterSpeed.WithoutPenalty("pc","playerUpgradeSpeed",0)==10,"Aura expiry at zero preserves true baseline");
+PunManager.instance.UpgradePlayerSprintSpeed("pc",1); // Native item, before retention's postfix.
+Check(Level("pc","Speed")==1,"Native consumption still exposes its +1 for retention");
+PorterSpeed.Update("pc",15,15);
+Check(Level("pc","Speed")==0&&PorterSpeed.WithoutPenalty("pc","playerUpgradeSpeed",0)==11,"Purchase is kept while loaded");
+UpgradeService.AddLevelsHostAuthoritative("pc","Speed",3);
+Check(Level("pc","Speed")==0,"Shared upgrade receipt remains suppressed at full load");
+PorterSpeed.Update("pc",0,15);Check(Level("pc","Speed")==14,"Unloading restores all acquired levels");
+PorterSpeed.Update("pc",7.5f,15);Set("pc","Speed",20);PorterSpeed.Update("pc",7.5f,15);
+Check(Level("pc","Speed")==10,"Absolute assignment replaces the old deduction");
+UpgradeService.EnsureAtLeastLevels("pc",new[]{new UpgradeGrant("Speed","playerUpgradeSpeed",19)});
+PorterSpeed.Update("pc",0,15);Check(Level("pc","Speed")==20,"Minimum check sees unsuppressed baseline");
+SemiFunc.Multiplayer=true;PhotonView.FailSend=true;
+PorterSpeed.Update("pc",15,15);PorterSpeed.Update("pc",15,15);
+Check(Level("pc","Speed")==0&&PorterSpeed.WithoutPenalty("pc","playerUpgradeSpeed",0)==20,"Send failure cannot double-deduct local levels");
+PhotonView.FailSend=false;PorterSpeed.Update("pc",0,15);SemiFunc.Multiplayer=false;
+Check(Level("pc","Speed")==20,"Cleanup after send failure restores exact baseline");
+
 // Preserve coverage of shared remote healing locks, independent of King's removed healing.
 RoleHealingRuntime.Clear(); SemiFunc.Multiplayer = true;
 ally1.Player.photonView.IsMine = false;
@@ -386,7 +415,7 @@ var resources = new[] { AbilityMetric.Medic, AbilityMetric.Rescuer, AbilityMetri
 foreach (AbilityMetric metric in Enum.GetValues<AbilityMetric>())
     Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Budgets and cargo weight use the resource HUD");
 var allMetrics = Enum.GetValues<AbilityMetric>().Select(m => new AbilityValue(m, 0, 0)).ToArray();
-Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 3 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Budgets and cargo plus Radio, Twin rest and unload timers");
+Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 4 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Budgets and cargo plus Radio, Twin rest and unload timers");
 Check(RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterLoad, 75, 150), false) == "7.5" &&
     RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterLoad, 75, 150), true) == "15", "Cargo HUD uses decimal weight without units");
 Check(RoleResourceLayout.MaximumOffset("15.5", 50) == 70, "Decimal cargo weight leaves room before its capacity");
@@ -454,6 +483,19 @@ Check(!IconCovers(AbilityMetric.Repair,18.5f,6), "Concave wrench jaw stays open 
 Check(IconCovers(AbilityMetric.Wager,4,12) && !IconCovers(AbilityMetric.Wager,8,13), "Rounded die retains its transparent interior");
 if (args.Length == 2 && args[0] == "--export-hud-icons")
     File.WriteAllText(args[1], System.Text.Json.JsonSerializer.Serialize(resources.ToDictionary(m => m.ToString(), m => RoleResourceSymbols.Get(m))));
+
+var money=new AbilitySnapshot("cargo",StageRole.Porter,StageRole.Porter,new[]{new AbilityValue(AbilityMetric.PorterValue,int.MaxValue,0)});
+Check(RoleAbilityCodec.Decode(RoleAbilityCodec.Encode(new[]{money}))["cargo"].Values.Single().Remaining==int.MaxValue,"Cargo values survive the wire above 10000");
+Check(RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterValue,12345,0),false)=="12,345","Money groups digits without a fake maximum");
+var rasterMetrics=resources.Append(AbilityMetric.PorterValue).Distinct().ToArray();
+var rasters=rasterMetrics.ToDictionary(m=>m,m=>RoleResourceRaster.Alpha(m));
+foreach(var pair in rasters)
+{
+    Check(pair.Value.Length==256*256&&pair.Value.Any(a=>a>0&&a<255),"Every HUD symbol has supersampled coverage");
+    Check(pair.Value.Take(256).All(a=>a==0)&&pair.Value.TakeLast(256).All(a=>a==0),"Transparent texture padding avoids edge bleed");
+}
+if(args.Length==2&&args[0]=="--export-hud-rasters")
+    File.WriteAllText(args[1],System.Text.Json.JsonSerializer.Serialize(rasters.ToDictionary(p=>p.Key.ToString(),p=>Convert.ToBase64String(p.Value))));
 var snapshot = new AbilitySnapshot("p|日本語", StageRole.Imitator, StageRole.Medic, metrics);
 var radioSnapshot = new AbilitySnapshot("radio", StageRole.Signalman, StageRole.Signalman,
     new[] { new AbilityValue(AbilityMetric.RadioCooldown, 20, 0) });
