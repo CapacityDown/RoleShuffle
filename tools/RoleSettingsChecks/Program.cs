@@ -9,6 +9,16 @@ Directory.CreateDirectory(directory);
 string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
+Check(config.DualWielderEnabled.Value && config.DualWielderWeight.Value == 100, "DualWielder normal selection defaults");
+Check(config.DualWielderDelaySeconds.Value == .3f && config.DualWielderLeftOffset.Value == .5f, "DualWielder follow defaults");
+Check(RolePresets.Find(RolePreset.Standard)!.Includes(StageRole.DualWielder) && RolePresets.Find(RolePreset.Challenge)!.Includes(StageRole.DualWielder), "DualWielder presets");
+config.DualWielderDelaySeconds.Value = .65f;
+config.DualWielderLeftOffset.Value = .75f;
+file.Save();
+var dualReload = new StageRolesConfig(new ConfigFile(path, false) { SaveOnConfigSet = false });
+Check(dualReload.DualWielderDelaySeconds.Value == .65f && dualReload.DualWielderLeftOffset.Value == .75f, "DualWielder settings persist");
+config.DualWielderDelaySeconds.Value = .3f;
+config.DualWielderLeftOffset.Value = .5f;
 Check(config.SignalmanEnabled.Value && config.SignalmanWeight.Value == 100, "Signalman defaults on with normal weight");
 Check(config.SignalmanCooldownSeconds.Value == 20 && config.SignalmanDeathAlerts.Value, "Signalman cooldown and private death alert defaults");
 config.SignalmanExcludedCommands.Value = "test,secret";
@@ -191,7 +201,7 @@ RoleConfigMigration.Apply(courierFile);
 Check(File.ReadAllText(courierPath) == courierText, "Courier migration is idempotent");
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();
-Check(roles.Length == 46 && (int)StageRole.Porter == 43 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");
+Check(roles.Length == 47 && (int)StageRole.DualWielder == 44 && (int)StageRole.Porter == 43 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");
 foreach (StageRole role in roles)
 {
     var entry = config.RoleEnabledEntry(role);

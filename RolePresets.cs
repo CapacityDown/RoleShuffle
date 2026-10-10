@@ -43,7 +43,7 @@ internal static class RolePresets
             "High risk; no dedicated healers or revivers.",
             StageRole.Jobless, StageRole.Tuna, StageRole.Vampire, StageRole.Mage, StageRole.Gambler,
             StageRole.Hunter, StageRole.Executioner, StageRole.Werewolf, StageRole.Berserker,
-            StageRole.Rammer, StageRole.Diver, StageRole.Sniper, StageRole.Brawler, StageRole.Avenger, StageRole.Influenza)
+            StageRole.Rammer, StageRole.Diver, StageRole.Sniper, StageRole.Brawler, StageRole.Avenger, StageRole.Influenza, StageRole.DualWielder)
     };
 
     internal static RolePresetDefinition? Find(RolePreset id)

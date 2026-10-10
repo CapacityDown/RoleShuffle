@@ -506,6 +506,10 @@ internal sealed class StageRolesConfig
         InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
         TwinsEnabled = RoleEnabled(config, "Twins");
+        DualWielderEnabled = RoleEnabled(config, "DualWielder");
+        DualWielderWeight = RoleWeight(config, "DualWielder");
+        DualWielderDelaySeconds = BindFloat(config, "DualWielder", "FollowDelaySeconds", 0.3f, 0.05f, 2f, "Seconds by which the second melee weapon follows the first. Battery and durability are shared; both weapons consume them on hit.");
+        DualWielderLeftOffset = BindFloat(config, "DualWielder", "LeftOffset", 0.5f, 0.1f, 1.5f, "Distance in metres to the player's left for the second melee weapon.");
         PorterEnabled = RoleEnabled(config, "Porter");
         PorterWeight = RoleWeight(config, "Porter");
         PorterCapacity = BindFloat(config, "Porter", "Capacity", 15f, 1f, 100f, "Maximum combined weight of stored valuables. No item-count limit.");
@@ -541,6 +545,10 @@ internal sealed class StageRolesConfig
     }
 
     internal ConfigEntry<bool> TwinsEnabled { get; }
+    internal ConfigEntry<bool> DualWielderEnabled { get; }
+    internal ConfigEntry<int> DualWielderWeight { get; }
+    internal ConfigEntry<float> DualWielderDelaySeconds { get; }
+    internal ConfigEntry<float> DualWielderLeftOffset { get; }
     internal ConfigEntry<bool> PorterEnabled { get; }
     internal ConfigEntry<int> PorterWeight { get; }
     internal ConfigEntry<float> PorterCapacity { get; }
@@ -938,6 +946,7 @@ internal sealed class StageRolesConfig
         StageRole.Signalman => SignalmanEnabled,
         StageRole.Twins => TwinsEnabled,
         StageRole.Porter => PorterEnabled,
+        StageRole.DualWielder => DualWielderEnabled,
         StageRole.Superbot => SuperbotEnabled,
         StageRole.Disaster => DisasterEnabled,
         _ => null
@@ -989,6 +998,7 @@ internal sealed class StageRolesConfig
         StageRole.Signalman => SignalmanWeight.Value,
         StageRole.Twins => TwinsWeight.Value,
         StageRole.Porter => PorterWeight.Value,
+        StageRole.DualWielder => DualWielderWeight.Value,
         StageRole.Superbot => 1,
         StageRole.Disaster => 1,
         _ => 0

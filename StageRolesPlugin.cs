@@ -93,6 +93,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             _harmony.PatchAll(typeof(UpgradeItemRetentionPatch));
             _harmony.PatchAll(typeof(NotificationEnemyReactionPatches));
             _harmony.PatchAll(typeof(HunterBatteryPatches));
+            _harmony.PatchAll(typeof(DualWielderPatches));
             _harmony.PatchAll(typeof(MageStaffProjectilePatch));
             _harmony.PatchAll(typeof(MageBeamCarrierStartPatch));
             _harmony.PatchAll(typeof(MageBeamCarrierAimPatch));

@@ -46,6 +46,8 @@
     <Compile Include="PorterRuntime.cs" />
     <Compile Include="PorterStorage.cs" />
     <Compile Include="PorterCart.cs" />
+    <Compile Include="DualWielderHistory.cs" />
+    <Compile Include="DualWielderRuntime.cs" />
     <Compile Include="PorterSpeed.cs" />
     <Compile Include="SignalmanRules.cs" />
     <Compile Include="SignalmanRuntime.cs" />

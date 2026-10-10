@@ -45,12 +45,15 @@ internal enum StageRole
     Signalman,
     Twins,
     Porter,
+    DualWielder,
     Superbot = 1001,
     Disaster = 1002
 }
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal Entry<float> DualWielderDelaySeconds { get; } = new(0.3f);
+    internal Entry<float> DualWielderLeftOffset { get; } = new(0.5f);
     internal readonly HashSet<StageRole> DisabledRoles = new();
     internal bool RoleIsEnabled(StageRole role) => !DisabledRoles.Contains(role);
     internal Entry<float> PorterHoldSeconds { get; } = new(3f);

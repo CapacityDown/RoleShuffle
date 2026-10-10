@@ -273,5 +273,7 @@
   "Cargo weight": "貨物重量",
   "Unloading": "卸貨",
   "Hold a valuable alone for {0} seconds to store it. Allowed sizes: {1}. Total weight limit: {2}; no item-count limit. Enter the truck or extraction area to unload automatically; a full load takes {3} seconds, proportionally less for lighter loads. Leaving the area or spilling cargo restarts unloading. Enemy damage scatters all stored items: {4}. Death, role changes or disconnects release all cargo. Stored weight proportionally reduces Speed upgrade levels (rounded down), reaching 0 at full load; unloading restores them. The HUD shows cargo weight and current total value. Shop equipment cannot be stored. You can also unload into a cart by standing on it for the same wait. Stepping off or changing carts restarts the wait.": "單獨抓住貴重品{0}秒後自動收納。允許尺寸：{1}。總重量上限：{2}，不限制數量。進入卡車或交貨區會自動卸貨；滿載需{3}秒，越輕越快。離開區域或被擊中掉落貨物會重新計時。受到敵人傷害時掉落全部收納物品：{4}。死亡、更換角色或離線會釋放全部貨物。重量越大，Speed升級等級按比例降低（無條件捨去），滿載為0；卸貨後恢復。HUD顯示貨物重量和目前總價值。商店裝備無法收納。 站在手推車上等待相同時間，也可將貨物卸入車內。離開或換到另一輛車會重新計時。",
-  "Cargo value": "貨物價值"
+  "Cargo value": "貨物價值",
+  "A second melee weapon follows your swings with a short delay.": "第二把近戰武器會稍後重複你的揮動。",
+  "Holding a melee weapon alone creates one matching weapon {0} m to your left. It repeats the original weapon's movement and attacks after {1} seconds. Both weapons share battery and durability; hits with the copy consume them too. Releasing or switching the weapon, death or a role change removes the copy. The copy cannot be picked up or kept. Normally excluded from draws when no melee weapon is available.": "獨自持有近戰武器時，會在左側{0}公尺處生成一把相同武器。第二把武器延遲{1}秒重複原武器的移動與攻擊。兩把武器共用電量和耐久，第二把命中也會消耗。放手、換武器、死亡或更換職業時，第二把會消失。生成的武器不能拾取或保留。沒有近戰武器時，通常不會抽到此職業。"
 }
