@@ -40,9 +40,9 @@ Open `ROLES` → `ROLE SETTINGS` from the lobby or Escape menu. Hosts toggle any
 |Preset|Enabled roles|Play style|
 |---|---|---|
 |Standard|46|Every role, including both secret roles; restores the default ON/OFF selection.|
-|Beginner|20|Basic upgrades, recovery and protection without passive hazard or hardship roles.|
-|Cooperative|18|Team support, healing, repairs and shared survival.|
-|Chaos|15|Explosions, magic, gambles and unpredictable effects.|
+|Beginner|21|Upgrades, recovery and protection; Signalman/Porter. Excludes passive hazards and Hardship.|
+|Cooperative|19|Team support, healing, repairs and shared survival; Signalman/Twins/Porter.|
+|Chaos|16|Explosions, magic, gambles and unpredictable effects; Twins.|
 |Challenge|15|Risky and specialized roles without dedicated healing or revival roles.|
 
 Party-size, context and balance restrictions apply; presets preserve `General.Enabled` and zero weights.
@@ -520,9 +520,9 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
 |標準|46|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
-|初心者向け|20|基本強化・回復・防御が中心。自動で危害を加える役やハンデ役を除外します。|
-|協力重視|18|チーム支援・回復・修理を中心に協力して生き残ります。|
-|カオス|15|爆発・魔法・ギャンブルなど、予測しづらい展開を楽しみます。|
+|初心者向け|21|基本強化・回復・防御。Signalman・Porterを含み、自動加害役・ハンデ役は除外。|
+|協力重視|19|チーム支援・回復・修理・共有生存。Signalman・Twins・Porterを含む。|
+|カオス|16|爆発・魔法・ギャンブルなど予測しづらい展開。Twinsを含む。|
 |高難度|15|専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。|
 
 人数・状況・バランスによる抽選制限は引き続き適用されます。全体の抽選が無効の場合や候補がない場合は画面に表示。プリセットを適用しても`General.Enabled`や重み0は変更しません。
