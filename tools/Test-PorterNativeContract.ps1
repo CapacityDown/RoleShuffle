@@ -19,7 +19,7 @@ try {
     }
     $calls = 0
     foreach ($type in (AllTypes $plugin.MainModule.Types)) {
-        if ($type.FullName -notlike 'REPOJP.StageRoles.PorterRuntime*' -and $type.FullName -ne 'REPOJP.StageRoles.PorterStorage') { continue }
+        if ($type.FullName -notlike 'REPOJP.StageRoles.PorterRuntime*' -and $type.FullName -ne 'REPOJP.StageRoles.PorterStorage' -and $type.FullName -ne 'REPOJP.StageRoles.PorterCart') { continue }
         foreach ($method in $type.Methods) {
             if (-not $method.HasBody) { continue }
             foreach ($instruction in $method.Body.Instructions) {
@@ -42,6 +42,20 @@ try {
     Check ([bool]($timers | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'isActive' }) -and [bool]($timers | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'timerAlterDeactivate' })) 'Native inactive-state maintenance changed'
     $setPosition = ($physics.Methods | Where-Object Name -eq SetPositionLogic).Body.Instructions
     Check ([bool]($setPosition | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.FullName -like '*PhotonTransformView::Teleport*' })) 'Native position changes no longer synchronize to vanilla peers'
+    $ground = $game.MainModule.Types | Where-Object Name -eq PlayerCollisionGrounded
+    Check (($ground.Fields | Where-Object Name -eq Collider).FieldType.FullName -eq 'UnityEngine.SphereCollider') 'Native grounded contact collider changed'
+    $avatar = $game.MainModule.Types | Where-Object Name -eq PlayerAvatar
+    Check (($avatar.Fields | Where-Object Name -eq clientPhysRiding).FieldType.FullName -eq 'System.Boolean') 'Guest riding flag changed'
+    Check (($avatar.Fields | Where-Object Name -eq clientPhysRidingID).FieldType.FullName -eq 'System.Int32') 'Guest riding ID changed'
+    $serialize = ($avatar.Methods | Where-Object Name -eq OnPhotonSerializeView).Body.Instructions
+    foreach ($field in @('clientPhysRiding', 'clientPhysRidingID')) {
+        Check ([bool]($serialize | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -eq $field })) ('Vanilla guest no longer sends ' + $field)
+    }
+    $cart = $game.MainModule.Types | Where-Object Name -eq PhysGrabCart
+    $cartStart = ($cart.Methods | Where-Object Name -eq Start).Body.Instructions
+    Check ([bool]($cartStart | Where-Object { $_.OpCode.Name -eq 'ldstr' -and $_.Operand -eq 'In Cart' })) 'Native cart cargo volume path changed'
+    $cartObjects = ($cart.Methods | Where-Object Name -eq ObjectsInCart).Body.Instructions
+    Check ([bool]($cartObjects | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'OverlapBox' })) 'Native cart cargo volume no longer uses oriented box'
     $deactivate = ($physics.Methods | Where-Object Name -eq OverrideDeactivate).Body.Instructions
     Check ([bool]($deactivate | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'physDisabledPosition' })) 'Native parking position contract changed'
     Check ([bool]($deactivate | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'Teleport' })) 'Native parking no longer teleports the object'

@@ -94,6 +94,57 @@ runtime.EnemyHit(player,notices);
 Check(spillRetry.Stored&&!spillOther.Stored&&runtime.Weight(player.Id)==4,"A failed return cannot block spilling the other cargo");
 spillRetry.FailRestore=false;Tick(88);
 Check(!spillRetry.Stored&&runtime.Weight(player.Id)==0&&UpgradeService.Speeds[player.Id]==10,"Failed enemy spill automatically retries and restores Speed");runtime.Stop();
+// Native riding reports choose the cart; mere proximity must never unload cargo.
+PhysGrabCart Cart(int id,float x)
+{
+    var cart=new PhysGrabCart();
+    cart.transform.Children["In Cart"]=new Transform{position=new(x,2,8),localScale=new(2,2,3)};
+    cart.Components[typeof(Rigidbody)]=new Rigidbody{velocity=new(2,0,3)};
+    var view=new Photon.Pun.PhotonView{ViewID=id};view.Components[typeof(PhysGrabCart)]=cart;
+    Photon.Pun.PhotonView.Views[id]=view;return cart;
+}
+var cartA=Cart(101,10);var cartB=Cart(102,20);
+var cartCargo=Item(7.5f);Tick(90);Tick(93.1f);
+Tick(94);Check(cartCargo.Stored&&runtime.UnloadReadyAt(player.Id)==0,"Nearby cart alone cannot trigger unloading");
+player.clientPhysRiding=true;player.clientPhysRidingID=101;Tick(95);
+Check(runtime.UnloadReadyAt(player.Id)==100,"Vanilla guest riding starts proportional cart wait");
+Tick(99.8f);Check(cartCargo.Stored,"Cart unloading retains cargo until wait completes");
+player.clientPhysRiding=false;Tick(100);
+Check(cartCargo.Stored&&runtime.UnloadReadyAt(player.Id)==0,"Stepping off at deadline cancels unloading");
+player.clientPhysRiding=true;Tick(101);Check(runtime.UnloadReadyAt(player.Id)==106,"Reboarding restarts complete wait");
+player.clientPhysRidingID=102;Tick(102);Check(runtime.UnloadReadyAt(player.Id)==107,"Switching carts resets wait");
+var area=cartB.transform.Find("In Cart")!;area.position=new(35,3,12);area.rotation=new Quaternion{Yaw=MathF.PI/2};
+Tick(107.1f);Check(!cartCargo.Stored&&runtime.Weight(player.Id)==0,"Unloading returns all cargo into ridden cart");
+Check(Math.Abs(cartCargo.transform.position.x-35)<0.001f&&Math.Abs(cartCargo.transform.position.y-3.4f)<0.001f&&Math.Abs(cartCargo.transform.position.z-12)<0.001f,"Drop uses the cart's current cargo area after moving");
+Check(cartCargo.rb.velocity.x==2&&cartCargo.rb.velocity.z==3&&UpgradeService.Speeds[player.Id]==10,"Dropped cargo inherits moving cart velocity and restores Speed");
+int finished=notices.Messages.Count(x=>x=="Unloaded");Tick(108);Check(notices.Messages.Count(x=>x=="Unloaded")==finished,"Empty cart does not repeat completion notices");
+Grab(cartCargo);Tick(109);Tick(113);Check(!cartCargo.Stored,"Cannot automatically reabsorb cargo while aboard cart");cartCargo.playerGrabbing.Clear();
+for(int i=0;i<200;i++)
+{
+    Vector3 point=PorterCart.DropPosition(cartB,i)-area.position;
+    Check(Math.Abs(point.x)<1.5f&&Math.Abs(point.z)<1&&point.y>0&&point.y<1,"Release points remain inside rotated cargo volume");
+}
+player.clientPhysRiding=false;var damageCargo=Item(2);Tick(114);Tick(117.1f);
+player.clientPhysRiding=true;Tick(118);runtime.EnemyHit(player,notices);
+Check(!damageCargo.Stored&&Math.Abs(damageCargo.transform.position.x)<2,"Enemy damage aboard cart still scatters cargo around carrier");
+player.clientPhysRiding=false;var interrupted=Item(3);Tick(119);Tick(122.1f);
+player.clientPhysRiding=true;Tick(123);cartB.transform.up=Vector3.down;Tick(124);
+Check(interrupted.Stored&&runtime.UnloadReadyAt(player.Id)==0,"Overturned cart cancels unloading without returning cargo");
+cartB.transform.up=Vector3.up;Tick(125);Photon.Pun.PhotonView.Views.Remove(102);Tick(126);
+Check(interrupted.Stored&&runtime.UnloadReadyAt(player.Id)==0,"Removed cart cancels unloading");
+assignment.Role=StageRole.Runner;Tick(127);
+Check(!interrupted.Stored&&Math.Abs(interrupted.transform.position.x)<2,"Role cleanup ignores former cart destination");assignment.Role=StageRole.Porter;
+player.clientPhysRiding=false;
+// Solo uses current native contact geometry rather than requiring a nonzero network ID.
+SemiFunc.Local=player;var ground=new PlayerCollisionGrounded{physRiding=true};PlayerController.instance=new(){CollisionGrounded=ground};
+var contact=new Collider{Parent=cartA};Physics.Contacts=new[]{contact};
+Check(PorterCart.RidingCart(player)==cartA,"Solo native foot contacts resolve cart with no network ID");
+ground.physRiding=false;Check(PorterCart.RidingCart(player)==null,"Standing nearby or jumping is not riding");
+var soloCargo=Item(7.5f);Tick(130);Tick(133.1f);ground.physRiding=true;Tick(134);Tick(139.1f);
+Check(!soloCargo.Stored&&Math.Abs(soloCargo.transform.position.x-10)<0.001f,"Solo cart unloading returns original cargo");
+cartA.transform.Children.Clear();Check(PorterCart.RidingCart(player)==null,"Cart without native cargo volume cannot receive valuables");
+SemiFunc.Local=null;PlayerController.instance=null;Physics.Contacts=Array.Empty<Collider>();runtime.Stop();
+
 for(int baseline=0;baseline<=200;baseline++)
 {
     int previous=baseline;

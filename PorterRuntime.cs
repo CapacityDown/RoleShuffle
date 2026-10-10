@@ -33,6 +33,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
         internal readonly PorterLoad Load = new();
         internal readonly PorterHold Hold = new();
         internal readonly PorterUnload Unload = new();
+        internal PhysGrabCart? UnloadCart;
         internal readonly List<Cargo> Cargo = new();
         internal Vector3 LastPosition = player.transform.position;
         internal int RejectedId;
@@ -138,15 +139,18 @@ internal sealed class PorterRuntime(StageRolesConfig config)
         foreach (Carrier carrier in _carriers.Values)
         {
             if (carrier.Retiring) continue;
+            PhysGrabCart? cart = PorterCart.RidingCart(carrier.Player);
             bool delivery = IsDelivery(carrier.Player.RoomVolumeCheck);
-            if (delivery)
+            if (carrier.UnloadCart != cart) carrier.Unload.Reset();
+            carrier.UnloadCart = cart;
+            if (delivery || cart != null)
             {
                 carrier.Hold.Reset();
                 bool starting = !carrier.Unload.Active && carrier.Load.Count > 0;
                 if (carrier.Unload.Tick(true, carrier.Load.Weight, config.PorterCapacity.Value,
                     config.PorterUnloadSeconds.Value, Time.time))
                 {
-                    DropAll(carrier);
+                    DropAll(carrier, cart);
                     if (carrier.Cargo.Count == 0) notifier.NotifyResponse(carrier.Player, "Unloaded");
                 }
                 else if (starting) notifier.NotifyResponse(carrier.Player, "Unloading");
@@ -240,21 +244,24 @@ internal sealed class PorterRuntime(StageRolesConfig config)
         if (carrier.Cargo.Count == 0) _carriers.Remove(steamId);
     }
 
-    private void DropAll(Carrier carrier)
+    private void DropAll(Carrier carrier, PhysGrabCart? cart = null)
     {
         int index = 0;
-        foreach (Cargo cargo in new List<Cargo>(carrier.Cargo)) Drop(carrier, cargo, index++);
+        foreach (Cargo cargo in new List<Cargo>(carrier.Cargo)) Drop(carrier, cargo, index++, cart);
         UpdateSpeed(carrier);
         carrier.Hold.Reset();
         carrier.Unload.Reset();
     }
 
-    private bool Drop(Carrier carrier, Cargo cargo, int index)
+    private bool Drop(Carrier carrier, Cargo cargo, int index, PhysGrabCart? cart = null)
     {
         if (cargo.Physics == null) { Remove(carrier, cargo); return false; }
         try
         {
-            cargo.Restore(DropPosition(carrier, index));
+            Vector3 position = cart != null ? PorterCart.DropPosition(cart, index) : DropPosition(carrier, index);
+            cargo.Restore(position);
+            if (cart != null && cargo.Physics.rb != null && !cargo.Physics.rb.isKinematic)
+                cargo.Physics.rb.velocity = PorterCart.Velocity(cart, position);
             _storeBlockedUntil[cargo.Id] = Time.time + 3f;
             Remove(carrier, cargo);
             return true;

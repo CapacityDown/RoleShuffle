@@ -15,13 +15,26 @@ namespace UnityEngine
         public readonly Transform transform = new();
         public readonly Dictionary<Type, Component> Components = new();
         public T? GetComponent<T>() where T : Component => this as T ?? Components.Values.OfType<T>().FirstOrDefault();
+        public Component? Parent;
+        public T? GetComponentInParent<T>() where T : Component => GetComponent<T>() ?? Parent?.GetComponentInParent<T>();
         public T[] GetComponentsInChildren<T>(bool inactive) => Components.Values.OfType<T>().ToArray();
         public int GetInstanceID() => id;
     }
-    public class Behaviour : Component { public bool enabled = true; }
+    public class Behaviour : Component { public bool enabled = true; public bool isActiveAndEnabled => enabled; }
     public class MonoBehaviour : Behaviour { }
-    public class Transform { public Vector3 position; public Quaternion rotation; }
-    public struct Quaternion { public static Quaternion identity => new(); }
+    public class Transform
+    {
+        public Vector3 position,localScale=new(1,1,1),up=Vector3.up;
+        public Quaternion rotation;
+        public readonly Dictionary<string,Transform> Children=new();
+        public Transform? Find(string name)=>Children.GetValueOrDefault(name);
+    }
+    public struct Quaternion
+    {
+        public float Yaw;
+        public static Quaternion identity => new();
+        public static Vector3 operator *(Quaternion q,Vector3 p)=>new(MathF.Cos(q.Yaw)*p.x+MathF.Sin(q.Yaw)*p.z,p.y,-MathF.Sin(q.Yaw)*p.x+MathF.Cos(q.Yaw)*p.z);
+    }
     public struct Vector3(float x, float y, float z)
     {
         public float x=x, y=y, z=z;
@@ -35,12 +48,16 @@ namespace UnityEngine
         public static Vector3 operator +(Vector3 a,Vector3 b)=>new(a.x+b.x,a.y+b.y,a.z+b.z);
         public static Vector3 operator *(Vector3 a,float b)=>new(a.x*b,a.y*b,a.z*b);
     }
-    public class Rigidbody { public bool isKinematic; public bool detectCollisions=true; public Vector3 velocity,angularVelocity; }
+    public class Rigidbody : Component { public bool isKinematic; public bool detectCollisions=true; public Vector3 velocity,angularVelocity; public Vector3 GetPointVelocity(Vector3 position)=>velocity; }
+    public class Collider : Component { }
+    public class SphereCollider : Collider { public float radius=0.25f; }
     public enum QueryTriggerInteraction { Ignore }
     public struct RaycastHit { public float distance; }
     public static class LayerMask { public static int GetMask(params string[] names)=>1; }
     public static class Physics
     {
+        public static Collider[] Contacts=Array.Empty<Collider>();
+        public static Collider[] OverlapSphere(Vector3 position,float radius,int mask,QueryTriggerInteraction mode)=>Contacts;
         public static bool Raycast(Vector3 a,Vector3 b,float c,int d,QueryTriggerInteraction e)=>true;
         public static bool Raycast(Vector3 a,Vector3 b,out RaycastHit hit,float c,int d,QueryTriggerInteraction e){hit=new();return false;}
     }
@@ -51,7 +68,7 @@ namespace HarmonyLib
 {
     public static class AccessTools { public static FieldInfo? Field(Type t,string name)=>t.GetField(name,BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic); }
 }
-namespace Photon.Pun { public class PhotonView : Component { public int ViewID=42; } }
+namespace Photon.Pun { public class PhotonView : Component { public int ViewID=42; public static readonly Dictionary<int,PhotonView> Views=new(); public static PhotonView? Find(int id)=>Views.GetValueOrDefault(id); } }
 public class ValuableVolume { public enum Type { Tiny,Small,Medium,Big,Wide,Tall,VeryTall,Unknown } }
 public class ValuableObject : MonoBehaviour { public float dollarValueCurrent=100; public ValuableVolume.Type volumeType; }
 public class ValuableTestEffect : MonoBehaviour { }
@@ -101,6 +118,8 @@ public class PlayerAvatar : Component
 {
     public string Id=Guid.NewGuid().ToString();
     public bool Alive=true;
+    public bool clientPhysRiding;
+    public int clientPhysRidingID;
     public readonly PhysGrabber physGrabber=new();
     public readonly RoomVolumeCheck RoomVolumeCheck=new();
 }
@@ -135,3 +154,8 @@ namespace REPOJP.StageRoles
         { Speeds[id]=Math.Max(0,Speeds.GetValueOrDefault(id,10)+delta);return true; }
     }
 }
+
+public class PhysGrabCart : MonoBehaviour { }
+public static class SemiFunc { public static PlayerAvatar? Local; public static PlayerAvatar? PlayerAvatarLocal()=>Local; }
+public class PlayerController { public static PlayerController? instance; public PlayerCollisionGrounded? CollisionGrounded; }
+public class PlayerCollisionGrounded : Component { public bool physRiding; public int LayerMask=1; public SphereCollider Collider=new(); }

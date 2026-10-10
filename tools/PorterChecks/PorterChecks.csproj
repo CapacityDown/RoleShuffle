@@ -4,6 +4,7 @@
     <Compile Include="../../PorterRules.cs" Link="PorterRules.cs" />
     <Compile Include="../../PorterRuntime.cs" Link="PorterRuntime.cs" />
     <Compile Include="../../PorterStorage.cs" Link="PorterStorage.cs" />
+    <Compile Include="../../PorterCart.cs" Link="PorterCart.cs" />
     <Compile Include="../../PorterSpeed.cs" Link="PorterSpeed.cs" />
     <Compile Include="../../StageRole.cs" Link="StageRole.cs" />
   </ItemGroup>
