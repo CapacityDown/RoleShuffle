@@ -15,8 +15,8 @@ internal sealed partial class StageRoleController
     }
 }
 
-// All cargo and value decisions run on authority. Native inventory deactivation
-// parks the ORIGINAL network object; there is no despawn/respawn or value copy.
+// All cargo and value decisions run on authority. The ORIGINAL network object
+// is parked outside the playable map; there is no despawn/respawn or value copy.
 internal sealed class PorterRuntime(StageRolesConfig config)
 {
     private static readonly FieldInfo? OriginalMass = AccessTools.Field(typeof(PhysGrabObject), "massOriginal");
@@ -60,6 +60,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
                     name.StartsWith("Valuable", StringComparison.Ordinal) || name == "ScreamDollValuable")
                 { _paused.Add(behaviour); behaviour.enabled = false; }
             }
+            PorterStorage.Begin(Physics);
             Maintain();
         }
 
@@ -69,7 +70,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
             Physics.OverrideIndestructible(1f);
             Physics.OverrideGrabDisable(1f);
             Physics.DisableDeathPitEffect(1f);
-            Physics.OverrideDeactivate(1f);
+            PorterStorage.Maintain(Physics);
         }
 
         internal void Restore(Vector3 position)

@@ -36,6 +36,11 @@ var first=Item(7.5f);Tick(0);Tick(3.01f);
 Check(first.Stored&&runtime.Weight(player.Id)==7.5f&&player.physGrabber.Releases==1,"Authority stores original and releases owner grip");
 Check(!first.GetComponent<ValuableTestEffect>()!.enabled&&first.GetComponent<ValuableObject>()!.dollarValueCurrent==100,"Pause special effect and preserve original value");
 Check(UpgradeService.Speeds[player.Id]==5,"Half cargo halves Speed levels");
+Check(first.transform.position.x==10000&&first.transform.position.z==10000,"Flattening altitude no longer projects storage onto entrance");
+Check(!first.isActive&&first.rb.isKinematic&&!first.rb.detectCollisions,"Storage retains native inactive collision state");
+for(int frame=0;frame<120;frame++){first.NativeTimersTick(.02f);PorterStorage.Maintain(first);}
+Check(first.transform.position.x==10000&&first.transform.position.z==10000,"Native timer ticks cannot park cargo back over the entrance");
+Check(first.DeactivateCalls==1&&first.ParkingTeleports==1,"Maintenance does not resend the parking teleport each frame");
 var second=Item(7.5f);Tick(4);Tick(7.01f);Check(runtime.Weight(player.Id)==15,"Multiple cargo reaches exact capacity");
 Check(UpgradeService.Speeds[player.Id]==0,"Full cargo removes all Speed upgrades");
 first.GetComponent<ValuableObject>()!.dollarValueCurrent=7000.5f;
@@ -54,10 +59,13 @@ Check(!first.Stored&&!second.Stored&&runtime.Weight(player.Id)==0,"One hit scatt
 Check(first.transform.position.x!=second.transform.position.x,"Spilled originals are spread around the carrier");
 Check(UpgradeService.Speeds[player.Id]==10&&runtime.Value(player.Id)==0,"Spill restores speed and clears cargo value");
 Check(first.GetComponent<ValuableTestEffect>()!.enabled&&first.Teleports==1,"Returned object resumes original effect once");
+Check(first.isActive&&first.rb.detectCollisions&&!first.rb.isKinematic&&first.timerAlterDeactivate==-123,"Spilling restores native physics and normal position");
+Check(Math.Abs(first.transform.position.x)<10&&Math.Abs(first.transform.position.z)<10,"Dropped cargo returns to the playable map projection");
 Grab(first);Tick(13.2f);Tick(15.5f);Check(!first.Stored,"Spilled item cannot be reabsorbed immediately");first.playerGrabbing.Clear();
 Grab(second);Tick(16.1f);Tick(19.2f);Check(second.Stored,"Dropped cargo can be stored again after the block");
 player.RoomVolumeCheck.CurrentRooms.Add(new RoomVolume{Extraction=true});Tick(19.4f);Tick(24.3f);Check(second.Stored,"Half-load waits five seconds");Tick(24.5f);
 Check(!second.Stored&&runtime.Weight(player.Id)==0&&notices.Messages.Contains("Unloaded"),"Unload all in delivery area after wait");
+Check(second.isActive&&second.rb.detectCollisions&&Math.Abs(second.transform.position.x)<10,"Unloading returns the same object and its map marker");
 Tick(24.7f);Check(notices.Messages.Count(x=>x=="Unloaded")==1,"Empty delivery area never repeats completion notice");
 Grab(first);Tick(25);Tick(30);Check(!first.Stored,"Never store inside delivery area");
 player.RoomVolumeCheck.CurrentRooms.Clear();Tick(31);Tick(34.01f);Check(first.Stored,"Storage available again after leaving");

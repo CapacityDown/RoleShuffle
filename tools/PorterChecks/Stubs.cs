@@ -21,19 +21,21 @@ namespace UnityEngine
     public class Behaviour : Component { public bool enabled = true; }
     public class MonoBehaviour : Behaviour { }
     public class Transform { public Vector3 position; public Quaternion rotation; }
-    public struct Quaternion { }
+    public struct Quaternion { public static Quaternion identity => new(); }
     public struct Vector3(float x, float y, float z)
     {
         public float x=x, y=y, z=z;
         public static Vector3 up => new(0,1,0);
         public static Vector3 down => new(0,-1,0);
         public static Vector3 zero => new(0,0,0);
-        public float magnitude => MathF.Sqrt(x*x+y*y+z*z);
+        public float magnitude => MathF.Sqrt(sqrMagnitude);
+        public float sqrMagnitude => x*x+y*y+z*z;
+        public static Vector3 operator -(Vector3 a,Vector3 b)=>new(a.x-b.x,a.y-b.y,a.z-b.z);
         public Vector3 normalized => magnitude > 0 ? this * (1/magnitude) : zero;
         public static Vector3 operator +(Vector3 a,Vector3 b)=>new(a.x+b.x,a.y+b.y,a.z+b.z);
         public static Vector3 operator *(Vector3 a,float b)=>new(a.x*b,a.y*b,a.z*b);
     }
-    public class Rigidbody { public bool isKinematic; public Vector3 velocity,angularVelocity; }
+    public class Rigidbody { public bool isKinematic; public bool detectCollisions=true; public Vector3 velocity,angularVelocity; }
     public enum QueryTriggerInteraction { Ignore }
     public struct RaycastHit { public float distance; }
     public static class LayerMask { public static int GetMask(params string[] names)=>1; }
@@ -64,14 +66,25 @@ public class PhysGrabObject : Component
     public readonly View photonView=new();
     public float massOriginal=2;
     public bool FailStore,FailRestore,Stored;
-    public int Teleports,Restores;
+    public float timerAlterDeactivate=-123;
+    public bool isActive=true;
+    public int Teleports,Restores,ParkingTeleports,DeactivateCalls;
     public void OverrideIndestructible(float x) { }
     public void OverrideGrabDisable(float x) { }
     public void DisableDeathPitEffect(float x) { }
     public void OverrideBreakEffects(float x) { }
-    public void OverrideDeactivate(float x){if(FailStore)throw new Exception("store failure");Stored=true;transform.position=new(10000,10000,10000);}
-    public void OverrideDeactivateReset(){if(FailRestore)throw new Exception("restore failure");Restores++;Stored=false;}
-    public void Teleport(Vector3 p,Quaternion r){transform.position=p;transform.rotation=r;Teleports++;}
+    public void OverrideDeactivate(float x){if(FailStore)throw new Exception("store failure");DeactivateCalls++;Stored=true;timerAlterDeactivate=x;rb.isKinematic=true;transform.position=new(0,3000,0);}
+    public void NativeTimersTick(float elapsed)
+    {
+        if(timerAlterDeactivate>0)
+        {
+            if(isActive)transform.position=new(0,3000,0);
+            isActive=false;rb.isKinematic=true;rb.detectCollisions=false;timerAlterDeactivate-=elapsed;
+        }
+        else if(timerAlterDeactivate!=-123)OverrideDeactivateReset();
+    }
+    public void OverrideDeactivateReset(){if(FailRestore)throw new Exception("restore failure");Restores++;Stored=false;isActive=true;timerAlterDeactivate=-123;rb.detectCollisions=true;rb.isKinematic=false;}
+    public void Teleport(Vector3 p,Quaternion r){transform.position=p;transform.rotation=r;if(p.y>2000)ParkingTeleports++;else Teleports++;}
 }
 public class PhysGrabber
 {

@@ -19,7 +19,7 @@ try {
     }
     $calls = 0
     foreach ($type in (AllTypes $plugin.MainModule.Types)) {
-        if ($type.FullName -notlike 'REPOJP.StageRoles.PorterRuntime*') { continue }
+        if ($type.FullName -notlike 'REPOJP.StageRoles.PorterRuntime*' -and $type.FullName -ne 'REPOJP.StageRoles.PorterStorage') { continue }
         foreach ($method in $type.Methods) {
             if (-not $method.HasBody) { continue }
             foreach ($instruction in $method.Body.Instructions) {
@@ -36,6 +36,12 @@ try {
     $valuable = $game.MainModule.Types | Where-Object Name -eq ValuableObject
     Check (($physics.Fields | Where-Object Name -eq massOriginal).FieldType.FullName -eq 'System.Single') 'Original mass field changed'
     Check (($valuable.Fields | Where-Object Name -eq dollarValueCurrent).FieldType.FullName -eq 'System.Single') 'Current value field changed'
+    Check (($physics.Fields | Where-Object Name -eq timerAlterDeactivate).FieldType.FullName -eq 'System.Single') 'Native deactivation timer field changed'
+    Check (($physics.Fields | Where-Object Name -eq isActive).FieldType.FullName -eq 'System.Boolean') 'Native activation field changed'
+    $timers = ($physics.Methods | Where-Object Name -eq OverrideTimersTick).Body.Instructions
+    Check ([bool]($timers | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'isActive' }) -and [bool]($timers | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'timerAlterDeactivate' })) 'Native inactive-state maintenance changed'
+    $setPosition = ($physics.Methods | Where-Object Name -eq SetPositionLogic).Body.Instructions
+    Check ([bool]($setPosition | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.FullName -like '*PhotonTransformView::Teleport*' })) 'Native position changes no longer synchronize to vanilla peers'
     $deactivate = ($physics.Methods | Where-Object Name -eq OverrideDeactivate).Body.Instructions
     Check ([bool]($deactivate | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'physDisabledPosition' })) 'Native parking position contract changed'
     Check ([bool]($deactivate | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'Teleport' })) 'Native parking no longer teleports the object'
