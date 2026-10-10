@@ -77,6 +77,7 @@
     <Compile Include="RoleLanguageValues.cs" />
     <Compile Include="RoleText.cs" />
     <Compile Include="RoleGuideSync.cs" />
+    <Compile Include="RoleGuideWire.cs" />
     <Compile Include="BaseUpgradeSync.cs" />
     <Compile Include="RoleGuideFont.cs" />
     <Compile Include="RoleHud.cs" />

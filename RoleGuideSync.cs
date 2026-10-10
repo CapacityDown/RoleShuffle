@@ -19,6 +19,9 @@ internal static class RoleGuideSync
     private static StageRolesConfig? _cachedConfig;
     private static string _cachedPayload = string.Empty;
     private static string _cachedLegacyPayload = string.Empty;
+    private static object _cachedWirePayload = string.Empty;
+    private static object _cachedLegacyWirePayload = string.Empty;
+    private static string? _lastPublishError;
     private static IReadOnlyDictionary<StageRole, string>? _cachedEnglish;
     private static IReadOnlyDictionary<StageRole, string>? _cachedJapanese;
     private static readonly Dictionary<RoleGuideLanguage, IReadOnlyDictionary<StageRole, string>> TranslatedLocal = new();
@@ -56,6 +59,8 @@ internal static class RoleGuideSync
         _cachedJapanese = LocalDescriptions(config, RoleGuideLanguage.Japanese);
         _cachedPayload = Serialize(config);
         _cachedLegacyPayload = SerializeLegacy(config);
+        _cachedWirePayload = RoleGuideWire.Encode(_cachedPayload);
+        _cachedLegacyWirePayload = RoleGuideWire.Encode(_cachedLegacyPayload);
         StringBuilder enabled = new();
         foreach (StageRole role in RoleCatalog.AllRoles)
         {
@@ -75,22 +80,39 @@ internal static class RoleGuideSync
             return;
         }
 
-        EnsureCached(config);
-        if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(PropertyKey, out object current) &&
-            current is string payload && payload == _cachedPayload &&
-            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LegacyPropertyKey, out object legacy) &&
-            legacy is string legacyPayload && legacyPayload == _cachedLegacyPayload &&
-            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(EnabledPropertyKey, out object enabled) &&
-            enabled is string enabledPayload && enabledPayload == _cachedEnabledPayload)
+        try
         {
-            return;
+            Hashtable properties = new();
+            AddProperties(properties, config);
+            if (properties.Count > 0) PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+            _lastPublishError = null;
         }
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable
+        catch (Exception error) { ReportPublishFailure(error); }
+    }
+
+    internal static void AddProperties(Hashtable properties, StageRolesConfig config, bool force = false)
+    {
+        EnsureCached(config);
+        void Add(string key, object payload)
         {
-            [LegacyPropertyKey] = _cachedLegacyPayload,
-            [PropertyKey] = _cachedPayload,
-            [EnabledPropertyKey] = _cachedEnabledPayload
-        });
+            if (force || PhotonNetwork.CurrentRoom == null ||
+                !PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out object? previous) ||
+                !RoleGuideWire.Same(previous, payload)) properties[key] = payload;
+        }
+        Add(LegacyPropertyKey, _cachedLegacyWirePayload);
+        Add(PropertyKey, _cachedWirePayload);
+        Add(EnabledPropertyKey, _cachedEnabledPayload);
+    }
+
+    internal static string? ReadPayload(string key) => PhotonNetwork.CurrentRoom != null &&
+        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out object? value) ? RoleGuideWire.Decode(value) : null;
+
+    internal static void ReportPublishFailure(Exception error)
+    {
+        string message = error.GetType().Name + ": " + error.Message;
+        if (_lastPublishError == message) return;
+        _lastPublishError = message;
+        StageRolesPlugin.ModLogger.LogWarning($"Role display data could not be published; gameplay continues. {message}");
     }
 
     internal static string VisibilitySignature(StageRolesConfig config)
@@ -101,7 +123,7 @@ internal static class RoleGuideSync
             return _cachedEnabledPayload;
         }
         return PhotonNetwork.CurrentRoom != null &&
-            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(EnabledPropertyKey, out object value) &&
+            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(EnabledPropertyKey, out object? value) &&
             value is string payload ? payload : "*";
     }
 
@@ -145,10 +167,10 @@ internal static class RoleGuideSync
         string? legacyPayload = null;
         if (PhotonNetwork.CurrentRoom != null)
         {
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(PropertyKey, out object value))
-                payload = value as string;
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LegacyPropertyKey, out object legacy))
-                legacyPayload = legacy as string;
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(PropertyKey, out object? value))
+                payload = RoleGuideWire.Decode(value);
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LegacyPropertyKey, out object? legacy))
+                legacyPayload = RoleGuideWire.Decode(legacy);
         }
         if (_signaturePayload != payload || _signatureLegacyPayload != legacyPayload)
         {
@@ -220,10 +242,10 @@ internal static class RoleGuideSync
         string? currentLegacyPayload = null;
         if (PhotonNetwork.CurrentRoom != null)
         {
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(PropertyKey, out object current))
-                currentPayload = current as string;
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LegacyPropertyKey, out object legacy))
-                currentLegacyPayload = legacy as string;
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(PropertyKey, out object? current))
+                currentPayload = RoleGuideWire.Decode(current);
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LegacyPropertyKey, out object? legacy))
+                currentLegacyPayload = RoleGuideWire.Decode(legacy);
         }
         if (_remoteDescriptions != null && _remotePayload == currentPayload &&
             _remoteLegacyPayload == currentLegacyPayload && _remoteLanguage == language)
@@ -243,8 +265,8 @@ internal static class RoleGuideSync
         if (PhotonNetwork.CurrentRoom != null &&
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(
             PropertyKey,
-                out object value) &&
-            value is string payload &&
+                out object? value) &&
+            RoleGuideWire.Decode(value) is string payload &&
             TryParse(
                 payload,
                 language,
@@ -257,8 +279,8 @@ internal static class RoleGuideSync
             PhotonNetwork.CurrentRoom != null &&
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(
                 LegacyPropertyKey,
-                out object legacyValue) &&
-            legacyValue is string legacyPayload &&
+                out object? legacyValue) &&
+            RoleGuideWire.Decode(legacyValue) is string legacyPayload &&
             TryParseLegacy(
                 legacyPayload,
                 out Dictionary<StageRole, string> legacyDescriptions))

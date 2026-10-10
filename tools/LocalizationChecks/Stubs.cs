@@ -51,6 +51,8 @@ internal enum StageRole
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal readonly HashSet<StageRole> DisabledRoles = new();
+    internal bool RoleIsEnabled(StageRole role) => !DisabledRoles.Contains(role);
     internal Entry<float> PorterHoldSeconds { get; } = new(3f);
     internal Entry<float> PorterCapacity { get; } = new(15f);
     internal Entry<float> PorterUnloadSeconds { get; } = new(10f);

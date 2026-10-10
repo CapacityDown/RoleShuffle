@@ -32,8 +32,15 @@ namespace Photon.Pun
         public string Name = "private-room-name";
         public Hashtable CustomProperties = new(), LastSent = new();
         public int Sends;
+        public bool FailSend;
         public void SetCustomProperties(Hashtable data)
-        { Sends++; LastSent = data; foreach (var item in data) CustomProperties[item.Key] = item.Value; }
+        {
+            Sends++;
+            if (FailSend) throw new IOException("Injected connection failure");
+            if (data.Values.OfType<string>().Any(s => System.Text.Encoding.UTF8.GetByteCount(s) > short.MaxValue))
+                throw new NotSupportedException("String exceeds Photon limit");
+            LastSent = data; foreach (var item in data) CustomProperties[item.Key] = item.Value;
+        }
     }
     public static class PhotonNetwork
     {
@@ -89,9 +96,24 @@ namespace REPOJP.StageRoles
     { internal static string Name(PlayerAvatar player) => player.Name; internal static string SteamId(PlayerAvatar player) => player.Id; }
     internal static class RoleGuideSync
     {
-        internal static string CurrentSignature(StageRolesConfig config) => "guide";
+        internal static string Guide = "guide";
+        internal static int Failures;
+        internal static string CurrentSignature(StageRolesConfig config) => Guide;
         internal static string VisibilitySignature(StageRolesConfig config) => "visible";
         internal static void Invalidate() { }
+        internal static string? ReadPayload(string key) => Photon.Pun.PhotonNetwork.CurrentRoom != null &&
+            Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out object value) ? RoleGuideWire.Decode(value) : null;
+        internal static void ReportPublishFailure(Exception error) => Failures++;
+        internal static void AddProperties(ExitGames.Client.Photon.Hashtable properties, StageRolesConfig config, bool force = false)
+        {
+            foreach (var (key, text) in new[] { ("RoleShuffleGuideV2", Guide), ("RoleShuffleGuideV1", "legacy"), ("RoleShuffleGuideEnabledV1", "visible") })
+            {
+                object encoded = RoleGuideWire.Encode(text);
+                if (force || Photon.Pun.PhotonNetwork.CurrentRoom == null ||
+                    !Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out object value) || !RoleGuideWire.Same(value, encoded))
+                    properties[key] = encoded;
+            }
+        }
     }
     internal static class BaseUpgradeSync
     {

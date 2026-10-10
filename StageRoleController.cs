@@ -1329,10 +1329,12 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _eventRoles.Begin(_assignments);
         _diver.Begin(_assignments);
         ApplyKingCrown();
-        RoleAssignmentSync.Publish(_assignments);
-        RoleGuideSync.Publish(_config);
+        // Gameplay initialization must not depend on room display-data publishing.
+        // Begin announcements before Twins queues its partner notifications.
         _notifier.Begin(_assignments);
         CompleteStagePreparation();
+        RoleAssignmentSync.Publish(_assignments);
+        RoleGuideSync.Publish(_config);
     }
 
     private void CompleteStagePreparation()

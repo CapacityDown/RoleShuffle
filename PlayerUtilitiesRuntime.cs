@@ -167,8 +167,7 @@ internal sealed class RoleSyncStatus : MonoBehaviour
     private bool _cachedMatch;
 
     internal void Initialize(StageRolesConfig config) { _config = config; Instance = this; }
-    internal static string? Property(string key) => PhotonNetwork.CurrentRoom != null &&
-        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out object value) ? value as string : null;
+    internal static string? Property(string key) => RoleGuideSync.ReadPayload(key);
 
     private void Update()
     {
@@ -197,19 +196,30 @@ internal sealed class RoleSyncStatus : MonoBehaviour
     internal void PublishNow()
     {
         if (PhotonNetwork.CurrentRoom == null || !PhotonNetwork.IsMasterClient || GameManager.instance == null) return;
-        string[] payloads =
+        _lastPublish = Time.unscaledTime;
+        _nextPublish = Time.unscaledTime + 5f;
+        try
         {
-            RoleGuideSync.CurrentSignature(_config), RoleGuideSync.VisibilitySignature(_config),
-            BaseUpgradeSync.LocalSignature(_config), RoleAssignmentSync.LocalPayload, BaseUpgradeHistory.LocalPayload
-        };
-        Hashtable props = new();
-        for (int i = 0; i < Keys.Length; i++)
-            if (_force || Property(Keys[i]) != payloads[i]) props[Keys[i]] = payloads[i];
-        BaseUpgradeSync.AddDetails(props, _config);
-        props[StampKey] = SyncStamp.Create(PhotonNetwork.LocalPlayer.ActorNumber,
-            StageRolesPlugin.PluginVersion, PhotonNetwork.ServerTimestamp, payloads);
-        PhotonNetwork.CurrentRoom.SetCustomProperties(props);
-        _force = false; _lastPublish = Time.unscaledTime; _nextPublish = Time.unscaledTime + 5f;
+            string[] payloads =
+            {
+                RoleGuideSync.CurrentSignature(_config), RoleGuideSync.VisibilitySignature(_config),
+                BaseUpgradeSync.LocalSignature(_config), RoleAssignmentSync.LocalPayload, BaseUpgradeHistory.LocalPayload
+            };
+            Hashtable props = new();
+            RoleGuideSync.AddProperties(props, _config, _force);
+            for (int i = 1; i < Keys.Length; i++)
+                if (_force || Property(Keys[i]) != payloads[i]) props[Keys[i]] = payloads[i];
+            BaseUpgradeSync.AddDetails(props, _config);
+            props[StampKey] = SyncStamp.Create(PhotonNetwork.LocalPlayer.ActorNumber,
+                StageRolesPlugin.PluginVersion, PhotonNetwork.ServerTimestamp, payloads);
+            PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+            _force = false;
+        }
+        catch (Exception error)
+        {
+            _force = true;
+            RoleGuideSync.ReportPublishFailure(error);
+        }
     }
 
     internal void RequestRefresh()
