@@ -1,8 +1,8 @@
 {
   "generationMode": "Built-in image_gen",
-  "count": 45,
+  "count": 46,
   "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha; Signalman uses native transparent alpha",
-  "status": "44 role emblems integrated",
+  "status": "46 role emblems integrated",
   "references": {
     "anatomy": "D:/Documents/R.E.P.O. MOD/StagePhysicsEvents/Assets/Semibot_reference.png",
     "style": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
@@ -38,7 +38,8 @@
         "Electrician",
         "Warden",
         "Bodyguard",
-        "Signalman"
+        "Signalman",
+        "Porter"
       ]
     ],
     [
@@ -520,6 +521,14 @@
       "background": "#50356E",
       "prompt": "Use case: stylized-concept. Create the new Twins role badge for RoleShuffle matching the two reference badge illustrations, not editing either reference. Square raster emblem with a cream-edged rounded hexagonal frame, flat solid Special-category purple #50356E interior and true transparent alpha only outside the hexagon. Two equally sized cream R.E.P.O. Semibots stand shoulder to shoulder as twins, connected visually by one large warm orange-red heart centered in front of their torsos, indicating ONE shared health pool. Both characters' dome heads and protruding large round eyes are visible. Each has a thin horizontal mouth slit BELOW the eyes, a distinct shallow cylindrical jaw/neck band BELOW that slit, cylindrical torso, two short simple tapered cone arms attached high just below the neck and cone legs. Match Tank reference neck band carefully. No human joints or hands, no fingers. Chunky clean dark contours, simple shading and restrained flat colors matching reference, enough negative space to read clearly at64px. The two bots look alike, slight inward tilt but symmetrical scale. Fill the badge generously. No text, letters, numbers, extra hearts, extra symbols, detached props, particle decorations, texture, mosaic or pixelation. Exterior truly transparent, purple opaque inside; keep cream rim and artwork fully opaque.",
       "method": "Built-in image_gen with Tank and Medic references; exact background normalized by the existing region-mask tool."
+    },
+    {
+      "role": "Porter",
+      "file": "44-Porter.png",
+      "category": "Support",
+      "background": "#24563E",
+      "prompt": "Create ONE new RoleShuffle role badge for Porter, matching the two reference badges as an existing icon set. References are style/anatomy only, not edit targets. Square transparent PNG, clear clean flat vector-like illustration, dark thin outlines, cream edging around a pointed-top pointed-bottom hexagonal frame filling the square. Solid interior support-category green #24563E. Show a single cream R.E.P.O. Semibot porter in 3/4 view, walking slightly bent forward under a large loaded backpack or cargo sack, visibly holding small valuables (a vase and small gold bar) inside the open top of the pack. Simple readable silhouette at 64 px. True Semibot anatomy: rounded dome head, two protruding circular eyes above a small horizontal mouth slit, separate shallow cylindrical jaw/neck band visibly between head and body, cylindrical torso, two short cone legs. Short tapered pointy arms attached high just below neck band, NO human hands/fingers/elbows/wrists. Keep the eyes expressive but simple. Cargo fits inside the hexagon; no other character. Exactly match reference cream robot, cream border, dark outline weights, simple two-tone shading and uncluttered visual density. No text, letters, numbers, watermark, pixelation, gradients, glow, photorealism or extra decorations. Preserve truly transparent exterior of the badge.",
+      "method": "Built-in image_gen with Tank and Medic references; native alpha preserved and background normalized using existing region-mask tool."
     }
   ],
   "influenza": {
