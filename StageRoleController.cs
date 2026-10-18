@@ -876,7 +876,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
     {
         if (_twins != null && (changes.ContainsKey(_twins.Members[0].SteamId) || changes.ContainsKey(_twins.Members[1].SteamId)))
             StopTwins();
-        _signalmanGeneration++;
         _notifier.ResetPending();
         RoleHealingRuntime.Clear();
         RestoreKingCrown();
@@ -965,7 +964,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
         assignment.TunaStationaryTimer = 0f;
         assignment.TunaDamageTimer = 0f;
         assignment.MageNextCastAt = 0f;
-        assignment.SignalmanNextTransmitAt = 0f;
         assignment.WasAlive = PlayerState.IsLiving(assignment.Player);
         assignment.PhoenixUsed = false;
         assignment.PhoenixRevivePending = false;
@@ -1367,7 +1365,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
             assignment.RevivalHeadStillness.Observe(assignment.Player);
         }
         TickInfluenza();
-        TickSignalman();
         TickTwins();
         _porter.Tick(_assignments, _notifier);
         _dualWielder.Tick(_assignments);
@@ -1984,7 +1981,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
             return;
         }
         string deadSteamId = PlayerIdentity.SteamId(player);
-        NotifySignalmanDeath(player);
         RoleAssignment? deadAssignment = FindAssignment(player);
         if (deadAssignment != null) _overhaul.PlayerDied(deadAssignment);
         if (deadAssignment != null) { _porter.ReleaseAll(deadAssignment.SteamId); _dualWielder.Release(deadAssignment.SteamId); }
@@ -2928,7 +2924,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private static void RemoveSoloIncompatibleRoles(List<StageRole> roles)
     {
-        roles.Remove(StageRole.Signalman);
         foreach (StageRole role in SoloExcludedRoles)
         {
             roles.Remove(role);
@@ -3218,8 +3213,6 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _stageGeneration++;
         StopAllCoroutines();
         StopInfluenza();
-        _signalmanGeneration++;
-        _signalmanReportedDeaths.Clear();
         _tracker?.Stop();
         _porter?.Stop();
         _dualWielder?.Stop();

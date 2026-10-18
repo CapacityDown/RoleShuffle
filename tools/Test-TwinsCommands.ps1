@@ -92,7 +92,7 @@ public static class TwinsCommandChecks {
         Check(RoleTestCommandService.Response.Contains("2 + 4"),"Response identifies both players");
         Rejected("Twins","1","3");Rejected("Twins","2","3");
         cmd.Run("Twins","4","2");Check(RoleTestCommandService.Success && c.Applied==2,"Same pair accepted in reverse order");
-        Fresh();cmd.Run("43","1","3");Check(RoleTestCommandService.Success && c._assignments[0].Role==StageRole.Twins && c._assignments[2].Role==StageRole.Twins,"Numeric role alias uses pair route");
+        Fresh();cmd.Run("42","1","3");Check(RoleTestCommandService.Success && c._assignments[0].Role==StageRole.Twins && c._assignments[2].Role==StageRole.Twins,"Numeric role alias uses pair route");
         Fresh();cmd.Run("tWiNs","76561190000000002","4");Check(RoleTestCommandService.Success && c._assignments[1].Role==StageRole.Twins,"Steam ID and player number can be mixed");
         Fresh();cmd.Run("Twins","Player1","player3");Check(RoleTestCommandService.Success && c._assignments[2].Role==StageRole.Twins,"Distinct single-token names work");
         Fresh();
@@ -114,7 +114,7 @@ public static class TwinsCommandChecks {
         cmd.Run("random","all");Check(c.RandomTarget=="all","Random all preserved");
         cmd.Run("rd","3");Check(c.RandomTarget=="3","Single random preserved");
         Check(RoleTestCommandService.Complete("Twins","").SequenceEqual(new[]{"1","2","3","4"}),"First target suggestions exclude all");
-        Check(RoleTestCommandService.Complete("43","2","").SequenceEqual(new[]{"1","3","4"}),"Second target suggestions exclude first number");
+        Check(RoleTestCommandService.Complete("42","2","").SequenceEqual(new[]{"1","3","4"}),"Second target suggestions exclude first number");
         Check(RoleTestCommandService.Complete("Twins","76561190000000001","").SequenceEqual(new[]{"2","3","4"}),"Second target suggestions exclude first Steam ID");
         Check(RoleTestCommandService.Complete("Twins","1","2","").Count==0,"No third target suggested");
         Check(RoleTestCommandService.Complete("Runner","").Contains("all"),"Ordinary all suggestion preserved");

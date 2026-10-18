@@ -66,7 +66,7 @@ internal static class RoleGuideSync
         {
             if (!config.RoleIsEnabled(role)) continue;
             if (enabled.Length > 0) enabled.Append(',');
-            enabled.Append((int)role);
+            enabled.Append(RoleWireId.Encode(role));
         }
         _cachedEnabledPayload = enabled.ToString();
         _cachedConfig = config;
@@ -146,7 +146,7 @@ internal static class RoleGuideSync
                     foreach (string entry in payload.Split(','))
                     {
                         if (!int.TryParse(entry, out int id)) { valid = false; break; }
-                        enabled.Add((StageRole)id);
+                        enabled.Add(RoleWireId.Decode(id));
                     }
                 }
                 if (valid) _remoteEnabledRoles = enabled;
@@ -195,7 +195,7 @@ internal static class RoleGuideSync
                 Encoding.UTF8.GetBytes(_cachedEnglish![role]));
             string japanese = Convert.ToBase64String(
                 Encoding.UTF8.GetBytes(_cachedJapanese![role]));
-            payload.Append((int)role)
+            payload.Append(RoleWireId.Encode(role))
                 .Append(FieldSeparator)
                 .Append(english)
                 .Append(FieldSeparator)
@@ -215,7 +215,7 @@ internal static class RoleGuideSync
             }
             string encoded = Convert.ToBase64String(
                 Encoding.UTF8.GetBytes(_cachedEnglish![role]));
-            payload.Append((int)role)
+            payload.Append(RoleWireId.Encode(role))
                 .Append(FieldSeparator)
                 .Append(encoded);
         }
@@ -342,14 +342,14 @@ internal static class RoleGuideSync
                     !int.TryParse(
                         fields[0],
                         out int roleValue) ||
-                    !Enum.IsDefined(typeof(StageRole), roleValue))
+                    !Enum.IsDefined(typeof(StageRole), RoleWireId.Decode(roleValue)))
                 {
                     continue;
                 }
                 string encoded = language == RoleGuideLanguage.Japanese
                     ? fields[2]
                     : fields[1];
-                descriptions[(StageRole)roleValue] = Encoding.UTF8.GetString(
+                descriptions[RoleWireId.Decode(roleValue)] = Encoding.UTF8.GetString(
                     Convert.FromBase64String(encoded));
             }
         }
@@ -377,11 +377,11 @@ internal static class RoleGuideSync
                     !int.TryParse(
                         entry.Substring(0, separatorIndex),
                         out int roleValue) ||
-                    !Enum.IsDefined(typeof(StageRole), roleValue))
+                    !Enum.IsDefined(typeof(StageRole), RoleWireId.Decode(roleValue)))
                 {
                     continue;
                 }
-                descriptions[(StageRole)roleValue] = Encoding.UTF8.GetString(
+                descriptions[RoleWireId.Decode(roleValue)] = Encoding.UTF8.GetString(
                     Convert.FromBase64String(entry.Substring(separatorIndex + 1)));
             }
         }

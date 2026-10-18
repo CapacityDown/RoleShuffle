@@ -8,9 +8,9 @@ internal static class RoleGuideCatalog
     internal const string TwinsSummary = "Two teammates share one HP pool and infection. Cooperate to carry, rest, reunite and earn delivery bonuses.";
     private const string RevivalStillnessDescription = " Revival waits until the Death Head has stopped moving.";
     private const string PhoenixWaitDescription = " An unused revival prevents game over, regardless of how long the wait takes.";
-    internal const string InfluenzaSummary = "30 seconds after becoming Influenza, maximum HP is fixed at 75. Sneezes and speech can spread it to teammates, replacing their roles. Sneezes also alert enemies.";
+    internal const string InfluenzaSummary = "After incubation, maximum HP is reduced. Sneezes and speech can infect teammates and replace their roles; sneezes also alert enemies.";
     internal const string InfluenzaDescription = "Onset\n30 seconds after becoming Influenza, maximum HP is fixed at 75. You can spread infection only after symptoms begin.\n\nSneezing\nYou sneeze automatically every 30-90 seconds (about once a minute). Each teammate in front, within 5 m and 20 degrees to either side, has a 60% chance of infection.\nThe sound also alerts enemies in every direction: the base radius is 5 m and varies with the enemy's hearing.\n\nVoice and text chat\nAfter symptoms begin, each spoken utterance or chat message gives each teammate in front, within 3 m and 30 degrees to either side, a 30% chance of infection. Continuous speech counts as one utterance.\n\nIf infected\nThe teammate immediately loses their current role and becomes Influenza. They develop symptoms 30 seconds later and can then infect others. Death and revival do not reset the timer. Infection ends when the stage ends.";
-    private const string InfluenzaSummaryJapanese = "インフルエンザになって30秒後、最大HPが75に固定されます。くしゃみや会話で仲間に感染させると、相手もこの役職に変わります。くしゃみの音は敵にも届きます。";
+    private const string InfluenzaSummaryJapanese = "潜伏期間の後に最大HPが減ります。くしゃみや会話で仲間に感染すると、相手もこの役職に変わります。くしゃみは敵にも聞こえます。";
     private const string InfluenzaDescriptionJapanese = "【発症】\nインフルエンザになって30秒後、最大HPが75に固定されます。発症するまでは感染を広げません。\n\n【くしゃみ】\n発症後、30～90秒ごと（平均約1分）に自動でくしゃみをします。前方5m以内・正面から左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％の確率で感染します。\n音は周囲の敵にも届きます。基本は全方向5mで、敵の聴力によって変わります。\n\n【VC・チャット】\n発症後、VCで話すかチャットを送ると、前方3m以内・正面から左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％の確率で感染します。\nVCはひとまとまりの発話につき1回、チャットは1投稿につき1回の判定です。\n\n【感染した仲間】\n感染すると、その場で元の役職を失い、インフルエンザに変わります。その仲間も30秒後に発症し、さらに感染を広げます。死亡・蘇生で発症までの時間はリセットされず、感染はステージ終了で解除されます。";
     internal static string RevealedSecretDescription(StageRole role, RoleGuideLanguage language, string? influenzaDescription = null)
     {
@@ -51,7 +51,6 @@ internal static class RoleGuideCatalog
             StageRole.Twins => TwinsSummary,
             StageRole.DualWielder => "A second melee weapon follows your swings with a short delay.",
             StageRole.Porter => "Stores small valuables for hands-free transport. Capacity is limited by total weight; enemy hits spill cargo and unloading takes time.",
-            StageRole.Signalman => "Relays ordinary chat to living teammates at any distance. Commands are excluded; radio has a cooldown. Privately receives teammate death alerts.",
             StageRole.Tank => "Increases maximum health, making the player harder to defeat.",
             StageRole.Runner => "Increases movement speed and stamina for faster, longer sprints.",
             StageRole.Jumper => "Adds extra jumps that can be used before landing.",
@@ -67,10 +66,10 @@ internal static class RoleGuideCatalog
             StageRole.Jobless => "Deliver valuables to heal yourself and temporarily stop Courier's automatic HP loss outside the truck.",
             StageRole.Rescuer => "Revives a dead teammate by grabbing their Death Head, even while it is moving.",
             StageRole.Vampire => "Recovers health when an enemy dies nearby. Stronger enemies restore more health.",
-            StageRole.King => "Receives the vanilla Crown for the stage. Only one King can be assigned.",
+            StageRole.King => "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.",
             StageRole.Tuna => "Takes continuous damage after standing still too long. Moving stops the damage.",
             StageRole.Musician => "Heals itself and nearby living players whenever it plays an instrument note.",
-            StageRole.Mage => "Uses chat or configured facial expressions to cast five vanilla attacks and recovers health after avoiding damage. Magic cast using a held staff lasts 1.3 times as long.",
+            StageRole.Mage => "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.",
             StageRole.Gambler => "Risks a held valuable for a chance to multiply its value; losing destroys it.",
             StageRole.Hunter => "Uses less weapon battery and earns extra orbs from personal kills.",
             StageRole.Stinker => "Leaves harmful uranium clouds behind while moving. The clouds can harm other players.",
@@ -104,7 +103,6 @@ internal static class RoleGuideCatalog
             StageRole.Twins => "2人1組でHPと感染を共有します。一緒に運ぶ・休む・合流する・納品することで能力を発揮します。",
             StageRole.DualWielder => "近接武器を持つと、少し遅れて同じ動きをする2本目の武器が現れます。",
             StageRole.Porter => "小さな貴重品を収納し、手ぶらで運びます。総重量に上限があり、敵からの被弾で荷物を落とし、荷下ろしには時間がかかります。",
-            StageRole.Signalman => "通常チャットを、距離に関係なく生存中の仲間へ届けます。コマンドは除外し、通信後は再使用待ちになります。仲間の死亡通知も受け取ります。",
             StageRole.Rider => "運転中の車両が敵へ与える衝突ダメージと、プレイヤーへのノックバックが増加します。",
             StageRole.Influencer => "近くの仲間が多いほど強化されますが、物音が広がり、定期的にTTSで発言します。",
             StageRole.Werewolf => "自身が攻撃者と特定できる、他のプレイヤーへのダメージが増加します。",
@@ -131,15 +129,15 @@ internal static class RoleGuideCatalog
             StageRole.Jobless => "貴重品の配達でHPを回復し、トラック外で起きるCourierの自動HP減少を一時停止します。",
             StageRole.Rescuer => "死亡した仲間のDeath Headをつかむと、その仲間を復活させます。頭が動いていても使用できます。",
             StageRole.Vampire => "近くで敵が死亡するとHPを回復します。強い敵ほど回復量が増えます。",
-            StageRole.King => "ステージ中、バニラのCrownを受け取ります。Kingは一人だけ割り当てられます。",
+            StageRole.King => "近くの仲間の移動・つかむ能力を一時的に強化し、自分はCrownを受け取ります。",
             StageRole.Tuna => "長時間静止すると継続的にダメージを受けます。移動するとダメージが止まります。",
             StageRole.Musician => "楽器で音を鳴らすたびに、自分と周囲の生存中のプレイヤーを回復します。",
-            StageRole.Mage => "HPを消費して5種類のバニラ攻撃を発動し、しばらくダメージを受けなければHPを自動回復します。保持した杖で発動する魔法の効果時間は1.3倍になります。",
+            StageRole.Mage => "チャットや設定した表情でHPを消費して5種類の攻撃を発動し、被弾しない時間が続くとHPを回復します。保持した杖の魔法は長く続きます。",
             StageRole.Gambler => "保持したValuableを賭け、成功すると価格を倍増させ、失敗すると破壊します。",
             StageRole.Hunter => "武器のバッテリー消費を抑え、自分で倒した敵から追加オーブを獲得します。",
             StageRole.Stinker => "移動した後に有害なウラン雲を残します。雲は他のプレイヤーにも危険です。",
             StageRole.Engineer => "対応する効果付きValuableを持っている間、その効果の発動を防ぎます。",
-            StageRole.Trickster => "周囲の敵を繰り返し引きつける固定式のScream Dollデコイを設置し、有効時間中は再配置できます。",
+            StageRole.Trickster => "チャットや設定した表情で、近くの敵を引きつける固定式のScream Dollデコイを設置します。",
             StageRole.Mechanic => "破損したValuableを直接持っている間、修復します。",
             StageRole.Electrician => "停止中のバッテリーアイテムを持っている間、充電します。",
             StageRole.Warden => "Wardenの攻撃で発生した敵のスタン時間を延長します。",
@@ -162,7 +160,6 @@ internal static class RoleGuideCatalog
         RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.English) ?? role switch
         {
             StageRole.Influenza => InfluenzaDescription,
-            StageRole.Signalman => SignalmanDescription(config, false),
             StageRole.Twins => TwinsDescription(config, false),
             StageRole.Porter => PorterDescription(config, false),
             StageRole.DualWielder => DualWielderDescription(config, false),
@@ -261,7 +258,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"Identifiable attacks against enemies scale continuously with distance: {Number(config.SniperMinimumDamageMultiplier.Value)}x at point-blank range, 1x at {Number(config.SniperReferenceDistance.Value)} m, and up to {Number(config.SniperMaximumDamageMultiplier.Value)}x at {Number(config.SniperMaximumMultiplierDistance.Value)} m. Vehicle impacts and Tumble Attacks are unchanged.",
             StageRole.Imitator =>
-                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Signalman, Twins, or ???1 or ???2.",
+                "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Twins, or ???1 or ???2.",
             StageRole.Avenger => $"An ally dying within {Number(config.AvengerTriggerRadius.Value)} m grants {Number(config.AvengerDamageMultiplier.Value)}x enemy damage for {Number(config.AvengerDurationSeconds.Value)} seconds. An ally within {Number(config.AvengerHitTriggerRadius.Value)} m losing at least {config.AvengerHitDamageThreshold.Value} HP to one enemy hit grants {Number(config.AvengerHitDamageMultiplier.Value)}x damage for {Number(config.AvengerHitDuration.Value)} seconds, with a {Number(config.AvengerHitCooldown.Value)}-second cooldown. Only the stronger active bonus applies. Self-damage and friendly fire do not trigger the hit bonus.",
             StageRole.Brawler => $"Melee damage starts at {Number(config.BrawlerMeleeDamageMultiplier.Value)}x. Each consecutive hit on the same enemy adds {Number(config.BrawlerComboStep.Value)}, up to {Number(Math.Max(config.BrawlerMeleeDamageMultiplier.Value, config.BrawlerComboMaximum.Value))}x. Changing targets or going {Number(config.BrawlerComboTimeout.Value)} seconds without a hit resets the combo. Friendly fire stays at the starting multiplier. Guns, staff projectiles and lasers deal {Number(config.BrawlerRangedDamageMultiplier.Value)}x damage. Vehicle impacts, Tumble Attacks, grenades and ordinary objects are unchanged.",
             StageRole.Superbot => "???",
@@ -275,7 +272,6 @@ internal static class RoleGuideCatalog
         RoleOverhaulDescriptions.For(role, config, RoleGuideLanguage.Japanese) ?? role switch
         {
             StageRole.Influenza => InfluenzaDescriptionJapanese,
-            StageRole.Signalman => SignalmanDescription(config, true),
             StageRole.Twins => TwinsDescription(config, true),
             StageRole.Porter => PorterDescription(config, true),
             StageRole.DualWielder => DualWielderDescription(config, true),
@@ -370,7 +366,7 @@ internal static class RoleGuideCatalog
             StageRole.Sniper =>
                 $"攻撃者を特定できる敵へのダメージが距離に応じて連続変化します。密着時は{Number(config.SniperMinimumDamageMultiplier.Value)}倍、{Number(config.SniperReferenceDistance.Value)}mで1倍、{Number(config.SniperMaximumMultiplierDistance.Value)}mで最大{Number(config.SniperMaximumDamageMultiplier.Value)}倍になります。車両衝突とTumble Attackは変化しません。",
             StageRole.Imitator =>
-                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、Influenza、Signalman、Twins、???1、???2はコピーしません。",
+                "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、Influenza、Twins、???1、???2はコピーしません。",
             StageRole.Avenger => $"{Number(config.AvengerTriggerRadius.Value)}m以内の味方が死亡すると、{Number(config.AvengerDurationSeconds.Value)}秒間、敵へのダメージが{Number(config.AvengerDamageMultiplier.Value)}倍になります。また、{Number(config.AvengerHitTriggerRadius.Value)}m以内の味方が敵の1回の攻撃で{config.AvengerHitDamageThreshold.Value}HP以上失うと、{Number(config.AvengerHitDuration.Value)}秒間、敵へのダメージが{Number(config.AvengerHitDamageMultiplier.Value)}倍になります。被弾による発動は{Number(config.AvengerHitCooldown.Value)}秒ごと。効果は強い方だけが適用され、自傷・味方からの攻撃では被弾効果が発動しません。",
             StageRole.Brawler => $"近接武器は最初の一撃が{Number(config.BrawlerMeleeDamageMultiplier.Value)}倍。同じ敵に連続で当てるたびに倍率が{Number(config.BrawlerComboStep.Value)}ずつ上がり、最大{Number(Math.Max(config.BrawlerMeleeDamageMultiplier.Value, config.BrawlerComboMaximum.Value))}倍になります。別の敵に当てるか、{Number(config.BrawlerComboTimeout.Value)}秒間当てないと最初の倍率に戻ります。味方への攻撃は最初の倍率のままです。銃・杖の弾・レーザーは{Number(config.BrawlerRangedDamageMultiplier.Value)}倍。車両衝突・Tumble Attack・グレネード・通常の保持物は変化しません。",
             StageRole.Superbot => "???",
@@ -397,13 +393,6 @@ internal static class RoleGuideCatalog
             : $"Hold a valuable alone for {Number(c.PorterHoldSeconds.Value)} seconds to store it. Allowed sizes: {c.PorterAllowedSizes.Value}. Total weight limit: {Number(c.PorterCapacity.Value)}; no item-count limit. Enter the truck or extraction area to unload automatically; a full load takes {Number(c.PorterUnloadSeconds.Value)} seconds, proportionally less for lighter loads. Leaving the area or spilling cargo restarts unloading. Enemy damage scatters all stored items: {drop}. Death, role changes or disconnects release all cargo. Stored weight proportionally reduces Speed upgrade levels (rounded down), reaching 0 at full load; unloading restores them. The HUD shows cargo weight and current total value. Shop equipment cannot be stored. You can also unload into a cart by standing on it for the same wait. Stepping off or changing carts restarts the wait.";
     }
 
-    private static string SignalmanDescription(StageRolesConfig config, bool japanese)
-    {
-        string alerts = config.SignalmanDeathAlerts.Value ? "ON" : "OFF";
-        return japanese
-        ? $"通常チャットの本文を変えずに、生存中の仲間全員へ距離制限なく通知し、受信者自身の読み上げ音声で再生します。通信後は{Number(config.SignalmanCooldownSeconds.Value)}秒待ちます。待機中の投稿は通常チャットのままで、後から転送しません。コマンドや自動通知は転送しません。\n受信者の発話を待ち、カウントダウンを優先します。{Number(config.SignalmanMaximumDelaySeconds.Value)}秒以上待った通信は破棄します。\n仲間の死亡通知：{alerts}。1人では抽選されず、同時に抽選されるSignalmanは1人までです。通常VCの距離は変わりません。"
-        : $"Relays your ordinary chat unchanged to all living teammates at any distance, using their own text-to-speech voices. Cooldown: {Number(config.SignalmanCooldownSeconds.Value)} seconds. Posts during cooldown stay ordinary chat and are never relayed later. Commands and automatic notices are excluded. Waits for each listener's speech, with countdowns taking priority; drops messages after {Number(config.SignalmanMaximumDelaySeconds.Value)} seconds of waiting. Teammate death alerts: {alerts}. Requires at least two players; at most one Signalman is drawn. Ordinary voice-chat range is unchanged.";
-    }
 
     private static string Number(float value) =>
         value.ToString("0.##", CultureInfo.InvariantCulture);

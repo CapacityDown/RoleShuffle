@@ -58,7 +58,6 @@ internal sealed class RoleAssignment
     internal float GhostNextHealAt { get; set; }
     internal int HunterConfirmedKills { get; set; }
     internal float ImitatorCopyNoticeAllowedAt { get; set; }
-    internal float SignalmanNextTransmitAt { get; set; }
 }
 
 internal readonly struct UpgradeGrant
@@ -153,7 +152,6 @@ internal static class RoleCatalog
         role != StageRole.Jobless &&
         role != StageRole.Tuna &&
         role != StageRole.Influenza &&
-        role != StageRole.Signalman &&
         role != StageRole.Twins &&
         !IsSecretRole(role);
 

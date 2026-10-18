@@ -415,7 +415,7 @@ var resources = new[] { AbilityMetric.Medic, AbilityMetric.Rescuer, AbilityMetri
 foreach (AbilityMetric metric in Enum.GetValues<AbilityMetric>())
     Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Budgets and cargo weight use the resource HUD");
 var allMetrics = Enum.GetValues<AbilityMetric>().Select(m => new AbilityValue(m, 0, 0)).ToArray();
-Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 4 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Budgets and cargo plus Radio, Twin rest and unload timers");
+Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 3 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Budgets and cargo plus Twin rest and unload timers");
 Check(RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterLoad, 75, 150), false) == "7.5" &&
     RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterLoad, 75, 150), true) == "15", "Cargo HUD uses decimal weight without units");
 Check(RoleResourceLayout.MaximumOffset("15.5", 50) == 70, "Decimal cargo weight leaves room before its capacity");
@@ -457,7 +457,7 @@ Check(superbotHud.Scale > 0.6f && superbotHud.Scale < 1 && superbotHud.Left == 0
     "Seven Superbot resources shrink together in one column with room below for the role list");
 Check(RoleResourceLayout.MaximumOffset(99, 50) == 50 && RoleResourceLayout.MaximumOffset(10000, 50) == 90,
     "Maximum text follows vanilla's twenty-unit shift per extra digit");
-foreach (var metric in resources.Append(AbilityMetric.RadioCooldown).Append(AbilityMetric.TwinRest).Append(AbilityMetric.PorterUnload))
+foreach (var metric in resources.Append(AbilityMetric.TwinRest).Append(AbilityMetric.PorterUnload))
 {
     var glyph = RoleResourceSymbols.Get(metric);
     Check(glyph.Count > 0 && glyph.Count % 3 == 0 && glyph.All(p => p.X >= 0 && p.X <= 25 && p.Y >= 0 && p.Y <= 25),
@@ -497,11 +497,6 @@ foreach(var pair in rasters)
 if(args.Length==2&&args[0]=="--export-hud-rasters")
     File.WriteAllText(args[1],System.Text.Json.JsonSerializer.Serialize(rasters.ToDictionary(p=>p.Key.ToString(),p=>Convert.ToBase64String(p.Value))));
 var snapshot = new AbilitySnapshot("p|日本語", StageRole.Imitator, StageRole.Medic, metrics);
-var radioSnapshot = new AbilitySnapshot("radio", StageRole.Signalman, StageRole.Signalman,
-    new[] { new AbilityValue(AbilityMetric.RadioCooldown, 20, 0) });
-var radioDecoded = RoleAbilityCodec.Decode(RoleAbilityCodec.Encode(new[] { radioSnapshot }));
-Check(radioDecoded["radio"].Effective == StageRole.Signalman && radioDecoded["radio"].Values.Single().Remaining == 20,
-    "Signalman and its cooldown survive the HUD wire format");
 string encoded = RoleAbilityCodec.Encode(new[] { snapshot });
 var decoded = RoleAbilityCodec.Decode(encoded);
 Check(decoded.Count == 1 && decoded[snapshot.SteamId].Effective == StageRole.Medic && decoded[snapshot.SteamId].Values[0].Remaining == 90,

@@ -11,7 +11,8 @@ def decode(value):
 
 def catalog():
     result = {}
-    source = (ROOT / 'RoleGuideCatalog.cs').read_text(encoding='utf-8-sig')
+    source = '\n'.join((ROOT / filename).read_text(encoding='utf-8-sig')
+                       for filename in ['RoleGuideCatalog.cs', 'RoleGuidePresentation.cs'])
     # Merge adjacent C# literals so translators receive complete paragraphs.
     for group in re.finditer(TOKEN + r'(?:\s*\+\s*' + TOKEN + r')*', source):
         value = ''.join(decode(match[1]) for match in re.finditer(TOKEN, group[0]))

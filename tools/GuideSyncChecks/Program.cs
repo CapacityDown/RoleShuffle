@@ -24,6 +24,29 @@ Check(RoleGuideWire.Decode(17) == null, "Ignore unsupported property type");
 try { RoleGuideWire.Encode(new string('A', RoleGuideWire.MaximumPayloadBytes + 1)); Check(false, "Oversized guide rejected"); }
 catch (ArgumentException) { Check(true, "Oversized guide rejected before transport"); }
 var config = new StageRolesConfig();
+Check(RoleWireId.Encode(StageRole.Twins) == 42 && RoleWireId.Decode(42) == StageRole.Twins,
+    "Compacted Twins keeps its existing room identity");
+Check(!Enum.IsDefined(RoleWireId.Decode(41)), "Removed role data cannot become Twins");
+foreach (var role in RoleCatalog.AllRoles) Check(RoleWireId.Decode(RoleWireId.Encode(role)) == role, "Role wire round-trip");
+foreach (var language in Enum.GetValues<RoleGuideLanguage>())
+foreach (var role in RoleCatalog.AllRoles)
+{
+    string configured = RoleGuideCatalog.Description(role, config, language);
+    string overview = RoleGuidePresentation.Describe(role, language, false, configured, false);
+    string detail = RoleGuidePresentation.Describe(role, language, true, configured, false);
+    Check(overview == RoleGuideCatalog.GenericDescription(role, language), "Overview uses the concise localized catalog");
+    Check(detail == configured, "Details retain the full configured description");
+    if (role is StageRole.Superbot or StageRole.Disaster)
+    {
+        Check(overview == "???" && detail == "???", "Both modes conceal unrevealed secrets");
+        Check(RoleGuidePresentation.Describe(role, language, false, configured, true) != "???", "Revealed secret has an overview");
+        Check(RoleGuidePresentation.Describe(role, language, true, configured, true) == RoleGuideCatalog.RevealedSecretDescription(role, language), "Revealed secret retains complete details");
+    }
+}
+Check(RoleGuidePresentation.Describe(StageRole.Porter, RoleGuideLanguage.English, true, "Host capacity: 9", false) == "Host capacity: 9", "Detailed view uses host-supplied values");
+Check(RoleGuidePresentation.Describe(StageRole.Porter, RoleGuideLanguage.English, false, "Host capacity: 9", false) == RoleGuideCatalog.GenericDescription(StageRole.Porter), "Overview stays concise with custom host values");
+Check(RoleGuidePresentation.Describe(StageRole.Porter, RoleGuideLanguage.English, true, null, false) == RoleGuideCatalog.GenericDescription(StageRole.Porter), "Missing detail falls back safely");
+Check(RoleGuidePresentation.Describe(StageRole.Disaster, RoleGuideLanguage.Japanese, true, null, true, "Host illness") .EndsWith("Host illness"), "Secret detail keeps synchronized infection settings");
 var room = new Room(); PhotonNetwork.CurrentRoom = room;
 string full = RoleGuideSync.CurrentSignature(config);
 Check(full.Length > short.MaxValue, "All-role configured bilingual guide crosses the old limit");

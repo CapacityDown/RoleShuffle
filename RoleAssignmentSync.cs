@@ -66,8 +66,8 @@ internal static class RoleAssignmentSync
                 string encodedName = Convert.ToBase64String(
                     Encoding.UTF8.GetBytes(playerName ?? string.Empty));
                 records.Add(
-                    $"{assignment.SteamId},{(int)assignment.AssignedRole}," +
-                    $"{(int)assignment.Role},{encodedName}");
+                    $"{assignment.SteamId},{RoleWireId.Encode(assignment.AssignedRole)}," +
+                    $"{RoleWireId.Encode(assignment.Role)},{encodedName}");
             }
         }
         _localRoleMap = string.Join(";", records);
@@ -127,7 +127,7 @@ internal static class RoleAssignmentSync
             if ((fields.Length != 3 && fields.Length != 4) ||
                 string.IsNullOrEmpty(fields[0]) ||
                 !int.TryParse(fields[1], out int roleValue) ||
-                !Enum.IsDefined(typeof(StageRole), roleValue))
+                !Enum.IsDefined(typeof(StageRole), RoleWireId.Decode(roleValue)))
             {
                 continue;
             }
@@ -136,7 +136,7 @@ internal static class RoleAssignmentSync
             if (fields.Length == 4)
             {
                 if (!int.TryParse(fields[2], out effectiveRoleValue) ||
-                    !Enum.IsDefined(typeof(StageRole), effectiveRoleValue))
+                    !Enum.IsDefined(typeof(StageRole), RoleWireId.Decode(effectiveRoleValue)))
                 {
                     continue;
                 }
@@ -155,8 +155,8 @@ internal static class RoleAssignmentSync
             result.Add(new RoleSnapshot(
                 fields[0],
                 playerName,
-                (StageRole)roleValue,
-                (StageRole)effectiveRoleValue,
+                RoleWireId.Decode(roleValue),
+                RoleWireId.Decode(effectiveRoleValue),
                 result.Count + 1));
         }
         return CacheSnapshots(serialized, localId, localName, result);

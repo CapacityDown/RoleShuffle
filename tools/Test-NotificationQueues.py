@@ -10,8 +10,10 @@ import json
 root = Path(__file__).resolve().parents[1]
 out = root / 'tmp/notification-checks'
 out.mkdir(parents=True, exist_ok=True)
+for stale in ['SignalmanRules.cs','SignalmanRuntime.cs']:
+    (out/stale).unlink(missing_ok=True)
 sources = []
-for file in ('RoleNotifier.cs', 'PlayerMessageActivity.cs', 'StageRole.cs', 'SignalmanRules.cs', 'SignalmanRuntime.cs'):
+for file in ('RoleNotifier.cs', 'PlayerMessageActivity.cs', 'StageRole.cs', 'PrivatePlayerSpeech.cs'):
     body = (root/file).read_text(encoding='utf-8-sig')
     (out/file).write_text(body, encoding='utf-8')
     sources.append(dict(file=file, sha256=hashlib.sha256(body.encode()).hexdigest()))
@@ -170,15 +172,13 @@ public static class Clock {
 namespace REPOJP.StageRoles {
  internal sealed class Entry<T>(T v) { internal T Value=v; }
  internal sealed class StageRolesConfig {
-  internal Entry<bool> AnnouncementsEnabled=new(true), Enabled=new(true), SignalmanDeathAlerts=new(true);
-  internal Entry<float> SignalmanCooldownSeconds=new(20),SignalmanMaximumDelaySeconds=new(5);
-  internal Entry<string> SignalmanExcludedCommands=new("star,roll,gravity,void,laser,decoy"),SignalmanExcludedPrefixes=new("!");
+  internal Entry<bool> AnnouncementsEnabled=new(true), Enabled=new(true);
   internal Entry<float> AnnouncementDelaySeconds=new(0), StageFluxAnnouncementDelaySeconds=new(0);
   internal Entry<float> InfluencerTtsQuietPeriodSeconds=new(0), InfluencerTtsInvestigateRadius=new(20);
  }
  internal sealed class RoleAssignment(PlayerAvatar player,StageRole role=StageRole.Tank) {
   internal PlayerAvatar Player=player; internal string SteamId=>Player.Id;
-  internal StageRole AssignedRole=role,Role=role; internal float InfluencerNextTtsAt,SignalmanNextTransmitAt;
+  internal StageRole AssignedRole=role,Role=role; internal float InfluencerNextTtsAt;
  }
  internal static class RoleCatalog {
   internal static string AssignmentName(StageRole assigned,StageRole effective)=>assigned.ToString();
@@ -189,12 +189,8 @@ namespace REPOJP.StageRoles {
  internal sealed partial class StageRoleController(RoleNotifier notifier) {
   private readonly RoleNotifier _notifier=notifier;
   internal readonly StageRolesConfig _config=new();
-  private bool _stageReady=true,_assignmentsInitialized=true;
   private static bool IsAuthority()=>SemiFunc.Authority;
   internal readonly List<RoleAssignment> _assignments=new();
-  internal void Death(PlayerAvatar player)=>NotifySignalmanDeath(player);
-  internal void TickRadio()=>TickSignalman();
-  internal void StopRadio(){_stageReady=false;_assignmentsInitialized=false;_signalmanGeneration++;_notifier.End();}
   internal bool HasPendingAutomaticNotifications(PlayerAvatar p)=>_notifier.HasPendingNotificationsFor(p);
   internal bool TrySendPlayerMessage(PlayerAvatar p,string message)=>_notifier.TrySendPlayerMessage(p,message);
  }
@@ -393,100 +389,27 @@ Clock.Reset();
  Check(a.Sent.Count==2&&EnemyDirector.instance!.Investigations==2,"Blocked Influencer speaks when its own channel clears");
  Check(StageFluxCompatibility.Reservations==0,"Influencer no longer reserves all players");
 }
-foreach(var text in new[]{"", "  ", "/roles", " /unknown arg", "STAR", " roll ", "gravity", "void", "laser", "decoy", "!mod command"})
- Check(!SignalmanRules.IsOrdinaryChat(text,"", "!"),"Commands/empty input excluded: "+text);
-foreach(var text in new[]{"出口に 戻って！", "a laser is here", "star power", "hello /roles", "Hi!"})
- Check(SignalmanRules.IsOrdinaryChat(text,"", "!"),"Ordinary sentence retained: "+text);
-Check(!SignalmanRules.IsOrdinaryChat("CUSTOM", " custom ", "")&&SignalmanRules.IsOrdinaryChat("custom text","custom",""),"Extra exclusions match full input only");
-Check(!SignalmanRules.IsOrdinaryChat("#command args", "", "#"),"Extra command prefixes supported");
 Clock.Reset();
 {
- var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("sender");var b=new PlayerAvatar("remote");var h=new PlayerAvatar("host"){isLocal=true};
- var assignment=new RoleAssignment(a,StageRole.Signalman);c._assignments.AddRange(new[]{assignment,new RoleAssignment(b),new RoleAssignment(h)});
- string raw="  出口に 戻って！  ";a.ChatMessageSend(raw);c.OnSignalmanChat(a,raw,new(a.photonView.Owner));
- Check(Clock.Rpcs.Count(r=>r.Message==raw)==2&&h.Sent.Single().Message==raw,"Original Unicode, spaces and punctuation reach each living teammate unchanged");
- Check(Clock.Rpcs.Where(r=>r.Message==raw).All(r=>r.View==r.Actor)&&Clock.Rpcs.All(r=>r.Actor!=a.photonView.Owner!.ActorNumber),"Each recipient receives only its own private native voice, with no sender echo");
- Check(Clock.Rpcs.Count(r=>r.Message=="")==2,"Original proximity voice is stopped only for the receiving listeners");
- Check(assignment.SignalmanNextTransmitAt==20,"Accepted transmission starts the 20-second cooldown");
- int count=Clock.Rpcs.Count;c.OnSignalmanChat(a,"/roles",new(a.photonView.Owner));Clock.Run(19.8f);c.OnSignalmanChat(a,"NotYet",new(a.photonView.Owner));
- Check(Clock.Rpcs.Count==count&&assignment.SignalmanNextTransmitAt==20,"Commands and cooldown posts neither relay nor extend cooldown");
- Clock.Run(0.3f);c.OnSignalmanChat(a,"ReadyNow",new(a.photonView.Owner));Check(Clock.Rpcs.Count(r=>r.Message=="ReadyNow")==2,"Next post after 20 seconds relays normally");
- Clock.Run(22);Check(Clock.Rpcs.All(r=>r.Message!="NotYet"),"Cooldown posts are never replayed later");
+ var n=Create();var a=new PlayerAvatar("tracker");var b=new PlayerAvatar("other");
+ Check(n.NotifyPrivate(a,"East",()=>true,()=>PrivatePlayerSpeech.Send(a,"East")),"Private notices remain available after removing radio");
+ Check(Clock.Rpcs.Count==1 && Clock.Rpcs[0].Actor==a.photonView.Owner!.ActorNumber,"Tracker notice targets only its receiver");
+ Check(!PrivatePlayerSpeech.IsDispatching,"Private transport clears its dispatch guard");
+ Check(n.TrySendPlayerMessage(b,"Other"),"Private notice does not block another player");
 }
 Clock.Reset();
 {
- var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("sender"){isLocal=true};var b=new PlayerAvatar("other");
- var assignment=new RoleAssignment(a,StageRole.Signalman);c._assignments.AddRange(new[]{assignment,new RoleAssignment(b)});
- c.OnSignalmanChat(a,"AutoNotice",new(a.photonView.Owner));Check(Clock.Rpcs.Count==0,"Host automatic notifications are never relayed");
- InfluenzaChatPatches.LocalSubmission=true;c.OnSignalmanChat(a,"Manual",new(a.photonView.Owner));Check(Clock.Rpcs.Any(r=>r.Message=="Manual"),"Host manual chat is accepted");
- Check(!PrivatePlayerSpeech.IsDispatching,"Private transport restores its reentrancy guard");
+ var n=Create();var a=new PlayerAvatar("tracker"){isLocal=true,Duration=20};a.ChatMessageSend("Busy");
+ n.NotifyPrivate(a,"Stale",()=>true,()=>PrivatePlayerSpeech.Send(a,"Stale"));Clock.Run(6);
+ Check(Clock.Rpcs.Count==0&&!n.HasPendingNotificationsFor(a),"Private notices keep their five-second waiting limit");
 }
 Clock.Reset();
 {
- var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("sender");var b=new PlayerAvatar("receiver");
- var assignment=new RoleAssignment(a,StageRole.Signalman);c._assignments.AddRange(new[]{assignment,new RoleAssignment(b)});
- c.OnSignalmanChat(a,"Forged",new(b.photonView.Owner));c.OnSignalmanChat(a,"MissingSender",new(null));
- Check(Clock.Rpcs.Count==0&&assignment.SignalmanNextTransmitAt==0,"Only the avatar owner can submit radio chat");
- assignment.Role=StageRole.Runner;c.OnSignalmanChat(a,"WrongRole",new(a.photonView.Owner));
- Check(Clock.Rpcs.Count==0,"Non-Signalman chat stays ordinary");
- assignment.Role=StageRole.Signalman;b.gameObject.activeInHierarchy=false;c.OnSignalmanChat(a,"NoAudience",new(a.photonView.Owner));
- Check(Clock.Rpcs.Count==0&&assignment.SignalmanNextTransmitAt==0,"No living audience consumes no cooldown");
- b.gameObject.activeInHierarchy=true;SemiFunc.Authority=false;c.OnSignalmanChat(a,"Client",new(a.photonView.Owner));
- Check(Clock.Rpcs.Count==0,"Non-host instances never relay");
+ var n=Create();var a=new PlayerAvatar("tracker");Clock.RpcFailure=true;
+ n.NotifyPrivate(a,"Failure",()=>true,()=>PrivatePlayerSpeech.Send(a,"Failure"));
+ Check(!PrivatePlayerSpeech.IsDispatching&&!n.HasPendingNotificationsFor(a),"Failed private transport releases its queue and guard");
 }
-Clock.Reset();
-{
- var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("sender");var b=new PlayerAvatar("receiver"){Duration=1};
- var assignment=new RoleAssignment(a,StageRole.Signalman);c._assignments.AddRange(new[]{assignment,new RoleAssignment(b)});
- b.ChatMessageSend("Busy");c.OnSignalmanChat(a,"Queued",new(a.photonView.Owner));
- Check(Clock.Rpcs.Count==0,"Private radio waits for the receiver's native speech");
- a.ChatMessageSend("LaterChat");Clock.Run(2);
- Check(Clock.Rpcs.Count==1&&Clock.Rpcs[0].Message=="Queued","A later ordinary chat from the sender is never stopped by delayed radio");
- Check(PlayerMessageActivity.IsBusy(b),"Private remote playback reserves that player's notification channel");
- n.NotifyCountdown(b,"5",()=>true);Clock.Run(2);
- Check(!PlayerMessageActivity.IsBusy(b),"A priority count interrupts and clears the private playback reservation");
-}
-Clock.Reset();
-{
- var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("sender");var b=new PlayerAvatar("receiver"){Duration=10};
- c._assignments.AddRange(new[]{new RoleAssignment(a,StageRole.Signalman),new RoleAssignment(b)});
- b.ChatMessageSend("Busy");c.OnSignalmanChat(a,"Stale",new(a.photonView.Owner));Clock.Run(6);
- Check(Clock.Rpcs.Count==0&&!n.HasPendingNotificationsFor(b),"Stale radio expires promptly without holding the queue for 15 seconds");
- Clock.Run(5);Check(Clock.Rpcs.Count==0,"Stale radio is never sent after the listener becomes free");
-}
-Clock.Reset();
-{
- var settings=new StageRolesConfig();settings.SignalmanMaximumDelaySeconds.Value=30;
- var n=Create(settings);var c=new StageRoleController(n);c._config.SignalmanMaximumDelaySeconds.Value=30;
- var a=new PlayerAvatar("sender");var b=new PlayerAvatar("receiver"){Duration=20};
- c._assignments.AddRange(new[]{new RoleAssignment(a,StageRole.Signalman),new RoleAssignment(b)});
- b.ChatMessageSend("LongSpeech");c.OnSignalmanChat(a,"LongWait",new(a.photonView.Owner));Clock.Run(21);
- Check(Clock.Rpcs.Any(r=>r.Message=="LongWait"),"Configured 30-second radio wait exceeds the ordinary 15-second queue limit");
-}
-foreach(string change in new[]{"role","stage","depart","dead"}) {
- Clock.Reset();var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("sender");var b=new PlayerAvatar("receiver");
- var assignment=new RoleAssignment(a,StageRole.Signalman);c._assignments.AddRange(new[]{assignment,new RoleAssignment(b)});
- b.ChatMessageSend("Busy");c.OnSignalmanChat(a,"Cancel",new(a.photonView.Owner));
- if(change=="role")assignment.Role=StageRole.Runner;else if(change=="stage")c.StopRadio();else if(change=="depart")c._assignments.Remove(assignment);else a.gameObject.activeInHierarchy=false;
- Clock.Run(2);Check(Clock.Rpcs.Count==0,"Pending radio cancelled after "+change);
-}
-Clock.Reset();
-{
- var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("radio");var b=new PlayerAvatar("Fallen Ally");
- c._assignments.AddRange(new[]{new RoleAssignment(a,StageRole.Signalman),new RoleAssignment(b)});
- b.gameObject.activeInHierarchy=false;c.Death(b);c.Death(b);
- Check(Clock.Rpcs.Count==1&&Clock.Rpcs[0].Message=="Down:FallenAlly"&&Clock.Rpcs[0].Actor==a.photonView.Owner!.ActorNumber,"Death alert is short, private, and once per death");
- Clock.Run(10);b.gameObject.activeInHierarchy=true;c.TickRadio();b.gameObject.activeInHierarchy=false;c.Death(b);
- Check(Clock.Rpcs.Count==2,"Revival rearms death alerts");
-}
-Clock.Reset();
-{
- var n=Create();var c=new StageRoleController(n);var a=new PlayerAvatar("sender");var b=new PlayerAvatar("receiver");
- c._assignments.AddRange(new[]{new RoleAssignment(a,StageRole.Signalman),new RoleAssignment(b)});
- Clock.RpcFailure=true;c.OnSignalmanChat(a,"Failed",new(a.photonView.Owner));
- Check(!PrivatePlayerSpeech.IsDispatching&&!n.HasPendingNotificationsFor(b),"Transport failure releases dispatch and queue state");
-}
-Console.WriteLine($"Notification and Signalman checks passed: {checks}");
+Console.WriteLine($"Notification and private notice checks passed: {checks}");
 ''', encoding='utf-8')
 (out/'sources.json').write_text(json.dumps(sources, indent=2)+'\n', encoding='utf-8')
 print(f'Generated {out}; {len(sources)} production source sections recorded.')

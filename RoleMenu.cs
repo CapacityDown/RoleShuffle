@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 539;
+    private const int RoleUiBuildNumber = 540;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -49,6 +49,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private static string? _guideVisibilitySignature;
     private static int _guideSignatureRevealed;
     private static string _guideSignature = string.Empty;
+    private static bool _guideDetails;
     private static IReadOnlyList<RoleSnapshot>? _signatureAssignments;
     private static string _assignmentsSignature = string.Empty;
     private static bool _signatureTestingEnabled;
@@ -206,6 +207,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             ? RoleMenuView.Assignments
             : RoleMenuView.Guide;
         _guideLanguage = SavedLanguage;
+        _guideDetails = false;
         _utilityMessage = string.Empty;
         _openSignature = string.Empty;
         _selectedAssignmentKey = string.Empty;
@@ -590,19 +592,20 @@ internal sealed partial class RoleMenu : MonoBehaviour
         }
 
         List<RoleMenuEntry> entries = new(visibleRoles.Count * 4);
+        entries.Add(new RoleMenuEntry((_guideDetails ? "  " : "> ") + Localized("Overview", "概要"),
+            20f, FontStyles.Bold, 36f, false, UseLanguageFont,
+            () => SwitchGuideMode(page, false), isControl: true));
+        entries.Add(new RoleMenuEntry((_guideDetails ? "> " : "  ") + Localized("Details", "詳細"),
+            20f, FontStyles.Bold, 36f, false, UseLanguageFont,
+            () => SwitchGuideMode(page, true), isControl: true));
         for (int roleIndex = 0; roleIndex < visibleRoles.Count; roleIndex++)
         {
             StageRole role = visibleRoles[roleIndex];
-            string description = descriptions.TryGetValue(role, out string value)
-                ? value
-                : RoleGuideCatalog.GenericDescription(role, _guideLanguage);
             bool secretAssigned = RoleCatalog.IsSecretRole(role) && IsRoleAssigned(role);
-            if (RoleCatalog.IsSecretRole(role))
-            {
-                description = secretAssigned
-                    ? RoleGuideCatalog.RevealedSecretDescription(role, _guideLanguage, descriptions.TryGetValue(StageRole.Influenza, out string illness) ? illness : null)
-                    : "???";
-            }
+            descriptions.TryGetValue(role, out string? configuredDetails);
+            descriptions.TryGetValue(StageRole.Influenza, out string? influenzaDetails);
+            string description = RoleGuidePresentation.Describe(role, _guideLanguage, _guideDetails,
+                configuredDetails, secretAssigned, influenzaDetails);
             entries.Add(new RoleMenuEntry(
                 secretAssigned
                     ? RoleCatalog.AssignmentName(role)
@@ -642,6 +645,14 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _openSignature = BuildGuideSignature();
     }
 
+    private static void SwitchGuideMode(REPOPopupPage page, bool details)
+    {
+        if (!ReferenceEquals(_openPage, page) || _activeView != RoleMenuView.Guide || _guideDetails == details) return;
+        _guideDetails = details;
+        page.scrollView.SetScrollPosition(0f);
+        RefreshGuideRows(page);
+    }
+
     private static string BuildGuideSignature()
     {
         string payload = RoleGuideSync.CurrentSignature(_config);
@@ -657,7 +668,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             _guideSignature = payload + "|enabled:" + visibility +
                 "|secrets:" + revealed;
         }
-        return _guideSignature;
+        return _guideSignature + "|details:" + _guideDetails;
     }
 
     private static bool IsRoleAssigned(StageRole role)
@@ -1195,6 +1206,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _activeView = RoleMenuView.Assignments;
         _selectLocalAssignmentOnRefresh = false;
         _guideLanguage = RoleGuideLanguage.English;
+        _guideDetails = false;
         _assignmentsEnabled = true;
     }
 

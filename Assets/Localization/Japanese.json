@@ -182,5 +182,12 @@
   "Two teammates share one HP pool and infection. Cooperate to carry, rest, reunite and earn delivery bonuses.": "2人1組でHPと感染を共有します。一緒に運ぶ・休む・合流する・納品することで能力を発揮します。",
   "At least two players; at most one pair. Combine current and maximum HP and share damage and healing. Either death kills both; either revival revives both. HP transfers within the pair are disabled. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving also ends sharing, preserving each player's remaining HP proportion.\n\nCarry: holding the same valuable together gives {0}x grab strength and reduces collision value loss by {1}%. Shop equipment is excluded.\nRest: both crouch within {2} m and stay still without damage for {3} seconds to heal {4}% of shared maximum HP and refill both players' stamina. Pair cooldown: {5} seconds.\nReunite: after separating by {6} m, sprint toward your partner at about {7}x speed until within {8} m.\nDeliver: carry a valuable together outside delivery areas for {9} seconds, then bring it into the truck or extraction area with both players within {10} m of it. Value +{11}%, once per item; stage bonus cap ${12}.": "2人以上で最大1組。2人の現在HP・最大HPを合算し、被弾と回復を共有します。片方の死亡で2人とも死亡し、片方への蘇生で2人とも復活します。相方へのHP渡しは無効です。片方への感染で2人ともInfluenzaになり、共有を解除します。ステージ終了・相方の離脱でも解除し、残りHPの割合を保ちます。\n\n共同運搬：同じ貴重品を2人でつかむ間、掴む力{0}倍、衝突による価値減少を{1}％軽減。購入装備は対象外です。\n共同休憩：{2}m以内で2人ともしゃがみ、被弾せず{3}秒静止すると共有最大HPの{4}％を回復し、両者のスタミナを全回復します。再使用は{5}秒後。\n合流支援：{6}m以上離れると、相方へ走る間の速度を約{7}倍にします。{8}m以内で終了。\n共同納品：納品エリア外で同じ貴重品を{9}秒共同運搬し、2人がその品の{10}m以内にいる状態でトラック・納品所へ入れると価値＋{11}％。1品1回、ステージ合計上限${12}。",
   "Rest together": "共同休憩",
-  "Joint delivery": "共同納品"
+  "Joint delivery": "共同納品",
+  "Overview": "概要",
+  "Details": "詳細",
+  "After incubation, maximum HP is reduced. Sneezes and speech can infect teammates and replace their roles; sneezes also alert enemies.": "潜伏期間の後に最大HPが減ります。くしゃみや会話で仲間に感染すると、相手もこの役職に変わります。くしゃみは敵にも聞こえます。",
+  "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.": "近くの仲間の移動・つかむ能力を一時的に強化し、自分はCrownを受け取ります。",
+  "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.": "チャットや設定した表情でHPを消費して5種類の攻撃を発動し、被弾しない時間が続くとHPを回復します。保持した杖の魔法は長く続きます。",
+  "Combines many roles' upgrades and abilities.": "多くの役職のアップグレードと能力を併せ持ちます。",
+  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber・Stinker・Tuna・Influenzaの能力と危険性を併せ持ちます。"
 }

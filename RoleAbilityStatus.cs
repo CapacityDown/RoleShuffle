@@ -5,7 +5,7 @@ using System.Text;
 
 namespace REPOJP.StageRoles;
 
-internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, RadioCooldown, TwinRest, TwinDelivery, GhostHealing, PorterLoad, PorterUnload, PorterValue }
+internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, TwinRest = 21, TwinDelivery, GhostHealing, PorterLoad, PorterUnload, PorterValue }
 
 internal readonly struct AbilityValue(AbilityMetric metric, int remaining, int limit)
 {
@@ -38,7 +38,7 @@ internal static class RoleAbilityCodec
                 values.Add(FormattableString.Invariant($"{(int)value.Metric},{value.Remaining},{value.Limit}"));
             }
             string id = Convert.ToBase64String(Encoding.UTF8.GetBytes(snapshot.SteamId));
-            rows.Add(FormattableString.Invariant($"{id}|{(int)snapshot.Assigned}|{(int)snapshot.Effective}|{string.Join(";", values)}"));
+            rows.Add(FormattableString.Invariant($"{id}|{RoleWireId.Encode(snapshot.Assigned)}|{RoleWireId.Encode(snapshot.Effective)}|{string.Join(";", values)}"));
         }
         return string.Join("\n", rows);
     }
@@ -53,8 +53,8 @@ internal static class RoleAbilityCodec
         {
             string[] fields = row.Split('|');
             if (fields.Length != 4 || fields[0].Length > 128 ||
-                !Number(fields[1], out int assigned) || !Enum.IsDefined(typeof(StageRole), assigned) ||
-                !Number(fields[2], out int effective) || !Enum.IsDefined(typeof(StageRole), effective)) continue;
+                !Number(fields[1], out int assigned) || !Enum.IsDefined(typeof(StageRole), RoleWireId.Decode(assigned)) ||
+                !Number(fields[2], out int effective) || !Enum.IsDefined(typeof(StageRole), RoleWireId.Decode(effective))) continue;
             string id;
             try { id = Encoding.UTF8.GetString(Convert.FromBase64String(fields[0])); }
             catch (FormatException) { continue; }
@@ -75,7 +75,7 @@ internal static class RoleAbilityCodec
                     !seen.Add((AbilityMetric)code)) { valid = false; break; }
                 values.Add(new AbilityValue((AbilityMetric)code, remaining, limit));
             }
-            if (valid) result[id] = new AbilitySnapshot(id, (StageRole)assigned, (StageRole)effective, values);
+            if (valid) result[id] = new AbilitySnapshot(id, RoleWireId.Decode(assigned), RoleWireId.Decode(effective), values);
         }
         return result;
     }
@@ -109,7 +109,6 @@ internal static class RoleAbilityText
             AbilityMetric.DiveActive => ("Dive remaining", "潜行残り"),
             AbilityMetric.DiveCooldown => ("Dive", "潜行"),
             AbilityMetric.Wager => ("Wagers", "賭け"),
-            AbilityMetric.RadioCooldown => ("Radio", "通信"),
             AbilityMetric.TwinRest => ("Rest together", "共同休憩"),
             AbilityMetric.TwinDelivery => ("Joint delivery", "共同納品"),
             AbilityMetric.PorterLoad => ("Cargo weight", "収納重量"),
@@ -129,7 +128,7 @@ internal static class RoleAbilityText
             string label = Label(value.Metric, language);
             bool seconds = value.Metric is AbilityMetric.MageCooldown or AbilityMetric.Grace or
                 AbilityMetric.DecoyActive or AbilityMetric.DecoyCooldown or AbilityMetric.DiveActive or
-                AbilityMetric.DiveCooldown or AbilityMetric.Avenger or AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload;
+                AbilityMetric.DiveCooldown or AbilityMetric.Avenger or AbilityMetric.TwinRest or AbilityMetric.PorterUnload;
             string amount = seconds ? $"{value.Remaining}s" : $"{value.Remaining}/{value.Limit}";
             if (value.Metric == AbilityMetric.PorterLoad) amount = RoleAbilityResources.Number(value, false) + "/" + RoleAbilityResources.Number(value, true);
             if (value.Metric == AbilityMetric.PorterValue) amount = "$" + RoleAbilityResources.Number(value, false);
@@ -148,7 +147,7 @@ internal static class RoleAbilityResources
     {
         List<AbilityValue> result = new();
         foreach (AbilityValue value in values)
-            if (IsResource(value.Metric) || value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload or AbilityMetric.PorterValue) result.Add(value);
+            if (IsResource(value.Metric) || value.Metric is AbilityMetric.TwinRest or AbilityMetric.PorterUnload or AbilityMetric.PorterValue) result.Add(value);
         return result;
     }
 

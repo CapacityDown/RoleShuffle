@@ -83,12 +83,6 @@ internal static class RoleResourceSymbols
                 Line(12.5f,2,12.5f,13,2.8f);
                 Fill(7,9,12.5f,15,18,9);
                 break;
-            case AbilityMetric.RadioCooldown:
-                RoundedFrame(3,8,15,15,2.5f);
-                Line(6,8,6,2,2.4f); Circle(13,13,1.6f);
-                Line(7,17,14,17,1.8f); Line(7,20,14,20,1.8f);
-                Line(20,5,22,7,1.8f); Line(18,2,23,7,1.8f);
-                break;
             case AbilityMetric.GhostHealing:
             case AbilityMetric.Medic: Cross(3,3,19,5.5f); break; // Prefer the native Plus sprite.
             case AbilityMetric.MageRecovery:

@@ -84,12 +84,12 @@ try {
     Check (Calls ($pun.Methods | Where-Object Name -eq SetItemName) 'RPC') 'Shared native item name is sent to vanilla peers'
     $grabber = $game.MainModule.Types | Where-Object Name -eq PhysGrabber
     Check ([bool](($grabber.Methods | Where-Object Name -eq OverrideGrabRelease).Body.Instructions | Where-Object { $_.OpCode.Name -eq 'ldstr' -and $_.Operand -eq 'ReleaseObjectRPC' })) 'Owner grab rejection reaches vanilla peers'
-    $image = $plugin.MainModule.Resources | Where-Object { $_.Name.EndsWith('45-DualWielder.png') }
+    $image = $plugin.MainModule.Resources | Where-Object { $_.Name.EndsWith('44-DualWielder.png') }
     Check ($null -ne $image) 'DualWielder emblem embedded'
     $sha = [Security.Cryptography.SHA256]::Create()
     try {
         $embedded = [Convert]::ToHexString($sha.ComputeHash($image.GetResourceData()))
-        Check ($embedded -eq (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot '../Assets/role-emblems-semibot-v1/transparent/runtime/45-DualWielder.png') -Algorithm SHA256).Hash) 'Embedded emblem matches approved PNG'
+        Check ($embedded -eq (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot '../Assets/role-emblems-semibot-v1/transparent/runtime/44-DualWielder.png') -Algorithm SHA256).Hash) 'Embedded emblem matches approved PNG'
     } finally { $sha.Dispose() }
     "PASS: $script:checks DualWielder native API, hit consumption, Harmony hook, inventory and emblem checks ($calls game method calls). Live physics/multiplayer remain untested."
 } finally { $plugin.Dispose(); $game.Dispose() }

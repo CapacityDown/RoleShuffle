@@ -19,14 +19,17 @@ var dualReload = new StageRolesConfig(new ConfigFile(path, false) { SaveOnConfig
 Check(dualReload.DualWielderDelaySeconds.Value == .65f && dualReload.DualWielderLeftOffset.Value == .75f, "DualWielder settings persist");
 config.DualWielderDelaySeconds.Value = .3f;
 config.DualWielderLeftOffset.Value = .5f;
-Check(config.SignalmanEnabled.Value && config.SignalmanWeight.Value == 100, "Signalman defaults on with normal weight");
-Check(config.SignalmanCooldownSeconds.Value == 20 && config.SignalmanDeathAlerts.Value, "Signalman cooldown and private death alert defaults");
-config.SignalmanExcludedCommands.Value = "test,secret";
-config.SignalmanExcludedPrefixes.Value = "!,#";
-config.SignalmanDeathAlerts.Value = false;
-file.Save();
-var radioReload = new StageRolesConfig(new ConfigFile(path, false) { SaveOnConfigSet = false });
-Check(radioReload.SignalmanExcludedCommands.Value == "test,secret" && radioReload.SignalmanExcludedPrefixes.Value == "!,#" && !radioReload.SignalmanDeathAlerts.Value, "Signalman exclusions and alerts persist");
+string removedPath = Path.Combine(directory, "removed-signalman.cfg");
+const string removedBefore = "[Migration]\nConfigVersion = 42\n[Signalman]\nEnabled = true\nCooldownSeconds = 99\n[Tracker]\nReportIntervalSeconds = 27\n";
+File.WriteAllText(removedPath, removedBefore);
+var removalFile = new ConfigFile(removedPath, false) { SaveOnConfigSet = false };
+var removalConfig = new StageRolesConfig(removalFile);
+removalFile.Save();
+Check(!File.ReadAllText(removedPath).Contains("[Signalman]") && !removalFile.Any(p => p.Key.Section == "Signalman"), "Signalman settings removed from file and REPOConfig");
+Check(File.ReadAllText(removedPath + ".pre-v4.6.0-signalman-removal.bak") == removedBefore, "Exact removal rollback backup");
+Check(File.ReadAllText(removedPath).Contains("ReportIntervalSeconds = 27"), "Unrelated custom settings survive role removal");
+string removedAfter = File.ReadAllText(removedPath); RoleConfigMigration.Apply(removalFile);
+Check(File.ReadAllText(removedPath) == removedAfter, "Removal migration is idempotent");
 Console.WriteLine($"Ability configuration checks passed: {AbilityConfigChecks.Run(directory)}");
 Console.WriteLine($"Combat migration checks passed: {CombatMigrationChecks.Run(directory)}");
 Console.WriteLine($"Hunter migration checks passed: {HunterMigrationChecks.Run(directory)}");
@@ -79,7 +82,7 @@ foreach (string variant in new[] { "defaults", "decimal-radius", "custom", "mixe
     string supportBackup = supportPath + ".pre-v4.5.1-king-support.bak";
     Check(current ? !File.Exists(supportBackup) : File.ReadAllText(supportBackup) == before, "Exact King rollback backup: " + variant);
     string after = File.ReadAllText(supportPath);
-    Check(after.Contains("ConfigVersion = 42"), "King migration uses current schema: " + variant);
+    Check(after.Contains("ConfigVersion = 43"), "King migration uses current schema: " + variant);
     RoleConfigMigration.Apply(supportFile);
     Check(File.ReadAllText(supportPath) == after && (current || File.ReadAllText(supportBackup) == before),
         "King migration is repeatable without replacing the backup: " + variant);
@@ -103,7 +106,7 @@ Check(!migratedLifterSection.Contains("StrengthMultiplier") && !migratedLifterSe
 Check(!lifterText.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
     "Fixed Lifter migration removes the unused level setting and preserves selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
-Check(lifterText.Contains("ConfigVersion = 42"), "Config uses the current v4.5 role schema");
+Check(lifterText.Contains("ConfigVersion = 43"), "Config uses the current v4.5 role schema");
 RoleConfigMigration.Apply(lifterFile);
 Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
     "Repeated migration preserves settings and rollback backup");
@@ -156,7 +159,7 @@ foreach (bool wasEnabled in new[] { false, true })
     Check(!standard.HudResourcesEnabled.Value && standard.HudResourceOffsetX.Value == 40 && standard.HudResourceScale.Value == 125,
         "Standard rules preserve resource HUD preferences");
     string backup = standardPath + ".pre-v4.5.0-standard-roles.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 42"), "Exact rollback backup and schema upgrade");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 43"), "Exact rollback backup and schema upgrade");
     RoleConfigMigration.Apply(standardFile);
     Check(File.ReadAllText(standardPath) == after && File.ReadAllText(backup) == before, "Standard migration is idempotent");
 }
@@ -174,7 +177,7 @@ foreach (int oldHeal in new[] { 0, 10, 100 })
         !after.Contains("ContractsPerStage") && jobless.JoblessDamage.Value == 2 && !jobless.JoblessEnabled.Value,
         "Full healing preserves other contract, damage and selection settings");
     string backup = joblessPath + ".pre-v4.5.0-jobless-full-heal.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 42"), "Exact pre-full-heal config backup");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 43"), "Exact pre-full-heal config backup");
     RoleConfigMigration.Apply(joblessFile);
     Check(File.ReadAllText(joblessPath) == after && File.ReadAllText(backup) == before, "Full-heal migration is idempotent");
 }
@@ -201,7 +204,8 @@ RoleConfigMigration.Apply(courierFile);
 Check(File.ReadAllText(courierPath) == courierText, "Courier migration is idempotent");
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();
-Check(roles.Length == 47 && (int)StageRole.DualWielder == 44 && (int)StageRole.Porter == 43 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Existing role identifiers are retained");
+Check(roles.Length == 46 && (int)StageRole.Twins == 41 && (int)StageRole.DualWielder == 43 && (int)StageRole.Porter == 42 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Normal role identifiers are compacted; secret IDs stay fixed");
+Check(roles.Where(r => (int)r < 1000).Select(r => (int)r).SequenceEqual(Enumerable.Range(0, 44)), "No holes in normal role numbers");
 foreach (StageRole role in roles)
 {
     var entry = config.RoleEnabledEntry(role);

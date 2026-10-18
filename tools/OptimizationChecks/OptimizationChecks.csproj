@@ -7,11 +7,13 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../RoleWireId.cs" Link="RoleWireId.cs" />
     <Compile Include="../../RoleAssignmentSync.cs" Link="RoleAssignmentSync.cs" />
     <Compile Include="../../RoleHudTestPreview.cs" Link="RoleHudTestPreview.cs" />
     <Compile Include="../../RoleGuideSync.cs" Link="RoleGuideSync.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
     <EmbeddedResource Include="../../Assets/Localization/*.json" LogicalName="REPOJP.StageRoles.Localization.%(Filename)%(Extension)" />
+    <Compile Include="../../RoleGuideWire.cs" Link="RoleGuideWire.cs" />
   </ItemGroup>
 </Project>

@@ -5,10 +5,12 @@
     <GameManagedDir Condition="'$(GameManagedDir)' == ''">E:/SteamLibrary/steamapps/common/REPO/REPO_Data/Managed</GameManagedDir>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../RoleWireId.cs" Link="RoleWireId.cs" />
     <Compile Include="../LocalizationChecks/Stubs.cs" Link="CatalogStubs.cs" />
     <Compile Include="../../RoleGuideSync.cs" Link="RoleGuideSync.cs" />
     <Compile Include="../../RoleGuideWire.cs" Link="RoleGuideWire.cs" />
     <Compile Include="../../RoleGuideCatalog.cs" Link="RoleGuideCatalog.cs" />
+    <Compile Include="../../RoleGuidePresentation.cs" Link="RoleGuidePresentation.cs" />
     <Compile Include="../../RoleOverhaulDescriptions.cs" Link="RoleOverhaulDescriptions.cs" />
     <Compile Include="../../RoleOverhaulRules.cs" Link="RoleOverhaulRules.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />

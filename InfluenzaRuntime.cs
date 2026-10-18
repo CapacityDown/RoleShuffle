@@ -183,6 +183,5 @@ internal static class InfluenzaChatPatches
     {
         if (PrivatePlayerSpeech.IsDispatching) return;
         StageRolesPlugin.Instance?.Controller?.OnInfluenzaChat(__instance, _message, _info);
-        StageRolesPlugin.Instance?.Controller?.OnSignalmanChat(__instance, _message, _info);
     }
 }

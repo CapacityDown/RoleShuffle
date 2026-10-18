@@ -126,7 +126,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
             ResourceRow row = _rows[i];
             AbilityValue value = _values[i];
             row.Rect.gameObject.SetActive(true);
-            bool radio = value.Metric is AbilityMetric.RadioCooldown or AbilityMetric.TwinRest or AbilityMetric.PorterUnload or AbilityMetric.PorterValue;
+            bool radio = value.Metric is AbilityMetric.TwinRest or AbilityMetric.PorterUnload or AbilityMetric.PorterValue;
             bool exhausted = value.Metric == AbilityMetric.PorterLoad ? value.Remaining >= value.Limit : value.Remaining == 0;
             Color ink = exhausted && !radio ? Color.red : ResourceColor;
             SetText(row.Remaining, RoleAbilityResources.Number(value, false));

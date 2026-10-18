@@ -532,13 +532,6 @@ internal sealed class StageRolesConfig
         TwinsDeliveryBonusPercent = BindFloat(config, "Twins", "DeliveryBonusPercent", 10f, 0f, 100f, "Value bonus for a qualified valuable entering the truck or extraction area. Each valuable pays only once.");
         TwinsDeliveryStageLimit = BindInt(config, "Twins", "DeliveryStageLimit", 5000, 0, 10000, "Maximum total extra value for joint delivery per pair and stage.");
 
-        SignalmanEnabled = RoleEnabled(config, "Signalman");
-        SignalmanWeight = RoleWeight(config, "Signalman");
-        SignalmanCooldownSeconds = BindFloat(config, "Signalman", "CooldownSeconds", 20f, 1f, 300f, "Seconds between relayed chat posts. Commands and posts during cooldown remain ordinary chat and do not extend the cooldown.");
-        SignalmanMaximumDelaySeconds = BindFloat(config, "Signalman", "MaximumDelaySeconds", 5f, 1f, 30f, "Drop a radio message if its listener remains busy longer than this many seconds.");
-        SignalmanDeathAlerts = BindBool(config, "Signalman", "DeathAlerts", true, "Privately informs Signalman when a teammate dies.");
-        SignalmanExcludedCommands = config.Bind("Signalman", "ExcludedCommands", "star,roll,gravity,void,laser,decoy", "Comma-separated complete chat inputs excluded from radio, ignoring case and surrounding whitespace. Slash-prefixed input and the exact built-in Mage/Trickster spell names are always excluded, even when this list is empty.");
-        SignalmanExcludedPrefixes = config.Bind("Signalman", "ExcludedPrefixes", "!", "Comma-separated additional command prefixes excluded from radio. Slash-prefixed input is always excluded.");
 
         SuperbotEnabled = BindBool(config, "???1", "Enabled", true, "???");
         DisasterEnabled = BindBool(config, "???2", "Enabled", true, "???");
@@ -571,13 +564,6 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<float> TwinsDeliveryBonusPercent { get; }
     internal ConfigEntry<int> TwinsDeliveryStageLimit { get; }
 
-    internal ConfigEntry<bool> SignalmanEnabled { get; }
-    internal ConfigEntry<int> SignalmanWeight { get; }
-    internal ConfigEntry<float> SignalmanCooldownSeconds { get; }
-    internal ConfigEntry<float> SignalmanMaximumDelaySeconds { get; }
-    internal ConfigEntry<bool> SignalmanDeathAlerts { get; }
-    internal ConfigEntry<string> SignalmanExcludedCommands { get; }
-    internal ConfigEntry<string> SignalmanExcludedPrefixes { get; }
     internal ConfigEntry<bool> Enabled { get; }
     internal ConfigEntry<bool> UniqueRoles { get; }
     internal ConfigEntry<bool> HudResourcesEnabled { get; }
@@ -943,7 +929,6 @@ internal sealed class StageRolesConfig
         StageRole.Avenger => AvengerEnabled,
         StageRole.Brawler => BrawlerEnabled,
         StageRole.Influenza => InfluenzaEnabled,
-        StageRole.Signalman => SignalmanEnabled,
         StageRole.Twins => TwinsEnabled,
         StageRole.Porter => PorterEnabled,
         StageRole.DualWielder => DualWielderEnabled,
@@ -995,7 +980,6 @@ internal sealed class StageRolesConfig
         StageRole.Avenger => AvengerWeight.Value,
         StageRole.Brawler => BrawlerWeight.Value,
         StageRole.Influenza => InfluenzaWeight.Value,
-        StageRole.Signalman => SignalmanWeight.Value,
         StageRole.Twins => TwinsWeight.Value,
         StageRole.Porter => PorterWeight.Value,
         StageRole.DualWielder => DualWielderWeight.Value,

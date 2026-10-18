@@ -52,8 +52,6 @@ internal static class AbilityConfigChecks
             ("Twins", "DeliveryRadius", 5f, 0.5f, 20f),
             ("Twins", "DeliveryBonusPercent", 10f, 0f, 100f),
             ("Twins", "DeliveryStageLimit", 5000, 0, 10000),
-            ("Signalman", "CooldownSeconds", 20f, 1f, 300f),
-            ("Signalman", "MaximumDelaySeconds", 5f, 1f, 30f),
             ("Mage", "BeamDurationSeconds", 5f, 0.1f, 30f),
             ("Lifter", "HeavyGripMultiplier", 1f, 0.1f, 5f),
             ("Lifter", "HeavyRotationMultiplier", 1f, 0.1f, 5f),

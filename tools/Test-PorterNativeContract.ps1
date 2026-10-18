@@ -72,12 +72,12 @@ try {
     Check ([bool]($speed.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'UpdateSprintSpeedRightAway' })) 'Speed changes no longer immediately update movement'
     $command = $pun.Methods | Where-Object Name -eq TesterUpgradeCommandRPC
     Check ([bool]($command.CustomAttributes | Where-Object { $_.AttributeType.Name -eq 'PunRPC' }) -and [bool]($command.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'UpgradePlayerSprintSpeed' })) 'Vanilla peers cannot receive Speed deltas'
-    $image = $plugin.MainModule.Resources | Where-Object { $_.Name.EndsWith('44-Porter.png') }
+    $image = $plugin.MainModule.Resources | Where-Object { $_.Name.EndsWith('43-Porter.png') }
     Check ($null -ne $image) 'Porter emblem missing in the built DLL'
     $sha = [Security.Cryptography.SHA256]::Create()
     try {
         $embedded = [Convert]::ToHexString($sha.ComputeHash($image.GetResourceData()))
-        $local = (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot '../Assets/role-emblems-semibot-v1/transparent/runtime/44-Porter.png') -Algorithm SHA256).Hash
+        $local = (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot '../Assets/role-emblems-semibot-v1/transparent/runtime/43-Porter.png') -Algorithm SHA256).Hash
         Check ($embedded -eq $local) 'Embedded Porter artwork differs from the approved image'
     } finally { $sha.Dispose() }
     "PASS: $script:checks Porter native API, owner-release, storage and embedded-artwork checks ($calls game method calls). This is not live multiplayer validation."

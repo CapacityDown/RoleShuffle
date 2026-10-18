@@ -44,6 +44,10 @@ historical version numbers, deployment profiles and superseded design choices.
   and not in use by a worktree. Keep unmerged and explicit archive/release
   branches. Publish and verify `main` before deleting integrated remote branches.
 
+- On 2026-10-18 the user removed Signalman and requested compact role numbers.
+  Keep ordinary role/test/icon numbers contiguous; secret IDs remain 1001/1002.
+  The role guide opens with Overview and offers Details with host-configured values.
+
 ## Builds and deployment
 
 - Increment the Role UI build number before each main build attempt. Keep the
@@ -73,9 +77,7 @@ historical version numbers, deployment profiles and superseded design choices.
   Follow the remaining-time deadline and interrupt the preceding utterance.
 - Keep role notices short and without spaces (for example `CannotCopy`). The
   user reported that spaces interrupt notifications. Do not include role names
-  or explanations when a concise status is sufficient. Signalman relays are an
-  exception: preserve the player's original message, including spaces and punctuation.
-  Commands are excluded; cooldown defaults to 20 seconds.
+  or explanations when a concise status is sufficient.
 
 ## Artwork
 

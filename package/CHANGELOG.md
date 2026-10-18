@@ -1,4 +1,5 @@
 ## 4.6.0
+- Split the role guide into Overview for short ability summaries and Details for configured values, conditions and limits.
 - Added DualWielder: holding a melee weapon creates a matching weapon to the left that repeats its movement and attacks after 0.3 seconds. Both share battery and durability, including consumption from the copy. The copy disappears when the weapon is released or switched, on death, or when the role ends. Delay and offset are configurable. Available in Standard and Challenge presets.
 - Added Porter: passively stores small valuables up to a combined weight of 15, scatters all cargo on enemy damage, and unloads in delivery areas or into the cart it stands on with a weight-based wait (10 seconds at full load). Weight proportionally reduces Speed upgrade levels to 0 at full load, restoring them on unloading. Includes configurable sizes and capacity, a smooth cargo HUD with weight and total value, and private capacity and unloading notices. Available in Beginner and Cooperative presets.
 - Added Ghost support after death: nearby healing with a 50 HP stage budget and Speed +1 for head carriers. Revival preserves the healing budget; high Base levels no longer exclude Ghost.
@@ -8,7 +9,6 @@
 - Adjusted Sniper's default distance curve to normal damage at 6 m and maximum damage at 18 m.
 - Changed Tracker into a passive scout: privately reports nearby enemies and fallen teammates' Death Heads, warns of close enemies, and updates only on meaningful changes. Detection ranges and notification intervals are configurable. Preserves stronger Base upgrades and remains eligible at high Base levels.
 - Added Twins: one fixed pair shares HP, death, revival and infection, with cooperative carrying, shared rest, reunion sprint assistance and a limited joint-delivery value bonus. Includes configurable abilities and resource HUD. Available in Cooperative and Chaos presets.
-- Added Signalman: relays ordinary chat unchanged to living teammates at any distance, excluding commands, with a configurable 20-second cooldown. Includes private teammate death alerts, a cooldown HUD, role settings and a Support emblem. Cannot be copied by Imitator.
 - Changed notifications and automatic speech to wait per player after initial role announcements. Different players can receive messages at the same time. Diver counts remaining time at 15-second marks, then every second from 10 to 0, interrupting previous speech.
 - Added a short notification when Imitator tries to copy an ineligible role.
 - Fixed HP becoming full when a role's extra maximum HP is removed. Remaining HP now keeps the same proportion, rounded down with at least 1 HP for living players.

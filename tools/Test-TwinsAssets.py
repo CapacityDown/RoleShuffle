@@ -26,17 +26,17 @@ for path in catalogs.glob('*.json'):
         checks += 1
 assets = root/'Assets/role-emblems-semibot-v1'
 manifest = json.loads((assets/'transparent/manifest.json').read_text(encoding='utf-8'))
-record = next(x for x in manifest['assets'] if x['name'] == '43-Twins')
+record = next(x for x in manifest['assets'] if x['name'] == '42-Twins')
 for kind, directory in [('source', 'selected'), ('master', 'transparent/masters'), ('runtime', 'transparent/runtime')]:
-    path = assets/directory/'43-Twins.png'
+    path = assets/directory/'42-Twins.png'
     assert hashlib.sha256(path.read_bytes()).hexdigest() == record[kind+'_sha256'], path
     checks += 1
-with Image.open(assets/'transparent/runtime/43-Twins.png') as icon:
+with Image.open(assets/'transparent/runtime/42-Twins.png') as icon:
     assert icon.mode == 'RGBA' and icon.size == (256, 256) and icon.getpixel((0, 0))[3] == 0
     assert record['background_color'] == '#50356E' and record['category'] == 'Special'
     assert record['outside_mask_pixels_unchanged'] and record['alpha_preserved_during_recolor']
     checks += 3
-with Image.open(root/'docs/icons/43.png') as thumb:
+with Image.open(root/'docs/icons/42.png') as thumb:
     assert thumb.mode == 'RGBA' and thumb.size == (64, 64)
     checks += 1
 print(f'Twins artwork and localization checks passed: {checks}')

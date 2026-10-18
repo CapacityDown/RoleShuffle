@@ -43,7 +43,6 @@ internal enum StageRole
     Avenger,
     Brawler,
     Influenza,
-    Signalman,
     Twins,
     Porter,
     DualWielder,

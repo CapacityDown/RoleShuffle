@@ -62,8 +62,10 @@ __PARSE__
         Check(TryParseRole("???2",out parsed) && parsed==StageRole.Disaster,"command secret alias 2");
         Check(TryParseRole("Disaster",out parsed) && parsed==StageRole.Disaster,"command real name");
         Check(!TryParseRole("999",out parsed) && !TryParseRole("1000",out parsed),"old IDs no longer assigned");
-        Check(!TryParseRole("44",out parsed),"hidden roles have no ordinary numeric alias");
-        Check(TryParseRole("42",out parsed) && parsed==StageRole.Signalman,"Signalman appended without renumbering existing roles");
+        Check(!TryParseRole("45",out parsed),"hidden roles have no ordinary numeric alias");
+        Check(TryParseRole("43",out parsed) && parsed==StageRole.Porter,"Porter compact ID");
+        Check(TryParseRole("44",out parsed) && parsed==StageRole.DualWielder,"DualWielder compact ID");
+        Check(!TryParseRole("Signalman",out parsed),"Removed role name rejected");
         Check(TryParseRole("41",out parsed) && parsed==StageRole.Influenza,"Influenza appended without renumbering existing roles");
         Check(TryParseRole("40",out parsed) && parsed==StageRole.Brawler,"standard IDs preserved");
         foreach(StageRole role in Enum.GetValues<StageRole>())
@@ -77,7 +79,7 @@ __PARSE__
         var planner=new RoleAssignmentPlanner(config,new Dictionary<string,StageRole>(),new Dictionary<string,List<StageRole>>(),new Dictionary<string,int>(),1);
         var secrets=new[]{StageRole.Superbot,StageRole.Disaster};
         config.UniqueRoles.Value=false;
-        Check(TryParseRole("43",out parsed) && parsed==StageRole.Twins,"Twins ID appended");
+        Check(TryParseRole("42",out parsed) && parsed==StageRole.Twins,"Twins compact ID");
         Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Twins) && !RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Twins),"Twins cannot be copied or inherited");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Twins},Array.Empty<StageRole>(),3)==null,"Joining cannot create lone Twins even in fallback");
         Check(planner.PlanInitialAssignments(new[]{new PlayerAvatar{Id="a"}},new[]{StageRole.Twins}).Count==0,"No solo Twins draw");
@@ -87,13 +89,6 @@ __PARSE__
         Check(pair.Count==2 && pair["a"]==StageRole.Twins && pair["b"]==StageRole.Twins,"Pair draw reserves both slots");
         var many=planner.PlanInitialAssignments(new[]{new PlayerAvatar{Id="a"},new PlayerAvatar{Id="b"},new PlayerAvatar{Id="c"},new PlayerAvatar{Id="d"}},new[]{StageRole.Twins,StageRole.Runner});
         Check(new List<StageRole>(many.Values).FindAll(r=>r==StageRole.Twins).Count==2 && many.Count==4,"At most one pair and remaining players still get roles");
-        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},Array.Empty<StageRole>(),1)==null,"Signalman excluded in solo including fallback");
-        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},Array.Empty<StageRole>(),2)==StageRole.Signalman,"Signalman available for two players");
-        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Signalman},new[]{StageRole.Signalman},2)==null,"Signalman maximum one even with uniqueness off and fallback");
-        Check(RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Signalman),"Superbot retains Signalman capability");
-        Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Signalman),"Signalman cannot be copied by Imitator");
-        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Imitator},new[]{StageRole.Signalman},2)==null,"Signalman alone cannot enable an Imitator draw, including fallback");
-        Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Imitator},new[]{StageRole.Signalman,StageRole.Tank},3)==StageRole.Imitator,"Another eligible teammate still enables Imitator");
         config.UniqueRoles.Value=true;
         Check(planner.PlanJoinedAssignment("p",secrets,Array.Empty<StageRole>(),2)==null,"two secrets cannot fill empty pool");
         Check(planner.PlanJoinedAssignment("p",new[]{StageRole.Disaster},Array.Empty<StageRole>(),2)==null,"Disaster alone not fallback");

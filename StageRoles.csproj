@@ -37,6 +37,7 @@
     <Compile Include="StageRolesPlugin.cs" />
     <Compile Include="StageRolesConfig.cs" />
     <Compile Include="StageRole.cs" />
+    <Compile Include="RoleWireId.cs" />
     <Compile Include="InfluenzaRules.cs" />
     <Compile Include="InfluenzaRuntime.cs" />
     <Compile Include="TwinsRules.cs" />
@@ -49,8 +50,8 @@
     <Compile Include="DualWielderHistory.cs" />
     <Compile Include="DualWielderRuntime.cs" />
     <Compile Include="PorterSpeed.cs" />
-    <Compile Include="SignalmanRules.cs" />
-    <Compile Include="SignalmanRuntime.cs" />
+    <Compile Include="PrivatePlayerSpeech.cs" />
+    <Compile Include="RoleGuidePresentation.cs" />
     <Compile Include="TrackerRules.cs" />
     <Compile Include="CombatRoleRules.cs" />
     <Compile Include="CombatRoleRuntime.cs" />

@@ -39,9 +39,9 @@ Open `ROLES` → `ROLE SETTINGS` in the lobby or Escape menu. Host toggles, incl
 
 |Preset|Enabled roles|Play style|
 |---|---|---|
-|Standard|47|Every role, including both secret roles; restores the default ON/OFF selection.|
-|Beginner|21|Upgrades, recovery and protection; Signalman/Porter. Excludes passive hazards and Hardship.|
-|Cooperative|19|Team support, healing, repairs and shared survival; Signalman/Twins/Porter.|
+|Standard|46|Every role, including both secret roles; restores the default ON/OFF selection.|
+|Beginner|20|Upgrades, recovery and protection; Porter. Excludes passive hazards and Hardship.|
+|Cooperative|18|Team support, healing, repairs and shared survival; Twins/Porter.|
 |Chaos|16|Explosions, magic, gambles and unpredictable effects; Twins.|
 |Challenge|16|Risky and specialized roles without dedicated healing or revival roles.|
 
@@ -65,7 +65,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 - No consecutive repeat roles. After `Courier`, `Tuna`, or `Influenza`, that player avoids all three for two stages. Restrictions relax only as needed to assign everyone a role.
 - `Jumper`, `Launcher`, `Climber`, and `Flyer` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
-- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, `Signalman`, and `Twins` are not selected in single-player or a one-player session.
+- `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, and `Twins` are not selected in single-player or a one-player session.
 - `Imitator` requires another active player with a copyable role.
 - By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` or `DualWielder` when no melee weapon is available. Weapon-like valuables do not count as weapons for these roles' assignment, and staffs do not count for Sniper assignment.
 - Leaving removes a player from the role list. Returning restores their role; new arrivals receive a role, upgrades and announcement.
@@ -112,14 +112,13 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i35]<br>Rammer|Tumble Attack deals 100 damage to enemies and deals 15 damage to Rammer after a successful hit.|Launch, Tumble Climb, and Tumble Wings are fixed at level 0 for the stage regardless of Base Upgrades.|Tumble Attack and self damage|
 |![][i36]<br>Diver|Tumbling while continuing to look down at a fixed floor enables movement below it for up to 10 seconds.|Failing to return through a floor in time kills Diver. Returning above the floor starts a cooldown equal to 1.5 times the previous dive time. The countdown and ready state are announced by TTS.|Underfloor duration, movement force|
 |![][i37]<br>Sniper|Enemy damage scales with distance: 0.5x at point-blank range, 1x at 6 m, and up to 2x at 18 m.|Requires an identifiable attacker. Vehicle impacts and Tumble Attacks are unchanged.|Distances and multipliers|
-|![][i38]<br>Imitator|Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator.|Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Signalman, Twins, or ???1 or ???2; announces `CannotCopy` on an ineligible attempt. The first valid copy is fixed for the stage. Never selected randomly when only one player is present.|Selection only|
+|![][i38]<br>Imitator|Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator.|Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Twins, or ???1 or ???2; announces `CannotCopy` on an ineligible attempt. The first valid copy is fixed for the stage. Never selected randomly when only one player is present.|Selection only|
 |![][i39]<br>Avenger|An ally losing at least 15 HP to one enemy hit within 15 m grants 1.25x enemy damage for 10 seconds (20-second cooldown). An ally dying within 30 m grants 1.5x for 30 seconds.|Activation and expiration are announced. Only the stronger active bonus applies. Deaths refresh their bonus without waiting for the hit cooldown. Self-damage and friendly fire do not trigger the hit bonus. Own death does not activate it. Excluded with one player.|Hit/death range, threshold, multipliers, durations, cooldown|
 |![][i40]<br>Brawler|Melee hits on the same enemy rise from 1.25x by 0.25 per hit, up to 2x. Guns, staff projectiles and lasers deal 0.75x.|Changing enemy or 4 seconds without a hit resets the combo. Friendly fire stays at 1.25x. Vehicle impacts, Tumble Attacks, grenades and ordinary objects are unchanged.|Melee/ranged multipliers, combo step/cap/timeout|
 |![][i41]<br>Influenza|**Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance.|**If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws.|Onset, HP, sneeze intervals, infection range/angle/chance, hearing|
-|![][i42]<br>Signalman|Relays ordinary chat unchanged to every living teammate at any distance, in each receiver's own TTS voice. Receives private teammate death alerts. Radio cooldown: 20 seconds.|Commands and automatic notices are excluded. Cooldown posts stay ordinary chat and are never relayed later. Waits for each receiver; countdowns have priority. Drops messages after 5 seconds waiting. At least two players; at most one drawn. Normal VC range is unchanged.|Cooldown, waiting limit, death alerts, command exclusions|
-|![][i43]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together gives 1.5x grab strength and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
-|![][i44]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In delivery areas or aboard a cart, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
-|![][i45]<br>DualWielder|Holding a melee weapon alone creates a matching weapon 0.5 m left, repeating its movement and attacks 0.3 s later. Both share and consume battery/durability.|Copy disappears on release, switching, death or role change. Cannot be picked up or kept. Excluded without melee weapons.|Delay, left offset|
+|![][i42]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together gives 1.5x grab strength and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
+|![][i43]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In delivery areas or aboard a cart, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
+|![][i44]<br>DualWielder|Holding a melee weapon alone creates a matching weapon 0.5 m left, repeating its movement and attacks 0.3 s later. Both share and consume battery/durability.|Copy disappears on release, switching, death or role change. Cannot be picked up or kept. Excluded without melee weapons.|Delay, left offset|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -166,9 +165,6 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 |`Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent`|60 / 30|0–100%|Chance per teammate per sneeze / utterance or message.|
 |`Influenza.SpeechSilenceSeconds`|0.75|0.1–5 s|Silent gap that starts a new utterance.|
 |`Influenza.SneezeNoiseRadius`|5|0–100 m|Enemy hearing distance, modified by enemy hearing. Zero disables the alert.|
-|`Signalman.CooldownSeconds` / `Signalman.MaximumDelaySeconds`|20 / 5|1–300 / 1–30 s|Radio cooldown / maximum wait for a busy receiver.|
-|`Signalman.DeathAlerts`|true|On/Off|Private teammate death notices; also follows `Notifications.Enabled`.|
-|`Signalman.ExcludedCommands` / `Signalman.ExcludedPrefixes`|`star,roll,gravity,void,laser,decoy` / `!`|Comma-separated|Extra exact commands / prefixes to exclude. Slash commands and exact built-in spell names are always excluded.|
 
 ### Configuration
 
@@ -200,7 +196,7 @@ All settings are available through REPOConfig. Host-controlled settings affect t
 
 #### Role balance
 
-Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, `Signalman`, and `Porter`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
+Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, and `Porter`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
 
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
@@ -425,6 +421,7 @@ Influencer and Berserker scaling accepts comma- or semicolon-separated `conditio
 
 Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` or `DRAW HISTORY`.
 
+- **Role guide:** opens in `Overview` with short ability summaries. Select `Details` for the host's configured values, conditions and limits.
 - **HUD editor:** in `TOOLS`, drag the HUD sample and adjust its anchor, alignment, text/icon size, scale, mode and visibility. `SAVE` keeps local settings; `CANCEL` or Esc discards them; `RESET` previews defaults. Mouse controls also work in the lobby.
 - **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports contain mod versions, settings and recent activity, are saved in `BepInEx/RoleShuffleReports`, and are never sent automatically.
 - **Language:** `UI.GuideLanguage` and the Roles toggle share a saved choice, defaulting to English. All 14 languages appear by native name. Menus, role descriptions, HUD editor, history and sync status follow it; role names, upgrade identifiers, commands and diagnostics remain English.
@@ -435,7 +432,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 
 ### Notifications and HUD
 
-- **Resources:** the remaining healing, revives, repair, charge and wagers appear below stamina as cyan icons and numbers in one column. The display fits the available space, and empty resources turn red. It appears while you are alive and have the mod installed. Adjust it with `HUD.ResourceHud*`. Signalman also shows its radio cooldown here.
+- **Resources:** the remaining healing, revives, repair, charge and wagers appear below stamina as cyan icons and numbers in one column. The display fits the available space, and empty resources turn red. It appears while you are alive and have the mod installed. Adjust it with `HUD.ResourceHud*`.
 - Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
@@ -515,9 +512,9 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
-|標準|47|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
-|初心者向け|21|基本強化・回復・防御。Signalman・Porterを含み、自動加害役・ハンデ役は除外。|
-|協力重視|19|チーム支援・回復・修理・共有生存。Signalman・Twins・Porterを含む。|
+|標準|46|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
+|初心者向け|20|基本強化・回復・防御。Porterを含み、自動加害役・ハンデ役は除外。|
+|協力重視|18|チーム支援・回復・修理・共有生存。Twins・Porterを含む。|
 |カオス|16|爆発・魔法・ギャンブルなど予測しづらい展開。Twinsを含む。|
 |高難度|16|専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。|
 
@@ -541,7 +538,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 - 同じプレイヤーへ前ステージと同じ役職を通常は連続で割り当てません。`Courier`、`Tuna`、`Influenza`のいずれかの後、2ステージはそのプレイヤーをこれらの役職から除外します。役職未割り当てを防ぐ必要がある場合だけ制限を緩和します。
 - `Jumper`、`Launcher`、`Climber`、`Flyer`は、トラック抽選分を含む基礎アップグレード目標値のいずれかが、対応する役職の設定値以上の場合、ランダム抽選から除外されます。
 - `Influencer`は、現在の参加人数で到達可能なアップグレード目標値が現在のBase Upgradeを1項目も上回らない場合、ランダム抽選から除外されます。
-- `Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`、`Signalman`、`Twins`はシングルプレイまたは1人のセッションでは抽選されません。
+- `Tracker`、`Ghost`、`Medic`、`Courier`、`Rescuer`、`Influencer`、`Werewolf`、`Bodyguard`、`Imitator`、`Avenger`、`Influenza`、`Twins`はシングルプレイまたは1人のセッションでは抽選されません。
 - `Imitator`は、コピー可能な役職を持つ他の参加者が確保された場合だけ抽選されます。
 - デフォルトでは、能力を使える対象がない状況依存役を抽選から除外します。必要なオブジェクトがない`Musician`、`Engineer`、`Electrician`、`Rider`と、近接武器も銃もない場合の`Sniper`、近接武器がない場合の`Brawler`・`DualWielder`が対象。これらの抽選判定では、武器として使える貴重品も武器に含めません。Sniperの抽選判定では杖も対象外です。
 - 退出したプレイヤーは役職一覧から外れます。再参加すると以前の役職に戻り、新しい参加者には役職・強化・通知が適用されます。
@@ -588,14 +585,13 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i35]<br>Rammer|Tumble Attackで敵へ100ダメージを与え、命中後に自身が15ダメージを受けます。|ステージ中はBase Upgradeにかかわらず、Launch、Tumble Climb、Tumble Wingsがレベル0に固定されます。|Tumble Attack・自傷ダメージ|
 |![][i36]<br>Diver|固定された床で下を向いたままタンブルすると床を抜け、最大10秒間、床下を移動可能です。|時間内に床を抜けて戻れないと死亡します。床上へ戻ると直前の潜航時間の1.5倍のクールダウンが始まり、残り時間と再使用可能状態はTTSで通知されます。|床下制限時間、移動力|
 |![][i37]<br>Sniper|敵へのダメージが距離に応じて連続変化し、密着時0.5倍、6mで1倍、18mで最大2倍。|攻撃者を特定できる場合に適用。車両衝突とTumble Attackは変化しません。|距離・倍率|
-|![][i38]<br>Imitator|最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。|Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、Influenza、Signalman、Twins、???1、???2はコピーしません。対象外をつかむと`CannotCopy`（コピー不可）と通知します。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。|抽選設定のみ|
+|![][i38]<br>Imitator|最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。|Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、Influenza、Twins、???1、???2はコピーしません。対象外をつかむと`CannotCopy`（コピー不可）と通知します。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。|抽選設定のみ|
 |![][i39]<br>Avenger|15m以内の味方が敵の一撃で15HP以上失うと、10秒間、敵へのダメージが1.25倍（クールダウン20秒）。30m以内の味方が死亡すると30秒間1.5倍。|発動・終了を通知。強い方だけ適用。死亡効果は被弾効果のクールダウン中も発動し、再発動で時間を更新。自傷・味方の攻撃では被弾効果は発動しません。自分の死亡では発動せず、1人では抽選されません。|被弾・死亡の範囲、閾値、倍率、時間、クールダウン|
 |![][i40]<br>Brawler|同じ敵への近接攻撃が1.25倍から命中ごとに0.25ずつ上昇し、最大2倍。銃・杖の弾・レーザーは0.75倍。|別の敵に命中、または4秒間命中しないと連撃をリセット。味方への攻撃は1.25倍のまま。車両衝突・Tumble Attack・グレネード・通常の保持物は変化しません。|近接・遠隔倍率、連撃の上昇幅・上限・猶予|
 |![][i41]<br>Influenza|**発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。|**感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。|発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音|
-|![][i42]<br>Signalman|通常チャットの本文を変えずに、生存中の仲間全員へ距離制限なく届けます。受信者自身の読み上げ音声で再生し、仲間の死亡通知も受け取ります。通信後は20秒待機。|コマンドと自動通知は除外。待機中の投稿は通常チャットのみで、後から転送しません。相手の発話を待ち、カウントダウンを優先。5秒待った通信は破棄。2人以上で最大1人を抽選。通常VCの距離は変わりません。|再使用待ち・待機上限・死亡通知・コマンド除外|
-|![][i43]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむと掴む力1.5倍、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
-|![][i44]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所・カート上で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
-|![][i45]<br>DualWielder|近接武器を1人で持つと左0.5mに同じ武器が現れ、動きと攻撃を0.3秒遅れで再現。電池・耐久度は共有し、2本目の命中分も消費。|手放す・持ち替え・死亡・役職変更で消滅。持ち帰り不可。近接武器がなければ抽選対象外。|遅延、左への距離|
+|![][i42]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむと掴む力1.5倍、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
+|![][i43]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所・カート上で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
+|![][i44]<br>DualWielder|近接武器を1人で持つと左0.5mに同じ武器が現れ、動きと攻撃を0.3秒遅れで再現。電池・耐久度は共有し、2本目の命中分も消費。|手放す・持ち替え・死亡・役職変更で消滅。持ち帰り不可。近接武器がなければ抽選対象外。|遅延、左への距離|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -642,9 +638,6 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |`Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent`|60 / 30|0～100％|くしゃみ／発話・投稿ごとの、仲間1人あたりの感染確率。|
 |`Influenza.SpeechSilenceSeconds`|0.75|0.1～5秒|別の発話として判定する無音時間。|
 |`Influenza.SneezeNoiseRadius`|5|0～100m|敵に聞こえる基本距離。敵の聴力で変化。0で反応なし。|
-|`Signalman.CooldownSeconds` / `Signalman.MaximumDelaySeconds`|20 / 5|1～300 / 1～30秒|通信の再使用待ち／受信者の発話を待つ上限。|
-|`Signalman.DeathAlerts`|true|On/Off|仲間の死亡を本人へ通知。`Notifications.Enabled`にも従います。|
-|`Signalman.ExcludedCommands` / `Signalman.ExcludedPrefixes`|`star,roll,gravity,void,laser,decoy` / `!`|カンマ区切り|除外する入力全文／先頭文字を追加。`/`で始まる入力と既存の魔法名の単独入力は常に除外。|
 
 ### 設定
 
@@ -678,7 +671,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 この表はすべてホスト設定。
 
-Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Signalman`、`Porter`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
+Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Porter`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
 
 |キー|デフォルト|範囲・値|内容|
 |---|---:|---|---|
@@ -907,6 +900,7 @@ InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたは�
 
 Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW HISTORY`を選択します。
 
+- **ロールガイド：** 最初は「概要」で能力を短く表示。「詳細」に切り替えると、ホストが設定した値・発動条件・制限を確認できます。
 - **HUD編集：** `TOOLS`でサンプルをドラッグし、基準位置・整列・文字／アイコンサイズ・全体倍率・表示形式・表示切替を調整します。「保存」で個人設定を保存、「取消」またはEscで破棄、「初期値」で初期状態をプレビューします。ロビーでもマウスで操作可能です。
 - **不具合レポート：** `TOOLS`からコピーまたはファイルを開き、内容と発生手順を確認してGitHub Issuesへ投稿します。MODのバージョン・設定・最近の動作状況を含み、`BepInEx/RoleShuffleReports`へ保存します。自動送信はしません。
 - **言語：** `UI.GuideLanguage`とRoles内の切替は同じ選択を保存します。初期値は英語、全14言語を各言語の名称で表示。メニュー・説明・HUD編集・履歴・同期状態に適用し、役職名・アップグレード識別名・コマンド・診断本文は英語です。
@@ -917,7 +911,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 
 ### 通知とHUD
 
-- **残量HUD：** 回復・蘇生・修理・充電・賭けの残量を、スタミナの下に水色のアイコンと数字で縦1列に表示。画面に収まるよう大きさを調整し、使い切った項目は赤く表示。MODを導入している本人の生存中に表示され、`HUD.ResourceHud*`で調整可能です。Signalmanの通信待ち時間も表示。
+- **残量HUD：** 回復・蘇生・修理・充電・賭けの残量を、スタミナの下に水色のアイコンと数字で縦1列に表示。画面に収まるよう大きさを調整し、使い切った項目は赤く表示。MODを導入している本人の生存中に表示され、`HUD.ResourceHud*`で調整可能です。
 - `CURRENT ROLES`と`ROLE GUIDE`の役職にエンブレムを表示し、HUDでも設定で表示可能です。六角形のエンブレムの外側は透過表示です。未開示の隠し役職は共通の「?」エンブレムで表示し、開示時に役職固有のエンブレムへ切り替わります。エンブレムはMOD導入済みのプレイヤーに表示されます。
 - ステージ開始時、各プレイヤーは割り当てられた英語の役職名をバニラのチャット／TTSで発言します。
 - RoleShuffleが生成する通知TTSでは敵が反応しません。通常のマイク入力やその他のワールド音は、Ninjaで抑止される場合を除いてバニラの動作を維持。
@@ -1003,8 +997,7 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 [i40]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/40.png
 [i41]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/41.png
 [iu]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/980c0419ea924e2008e9c963ed68ff67eedd5a04/docs/icons/unknown.png
-[i42]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/2207c9a37f217fcea8399ef3efdc0945ce62a04e/docs/icons/42.png
-[i43]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/d5f615a8cf9ee60a6b0ae98104a051d2ad64a193/docs/icons/43.png
+[i42]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c5c96682f06f981c33c897d7c74c4111d04d37cb/docs/icons/42.png
 
-[i44]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/06ef1e70cf0efdaba265cee9138ba3af5eea994d/docs/icons/44.png
-[i45]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/1a8d7a7ce736c014e5497b45219ce77c09670071/docs/icons/45.png
+[i43]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c5c96682f06f981c33c897d7c74c4111d04d37cb/docs/icons/43.png
+[i44]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c5c96682f06f981c33c897d7c74c4111d04d37cb/docs/icons/44.png

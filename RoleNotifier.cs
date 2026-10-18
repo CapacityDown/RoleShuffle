@@ -16,6 +16,7 @@ internal sealed class RoleNotifier
     private const float StageFluxQuietPeriodSeconds = 1.5f;
     private const float PollIntervalSeconds = 0.1f;
     private const float QueueHeadWaitTimeoutSeconds = 15f;
+    private const float PrivateMessageWaitTimeoutSeconds = 5f;
     private const float ReservationSeconds = 2f;
     private const float PlaybackStartGraceSeconds = 2f;
     private const float PlaybackQuietPeriodSeconds = 0.25f;
@@ -199,7 +200,7 @@ internal sealed class RoleNotifier
 
     internal bool NotifyPrivate(PlayerAvatar player, string message, Func<bool> isValid, Func<bool> dispatch,
         Action? onFinished = null) =>
-        Enqueue(player, message, "private radio", isValid, onFinished: onFinished, dispatch: dispatch);
+        Enqueue(player, message, "private notice", isValid, onFinished: onFinished, dispatch: dispatch);
 
     private bool HasPendingAssignments =>
         _announcingGeneration == _generation || _assignmentQueue.Pending.Count > 0 ||
@@ -389,7 +390,7 @@ internal sealed class RoleNotifier
 
                 float deadline = Time.realtimeSinceStartup +
                                  (pending.Dispatch != null
-                                     ? _config.SignalmanMaximumDelaySeconds.Value
+                                     ? PrivateMessageWaitTimeoutSeconds
                                      : QueueHeadWaitTimeoutSeconds);
                 bool reserved = false;
                 while (generation == _generation &&

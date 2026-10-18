@@ -42,7 +42,6 @@ internal enum StageRole
     Avenger,
     Brawler,
     Influenza,
-    Signalman,
     Twins,
     Porter,
     DualWielder,
@@ -78,9 +77,6 @@ internal sealed class StageRolesConfig
     internal Entry<float> TwinsDeliveryRadius { get; } = new(5f);
     internal Entry<float> TwinsDeliveryBonusPercent { get; } = new(10f);
     internal Entry<int> TwinsDeliveryStageLimit { get; } = new(5000);
-    internal Entry<float> SignalmanCooldownSeconds { get; } = new(20f);
-    internal Entry<float> SignalmanMaximumDelaySeconds { get; } = new(5f);
-    internal Entry<bool> SignalmanDeathAlerts { get; } = new(true);
     internal Entry<float> InfluenzaIncubationSeconds { get; } = new(30f);
     internal Entry<int> InfluenzaMaximumHealth { get; } = new(75);
     internal Entry<float> InfluenzaSneezeMinimumSeconds { get; } = new(30f);
