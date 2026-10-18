@@ -48,6 +48,11 @@ historical version numbers, deployment profiles and superseded design choices.
   Keep ordinary role/test/icon numbers contiguous; secret IDs remain 1001/1002.
   The role guide opens with Overview and offers Details with host-configured values.
 
+- On 2026-10-18 the user requested substantially easier Courier play, prioritizing
+  longer grace periods. Defaults: initial/revival 120 seconds; delivery sizes
+  Tiny/Small/Medium/Big/Wide/Tall/VeryTall 90/120/180/240/240/240/300 seconds.
+  Keep the existing attrition rate, fixed healing amounts and delivery conditions.
+
 ## Builds and deployment
 
 - Increment the Role UI build number before each main build attempt. Keep the
