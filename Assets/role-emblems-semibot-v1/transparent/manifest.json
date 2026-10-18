@@ -2,7 +2,7 @@
   "method": "Preserve native alpha or remove perimeter-connected near-black exterior; normalize category interiors through a color-region mask",
   "generator": "Python / Pillow / NumPy",
   "black_limit": 64,
-  "count": 48,
+  "count": 47,
   "assets": [
     {
       "name": "01-Tank",
@@ -1440,41 +1440,6 @@
       "background_color_tolerance": 24
     },
     {
-      "name": "42-Signalman",
-      "source": "Assets\\role-emblems-semibot-v1\\selected\\42-Signalman.png",
-      "source_sha256": "5c59ad75b20f8817c792c23951fa0ee00130c0c14fef504452ac530a43c89292",
-      "master_sha256": "31613b9e2d00570824f3adf3fefbd4c1dc17ad12763446e53957aa226074e5c1",
-      "runtime_sha256": "8a3c262a07ef5b14120bc303c142b57ebd67f28765fd8ec69e0389687724b72d",
-      "source_size": [
-        1254,
-        1254
-      ],
-      "runtime_size": [
-        256,
-        256
-      ],
-      "transparent_fraction": 0.407635,
-      "outline_channel_closing": 0,
-      "runtime_edge_pixels": 39040,
-      "native_source_alpha": true,
-      "rgb_pixels_unchanged": false,
-      "central_interior_opaque": false,
-      "central_alpha": 253,
-      "category": "Support",
-      "background_color": "#24563E",
-      "detected_background_rgb": [
-        40,
-        95,
-        66
-      ],
-      "background_color_tolerance": 24,
-      "background_core_pixels": 441487,
-      "background_mask_pixels": 468985,
-      "outside_mask_pixels_unchanged": true,
-      "alpha_preserved_during_recolor": true,
-      "runtime_background_core_pixels": 16680
-    },
-    {
       "name": "1001-Superbot",
       "source": "Assets\\role-emblems-semibot-v1\\selected\\1001-Superbot.png",
       "source_sha256": "f81d8b2a484883abcf26b3fa98ba1b9fe55167024d72d22d72e90567189c33f3",
@@ -1567,8 +1532,8 @@
       "central_alpha": 255
     },
     {
-      "name": "43-Twins",
-      "source": "Assets\\role-emblems-semibot-v1\\selected\\43-Twins.png",
+      "name": "42-Twins",
+      "source": "Assets\\role-emblems-semibot-v1\\selected\\42-Twins.png",
       "source_sha256": "97b405cb115121cd4f32252d76a6453b28943d4f0968c7b650b272ea2033a19e",
       "master_sha256": "7a5e52a7e7110d105b83edde7e0550991303f7a1be88c89922337dba8945ce48",
       "runtime_sha256": "153fa58db94d94fab951aae8c251a0221ea96c30994644cd72aa8e1b48c334a9",
@@ -1615,8 +1580,8 @@
       "outside_mask_pixels_unchanged": true,
       "alpha_preserved_during_recolor": true,
       "background_alpha_holes_filled": 24324,
-      "name": "44-Porter",
-      "source": "Assets/role-emblems-semibot-v1/selected/44-Porter.png",
+      "name": "43-Porter",
+      "source": "Assets/role-emblems-semibot-v1/selected/43-Porter.png",
       "native_source_alpha": true,
       "rgb_pixels_unchanged": false,
       "source_sha256": "ae171c365d3189f39646821b3a188e71f79f6662918cd6e6c50bbf03168378af",
@@ -1645,8 +1610,8 @@
       "outside_mask_pixels_unchanged": true,
       "alpha_preserved_during_recolor": true,
       "method": "Built-in image_gen",
-      "name": "45-DualWielder",
-      "source": "Assets/role-emblems-semibot-v1/selected/45-DualWielder.png",
+      "name": "44-DualWielder",
+      "source": "Assets/role-emblems-semibot-v1/selected/44-DualWielder.png",
       "native_source_alpha": true,
       "source_size": [
         1254,

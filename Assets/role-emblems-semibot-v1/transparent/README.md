@@ -16,7 +16,7 @@ It never overwrites selected source artwork or generation prompts.
 - Opaque sources: remove only near-black exterior connected to image corners.
   When a prop crosses the cream frame, seal narrow channels in the detection
   mask to preserve its interior dark outline.
-- Native-alpha sources (Courier, Influenza and Signalman): retain source alpha
+- Native-alpha sources (Courier and Influenza): retain source alpha
   directly; never color-key them. Their central alpha can be 253–255.
 - Detect the dominant background color region, exclude the black/cream/orange
   artwork, and apply the category color with a narrow antialiased transition.

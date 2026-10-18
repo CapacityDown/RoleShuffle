@@ -1,8 +1,8 @@
 {
   "generationMode": "Built-in image_gen",
-  "count": 47,
-  "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha; Signalman uses native transparent alpha",
-  "status": "47 role emblems integrated",
+  "count": 46,
+  "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha",
+  "status": "46 role emblems integrated",
   "references": {
     "anatomy": "D:/Documents/R.E.P.O. MOD/StagePhysicsEvents/Assets/Semibot_reference.png",
     "style": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-97effa65-2bdf-4e29-b5c1-083b821e9ec5.png",
@@ -38,7 +38,6 @@
         "Electrician",
         "Warden",
         "Bodyguard",
-        "Signalman",
         "Porter"
       ]
     ],
@@ -484,20 +483,6 @@
       "generationMode": "Built-in image_gen (category background edit)"
     },
     {
-      "id": "42",
-      "role": "Signalman",
-      "file": "42-Signalman.png",
-      "category": "Support",
-      "background": "#24563E",
-      "path": "C:\\Users\\Code-\\.codex\\generated_images\\01a0a1f3-aaf0-7cd0-809b-f9921d54fa09\\exec-05e4aa37-ceef-4193-8f9d-8a866cdc242d.png",
-      "prompt": "Edit only the raised arm on the LEFT of this Signalman Semibot role emblem: replace that entire bent arm with ONE simple straight tapered conical cream arm pointing diagonally DOWN and outward, mirroring the right arm. Both arms must now point down. No elbows, no wrists, no hands, no joint seam. Preserve the original hexagonal cream border, green interior, headset microphone, antenna and orange radio waves, eyes, head, shallow neck band, cylindrical body and cone legs EXACTLY as shown. Keep genuine transparent exterior alpha. No text. Crisp clean shapes at icon size.",
-      "prompt_history": {
-        "initial": "Edit the attached Tank emblem into the new Signalman (communications soldier) role emblem for the same R.E.P.O. RoleShuffle icon set. Use this image as the anatomy, linework, framing and palette reference. Preserve the cream rounded point-up hexagonal frame and the unmistakable cream Semibot anatomy: dome head, two large protruding circular eyes, narrow mouth gap, a distinct shallow cylindrical jaw/neck band immediately below the mouth, cylindrical torso, high-attached short tapered one-piece arms, two pointed cone feet. Remove the heart and health bar entirely. Show one single Semibot centered and filling the emblem, wearing a dark compact headset with a small boom microphone beside its mouth and a compact backpack radio with a tall antenna rising behind one shoulder. One tapered arm raised near the headset, the other arm simple. Add three simple orange curved radio signal marks above the antenna. No guns, no human fingers, wrists or elbows, no other characters, no text, letters or numbers. Flat smooth colors, simple clean shading and bold dark outlines matching the reference; absolutely no pixelation, checkerboard pattern, gritty texture, mosaic or blur. Interior of hexagon must be a single flat Support category forest-green color #24563E. Only the exterior beyond the cream hexagon frame is truly transparent. Square canvas, full badge comfortably inside canvas with small even margins. This is a new role variant, save separately from original.",
-        "correction": "Make one precise correction to this Signalman badge. The raised arm on the viewer's left must be ONE single simple tapered cream limb attached high to the side of the cylindrical torso, directly below the neck band, pointing diagonally upward toward the headset. Remove the extra horizontal upper-arm cylinder and elbow-looking connection. It must have no elbow joint, no wrist, no hand. Keep all other artwork, head, eyes, distinct jaw/neck band, headset, backpack antenna, signal marks, pose, cream hexagonal frame, sizes and colors unchanged. Keep outside the hexagon truly transparent. Keep the green background flat #24563E, without noise or patterns.",
-        "final": "Edit only the raised arm on the LEFT of this Signalman Semibot role emblem: replace that entire bent arm with ONE simple straight tapered conical cream arm pointing diagonally DOWN and outward, mirroring the right arm. Both arms must now point down. No elbows, no wrists, no hands, no joint seam. Preserve the original hexagonal cream border, green interior, headset microphone, antenna and orange radio waves, eyes, head, shallow neck band, cylindrical body and cone legs EXACTLY as shown. Keep genuine transparent exterior alpha. No text. Crisp clean shapes at icon size."
-      }
-    },
-    {
       "id": "1001",
       "role": "Superbot",
       "path": "C:\\Users\\Code-\\.codex\\generated_images\\019fbdb5-6974-7f70-b783-b426be968fe3\\exec-f598efe4-dcb1-40fa-bc91-b9ec602a9cfc.png",
@@ -517,7 +502,7 @@
     },
     {
       "role": "Twins",
-      "file": "43-Twins.png",
+      "file": "42-Twins.png",
       "category": "Special",
       "background": "#50356E",
       "prompt": "Use case: stylized-concept. Create the new Twins role badge for RoleShuffle matching the two reference badge illustrations, not editing either reference. Square raster emblem with a cream-edged rounded hexagonal frame, flat solid Special-category purple #50356E interior and true transparent alpha only outside the hexagon. Two equally sized cream R.E.P.O. Semibots stand shoulder to shoulder as twins, connected visually by one large warm orange-red heart centered in front of their torsos, indicating ONE shared health pool. Both characters' dome heads and protruding large round eyes are visible. Each has a thin horizontal mouth slit BELOW the eyes, a distinct shallow cylindrical jaw/neck band BELOW that slit, cylindrical torso, two short simple tapered cone arms attached high just below the neck and cone legs. Match Tank reference neck band carefully. No human joints or hands, no fingers. Chunky clean dark contours, simple shading and restrained flat colors matching reference, enough negative space to read clearly at64px. The two bots look alike, slight inward tilt but symmetrical scale. Fill the badge generously. No text, letters, numbers, extra hearts, extra symbols, detached props, particle decorations, texture, mosaic or pixelation. Exterior truly transparent, purple opaque inside; keep cream rim and artwork fully opaque.",
@@ -525,7 +510,7 @@
     },
     {
       "role": "Porter",
-      "file": "44-Porter.png",
+      "file": "43-Porter.png",
       "category": "Support",
       "background": "#24563E",
       "prompt": "Create ONE new RoleShuffle role badge for Porter, matching the two reference badges as an existing icon set. References are style/anatomy only, not edit targets. Square transparent PNG, clear clean flat vector-like illustration, dark thin outlines, cream edging around a pointed-top pointed-bottom hexagonal frame filling the square. Solid interior support-category green #24563E. Show a single cream R.E.P.O. Semibot porter in 3/4 view, walking slightly bent forward under a large loaded backpack or cargo sack, visibly holding small valuables (a vase and small gold bar) inside the open top of the pack. Simple readable silhouette at 64 px. True Semibot anatomy: rounded dome head, two protruding circular eyes above a small horizontal mouth slit, separate shallow cylindrical jaw/neck band visibly between head and body, cylindrical torso, two short cone legs. Short tapered pointy arms attached high just below neck band, NO human hands/fingers/elbows/wrists. Keep the eyes expressive but simple. Cargo fits inside the hexagon; no other character. Exactly match reference cream robot, cream border, dark outline weights, simple two-tone shading and uncluttered visual density. No text, letters, numbers, watermark, pixelation, gradients, glow, photorealism or extra decorations. Preserve truly transparent exterior of the badge.",
@@ -533,7 +518,7 @@
     },
     {
       "role": "DualWielder",
-      "file": "45-DualWielder.png",
+      "file": "44-DualWielder.png",
       "category": "Combat",
       "background": "#80451F",
       "prompt": "Create one production-ready role emblem for a R.E.P.O. mod role \"DualWielder\". No lettering or text anywhere. Use the two attached existing approved icons solely as visual/style/anatomy references, not edit targets. Square 1024x1024 raster, centered full badge, true transparent exterior. Preserve their exact design language: tall pointy hexagonal badge with thin dark outline and thick warm cream edging, flat solid colors, smooth clean dark outlines, minimal shading, no grain, mosaic, blur, gradients or realistic rendering. Interior background is Combat category solid #80451F. A single cream Semibot in the center, with dome head, two protruding round eyes above a horizontal mouth slit, clearly visible shallow cylindrical jaw/neck band, short cylinder torso, two small tapering cone legs. Short tapered arms attach just below the neck band, with NO human elbows, hands, fingers or wrists. Role action: the Semibot is wielding two identical orange-red baseball bats, one on each side, visibly separated in a strong symmetric V-shaped ready stance. Keep both eyes and the entire neck band unobstructed. Two bats exactly, same size and appearance. No third weapon, no shield, no floating symbols, no extra character. Fill the badge for readability at 64px. Match reference line weight, cream color and flat editorial cartoon style. Exterior must be alpha transparent; the brown interior must remain opaque.",
