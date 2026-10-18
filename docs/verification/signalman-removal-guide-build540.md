@@ -51,12 +51,11 @@ Date: 2026-10-18 JST. RoleShuffle v4.6.0, branch `version/4.6.0`.
 Build/package DLL SHA-256:
 `e60b29e326031b1b9385d64922b4e29442185bed1518f774f32cd66a90ba0b36`.
 
-Package is prepared. RSO_TEST deployment is pending because R.E.P.O. was running.
-No loaded DLL was replaced and the game was not stopped. The profile still has
-build539. Previous package DLL is retained in
+Deployed build540 to RSO_TEST at 2026-10-18 13:03 JST with the game stopped.
+All seven package/profile files matched SHA-256. Previous profile files are
+backed up in `tmp/deployments/before-build540-20261018-040344/RSO_TEST`.
+The previous build539 package DLL remains in
 `tmp/deployments/before-build540-20261018-040202/package-RoleShuffle.dll`.
-The existing release ZIP and profile configuration are unchanged. Prepared
-`tmp/deploy-build540.ps1` rechecks the game, backs up the profile and verifies
-all seven file hashes when deployment is possible.
+The existing release ZIP and profile configuration are unchanged.
 
 Actual in-game menu interaction and host-only multiplayer remain untested.
