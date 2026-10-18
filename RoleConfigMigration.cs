@@ -602,7 +602,7 @@ internal static class RoleConfigMigration
             if (sourceVersion < CurrentSchemaVersion && values.Count > 1 &&
                 File.Exists(path))
             {
-                string backupPath = path + (sourceVersion >= 43 ? ".pre-v4.6.0-courier-grace.bak" : sourceVersion >= 42 ? ".pre-v4.6.0-signalman-removal.bak" : sourceVersion >= 41 ? ".pre-v4.6.0-hunter.bak" : sourceVersion >= 40 ? ".pre-v4.6.0-combat.bak" : sourceVersion >= 39 ? ".pre-v4.5.1-king-support.bak" : sourceVersion >= 38 ? ".pre-v4.5.0-delivery-grace.bak" : sourceVersion >= 37 ? ".pre-v4.5.0-jobless-full-heal.bak" : sourceVersion >= 36 ? ".pre-v4.5.0-standard-roles.bak" : sourceVersion >= 35 ? ".pre-v4.5.0-native-hud.bak" : sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
+                string backupPath = path + (sourceVersion >= 43 ? ".pre-v4.6.1-courier-grace.bak" : sourceVersion >= 42 ? ".pre-v4.6.0-signalman-removal.bak" : sourceVersion >= 41 ? ".pre-v4.6.0-hunter.bak" : sourceVersion >= 40 ? ".pre-v4.6.0-combat.bak" : sourceVersion >= 39 ? ".pre-v4.5.1-king-support.bak" : sourceVersion >= 38 ? ".pre-v4.5.0-delivery-grace.bak" : sourceVersion >= 37 ? ".pre-v4.5.0-jobless-full-heal.bak" : sourceVersion >= 36 ? ".pre-v4.5.0-standard-roles.bak" : sourceVersion >= 35 ? ".pre-v4.5.0-native-hud.bak" : sourceVersion >= 34 ? ".pre-v4.5.0-lifter-200.bak" : sourceVersion >= 33 ? ".pre-v4.5.0-king-upgrades.bak" : sourceVersion >= 32 ? ".pre-v4.5.0-multipliers.bak" : ".pre-v4.4.0.bak");
                 if (!File.Exists(backupPath))
                 {
                     File.Copy(path, backupPath, overwrite: false);

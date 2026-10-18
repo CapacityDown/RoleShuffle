@@ -10,7 +10,7 @@ historical version numbers, deployment profiles and superseded design choices.
 
 - Work in `RoleShuffle`; preserve the original `StageRoles` checkout and previous
   release artifacts so the stable version can be restored.
-- Keep the MOD name RoleShuffle. Continue the current development version (4.6.0)
+- Keep the MOD name RoleShuffle. Continue the current development version (4.6.1)
   unless the user changes it. Do not revive the old overhaul setting.
 - On 2026-10-03 the user requested a complete rollback of the Tuna changes in
   build503. Retain Tuna's build502 behavior: per-frame movement checks, stage-start
@@ -26,7 +26,7 @@ historical version numbers, deployment profiles and superseded design choices.
   into `main`, including the role-safety audit, its diagnostic results and
   hashes, and the verification tools committed as `d4c2698`.
 - Perform development in `RoleShuffle` on a branch named `version/<version>`;
-  the current working branch is `version/4.6.0`. Commit and push ongoing work
+  the current working branch is `version/4.6.1`. Commit and push ongoing work
   to that version's branch instead of directly to `main`.
 - When the user changes the version, complete the relevant verification and
   merge the outgoing version's branch into `main`, then push and verify `main`.
@@ -52,6 +52,11 @@ historical version numbers, deployment profiles and superseded design choices.
   longer grace periods. Defaults: initial/revival 120 seconds; delivery sizes
   Tiny/Small/Medium/Big/Wide/Tall/VeryTall 90/120/180/240/240/240/300 seconds.
   Keep the existing attrition rate, fixed healing amounts and delivery conditions.
+
+- On 2026-10-19 the user assigned the Courier difficulty easing and later work
+  to v4.6.1. The v4.6.0 feature boundary is build540; its source tree is integrated
+  into main at `7525180`. Continue the longer Courier grace periods in
+  `version/4.6.1`, with a separate v4.6.1 CHANGELOG entry and release ZIP.
 
 ## Builds and deployment
 

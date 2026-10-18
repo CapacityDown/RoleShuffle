@@ -2,6 +2,11 @@
 
 Date: 2026-10-18 JST. RoleShuffle v4.6.0, branch `version/4.6.0`.
 
+Historical build record: on 2026-10-19 the user assigned this Courier change and
+later work to v4.6.1. The final artifact is v4.6.1 build542; see
+[the version transition record](version-4.6.1-build542.md). The earlier build541
+metadata and hashes below are retained as produced, for rollback provenance.
+
 The user requested substantially easier Courier play and selected longer grace
 periods as the primary change. The HP-loss rate, fixed healing rewards, required
 carry distance, one reward per valuable per player and unlimited deliveries remain.

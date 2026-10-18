@@ -1,5 +1,7 @@
-## 4.6.0
+## 4.6.1
 - Eased Courier with a 120-second HP-loss pause at stage start and after revival. Delivery pauses now last 90/120/180/240/240/240/300 seconds for Tiny/Small/Medium/Big/Wide/Tall/VeryTall valuables.
+
+## 4.6.0
 - Split the role guide into Overview for short ability summaries and Details for configured values, conditions and limits.
 - Added DualWielder: holding a melee weapon creates a matching weapon to the left that repeats its movement and attacks after 0.3 seconds. Both share battery and durability, including consumption from the copy. The copy disappears when the weapon is released or switched, on death, or when the role ends. Delay and offset are configurable. Available in Standard and Challenge presets.
 - Added Porter: passively stores small valuables up to a combined weight of 15, scatters all cargo on enemy damage, and unloads in delivery areas or into the cart it stands on with a weight-based wait (10 seconds at full load). Weight proportionally reduces Speed upgrade levels to 0 at full load, restoring them on unloading. Includes configurable sizes and capacity, a smooth cargo HUD with weight and total value, and private capacity and unloading notices. Available in Beginner and Cooperative presets.

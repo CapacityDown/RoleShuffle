@@ -37,7 +37,7 @@ internal static class CourierGraceMigrationChecks
                 !config.JoblessEnabled.Value && config.JoblessWeight.Value == 7 && File.ReadAllText(path).Contains("ReportIntervalSeconds = 27"),
                 "Custom attrition, delivery, healing, draw settings and unrelated role values survive");
             if (schema == 43)
-                Check(File.ReadAllText(path + ".pre-v4.6.0-courier-grace.bak") == text, "Exact rollback backup");
+                Check(File.ReadAllText(path + ".pre-v4.6.1-courier-grace.bak") == text, "Exact rollback backup");
             if (schema >= 44) Check(File.ReadAllText(path) == text, "Current/future schema is not rewritten");
             file.Save();
             string once = File.ReadAllText(path);
