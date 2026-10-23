@@ -58,6 +58,9 @@ historical version numbers, deployment profiles and superseded design choices.
   into main at `7525180`. Continue the longer Courier grace periods in
   `version/4.6.1`, with a separate v4.6.1 CHANGELOG entry and release ZIP.
 
+- After final extraction, Courier automatic HP loss stays disabled until stage end,
+  including after role reassignment or revival. Other damage remains unchanged.
+
 ## Builds and deployment
 
 - Increment the Role UI build number before each main build attempt. Keep the

@@ -280,5 +280,6 @@
   "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.": "주변 동료의 이동과 잡기 능력을 일시적으로 강화하고 왕관을 받습니다.",
   "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.": "채팅이나 지정 표정으로 HP를 소모해 다섯 공격을 사용하며, 피해를 받지 않으면 HP가 회복됩니다. 들고 있는 지팡이의 마법은 더 오래 지속됩니다.",
   "Combines many roles' upgrades and abilities.": "여러 역할의 업그레이드와 능력을 함께 가집니다.",
-  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber, Stinker, Tuna, Influenza의 능력과 위험을 함께 가집니다."
+  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber, Stinker, Tuna, Influenza의 능력과 위험을 함께 가집니다.",
+  "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\n마지막 회수가 완료되면 스테이지가 끝날 때까지 Courier의 자동 HP 감소가 멈춥니다."
 }

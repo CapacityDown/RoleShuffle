@@ -177,6 +177,11 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _gambler.ExtractionCompleted(director, _assignments, _notifier);
     }
 
+    internal void FinalExtractionCompleted()
+    {
+        if (_stageReady && IsAuthority()) _overhaul.CompleteFinalExtraction();
+    }
+
     internal void ObserveGambitState(EnemySpinny gambit)
     {
         if (_stageReady && IsAuthority())

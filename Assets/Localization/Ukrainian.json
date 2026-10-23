@@ -280,5 +280,6 @@
   "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.": "Тимчасово покращує рух і захоплення найближчих союзників та отримує корону.",
   "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.": "Виконує п’ять атак через чат або вибрані вирази обличчя ціною HP і відновлюється після часу без шкоди. Магія утримуваних посохів триває довше.",
   "Combines many roles' upgrades and abilities.": "Поєднує покращення й здібності багатьох ролей.",
-  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Поєднує Bomber, Stinker, Tuna й Influenza разом із їхніми небезпеками."
+  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Поєднує Bomber, Stinker, Tuna й Influenza разом із їхніми небезпеками.",
+  "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\nПісля завершення останнього вилучення Courier перестає автоматично втрачати HP до кінця етапу."
 }

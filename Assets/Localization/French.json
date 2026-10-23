@@ -280,5 +280,6 @@
   "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.": "Accorde temporairement aux alliés proches des améliorations de déplacement et de prise, et reçoit une couronne.",
   "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.": "Utilise le chat ou des expressions choisies pour lancer cinq attaques contre des PV, puis récupère après une période sans dégâts. La magie des bâtons tenus dure plus longtemps.",
   "Combines many roles' upgrades and abilities.": "Combine les améliorations et capacités de nombreux rôles.",
-  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Combine Bomber, Stinker, Tuna et Influenza, avec leurs dangers."
+  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Combine Bomber, Stinker, Tuna et Influenza, avec leurs dangers.",
+  "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\nUne fois la dernière extraction terminée, Courier ne perd plus automatiquement de PV jusqu'à la fin du niveau."
 }

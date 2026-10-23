@@ -192,6 +192,57 @@ foreach (float grace in new[] { 0f, 1f, 5f, 30f, 300f })
     Check(revived.Overhaul.PaidUntil == 1000 + grace && revived.Player.playerHealth.Health == (grace == 0 ? 0 : 1),
         "Revival respects the configured initial pause, including an explicitly disabled pause");
 }
+// Final extraction is a stage-wide attrition exemption, including vanilla guests.
+foreach (bool remote in new[] { false, true })
+{
+    SemiFunc.Multiplayer = remote;
+    var finalConfig = new StageRolesConfig();
+    finalConfig.JoblessInitialGrace.Value = 0;
+    var finalRuntime = new RoleOverhaulRuntime(finalConfig);
+    var finalCourier = new RoleAssignment();
+    finalCourier.Player.photonView.IsMine = !remote;
+    Clock(0); Time.deltaTime = 0.1f;
+    finalRuntime.TickAttrition(finalCourier);
+    Check(finalCourier.Player.playerHealth.DamageRequests == 1,
+        "Courier attrition still applies before final extraction");
+    finalCourier.JoblessDamageTimer = 2f;
+    finalRuntime.CompleteFinalExtraction();
+    finalRuntime.CompleteFinalExtraction(); // Duplicate native notification is harmless.
+    foreach (float time in new[] { 1f, 301f, 10000f })
+    {
+        Clock(time);
+        finalRuntime.TickAttrition(finalCourier);
+        Check(finalCourier.Player.playerHealth.DamageRequests == 1 && finalCourier.JoblessDamageTimer == 0,
+            "Final extraction discards pending attrition and never expires outside the truck");
+    }
+    finalCourier.Player.InTruck = true;
+    finalRuntime.TickAttrition(finalCourier);
+    finalCourier.Player.InTruck = false;
+    finalRuntime.TickAttrition(finalCourier);
+    Check(finalCourier.Player.playerHealth.DamageRequests == 1,
+        "Leaving the truck after final extraction does not restart attrition");
+    finalRuntime.PlayerDied(finalCourier);
+    finalCourier.Player.playerHealth.Health = 1;
+    Clock(20000); finalRuntime.TickAttrition(finalCourier);
+    Check(finalCourier.Player.playerHealth.Health == 1 && finalCourier.JoblessDamageTimer == 0,
+        "One-HP revival remains safe after final extraction even with initial grace disabled");
+    var lateCourier = new RoleAssignment();
+    lateCourier.Player.photonView.IsMine = !remote;
+    finalRuntime.TickAttrition(lateCourier);
+    Check(lateCourier.Player.playerHealth.DamageRequests == 0,
+        "New or reassigned Courier inherits the completed stage exemption");
+    lateCourier.Player.playerHealth.HurtOther(2, Vector3.zero, false);
+    Check(lateCourier.Player.playerHealth.Health == 48,
+        "Ordinary incoming damage still applies after final extraction");
+    finalRuntime.Stop();
+    Check(!finalRuntime.FinalExtractionCompleted, "Stage cleanup clears final extraction state");
+    var nextCourier = new RoleAssignment();
+    Clock(0); finalRuntime.TickAttrition(nextCourier);
+    Check(nextCourier.Player.playerHealth.DamageRequests == 1,
+        "The next stage resumes configured Courier attrition");
+}
+SemiFunc.Multiplayer = false;
+
 var protectedWork = new RoleOverhaulState();
 protectedWork.Start(0, 30);
 protectedWork.Carry(500, 0, false, 10, 5, 120);

@@ -189,5 +189,6 @@
   "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.": "近くの仲間の移動・つかむ能力を一時的に強化し、自分はCrownを受け取ります。",
   "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.": "チャットや設定した表情でHPを消費して5種類の攻撃を発動し、被弾しない時間が続くとHPを回復します。保持した杖の魔法は長く続きます。",
   "Combines many roles' upgrades and abilities.": "多くの役職のアップグレードと能力を併せ持ちます。",
-  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber・Stinker・Tuna・Influenzaの能力と危険性を併せ持ちます。"
+  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber・Stinker・Tuna・Influenzaの能力と危険性を併せ持ちます。",
+  "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\n最終納品が完了すると、ステージ終了までCourierの自動HP減少が止まります。"
 }

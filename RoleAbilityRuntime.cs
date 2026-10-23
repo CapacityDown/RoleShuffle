@@ -61,7 +61,8 @@ internal sealed partial class StageRoleController
             values.Add(new AbilityValue(AbilityMetric.RoyalSupport, assignment.Overhaul.KingSupportedAllies, 0));
         if (assignment.Role == StageRole.Jobless)
         {
-            Seconds(AbilityMetric.Grace, assignment.Overhaul.PaidUntil);
+            if (!_overhaul.FinalExtractionCompleted)
+                Seconds(AbilityMetric.Grace, assignment.Overhaul.PaidUntil);
             values.Add(new AbilityValue(AbilityMetric.Carry, Mathf.FloorToInt(assignment.Overhaul.CarryDistance),
                 Mathf.CeilToInt(_config.JoblessContractDistance.Value)));
         }

@@ -280,5 +280,6 @@
   "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.": "暫時提升附近隊友的移動和抓取能力，並獲得王冠。",
   "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.": "透過聊天或指定表情消耗生命值發動五種攻擊，一段時間未受傷後恢復生命。手持法杖施放的魔法持續更久。",
   "Combines many roles' upgrades and abilities.": "兼具多個角色的升級與能力。",
-  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "兼具Bomber、Stinker、Tuna和Influenza的能力及危險。"
+  "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "兼具Bomber、Stinker、Tuna和Influenza的能力及危險。",
+  "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\n完成最後一次提取後，Courier的自動生命值流失將停止，直到本關結束。"
 }

@@ -14,7 +14,18 @@ internal sealed class RoleOverhaulRuntime
     private float _nextTick;
 
     internal RoleOverhaulRuntime(StageRolesConfig config) => _config = config;
-    internal void Stop() { KingUpgradeAura.Stop(); _cargoPositions.Clear(); _nextTick = 0; }
+    internal bool FinalExtractionCompleted { get; private set; }
+
+    // Stage-wide, so later role assignments and revivals retain the exemption.
+    internal void CompleteFinalExtraction() => FinalExtractionCompleted = true;
+
+    internal void Stop()
+    {
+        KingUpgradeAura.Stop();
+        _cargoPositions.Clear();
+        _nextTick = 0;
+        FinalExtractionCompleted = false;
+    }
 
     internal void Tick(IReadOnlyList<RoleAssignment> assignments, RoleNotifier notifier)
     {
@@ -67,7 +78,7 @@ internal sealed class RoleOverhaulRuntime
     internal void TickAttrition(RoleAssignment assignment)
     {
         PlayerAvatar player = assignment.Player;
-        if (!ObserveCourierLife(assignment) || PlayerState.IsInTruck(player) ||
+        if (!ObserveCourierLife(assignment) || FinalExtractionCompleted || PlayerState.IsInTruck(player) ||
             Time.time < assignment.Overhaul.PaidUntil)
         {
             assignment.JoblessDamageTimer = 0f;
@@ -76,7 +87,7 @@ internal sealed class RoleOverhaulRuntime
         assignment.JoblessDamageTimer += Time.deltaTime;
         int ticks = 0;
         float interval = _config.ClampedJoblessInterval;
-        while (assignment.JoblessDamageTimer >= interval && ticks < 20 &&
+        while (!FinalExtractionCompleted && assignment.JoblessDamageTimer >= interval && ticks < 20 &&
                PlayerState.IsLiving(player) && !PlayerState.IsInTruck(player))
         {
             assignment.JoblessDamageTimer -= interval;

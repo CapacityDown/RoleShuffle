@@ -76,6 +76,16 @@ internal static class LifecyclePatches
         }
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(RoundDirector), "ExtractionCompletedAllRPC")]
+    private static void RoundDirectorFinalExtractionPostfix(bool ___allExtractionPointsCompleted)
+    {
+        // Read the native result after its sender check. Ordinary/intermediate
+        // extraction completion is intentionally handled by the separate hook.
+        if (___allExtractionPointsCompleted)
+            StageRolesPlugin.Instance?.Controller?.FinalExtractionCompleted();
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(RunManager), nameof(RunManager.ChangeLevel))]
     private static bool RunManagerChangeLevelPrefix(
