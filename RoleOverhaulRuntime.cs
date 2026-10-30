@@ -27,11 +27,12 @@ internal sealed class RoleOverhaulRuntime
         FinalExtractionCompleted = false;
     }
 
-    internal void Tick(IReadOnlyList<RoleAssignment> assignments, RoleNotifier notifier)
+    internal void Tick(IReadOnlyList<RoleAssignment> assignments, RoleNotifier notifier,
+        Func<PlayerAvatar, float>? carryStrengthMultiplier = null)
     {
         if (Time.time < _nextTick) return;
         _nextTick = Time.time + 0.25f;
-        KingUpgradeAura.Tick(_config, assignments);
+        KingUpgradeAura.Tick(_config, assignments, carryStrengthMultiplier);
         PhysGrabObject[]? candidates = null;
         foreach (RoleAssignment assignment in assignments)
         {

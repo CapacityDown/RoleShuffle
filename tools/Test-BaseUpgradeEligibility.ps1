@@ -27,8 +27,7 @@ public class StageRolesConfig {
     public Entry<bool> KeepUpgradeItems = new(false);
     public UpgradeGrant[] Bases;
     public UpgradeGrant[] Targets;
-    public Entry<float> LifterHeavyGripMultiplier = new(1f);
-    public Entry<float> LifterHeavyRotationMultiplier = new(1f);
+    public Entry<int> LifterStrengthLevel = new(200);
     public Entry<float> TankHealthMultiplier = new(1.5f);
     public Entry<float> RunnerSpeedMultiplier = new(1.5f);
     public Entry<float> RunnerStaminaMultiplier = new(1.5f);
@@ -112,38 +111,35 @@ __TARGETS__
             Bases = new[] { new UpgradeGrant("Strength", 20) }, Targets = new[] { new UpgradeGrant("Strength", 25) }
         };
         RoleOverhaulRules.LifterPhysicsAvailable = true;
-        // Execute actual target composition and eligibility over the whole Base range,
-        // including old role inputs that the fixed Strength target must ignore.
-        foreach (int minimum in new[] { 0, 25, 50, 200 })
+        // Execute production assignment and eligibility using configured upgrade targets.
+        foreach (int target in new[] { 0, 1, 20, 49, 50, 100, 200 })
         for (int baseline = 0; baseline <= 200; baseline++) {
             lifter.Bases[0].Level = baseline;
-            lifter.Targets[0].Level = minimum;
-            if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != 200)
-                throw new Exception("Lifter must grant fixed Strength 200 regardless of Base/minimum");
-            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (baseline == 50))
-                throw new Exception("Only Base level 50 already reaches the heavy-object peak");
-            if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != 200)
-                throw new Exception("Superbot inherits fixed Strength 200");
+            lifter.Targets[0].Level = target;
+            lifter.LifterStrengthLevel.Value = target;
+            if (TargetUpgrades(StageRole.Lifter, lifter)[0].Level != target)
+                throw new Exception("Lifter must grant the configured Strength upgrade level");
+            if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter) != (baseline >= Math.Min(target, 50)))
+                throw new Exception("Native heavy-object plateau controls eligibility");
+            if (TargetUpgrades(StageRole.Superbot, lifter)[0].Level != target)
+                throw new Exception("Superbot inherits the configured Lifter upgrade");
             count += 3;
         }
-        lifter.Bases[0].Level = 50;
-        lifter.LifterHeavyGripMultiplier.Value = 2;
-        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Custom grip gain keeps Lifter eligible");
-        lifter.LifterHeavyGripMultiplier.Value = 0.5f; lifter.LifterHeavyRotationMultiplier.Value = 2;
-        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Custom rotation gain keeps Lifter eligible");
-        lifter.LifterHeavyRotationMultiplier.Value = 0.5f;
-        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Base exceeding both custom targets excludes Lifter");
         lifter.Bases = Array.Empty<UpgradeGrant>();
-        lifter.LifterHeavyGripMultiplier.Value = lifter.LifterHeavyRotationMultiplier.Value = 0.1f;
-        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("Absent Base Strength means level zero for custom eligibility");
-        lifter.LifterHeavyGripMultiplier.Value = lifter.LifterHeavyRotationMultiplier.Value = 1;
-        count += 4;
+        lifter.LifterStrengthLevel.Value = 0;
+        if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("No Base is level zero, so a zero target is excluded");
+        lifter.LifterStrengthLevel.Value = 1;
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter)) throw new Exception("No Base can benefit from target level one");
+        lifter.LifterStrengthLevel.Value = 200;
+        count += 2;
         lifter.Targets[0].Level = 25;
         RoleOverhaulRules.LifterPhysicsAvailable = false;
         if (!BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Lifter, lifter))
             throw new Exception("Missing physics patch excludes ineffective random Lifter");
+        if (BaseUpgradeMeetsOrExceedsRoleTarget(StageRole.Twins, lifter))
+            throw new Exception("Twins upgrades do not depend on the Lifter item-handling patch");
         RoleOverhaulRules.LifterPhysicsAvailable = true;
-        count++;
+        count += 2;
         var tank = new StageRolesConfig {
             Bases = new[] { new UpgradeGrant("Health", 199) }, Targets = new[] { new UpgradeGrant("Health", 21) }
         };

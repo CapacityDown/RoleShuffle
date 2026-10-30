@@ -29,21 +29,26 @@ internal static class KingUpgradeAura
 
     internal static int DesiredBonus(string command, int baseline, int requested)
     {
-        int maximum = Math.Min(Math.Clamp(requested, 0, 200), Math.Max(0, 200 - baseline));
-        if (command != "Strength") return maximum;
-        for (int extra = maximum; extra > 0; extra--)
-        {
-            bool safe = true;
-            foreach (bool light in new[] { true, false })
-            foreach (bool rotation in new[] { true, false })
-                if (RoleOverhaulRules.EffectiveGrabStrength(baseline + extra, light, rotation) <
-                    RoleOverhaulRules.EffectiveGrabStrength(baseline, light, rotation)) safe = false;
-            if (safe) return extra;
-        }
-        return 0;
+        // v0.5.0 retains high-level grabbing strength; no role-side penalty
+        // curve or search is needed for ordinary upgrade grants.
+        return Math.Min(Math.Clamp(requested, 0, 200), Math.Max(0, 200 - Math.Max(0, baseline)));
     }
 
-    internal static void Tick(StageRolesConfig config, IReadOnlyList<RoleAssignment> assignments)
+    // The ledger owns the combined King/Twins Strength grant so neither effect
+    // can recursively multiply the other effect's temporary levels.
+    internal static int CombinedStrengthBonus(int baseline, int kingBonus, float carryMultiplier)
+    {
+        baseline = Math.Max(0, baseline);
+        int king = DesiredBonus("Strength", baseline, kingBonus);
+        if (baseline >= 200) return 0;
+        double multiplier = float.IsFinite(carryMultiplier) ? Math.Clamp(carryMultiplier, 1f, 3f) : 1d;
+        double nativeStrength = 1d + 0.2d * (baseline + king);
+        int target = (int)Math.Min(200d, Math.Ceiling((nativeStrength * multiplier - 1d) / 0.2d - 1e-8));
+        return Math.Max(king, target - baseline);
+    }
+
+    internal static void Tick(StageRolesConfig config, IReadOnlyList<RoleAssignment> assignments,
+        Func<PlayerAvatar, float>? carryStrengthMultiplier = null)
     {
         if (!SemiFunc.IsMasterClientOrSingleplayer()) return;
         List<RoleAssignment> kings = new();
@@ -72,14 +77,16 @@ internal static class KingUpgradeAura
                 foreach (var ghost in ghosts)
                     if (PlayerState.IsGrabbingDeathHead(target.Player, ghost.Player))
                     { carryBonus = config.GhostCarrierSpeedBonus.Value; break; }
-            bool supported = Reconcile(target.SteamId, nearby.Count > 0 ? config : null, carryBonus);
+            float strengthMultiplier = PlayerState.IsLiving(target.Player)
+                ? carryStrengthMultiplier?.Invoke(target.Player) ?? 1f : 1f;
+            bool supported = Reconcile(target.SteamId, nearby.Count > 0 ? config : null, carryBonus, strengthMultiplier);
             if (supported) foreach (var king in nearby) king.Overhaul.KingSupportedAllies++;
         }
         foreach (string steamId in new List<string>(Applied.Keys))
             if (!active.Contains(steamId)) Reconcile(steamId, null);
     }
 
-    private static bool Reconcile(string steamId, StageRolesConfig? config, int carryBonus = 0)
+    private static bool Reconcile(string steamId, StageRolesConfig? config, int carryBonus = 0, float carryStrengthMultiplier = 1f)
     {
         if (!UpgradeService.TryGetLevels(steamId, out var current)) return false;
         if (!Applied.TryGetValue(steamId, out var applied)) applied = new(StringComparer.Ordinal);
@@ -96,7 +103,10 @@ internal static class KingUpgradeAura
             };
             // Speed auras use the stronger bonus; multiple Ghost heads never stack.
             if (command == "Speed") requested = Math.Max(requested, carryBonus);
-            int desired = DesiredBonus(command, Math.Max(0, level - previous), requested);
+            int baseline = Math.Max(0, level - previous);
+            int desired = command == "Strength"
+                ? CombinedStrengthBonus(baseline, requested, carryStrengthMultiplier)
+                : DesiredBonus(command, baseline, requested);
             int delta = desired - previous;
             if (delta != 0)
             {

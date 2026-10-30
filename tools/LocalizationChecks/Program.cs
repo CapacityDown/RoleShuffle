@@ -99,8 +99,7 @@ try
     }
 }
 finally { if (File.Exists(temp)) File.Delete(temp); }
-config.LifterHeavyGripMultiplier.Value = 2.5f;
-config.LifterHeavyRotationMultiplier.Value = 0.5f;
+config.LifterStrengthLevel.Value = 17;
 config.InfluenzaIncubationSeconds.Value = 17;
 config.InfluenzaMaximumHealth.Value = 123;
 config.InfluenzaSneezeMinimumSeconds.Value = 19;

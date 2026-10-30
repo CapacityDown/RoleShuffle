@@ -416,6 +416,74 @@ PhotonAccess.FailOnRead = true; KingUpgradeAura.Stop(); PhotonAccess.FailOnRead 
 SemiFunc.Multiplayer = false;
 
 
+// Co-carry Strength uses the same native-upgrade ledger as King.
+var carryKing = new RoleAssignment { Role = StageRole.King, Player = new PlayerAvatar { Id = "carry-king", Living = false } };
+var twinA = new RoleAssignment { Role = StageRole.Twins, Player = new PlayerAvatar { Id = "carry-a" } };
+var twinB = new RoleAssignment { Role = StageRole.Twins, Player = new PlayerAvatar { Id = "carry-b" } };
+var carryParty = new[] { carryKing, twinA, twinB };
+bool coCarrying = true;
+float CarryStrength(PlayerAvatar p) => coCarrying && (p == twinA.Player || p == twinB.Player) ? 1.5f : 1f;
+void CarryAura() => KingUpgradeAura.Tick(config, carryParty, CarryStrength);
+Set("carry-a", "Strength", 0); Set("carry-b", "Strength", 10);
+CarryAura();
+Check(Level("carry-a", "Strength") == 3 && Level("carry-b", "Strength") == 18,
+    "Co-carry grants separate integer upgrade targets for each baseline");
+for (int i = 0; i < 20; i++) CarryAura();
+Check(Level("carry-a", "Strength") == 3 && Level("carry-b", "Strength") == 18,
+    "Repeated co-carry ticks cannot multiply their own temporary levels");
+carryKing.Player.Living = true; CarryAura();
+Check(Level("carry-a", "Strength") == 10 && Level("carry-b", "Strength") == 25,
+    "King and co-carry compose once from baseline plus King levels");
+carryKing.Player.Living = false; CarryAura();
+Check(Level("carry-a", "Strength") == 3 && Level("carry-b", "Strength") == 18,
+    "King expiry preserves the co-carry contribution");
+carryKing.Player.Living = true; coCarrying = false; CarryAura();
+Check(Level("carry-a", "Strength") == 5 && Level("carry-b", "Strength") == 15,
+    "Releasing co-carry preserves King support");
+carryKing.Player.Living = false; CarryAura();
+Check(Level("carry-a", "Strength") == 0 && Level("carry-b", "Strength") == 10,
+    "Both temporary effects expire to exact separate baselines");
+coCarrying = true; CarryAura();
+UpgradeService.AddLevelsHostAuthoritative("carry-a", "Strength", 2); CarryAura();
+Check(Level("carry-a", "Strength") == 6 && KingUpgradeAura.WithoutBonus("carry-a", "playerUpgradeStrength", 6) == 2,
+    "Purchased levels while carrying remain baseline, not temporary aura");
+coCarrying = false; CarryAura();
+Check(Level("carry-a", "Strength") == 2, "Purchased Strength survives co-carry expiry");
+coCarrying = true; CarryAura(); Set("carry-a", "Strength", 6); CarryAura();
+Check(Level("carry-a", "Strength") == 12, "Absolute reassignment clears ownership even when the visible level was unchanged");
+coCarrying = false; CarryAura();
+Check(Level("carry-a", "Strength") == 6, "Absolute role reset cannot double-remove a previous carry bonus");
+coCarrying = true; CarryAura(); twinA.Player.Living = false; CarryAura();
+Check(Level("carry-a", "Strength") == 6, "Dead recipient has no temporary Strength even before callback cleanup");
+twinA.Player.Living = true; CarryAura();
+KingUpgradeAura.Tick(config, new[] { carryKing, twinB }, CarryStrength);
+Check(Level("carry-a", "Strength") == 6, "Disconnect removes the former recipient's temporary Strength");
+Set("carry-a", "Strength", 199); Set("carry-b", "Strength", 250); CarryAura();
+Check(Level("carry-a", "Strength") == 200 && Level("carry-b", "Strength") == 250,
+    "Co-carry cap does not reduce already-higher external levels");
+KingUpgradeAura.Stop();
+Check(Level("carry-a", "Strength") == 199 && Level("carry-b", "Strength") == 250,
+    "Stage cleanup restores high-level baselines");
+Set("carry-a", "Strength", 0); Set("carry-b", "Strength", 10);
+SemiFunc.Multiplayer = true; PhotonNetwork.IsMasterClient = false; CarryAura();
+Check(Level("carry-a", "Strength") == 0, "Non-host cannot grant co-carry Strength");
+PhotonNetwork.IsMasterClient = true; PhotonView.FailSend = true; CarryAura(); CarryAura();
+Check(Level("carry-a", "Strength") == 3 && Level("carry-b", "Strength") == 18,
+    "Failed network send after local application cannot duplicate co-carry grants");
+PhotonView.FailSend = false; KingUpgradeAura.Stop(); SemiFunc.Multiplayer = false;
+Check(Level("carry-a", "Strength") == 0 && Level("carry-b", "Strength") == 10,
+    "Cleanup after send failure removes the exact applied amounts");
+foreach (int baseline in Enumerable.Range(0, 251))
+foreach (int kingBonus in new[] { 0, 5, 200 })
+foreach (float multiplier in new[] { 1f, 1.5f, 3f, float.NaN, float.PositiveInfinity })
+{
+    int extra = KingUpgradeAura.CombinedStrengthBonus(baseline, kingBonus, multiplier);
+    int minimum = Math.Min(kingBonus, Math.Max(0, 200 - baseline));
+    Check(extra >= minimum && extra <= Math.Max(0, 200 - baseline), "Combined grants preserve King bonus and obey cap");
+    Check(Forces(baseline + extra).Zip(Forces(baseline)).All(pair => pair.First >= pair.Second),
+        "Combined upgrade grants never weaken native grip or rotation");
+}
+
 // Porter deductions compose with King, native item increments and absolute resets.
 var porterKing=new RoleAssignment{Role=StageRole.King,Player=new PlayerAvatar{Id="pk"}};
 var porterAlly=new RoleAssignment{Role=StageRole.Porter,Player=new PlayerAvatar{Id="pc"}};

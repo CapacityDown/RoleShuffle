@@ -264,8 +264,13 @@ internal sealed partial class StageRoleController
             UtilityRoleRuntime.IsHeldBy(item, pair.Members[0]) && UtilityRoleRuntime.IsHeldBy(item, pair.Members[1]);
     }
 
-    internal float TwinsGrabMultiplier(PhysGrabObject item, PlayerAvatar player) =>
-        IsTwin(player) && TwinsCarrying(item) ? _config.TwinsCarryStrengthMultiplier.Value : 1f;
+    internal float TwinsStrengthUpgradeMultiplier(PlayerAvatar player)
+    {
+        if (!IsTwin(player) || _twins == null) return 1f;
+        foreach (PhysGrabObject item in _twins.Cargo)
+            if (TwinsCarrying(item)) return _config.TwinsCarryStrengthMultiplier.Value;
+        return 1f;
+    }
 
     internal float TwinsCollisionMultiplier(PhysGrabObject item) => TwinsCarrying(item)
         ? 1f - _config.TwinsCollisionReductionPercent.Value / 100f : 1f;

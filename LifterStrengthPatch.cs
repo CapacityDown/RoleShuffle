@@ -27,7 +27,7 @@ internal static class LifterStrengthPatch
             StageRolesPlugin.ModLogger.LogWarning($"Lifter physics patch failed: {error}");
         }
         if (!RoleOverhaulRules.LifterPhysicsAvailable)
-            StageRolesPlugin.ModLogger.LogWarning("Fixed-strength Lifter is unavailable and excluded from random assignment.");
+            StageRolesPlugin.ModLogger.LogWarning("Lifter small-item handling is unavailable and excluded from random assignment.");
     }
 
     private static IEnumerable<MethodBase> TargetMethods()
@@ -63,9 +63,8 @@ internal static class LifterStrengthPatch
             source[site - 1].opcode != OpCodes.Ldc_R4 ||
             !Equals(source[site - 1].operand, rotation ? float.PositiveInfinity : 30f) ||
             loads[0].index >= site) return source;
-        MethodInfo adjust = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Adjust));
         MethodInfo input = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.NativeStrengthInput));
-        var result = new List<CodeInstruction>(source.Count + 8);
+        var result = new List<CodeInstruction>(source.Count + 3);
         for (int i = 0; i < source.Count; i++)
         {
             result.Add(source[i]);
@@ -74,14 +73,6 @@ internal static class LifterStrengthPatch
                 result.Add(new CodeInstruction(OpCodes.Ldarg_0));
                 result.Add(new CodeInstruction(grabber));
                 result.Add(new CodeInstruction(OpCodes.Call, input));
-            }
-            if (i == site)
-            {
-                result.Add(new CodeInstruction(OpCodes.Ldloc, rawLocal));
-                result.Add(new CodeInstruction(OpCodes.Ldarg_0));
-                result.Add(new CodeInstruction(grabber));
-                result.Add(new CodeInstruction(rotation ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0));
-                result.Add(new CodeInstruction(OpCodes.Call, adjust));
             }
         }
         if (rotation) _torquePatched = true; else _gripPatched = true;

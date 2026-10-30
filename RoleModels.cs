@@ -186,7 +186,6 @@ internal static class RoleCatalog
         StageRole role,
         StageRolesConfig config, string? steamId = null)
     {
-        if (role == StageRole.Twins) return !RoleOverhaulRules.LifterPhysicsAvailable;
         if (role is StageRole.Tracker or StageRole.Ghost) return false; // Passive abilities remain useful at any Base level.
         if (role < StageRole.Tank || role > StageRole.Ghost)
         {
@@ -200,9 +199,9 @@ internal static class RoleCatalog
             foreach (UpgradeGrant baseline in baseUpgrades)
                 if (baseline.CommandName == "Strength")
                     return RoleOverhaulRules.LifterBaseReachesTarget(baseline.Level,
-                        config.LifterHeavyGripMultiplier.Value, config.LifterHeavyRotationMultiplier.Value);
+                        config.LifterStrengthLevel.Value);
             return RoleOverhaulRules.LifterBaseReachesTarget(0,
-                config.LifterHeavyGripMultiplier.Value, config.LifterHeavyRotationMultiplier.Value);
+                config.LifterStrengthLevel.Value);
         }
         if (RoleOverhaulRules.GrowsWithBase(role))
         {
@@ -310,7 +309,7 @@ internal static class RoleCatalog
                     role is StageRole.Lifter or StageRole.Superbot)
                 {
                     targets[index] = new UpgradeGrant(roleUpgrade.CommandName, roleUpgrade.DictionaryName,
-                        RoleOverhaulRules.LifterStrengthLevel);
+                        roleUpgrade.Level);
                     break;
                 }
                 if (role == StageRole.Tracker)
@@ -355,7 +354,7 @@ internal static class RoleCatalog
                 new UpgradeGrant("Stamina", "playerUpgradeStamina", config.RunnerStaminaLevels.Value)
             },
             StageRole.Jumper => Grant("ExtraJump", "playerUpgradeExtraJump", config.JumperExtraJumpLevels.Value),
-            StageRole.Lifter => Grant("Strength", "playerUpgradeStrength", RoleOverhaulRules.LifterStrengthLevel),
+            StageRole.Lifter => Grant("Strength", "playerUpgradeStrength", config.LifterStrengthLevel.Value),
             StageRole.Launcher => Grant("Launch", "playerUpgradeLaunch", config.LauncherLaunchLevels.Value),
             StageRole.Climber => new[]
             {

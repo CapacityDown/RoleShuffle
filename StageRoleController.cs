@@ -1376,7 +1376,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _tracker.Tick(_assignments);
         TickGhostSupport();
         _eventRoles.Tick(_assignments);
-        _overhaul.Tick(_assignments, _notifier);
+        _overhaul.Tick(_assignments, _notifier, TwinsStrengthUpgradeMultiplier);
         _mage.MaintainSpawnedObjects();
         RefreshRescueDeaths();
         foreach (RoleAssignment assignment in _assignments)

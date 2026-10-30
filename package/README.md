@@ -79,7 +79,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i01]<br>Tank|Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit.|Health minimum 21.|Minimum, multiplier, cap|
 |![][i02]<br>Runner|Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040.|Minimum Speed 6, Stamina 46.|Minimums, multipliers, caps|
 |![][i03]<br>Jumper|Adds up to 10 extra jumps before landing by setting Extra Jump to level 10.|Passive upgrade.|Extra Jump target 0–100|
-|![][i04]<br>Lifter|Heavy objects, carts and bikes use peak lifting/turning strength from Strength Lv0–200.|Strength displays Lv200. Excluded if Base meets both strength targets (default: Lv50).|Holding strength|
+|![][i04]<br>Lifter|Strength becomes Lv200, making heavy objects, carts and bikes easier to handle.|Normal Strength returns when the role ends. Excluded if Base already provides the same heavy-object strength (default: Lv50).|Strength level|
 |![][i05]<br>Launcher|Launches the player farther forward when starting a Tumble. Launch is level 10.|Passive upgrade.|Launch target 0–100|
 |![][i06]<br>Climber|Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20.|Passive upgrade.|Tumble Climb and Range targets 0–100|
 |![][i07]<br>Flyer|Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10.|Passive upgrade.|Tumble Wings target 0–100|
@@ -117,7 +117,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i39]<br>Avenger|An ally losing at least 15 HP to one enemy hit within 15 m grants 1.25x enemy damage for 10 seconds (20-second cooldown). An ally dying within 30 m grants 1.5x for 30 seconds.|Activation and expiration are announced. Only the stronger active bonus applies. Deaths refresh their bonus without waiting for the hit cooldown. Self-damage and friendly fire do not trigger the hit bonus. Own death does not activate it. Excluded with one player.|Hit/death range, threshold, multipliers, durations, cooldown|
 |![][i40]<br>Brawler|Melee hits on the same enemy rise from 1.25x by 0.25 per hit, up to 2x. Guns, staff projectiles and lasers deal 0.75x.|Changing enemy or 4 seconds without a hit resets the combo. Friendly fire stays at 1.25x. Vehicle impacts, Tumble Attacks, grenades and ordinary objects are unchanged.|Melee/ranged multipliers, combo step/cap/timeout|
 |![][i41]<br>Influenza|**Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance.|**If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws.|Onset, HP, sneeze intervals, infection range/angle/chance, hearing|
-|![][i42]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together gives 1.5x grab strength and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
+|![][i42]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together grants temporary Strength upgrades targeting about 1.5x Strength (maximum level 200) and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
 |![][i43]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In delivery areas or aboard a cart, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
 |![][i44]<br>DualWielder|Holding a melee weapon alone creates a matching weapon 0.5 m left, repeating its movement and attacks 0.3 s later. Both share and consume battery/durability.|Copy disappears on release, switching, death or role change. Cannot be picked up or kept. Excluded without melee weapons.|Delay, left offset|
 |![][iu]<br>???1|???|???|???|
@@ -135,7 +135,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |`Courier.<Size>GraceSeconds`|`90/120/180/240/240/240/300`|0–300 s|Tiny/Small/Medium/Big/Wide/Tall/VeryTall. Never shortens remaining grace.|
 |`Courier.<Size>HealAmount`|`10/25/50/100/100/100/100`|0–10000 HP|Same size order; fixed HP, capped at maximum health.|
 |`King.SpeedBonusLevels` / `King.RangeBonusLevels`|2 / 2|0–200|Speed / Range bonus levels.|
-|`King.StrengthBonusLevels`|5|0–200|Maximum safe Strength bonus levels.|
+|`King.StrengthBonusLevels`|5|0–200|Temporary Strength bonus levels; total cap 200.|
 |`King.UpgradeRadius`|12|1–30 m|Upgrade aura radius.|
 |`HUD.ResourceHudEnabled`|true|Boolean|Personal resource HUD at the top left, independent of the role list.|
 |`HUD.ResourceHudScalePercent`|100|50–200|Resource HUD scale; fits the screen automatically.|
@@ -155,7 +155,8 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 |`Porter.FullUnloadSeconds`|10|0–60 s|Full-load unloading time; scales with weight. 0 unloads immediately.|
 |`Porter.DropOnEnemyHit`|true|Boolean|Enemy HP damage scatters all cargo.|
 |`Porter.AllowedSizes`|Tiny,Small,Medium|Comma-separated: Tiny, Small, Medium, Big, Wide, Tall, VeryTall|Allowed sizes; empty/unknown entries allow no additional sizes.|
-|`Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier`|1 / 1|0.1–5|Lifting / turning strength relative to the maximum across Strength Lv0–200.|
+|`Lifter.StrengthLevel`|200|0–200|Strength upgrade level while the role is active.|
+|`Twins.CarryStrengthMultiplier`|1.5|1–3|Co-carry Strength target multiplier, granted as temporary upgrades up to level 200.|
 |`Lifter.LightItemStrengthLevel`|1|0–200|Holding level for light objects/shop equipment, excluding carts/bikes.|
 |`Stinker.BreakGraceSeconds`|0.5|0–10 s|Delay before a spawned uranium valuable breaks.|
 |`Influenza.IncubationSeconds`|30|0–300 s|Delay from infection to symptoms.|
@@ -553,7 +554,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i01]<br>Tank|基礎の最大HPを1.5倍に強化します。倍率強化の上限は4,100HPです。|最低Health 21。|最低値・倍率・上限|
 |![][i02]<br>Runner|基礎の走行速度・スタミナを1.5倍に強化します。倍率強化の上限は205・2,040です。|最低Speed 6・Stamina 46。|最低値・倍率・上限|
 |![][i03]<br>Jumper|Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。|常時有効の強化。|Extra Jump目標値0～100|
-|![][i04]<br>Lifter|重い物・カート・バイクをつかむ力・回転力をStrength Lv0～200の最大値に固定。|Strengthの表示はLv200。基礎値が両方の目標に達すると抽選対象外（初期設定ではLv50）。|保持する力|
+|![][i04]<br>Lifter|StrengthをLv200に変更し、重い物・カート・バイクを扱いやすくします。|役職終了で本来のStrengthに戻ります。基礎値が重量物に対して同等の力に達すると抽選対象外（初期設定ではLv50）。|Strengthレベル|
 |![][i05]<br>Launcher|Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。|常時有効の強化。|Launch目標値0～100|
 |![][i06]<br>Climber|Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。|常時有効の強化。|Tumble ClimbとRangeの目標値0～100|
 |![][i07]<br>Flyer|Tumble Wingsの効果時間が延び、空中をより長く移動可能です。Tumble Wingsはレベル10です。|常時有効の強化。|Tumble Wings目標値0～100|
@@ -591,7 +592,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i39]<br>Avenger|15m以内の味方が敵の一撃で15HP以上失うと、10秒間、敵へのダメージが1.25倍（クールダウン20秒）。30m以内の味方が死亡すると30秒間1.5倍。|発動・終了を通知。強い方だけ適用。死亡効果は被弾効果のクールダウン中も発動し、再発動で時間を更新。自傷・味方の攻撃では被弾効果は発動しません。自分の死亡では発動せず、1人では抽選されません。|被弾・死亡の範囲、閾値、倍率、時間、クールダウン|
 |![][i40]<br>Brawler|同じ敵への近接攻撃が1.25倍から命中ごとに0.25ずつ上昇し、最大2倍。銃・杖の弾・レーザーは0.75倍。|別の敵に命中、または4秒間命中しないと連撃をリセット。味方への攻撃は1.25倍のまま。車両衝突・Tumble Attack・グレネード・通常の保持物は変化しません。|近接・遠隔倍率、連撃の上昇幅・上限・猶予|
 |![][i41]<br>Influenza|**発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。|**感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。|発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音|
-|![][i42]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむと掴む力1.5倍、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
+|![][i42]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむとStrengthを約1.5倍相当に強化するアップグレードを付与（上限Lv200）し、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
 |![][i43]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所・カート上で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
 |![][i44]<br>DualWielder|近接武器を1人で持つと左0.5mに同じ武器が現れ、動きと攻撃を0.3秒遅れで再現。電池・耐久度は共有し、2本目の命中分も消費。|手放す・持ち替え・死亡・役職変更で消滅。持ち帰り不可。近接武器がなければ抽選対象外。|遅延、左への距離|
 |![][iu]<br>???1|???|???|???|
@@ -609,7 +610,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |`Courier.<Size>GraceSeconds`|`90/120/180/240/240/240/300`|0–300秒|Tiny/Small/Medium/Big/Wide/Tall/VeryTall（極小/小/中/大/横長/縦長/超縦長）。残り猶予は短縮しません。|
 |`Courier.<Size>HealAmount`|`10/25/50/100/100/100/100`|0–10000HP|同じサイズ順。固定HP回復、最大HPまで。|
 |`King.SpeedBonusLevels` / `King.RangeBonusLevels`|2 / 2|0–200|Speed・Range追加レベル。|
-|`King.StrengthBonusLevels`|5|0–200|悪化しないStrengthの追加上限。|
+|`King.StrengthBonusLevels`|5|0–200|Strengthの一時追加レベル。合計上限Lv200。|
 |`King.UpgradeRadius`|12|1–30 m|味方に強化を付与する範囲。|
 |`HUD.ResourceHudEnabled`|true|真偽値|左上に自分の能力残量を表示。役職一覧とは独立。|
 |`HUD.ResourceHudScalePercent`|100|50–200|残量HUDの大きさ。画面内に収まるよう自動調整。|
@@ -629,7 +630,8 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |`Porter.FullUnloadSeconds`|10|0～60秒|満載時の荷下ろし時間。重量に比例。0なら即座に完了。|
 |`Porter.DropOnEnemyHit`|true|真偽値|敵からHPダメージで全収納品をばらまく。|
 |`Porter.AllowedSizes`|Tiny,Small,Medium|Tiny・Small・Medium・Big・Wide・Tall・VeryTallをカンマ区切り|収納可能サイズ。空欄・不明な名前は追加許可しない。|
-|`Lifter.HeavyGripMultiplier` / `Lifter.HeavyRotationMultiplier`|1 / 1|0.1～5|Strength Lv0～200の最大値に対する、つかむ力／回転力の倍率。|
+|`Lifter.StrengthLevel`|200|0～200|役職中に付与するStrengthアップグレードのレベル。|
+|`Twins.CarryStrengthMultiplier`|1.5|1～3|共同運搬中のStrength目標倍率。上限Lv200まで一時アップグレードを付与。|
 |`Lifter.LightItemStrengthLevel`|1|0～200|軽量品・ショップ装備（カート・バイクを除く）を保持するStrengthレベル。|
 |`Stinker.BreakGraceSeconds`|0.5|0～10秒|出現したウラン貴重品が壊れるまでの猶予。|
 |`Influenza.IncubationSeconds`|30|0～300秒|感染から発症までの時間。|

@@ -220,8 +220,7 @@ internal sealed class StageRolesConfig
 
         LifterEnabled = RoleEnabled(config, "Lifter");
         LifterWeight = RoleWeight(config, "Lifter");
-        LifterHeavyGripMultiplier = BindFloat(config, "Lifter", "HeavyGripMultiplier", 1f, 0.1f, 5f, "Heavy-object, cart and bike lifting strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
-        LifterHeavyRotationMultiplier = BindFloat(config, "Lifter", "HeavyRotationMultiplier", 1f, 0.1f, 5f, "Heavy-object, cart and bike turning strength relative to the strongest value across Strength levels 0-200. Applied by the host while holding.");
+        LifterStrengthLevel = BindInt(config, "Lifter", "StrengthLevel", 200, 0, 200, "Strength upgrade level granted while Lifter is active. Heavy objects, carts and bikes use normal game physics at this level. The normal upgrade level is restored when the role ends.");
         LifterLightItemStrengthLevel = BindInt(config, "Lifter", "LightItemStrengthLevel", 1, 0, 200, "Strength level used to hold light objects and shop equipment, including weapons but excluding carts and bikes. Default 1 reduces shaking. Does not change the displayed Strength level or weapon attack bonuses.");
 
         LauncherEnabled = RoleEnabled(config, "Launcher");
@@ -315,7 +314,7 @@ internal sealed class StageRolesConfig
         KingUpgradeRadius = BindFloat(config, "King", "UpgradeRadius", 12f, 1f, 30f, "Radius in metres for temporary upgrade support to living allies; excludes King.");
         KingSpeedBonus = BindInt(config, "King", "SpeedBonusLevels", 2, 0, 200, "Temporary Speed levels for allies in range, capped at level 200. Removed on leaving the aura.");
         KingRangeBonus = BindInt(config, "King", "RangeBonusLevels", 2, 0, 200, "Temporary Range levels for allies in range, capped at level 200. Removed on leaving the aura.");
-        KingStrengthBonus = BindInt(config, "King", "StrengthBonusLevels", 5, 0, 200, "Maximum temporary Strength levels for allies in range. Selects a non-weakening level within this bonus and level 200; otherwise grants none.");
+        KingStrengthBonus = BindInt(config, "King", "StrengthBonusLevels", 5, 0, 200, "Temporary Strength upgrade levels for allies in range, capped at level 200. Removed when they leave the aura.");
 
         TunaEnabled = RoleEnabled(config, "Tuna");
         TunaWeight = RoleWeight(config, "Tuna", 50);
@@ -518,7 +517,7 @@ internal sealed class StageRolesConfig
         PorterDropOnEnemyHit = BindBool(config, "Porter", "DropOnEnemyHit", true, "Scatter all stored valuables on a confirmed enemy hit that reduces HP. Death releases all cargo.");
         PorterAllowedSizes = config.Bind("Porter", "AllowedSizes", "Tiny,Small,Medium", "Comma-separated allowed valuable sizes: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Empty or unknown entries allow no additional sizes. Shop equipment is excluded.");
         TwinsWeight = RoleWeight(config, "Twins");
-        TwinsCarryStrengthMultiplier = BindFloat(config, "Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f, "Grab strength while both twins directly hold the same valuable. Shop equipment is excluded.");
+        TwinsCarryStrengthMultiplier = BindFloat(config, "Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f, "Strength multiplier converted to temporary upgrade levels while both twins hold the same valuable. Rounded up to whole levels, capped at 200. Shop equipment is excluded.");
         TwinsCollisionReductionPercent = BindFloat(config, "Twins", "CollisionReductionPercent", 50f, 0f, 100f, "Percentage of collision value loss prevented during cooperative carrying.");
         TwinsRestRadius = BindFloat(config, "Twins", "RestRadius", 3f, 0.5f, 10f, "Maximum distance between twins while resting together.");
         TwinsRestHoldSeconds = BindFloat(config, "Twins", "RestHoldSeconds", 3f, 1f, 30f, "Seconds both twins must crouch and stay still without damage.");
@@ -669,8 +668,7 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> JumperExtraJumpLevels { get; }
     internal ConfigEntry<bool> LifterEnabled { get; }
     internal ConfigEntry<int> LifterWeight { get; }
-    internal ConfigEntry<float> LifterHeavyGripMultiplier { get; }
-    internal ConfigEntry<float> LifterHeavyRotationMultiplier { get; }
+    internal ConfigEntry<int> LifterStrengthLevel { get; }
     internal ConfigEntry<int> LifterLightItemStrengthLevel { get; }
     internal ConfigEntry<bool> LauncherEnabled { get; }
     internal ConfigEntry<int> LauncherWeight { get; }

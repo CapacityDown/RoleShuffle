@@ -60,8 +60,7 @@ internal sealed class StageRolesConfig
     internal Entry<float> PorterUnloadSeconds { get; } = new(10f);
     internal Entry<string> PorterAllowedSizes { get; } = new("Tiny,Small,Medium");
     internal Entry<bool> PorterDropOnEnemyHit { get; } = new(true);
-    internal Entry<float> LifterHeavyGripMultiplier { get; } = new(1f);
-    internal Entry<float> LifterHeavyRotationMultiplier { get; } = new(1f);
+    internal Entry<int> LifterStrengthLevel { get; } = new(200);
     internal Entry<int> LifterLightItemStrengthLevel { get; } = new(1);
     internal Entry<float> StinkerBreakGraceSeconds { get; } = new(0.5f);
     internal Entry<float> TwinsCarryStrengthMultiplier { get; } = new(1.5f);

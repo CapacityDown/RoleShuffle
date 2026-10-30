@@ -66,6 +66,18 @@ historical version numbers, deployment profiles and superseded design choices.
   v4.6.1 branch and release archives remain recoverable. The v5.0.0 changelog
   includes Courier easing and final-extraction protection.
 
+- On 2026-10-30 the user approved upgrade-based Lifter Strength. Grant a
+  configurable Strength level (default 200) and use native heavy-object physics.
+  Keep light/shop item handling at its configured level (default 1), except
+  carts/bikes, and keep absolute Strength restoration after role changes.
+  Retire the heavy grip/rotation multipliers with a configuration backup.
+- Apply the upgrade-based Strength policy to every role. King uses direct
+  temporary upgrade grants; Twins converts its configured carry multiplier into
+  temporary Strength levels, capped at 200. Track their combined grant once so
+  overlapping effects cannot compound, and preserve purchased levels on expiry.
+  Influencer and Berserker already grant ordinary upgrades; inherited/copied Lifter
+  abilities use the same Lifter settings and restoration.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

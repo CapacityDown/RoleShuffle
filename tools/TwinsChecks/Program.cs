@@ -36,12 +36,13 @@ Check(UpgradeService.Levels["a"].GetValueOrDefault("playerUpgradeSpeed")>0,"Appr
 a.transform.position=new(0,0,0);c.Tick(.5f);Check(UpgradeService.Levels["a"]["playerUpgradeSpeed"]==0,"Moving away removes only temporary speed");
 a.transform.position=new(1,0,0);c.Tick(.7f);c.End();Check(UpgradeService.Levels["a"]["playerUpgradeSpeed"]==0,"Stage end removes rendezvous boost");
 (c,a,b)=Pair();var item=new PhysGrabObject();item.Holders.UnionWith(new[]{"a","b"});
-Check(c.TwinsGrabMultiplier(item,a)==1.5f&&c.TwinsCollisionMultiplier(item)==.5f,"Both holders receive carry strength and collision protection");
-item.Components[typeof(ItemAttributes)]=new ItemAttributes();Check(c.TwinsGrabMultiplier(item,a)==1,"Shop equipment excluded");item.Components.Remove(typeof(ItemAttributes));
+c.Tick(.01f);
+Check(c.TwinsStrengthUpgradeMultiplier(a)==1.5f&&c.TwinsCollisionMultiplier(item)==.5f,"Both holders receive carry strength and collision protection");
+item.Components[typeof(ItemAttributes)]=new ItemAttributes();Check(c.TwinsStrengthUpgradeMultiplier(a)==1,"Shop equipment excluded");item.Components.Remove(typeof(ItemAttributes));
 c.Tick(.1f);c.Tick(3.2f);item.GetComponent<RoomVolumeCheck>()!.CurrentRooms.Add(new(){Truck=true});c.TwinsCargoReleased(item);
 Check(item.GetComponent<ValuableObject>()!.dollarValueCurrent==11000,"Qualified cargo gets ten percent on release into truck");
 c.Tick(4);c.TwinsCargoReleased(item);Check(item.GetComponent<ValuableObject>()!.dollarValueCurrent==11000,"Delivery cannot pay repeatedly");
-item.Holders.Remove("b");Check(c.TwinsGrabMultiplier(item,a)==1,"Releasing either holder removes the buff");c.End();
+item.Holders.Remove("b");Check(c.TwinsStrengthUpgradeMultiplier(a)==1,"Releasing either holder removes the buff");c.End();
 var state=new TwinsCooperation();state.ObserveCarry(1,true,false,0,3);state.ObserveCarry(1,true,false,3,3);
 Check(state.Deliver(1,true,false,10000,10,5000)==0,"Both players must be near delivery");
 Check(state.Deliver(1,true,true,100000,10,5000)==5000&&state.DeliveryBonusUsed==5000,"Bonus capped before dispatch");

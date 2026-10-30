@@ -7,29 +7,12 @@ internal static class RoleOverhaulRules
 {
     internal const int LifterStrengthLevel = 200;
     internal const int LifterReferenceLevel = 1;
-    private static readonly double LifterHeavyGrip = MaximumHeavyStrength(false);
-    private static readonly double LifterHeavyRotation = MaximumHeavyStrength(true);
     internal static bool LifterPhysicsAvailable { get; set; }
-    internal static double LifterEffectiveStrength(bool lightObject, bool rotation = false,
-        double multiplier = 1d, int lightLevel = LifterReferenceLevel) =>
-        lightObject ? EffectiveGrabStrength(lightLevel, true, rotation)
-            : (rotation ? LifterHeavyRotation : LifterHeavyGrip) *
-                (double.IsNaN(multiplier) ? 1d : Math.Clamp(multiplier, 0.1d, 5d));
-
-    // Evaluate each penalty curve over the complete supported range once, not
-    // every physics tick. Use the exact peak, without rounding up to a cap.
-    private static double MaximumHeavyStrength(bool rotation)
-    {
-        double maximum = 0d;
-        for (int level = 0; level <= LifterStrengthLevel; level++)
-            maximum = Math.Max(maximum, EffectiveGrabStrength(level, false, rotation));
-        return maximum;
-    }
-    // Light objects default to level 1 to reduce oscillation. Random assignment
-    // requires a remaining heavy-object lifting or turning benefit.
-    internal static bool LifterBaseReachesTarget(int baseline, double gripMultiplier = 1d, double rotationMultiplier = 1d) =>
-        EffectiveGrabStrength(baseline, false) + 1e-9 >= LifterEffectiveStrength(false, false, gripMultiplier) &&
-        EffectiveGrabStrength(baseline, false, true) + 1e-9 >= LifterEffectiveStrength(false, true, rotationMultiplier);
+    // Assignment only needs a benefit for heavy objects. Their native curve
+    // reaches a plateau before Lv200, so equal effective power stays excluded.
+    internal static bool LifterBaseReachesTarget(int baseline, int targetLevel = LifterStrengthLevel) =>
+        EffectiveGrabStrength(baseline, false) + 1e-9 >= EffectiveGrabStrength(targetLevel, false) &&
+        EffectiveGrabStrength(baseline, false, true) + 1e-9 >= EffectiveGrabStrength(targetLevel, false, true);
     internal static bool GrowsWithBase(StageRole role) =>
         role is StageRole.Tank or StageRole.Runner;
 
