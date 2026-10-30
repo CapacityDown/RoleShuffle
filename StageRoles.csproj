@@ -7,7 +7,7 @@
     <AssemblyName>RoleShuffle</AssemblyName>
     <RootNamespace>REPOJP.StageRoles</RootNamespace>
     <Authors>Codex</Authors>
-    <Version>4.6.1</Version>
+    <Version>5.0.0</Version>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
     <CopyFilesToPluginOutputDirectoryOnBuild>false</CopyFilesToPluginOutputDirectoryOnBuild>
@@ -25,8 +25,20 @@
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" ExcludeAssets="runtime" />
-    <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Compile against the installed 0.5.0/Unity 6 assemblies, never old publicized stubs. -->
+  <Import Project="Directory.Repo.props" Condition="Exists('Directory.Repo.props')" />
+  <PropertyGroup>
+    <RepoManagedDirectory Condition="'$(RepoManagedDirectory)' == '' and '$(REPO_GAME_DIR)' != ''">$(REPO_GAME_DIR)/REPO_Data/Managed</RepoManagedDirectory>
+  </PropertyGroup>
+  <Target Name="RequireInstalledRepo" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(RepoManagedDirectory)/Assembly-CSharp.dll')" Text="Set REPO_GAME_DIR to the R.E.P.O. v0.5.0 installation, or RepoManagedDirectory to its REPO_Data/Managed directory." />
+  </Target>
+  <ItemGroup>
+    <Reference Include="$(RepoManagedDirectory)/Assembly-CSharp.dll;$(RepoManagedDirectory)/Assembly-CSharp-firstpass.dll;$(RepoManagedDirectory)/UnityEngine*.dll;$(RepoManagedDirectory)/Unity.TextMeshPro.dll;$(RepoManagedDirectory)/Unity.InputSystem.dll;$(RepoManagedDirectory)/Photon*.dll;$(RepoManagedDirectory)/Facepunch.Steamworks.Win64.dll">
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

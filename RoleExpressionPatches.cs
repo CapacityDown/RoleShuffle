@@ -32,6 +32,16 @@ internal static class RoleExpressionPatches
         }
     }
 
+    // The expression wheel applies selections on subsequent frames without
+    // DoExpression's player-input flag. Record only a committed local selection.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerExpression), "WheelExpressionsSet")]
+    private static void WheelPostfix(PlayerExpression __instance, List<int> selection)
+    {
+        foreach (int index in selection)
+            if (index > 0 && index < __instance.expressions.Count) RecordInput(__instance, index);
+    }
+
     private static void RecordInput(PlayerExpression expression, int index)
     {
         PlayerAvatar player = expression.playerAvatar;

@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 543;
+    private const int RoleUiBuildNumber = 548;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -797,7 +797,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             label.font = RoleGuideFont.ForLanguage(label.font, _guideLanguage) ?? label.font;
         dialog.option1Button.buttonTextString = Localized("OPEN IN BROWSER", "ブラウザーで開く");
         dialog.option2Button.buttonTextString = Localized("CANCEL", "取消");
-        dialog.bodyTextMesh.enableWordWrapping = true;
+        dialog.bodyTextMesh.textWrappingMode = TextWrappingModes.Normal;
         dialog.bodyTextMesh.enableAutoSizing = true;
         dialog.bodyTextMesh.fontSizeMin = 12;
         dialog.bodyTextMesh.fontSizeMax = 18;
@@ -841,7 +841,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
 
         float previousFontSize = measurementText.fontSize;
         FontStyles previousFontStyle = measurementText.fontStyle;
-        bool previousWrapping = measurementText.enableWordWrapping;
+        TextWrappingModes previousWrapping = measurementText.textWrappingMode;
         bool previousAutoSizing = measurementText.enableAutoSizing;
         TMP_FontAsset previousFont = measurementText.font;
         float wrapWidth = contentWidth;
@@ -859,7 +859,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         }
         measurementText.fontSize = GuideFontSize;
         measurementText.fontStyle = FontStyles.Normal;
-        measurementText.enableWordWrapping = false;
+        measurementText.textWrappingMode = TextWrappingModes.NoWrap;
         measurementText.enableAutoSizing = false;
         StringBuilder line = new();
         foreach (string token in tokens)
@@ -899,7 +899,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         }
         measurementText.fontSize = previousFontSize;
         measurementText.fontStyle = previousFontStyle;
-        measurementText.enableWordWrapping = previousWrapping;
+        measurementText.textWrappingMode = previousWrapping;
         measurementText.enableAutoSizing = previousAutoSizing;
         measurementText.font = previousFont;
         return lines;
@@ -1001,7 +1001,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 : TextAlignmentOptions.Left;
             labelText.fontSize = entry.FontSize;
             labelText.fontStyle = entry.FontStyle;
-            labelText.enableWordWrapping = entry.Wrap;
+            labelText.textWrappingMode = entry.Wrap ? TextWrappingModes.Normal : TextWrappingModes.NoWrap;
             labelText.enableAutoSizing = control || _activeView == RoleMenuView.BaseUpgrades;
             labelText.fontSizeMin = 12f;
             labelText.fontSizeMax = entry.FontSize;

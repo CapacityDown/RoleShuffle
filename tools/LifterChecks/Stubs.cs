@@ -52,44 +52,58 @@ public sealed class PhysGrabObject
     public float overrideGrabStrength, overrideMinGrabStrength, overrideTorqueStrength = 1, overrideMinTorqueStrength;
     public GrabberCollection playerGrabbing = Array.Empty<PhysGrabber>();
 
-    // Vanilla's two blends in a per-player loop, emitted and run after patching.
+    public bool UseOverrides;
+    // Small executable fixtures with the same call-site contract as v0.5.0.
     public void PhysicsGrabbingManipulation()
     {
         foreach (PhysGrabber item in playerGrabbing)
         {
             float strength = item.grabStrength;
-            float reduced = strength / (1f + UnityEngine.Mathf.Min(strength, 30f));
-            float blend = UnityEngine.Mathf.Min((strength - 1f) / (rb.mass < 2f ? 7f : 20f), 0.9f);
-            item.Grip = UnityEngine.Mathf.Lerp(strength, reduced, blend);
-            strength = item.grabStrength;
-            reduced = strength / (1f + strength);
-            item.Torque = UnityEngine.Mathf.Lerp(strength, reduced, blend);
+            if (UseOverrides)
+            {
+                if (item.playerAvatar.isTumbling || overrideExtraGrabStrengthDisable) strength = 1;
+                if (overrideMinGrabStrengthTimer > 0) strength = Math.Max(strength, overrideMinGrabStrength + strength / 5);
+                if (overrideGrabStrengthTimer > 0) strength = overrideGrabStrength;
+                if (item.overrideGrabStrength != -1) strength = item.overrideGrabStrength;
+            }
+            item.Grip = GrabStrengthGet(strength, 30f);
         }
     }
 
-    // Installed-game override ordering for comparison with native level-1 guns.
-    public void PhysicsGrabbingGunFixture()
+    public void GrabTorqueGet(PhysGrabber player)
     {
-        foreach (PhysGrabber item in playerGrabbing)
+        float strength = player.grabStrength;
+        if (UseOverrides)
         {
-            float strength = item.grabStrength;
-            if (item.playerAvatar.isTumbling || overrideExtraGrabStrengthDisable) strength = 1;
-            if (overrideMinGrabStrengthTimer > 0) strength = Math.Max(strength, overrideMinGrabStrength + strength / 5);
-            if (overrideGrabStrengthTimer > 0) strength = overrideGrabStrength;
-            if (item.overrideGrabStrength != -1) strength = item.overrideGrabStrength;
-            float reduced = strength / (1f + UnityEngine.Mathf.Min(strength, 30f));
-            float blend = UnityEngine.Mathf.Min((strength - 1f) / (rb.mass < 2f ? 7f : 20f), 0.9f);
-            item.Grip = UnityEngine.Mathf.Lerp(strength, reduced, blend);
-
-            strength = item.grabStrength;
-            if (overrideExtraTorqueStrengthDisable || item.playerAvatar.isTumbling) strength = 1;
+            if (overrideExtraTorqueStrengthDisable || player.playerAvatar.isTumbling) strength = 1;
             if (overrideMinTorqueStrengthTimer > 0) strength = Math.Max(strength, overrideMinTorqueStrength + strength / 5);
             strength = Math.Max(strength, overrideTorqueStrength);
-            reduced = strength / (1f + strength);
-            blend = UnityEngine.Mathf.Min((strength - 1f) / (rb.mass < 2f ? 7f : 20f), 0.9f);
-            item.Torque = UnityEngine.Mathf.Lerp(strength, reduced, blend);
         }
+        player.Torque = GrabStrengthGet(strength, float.PositiveInfinity);
     }
+
+    public void PhysicsGrabbingGunFixture()
+    {
+        UseOverrides = true;
+        PhysicsGrabbingManipulation();
+        foreach (var item in playerGrabbing) GrabTorqueGet(item);
+    }
+
+    public float GrabStrengthGet(float strength, float dividerLimit)
+    {
+        float denominator = rb.mass < 2 ? 7 : 20;
+        float peak = 1 + denominator / 2;
+        for (int i = 0; i < 3; i++)
+        {
+            float inverse = 1 / (1 + peak);
+            peak -= (peak - 1 + inverse * inverse - denominator / 2) / (1 - 2 * inverse * inverse * inverse);
+        }
+        float bounded = Math.Min(strength, peak);
+        float floor = UnityEngine.Mathf.Lerp(bounded, bounded / (1 + bounded), Math.Min((bounded - 1) / denominator, .9f));
+        float value = UnityEngine.Mathf.Lerp(strength, strength / (1 + Math.Min(strength, dividerLimit)), Math.Min((strength - 1) / denominator, .9f));
+        return Math.Max(floor, value);
+    }
+
 }
 public sealed class ItemAttributes { }
 public sealed class ItemVehicle { }

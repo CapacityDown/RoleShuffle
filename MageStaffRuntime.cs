@@ -99,7 +99,7 @@ internal static class MageStaffImpactPatch
 {
     private static IEnumerable<MethodBase> TargetMethods()
     {
-        yield return AccessTools.Method(typeof(SlowProjectile), "DestroyRPC");
+        yield return AccessTools.Method(typeof(SlowProjectile), "DestroyLogic");
         yield return AccessTools.Method(typeof(SlowProjectile), "ExplosionRPC");
     }
 

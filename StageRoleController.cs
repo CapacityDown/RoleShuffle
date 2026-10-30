@@ -3020,12 +3020,12 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         try
         {
-            if (UnityEngine.Object.FindObjectsOfType<MusicalValuableLogic>(true).Length == 0)
+            if (UnityEngine.Object.FindObjectsByType<MusicalValuableLogic>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID).Length == 0)
             {
                 roles.Remove(StageRole.Musician);
             }
 
-            if (UnityEngine.Object.FindObjectsOfType<ItemVehicle>(true).Length == 0)
+            if (UnityEngine.Object.FindObjectsByType<ItemVehicle>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID).Length == 0)
             {
                 roles.Remove(StageRole.Rider);
             }
@@ -3047,7 +3047,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
             bool engineerTargetFound = false;
             foreach (PhysGrabObject valuable in
-                     UnityEngine.Object.FindObjectsOfType<PhysGrabObject>(true))
+                     UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
             {
                 if (valuable != null &&
                     EngineerEffectCatalog.IsEffectValuable(valuable))
@@ -3063,7 +3063,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
             bool rechargeableFound = false;
             foreach (ItemBattery battery in
-                     UnityEngine.Object.FindObjectsOfType<ItemBattery>(true))
+                     UnityEngine.Object.FindObjectsByType<ItemBattery>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
             {
                 if (battery != null && !battery.isUnchargable)
                 {
@@ -3102,7 +3102,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private static bool HasNonValuableWeaponContext<T>() where T : Component
     {
-        foreach (T weapon in UnityEngine.Object.FindObjectsOfType<T>(true))
+        foreach (T weapon in UnityEngine.Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
         {
             if (weapon == null || weapon.GetComponentInParent<DualWielderEcho>() != null ||
                 weapon.GetComponentInParent<ValuableObject>() != null ||

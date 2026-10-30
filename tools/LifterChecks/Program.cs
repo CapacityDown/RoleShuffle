@@ -11,7 +11,7 @@ void Near(double actual, double expected, string message) => Check(Math.Abs(actu
 var opcodes = typeof(OpCodes).GetFields(BindingFlags.Static | BindingFlags.Public)
     .Where(f => f.FieldType == typeof(OpCode)).Select(f => (OpCode)f.GetValue(null)!).ToDictionary(op => op.Name!);
 var lerp = AccessTools.Method(typeof(Mathf), nameof(Mathf.Lerp));
-var blendMethod = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Blend));
+var blendMethod = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Adjust));
 var inputMethod = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.NativeStrengthInput));
 Check(LifterStrengthRuntime.FieldsAvailable, "Runtime override fields found");
 Near(RoleOverhaulRules.LifterEffectiveStrength(true), 1.1812987012987013, "Light handling uses vanilla level ONE without sixfold boost");
@@ -19,8 +19,8 @@ Near(RoleOverhaulRules.LifterEffectiveStrength(true, true), 1.1812987012987013, 
 foreach (bool rotation in new[] { false, true })
 {
     double target = RoleOverhaulRules.LifterEffectiveStrength(false, rotation);
-    Near(target, 143d / 24d, "Heavy target is the exact level-50 peak, without rounding");
-    Check(target > RoleOverhaulRules.EffectiveGrabStrength(200, false, rotation), "Peak exceeds the level-200 endpoint");
+    Near(target, 5.958335747394438d, "Heavy target is the exact v0.5.0 plateau, without rounding");
+    Check(Math.Abs(target - RoleOverhaulRules.EffectiveGrabStrength(200, false, rotation)) < 1e-9, "New native high levels retain the peak");
     for (int level = 0; level <= 200; level++)
         Check(RoleOverhaulRules.EffectiveGrabStrength(level, false, rotation) <= target + 1e-9,
             "Heavy target covers every level, including the penalty dip");
@@ -30,47 +30,59 @@ foreach (bool rotation in new[] { false, true })
 // to the real transpiler, mapping only the locals/members it examines.
 using var game = AssemblyDefinition.ReadAssembly(@"E:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\Assembly-CSharp.dll");
 var physics = game.MainModule.Types.Single(t => t.Name == "PhysGrabObject");
-var method = physics.Methods.Single(m => m.Name == "PhysicsGrabbingManipulation");
-Check(method.Body.Instructions.Count(i => i.Operand is MethodReference m && m.DeclaringType.FullName == "UnityEngine.Mathf" && m.Name == "Lerp") == 2,
-    "Installed game has exactly two scalar penalty blends");
 foreach (var field in typeof(PhysGrabObject).GetFields().Where(f => f.Name.StartsWith("override")))
     Check(physics.Fields.Any(f => f.Name == field.Name && f.FieldType.FullName == field.FieldType.FullName), "Installed override field " + field.Name);
-Check(game.MainModule.Types.Single(t => t.Name == "PlayerAvatar").Fields.Any(f => f.Name == "isTumbling" && f.FieldType.FullName == "System.Boolean"), "Installed tumbling field");
-Check(game.MainModule.Types.Single(t => t.Name == "PhysGrabber").Fields.Any(f => f.Name == "overrideGrabStrength" && f.FieldType.FullName == "System.Single"), "Installed player override field");
-var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("LifterILLocals"), AssemblyBuilderAccess.Run);
-var type = assembly.DefineDynamicModule("main").DefineType("Locals");
-var proxy = type.DefineMethod("Original", System.Reflection.MethodAttributes.Public, typeof(void), Type.EmptyTypes);
-var proxyIL = proxy.GetILGenerator();
-foreach (var variable in method.Body.Variables)
-    proxyIL.DeclareLocal(variable.VariableType.Name == "PhysGrabber" ? typeof(PhysGrabber) : typeof(object));
-proxyIL.Emit(OpCodes.Ret);
-var proxyMethod = type.CreateType()!.GetMethod("Original")!;
-List<CodeInstruction> InstalledInstructions() => method.Body.Instructions.Select(i => {
-    object? operand = i.Operand;
-    if (operand is MethodReference m && m.DeclaringType.FullName == "UnityEngine.Mathf" && m.Name == "Lerp") operand = lerp;
-    else if (operand is FieldReference f && f.DeclaringType.Name == "PhysGrabber" && f.Name == "grabStrength") operand = AccessTools.Field(typeof(PhysGrabber), "grabStrength");
-    else if (operand is Mono.Cecil.Cil.VariableDefinition v) operand = v.Index;
-    return new CodeInstruction(opcodes[i.OpCode.Name], operand);
-}).ToList();
-var installed = LifterStrengthPatch.Transpiler(InstalledInstructions(), proxyMethod).ToList();
-Check(RoleOverhaulRules.LifterPhysicsAvailable && installed.Count(i => i.Calls(blendMethod)) == 2, "Production transpiler matches installed game");
-Check(installed.Count(i => i.Calls(inputMethod)) == 2, "Both installed-game Strength reads receive the gun input correction");
-Check(physics.Fields.Any(f => f.Name == "isGun" && f.FieldType.FullName == "System.Boolean"), "Installed native gun classification field");
-var gunUpdate = game.MainModule.Types.Single(t => t.Name == "ItemGun").Methods.Single(m => m.Name == "UpdateMaster");
-Check(gunUpdate.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "OverrideTorqueStrength") &&
-    gunUpdate.Body.Instructions.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Ldc_R4 && (float)i.Operand == 12f),
-    "Installed guns refresh the aiming torque override even when not firing");
-int[] sites = installed.Select((code, index) => (code, index)).Where(x => x.code.Calls(blendMethod)).Select(x => x.index).ToArray();
-Check(installed[sites[0]-1].opcode == OpCodes.Ldc_I4_0 && installed[sites[1]-1].opcode == OpCodes.Ldc_I4_1, "Grip and rotation site order");
-var unsupported = InstalledInstructions(); unsupported.Add(new CodeInstruction(OpCodes.Call, lerp));
-var rejected = LifterStrengthPatch.Transpiler(unsupported, proxyMethod).ToList();
-Check(!RoleOverhaulRules.LifterPhysicsAvailable && rejected.All(i => !i.Calls(blendMethod) && !i.Calls(inputMethod)), "Unknown game shape fails without partial patch");
+var nativeHelper = AccessTools.Method(typeof(PhysGrabObject), "GrabStrengthGet");
+foreach (string name in new[] { "PhysicsGrabbingManipulation", "GrabTorqueGet" })
+{
+    var method = physics.Methods.Single(m => m.Name == name);
+    Check(method.Body.Instructions.Count(i => i.Operand is MethodReference m && m.Name == "GrabStrengthGet") == 1,
+        "Installed helper call exists in " + name);
+    var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("LifterILLocals" + name), AssemblyBuilderAccess.Run);
+    var type = assembly.DefineDynamicModule("main").DefineType("Locals");
+    var proxy = type.DefineMethod(name, System.Reflection.MethodAttributes.Public, typeof(void),
+        name == "GrabTorqueGet" ? new[] { typeof(PhysGrabber) } : Type.EmptyTypes);
+    var proxyIL = proxy.GetILGenerator();
+    foreach (var variable in method.Body.Variables)
+        proxyIL.DeclareLocal(variable.VariableType.Name == "PhysGrabber" ? typeof(PhysGrabber) : typeof(object));
+    proxyIL.Emit(OpCodes.Ret);
+    var proxyMethod = type.CreateType()!.GetMethod(name)!;
+    List<CodeInstruction> Instructions() => method.Body.Instructions.Select(i => {
+        object? operand = i.Operand;
+        if (operand is MethodReference m && m.Name == "GrabStrengthGet") operand = nativeHelper;
+        else if (operand is FieldReference f && f.DeclaringType.Name == "PhysGrabber" && f.Name == "grabStrength") operand = AccessTools.Field(typeof(PhysGrabber), "grabStrength");
+        else if (operand is Mono.Cecil.Cil.VariableDefinition v) operand = v.Index;
+        return new CodeInstruction(opcodes[i.OpCode.Name], operand);
+    }).ToList();
+    var installed = LifterStrengthPatch.Transpiler(Instructions(), proxyMethod).ToList();
+    Check(installed.Count(i => i.Calls(blendMethod)) == 1 && installed.Count(i => i.Calls(inputMethod)) == 1,
+        "Production transpiler patches native coefficient and raw input: " + name);
+    Check(installed.Count(i => i.Calls(nativeHelper)) == 1, "Native stable strength calculation remains intact");
+    var unsupported = Instructions(); unsupported.Add(new CodeInstruction(OpCodes.Call, nativeHelper));
+    var rejected = LifterStrengthPatch.Transpiler(unsupported, proxyMethod).ToList();
+    Check(!RoleOverhaulRules.LifterPhysicsAvailable && rejected.All(i => !i.Calls(blendMethod) && !i.Calls(inputMethod)),
+        "Unknown helper shape leaves both role corrections disabled");
+    LifterStrengthPatch.Transpiler(Instructions(), proxyMethod).ToList();
+}
+Check(RoleOverhaulRules.LifterPhysicsAvailable, "Both installed native methods are supported");
+// Validate the independent double-precision model against the installed helper's
+// operations in the float fixture over both weight classes and every level.
+var referenceObject = new PhysGrabObject();
+foreach (float mass in new[] { 1f, 10f })
+foreach (bool rotation in new[] { false, true })
+for (int level = 0; level <= 200; level++)
+{
+    referenceObject.rb.mass = mass;
+    Near(RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2, rotation),
+        referenceObject.GrabStrengthGet(1 + .2f * level, rotation ? float.PositiveInfinity : 30f),
+        "v0.5.0 native curve agrees over all supported levels");
+}
 
 // Decode with real Harmony, transform with production code, then emit/run it.
-Action<PhysGrabObject> CompileFixture(string methodName)
+Delegate CompileFixture(string methodName)
 {
     var fixture = typeof(PhysGrabObject).GetMethod(methodName)!;
-    var executable = new DynamicMethod("LifterPatchedFixture", typeof(void), new[] { typeof(PhysGrabObject) }, typeof(PhysGrabObject).Module, true);
+    var executable = new DynamicMethod("LifterPatchedFixture", typeof(void), methodName == "GrabTorqueGet" ? new[] { typeof(PhysGrabObject), typeof(PhysGrabber) } : new[] { typeof(PhysGrabObject) }, typeof(PhysGrabObject).Module, true);
     var generator = executable.GetILGenerator();
     var original = PatchProcessor.GetOriginalInstructions(fixture, generator);
     var patched = LifterStrengthPatch.Transpiler(original, fixture).ToList();
@@ -79,7 +91,7 @@ Action<PhysGrabObject> CompileFixture(string methodName)
         Console.WriteLine(string.Join("\n", fixture.GetMethodBody()!.LocalVariables.Select(v => $"local {v.LocalIndex}: {v.LocalType}")));
         Console.WriteLine(string.Join("\n", original.Select((code, index) => $"{index}: {code}")));
     }
-    Check(RoleOverhaulRules.LifterPhysicsAvailable && patched.Count(i => i.Calls(blendMethod)) == 2 && patched.Count(i => i.Calls(inputMethod)) == 2, "Executable fixture patched at both sites");
+    Check(RoleOverhaulRules.LifterPhysicsAvailable && patched.Count(i => i.Calls(blendMethod)) == 1 && patched.Count(i => i.Calls(inputMethod)) == 1, "Executable fixture patched at both sites");
     foreach (var code in patched)
     {
         foreach (var label in code.labels) generator.MarkLabel(label);
@@ -100,10 +112,18 @@ Action<PhysGrabObject> CompileFixture(string methodName)
             default: throw new Exception("Unhandled fixture operand " + code.operand.GetType());
         }
     }
-    return executable.CreateDelegate<Action<PhysGrabObject>>();
+    return executable.CreateDelegate(methodName == "GrabTorqueGet" ? typeof(Action<PhysGrabObject, PhysGrabber>) : typeof(Action<PhysGrabObject>));
 }
-var run = CompileFixture(nameof(PhysGrabObject.PhysicsGrabbingManipulation));
-var runGun = CompileFixture(nameof(PhysGrabObject.PhysicsGrabbingGunFixture));
+var grip = (Action<PhysGrabObject>)CompileFixture(nameof(PhysGrabObject.PhysicsGrabbingManipulation));
+var runTorqueCoefficient = (Action<PhysGrabObject, PhysGrabber>)CompileFixture(nameof(PhysGrabObject.GrabTorqueGet));
+void Run(PhysGrabObject item, bool overrides)
+{
+    item.UseOverrides = overrides;
+    grip(item);
+    foreach (var grabber in item.playerGrabbing) runTorqueCoefficient(item, grabber);
+}
+void run(PhysGrabObject item) => Run(item, false);
+void runGun(PhysGrabObject item) => Run(item, true);
 var lifter = new PhysGrabber();
 var other = new PhysGrabber { playerAvatar = new PlayerAvatar { Role = StageRole.Tank } };
 var owner = new PhysGrabObject { playerGrabbing = new[] { lifter, other } };
@@ -118,7 +138,7 @@ for (int level = 0; level <= 200; level++)
     Near(other.Grip, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2), "Mixed grabber vanilla grip");
     Near(other.Torque, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2, true), "Mixed grabber vanilla rotation");
     Near(lifter.grabStrength, 1f + 0.2f * level, "Never mutate the shared grabber Strength");
-    Check(RoleOverhaulRules.LifterBaseReachesTarget(level) == (level == 50), "Only Base at the actual peak is excluded");
+    Check(RoleOverhaulRules.LifterBaseReachesTarget(level) == (level >= 50), "Base at or above the native plateau is excluded");
 }
 owner.rb.mass = 10; lifter.grabStrength = 41;
 void Vanilla(string reason) { run(owner); Near(lifter.Grip, RoleOverhaulRules.EffectiveGrabStrength(200, false), reason); Near(lifter.Torque, RoleOverhaulRules.EffectiveGrabStrength(200, false, true), reason); }
@@ -141,7 +161,7 @@ foreach (var field in typeof(PhysGrabObject).GetFields().Where(f => f.Name.Start
 lifter.playerAvatar.Role = StageRole.Superbot; run(owner); Near(lifter.Grip, RoleOverhaulRules.LifterEffectiveStrength(false), "Superbot capability");
 lifter.playerAvatar.Role = StageRole.Tank; Vanilla("Role change stops correction immediately");
 lifter.playerAvatar.Role = StageRole.Lifter; run(owner); Near(lifter.Grip, RoleOverhaulRules.LifterEffectiveStrength(false), "Copied effective Lifter role");
-Near(LifterStrengthRuntime.Blend(2f, 1f, 0.5f, owner, lifter, false), 1.5, "Changed raw value from another override remains untouched");
+Near(LifterStrengthRuntime.Adjust(Mathf.Lerp(2f, 1f, 0.5f), 2f, owner, lifter, false), 1.5, "Changed raw value from another override remains untouched");
 RoleOverhaulRules.LifterPhysicsAvailable = false; Vanilla("Failed or disabled patch");
 
 // Exercise the real absolute upgrade setter together with the patched physics.
@@ -395,8 +415,7 @@ Check(awake.Any(i => i.Operand is GenericInstanceMethod m && m.Name == "GetCompo
     awake.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Stfld && i.Operand is FieldReference f && f.Name == "isCart"),
     "Installed game identifies actual carts by PhysGrabCart");
 foreach (string bikeType in new[] { "ItemVehicle", "ValuableArcticSnowBike" })
-    Check(game.MainModule.Types.Single(t => t.Name == bikeType).Methods.Single(m => m.Name == "Start")
-        .Body.Instructions.Any(i => i.Operand is GenericInstanceMethod m && m.Name == "GetComponent" &&
+    Check(game.MainModule.Types.Single(t => t.Name == bikeType).Methods.Where(m => m.Name is "Start" or "Awake").SelectMany(m => m.Body.Instructions).Any(i => i.Operand is GenericInstanceMethod m && m.Name == "GetComponent" &&
             m.GenericArguments.Any(t => t.Name == "PhysGrabObject")),
         bikeType + " uses the same object's PhysGrabObject");
 var vehicleActive = game.MainModule.Types.Single(t => t.Name == "ItemVehicle").Methods.Single(m => m.Name == "StateActive");
@@ -425,8 +444,8 @@ foreach (string kind in new[] { "cart", "scooter", "snow-bike" })
         vehicleHolder.playerAvatar.Role = role;
         vehicleHolder.grabStrength = otherHolder.grabStrength = 1f + 0.2f * level;
         run(vehicle);
-        Near(vehicleHolder.Grip, 143d / 24d, kind + " uses the heavy peak regardless of mass or shop status");
-        Near(vehicleHolder.Torque, 143d / 24d, kind + " turning uses the heavy peak");
+        Near(vehicleHolder.Grip, 5.958335747394438d, kind + " uses the heavy peak regardless of mass or shop status");
+        Near(vehicleHolder.Torque, 5.958335747394438d, kind + " turning uses the heavy peak");
         Near(otherHolder.Grip, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2), "Other vehicle holder keeps native grip");
         Near(otherHolder.Torque, RoleOverhaulRules.EffectiveGrabStrength(level, mass < 2, true), "Other vehicle holder keeps native torque");
         Near(vehicleHolder.grabStrength, 1f + 0.2f * level, kind + " never mutates shared Strength");
@@ -456,8 +475,8 @@ foreach (string kind in new[] { "cart", "scooter", "snow-bike" })
     controller._config.LifterHeavyRotationMultiplier.Value = 0.5f;
     controller._config.LifterLightItemStrengthLevel.Value = 12;
     run(vehicle);
-    Near(vehicleHolder.Grip, 143d / 12d, kind + " uses configured heavy grip at low mass");
-    Near(vehicleHolder.Torque, 143d / 48d, kind + " uses configured heavy rotation at low mass");
+    Near(vehicleHolder.Grip, 11.916671494788876d, kind + " uses configured heavy grip at low mass");
+    Near(vehicleHolder.Torque, 2.979167873697219d, kind + " uses configured heavy rotation at low mass");
     controller._config.LifterHeavyGripMultiplier.Value = controller._config.LifterHeavyRotationMultiplier.Value = 1;
     controller._config.LifterLightItemStrengthLevel.Value = 1;
 }
@@ -541,8 +560,8 @@ controller._config.LifterHeavyGripMultiplier.Value = 2f;
 controller._config.LifterHeavyRotationMultiplier.Value = 0.5f;
 var tunedHolder = new PhysGrabber { grabStrength = 41f };
 var tunedObject = new PhysGrabObject { rb = new Rigidbody { mass = 8f }, playerGrabbing = new[] { tunedHolder } };
-Near(LifterStrengthRuntime.Blend(41, 1, 0.9f, tunedObject, tunedHolder, false), 143d / 12d, "Custom heavy grip applied immediately");
-Near(LifterStrengthRuntime.Blend(41, 1, 0.9f, tunedObject, tunedHolder, true), 143d / 48d, "Custom heavy rotation applied independently");
+Near(LifterStrengthRuntime.Adjust(Mathf.Lerp(41, 1, 0.9f), 41, tunedObject, tunedHolder, false), 11.916671494788876d, "Custom heavy grip applied immediately");
+Near(LifterStrengthRuntime.Adjust(Mathf.Lerp(41, 1, 0.9f), 41, tunedObject, tunedHolder, true), 2.979167873697219d, "Custom heavy rotation applied independently");
 Check(!RoleOverhaulRules.LifterBaseReachesTarget(50, 2, 0.5), "Increased grip remains eligible at Base peak");
 Check(!RoleOverhaulRules.LifterBaseReachesTarget(50, 0.5, 2), "Increased rotation remains eligible at Base peak");
 Check(RoleOverhaulRules.LifterBaseReachesTarget(50, 0.5, 0.5), "Base exceeding both custom targets is excluded");
@@ -550,7 +569,7 @@ foreach (int level in new[] { 0, 1, 12, 200 })
 {
     controller._config.LifterLightItemStrengthLevel.Value = level;
     tunedObject.rb.mass = 1f;
-    Near(LifterStrengthRuntime.Blend(41, 1, 0.9f, tunedObject, tunedHolder, false), RoleOverhaulRules.EffectiveGrabStrength(level, true), "Custom light-object grip");
+    Near(LifterStrengthRuntime.Adjust(Mathf.Lerp(41, 1, 0.9f), 41, tunedObject, tunedHolder, false), RoleOverhaulRules.EffectiveGrabStrength(level, true), "Custom light-object grip");
     tunedObject.itemAttributes = new(); tunedObject.rb.mass = 8;
     Near(LifterStrengthRuntime.NativeStrengthInput(41, tunedObject, tunedHolder), 1f + 0.2f * level, "Custom shop holding level applies independently of mass");
     var tunedMelee = new ItemMelee(tunedObject); ItemMelee.HoldingPatchesEnabled = true;

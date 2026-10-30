@@ -1,12 +1,13 @@
 using System.Reflection;
 namespace UnityEngine
 {
+    public enum FindObjectsSortMode { InstanceID }
     public static class Time { public static float time; public static float unscaledTime; public static float deltaTime; }
     public class Object
     {
         public static PhysGrabObject[] Items = Array.Empty<PhysGrabObject>();
         public static int Scans;
-        public static T[] FindObjectsOfType<T>() { Scans++; return Items.Cast<T>().ToArray(); }
+        public static T[] FindObjectsByType<T>(FindObjectsSortMode sort) { Scans++; return Items.Cast<T>().ToArray(); }
     }
     public readonly record struct Vector3(float x, float y, float z)
     {

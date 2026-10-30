@@ -13,6 +13,7 @@ public sealed class MenuManager
 }
 public sealed class PlayerExpression
 {
+    public List<int> expressions = Enumerable.Range(0, 7).ToList();
     public PlayerAvatar playerAvatar;
     public PlayerExpression(PlayerAvatar avatar) { playerAvatar = avatar; }
 }

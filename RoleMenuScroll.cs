@@ -17,20 +17,20 @@ internal static class RoleGuideScrollPatch
     internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         List<CodeInstruction> code = new(instructions);
-        var input = AccessTools.Method(typeof(SemiFunc), nameof(SemiFunc.InputScrollY));
+        var wheelStep = AccessTools.Field(typeof(MenuScrollBox), "scrollWheelStep");
         var height = AccessTools.Field(typeof(MenuScrollBox), "scrollHeight");
         int matches = 0;
-        for (int i = 0; i + 5 < code.Count; i++)
+        for (int i = 0; i + 7 < code.Count; i++)
         {
-            // Replace only the wheel delta after the native hover/input gates.
-            // MenuLib 2.5.4 retains an old scrollSpeed IL hook but does not
-            // register it. Changing REPOScrollView.scrollSpeed has no effect.
-            if (!code[i].Calls(input) || code[i + 1].opcode != OpCodes.Ldarg_0 ||
-                !code[i + 2].LoadsField(height) || code[i + 3].opcode != OpCodes.Ldc_R4 ||
-                !Equals(code[i + 3].operand, 0.01f) || code[i + 4].opcode != OpCodes.Mul ||
-                code[i + 5].opcode != OpCodes.Div) continue;
+            // v0.5.0 has separate stick/keyboard and wheel branches. Decorate
+            // only Sign(wheel) * scrollWheelStep / (scrollHeight * 0.01).
+            if (code[i].opcode != OpCodes.Ldarg_0 || !code[i + 1].LoadsField(wheelStep) ||
+                code[i + 2].opcode != OpCodes.Mul || code[i + 3].opcode != OpCodes.Ldarg_0 ||
+                !code[i + 4].LoadsField(height) || code[i + 5].opcode != OpCodes.Ldc_R4 ||
+                !Equals(code[i + 5].operand, 0.01f) || code[i + 6].opcode != OpCodes.Mul ||
+                code[i + 7].opcode != OpCodes.Div) continue;
 
-            code.InsertRange(i + 6, new[]
+            code.InsertRange(i + 8, new[]
             {
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldarg_0),
@@ -40,7 +40,7 @@ internal static class RoleGuideScrollPatch
                 CodeInstruction.Call(typeof(RoleGuideScrollPatch), nameof(WheelStep))
             });
             matches++;
-            i += 11;
+            i += 13;
         }
         if (matches != 1)
             throw new InvalidOperationException($"Expected one MenuScrollBox wheel calculation, found {matches}.");

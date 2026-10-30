@@ -83,7 +83,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
             Physics.OverrideGrabDisable(0.5f);
             Physics.Teleport(position, Rotation);
             if (Physics.rb != null && !Physics.rb.isKinematic)
-            { Physics.rb.velocity = Vector3.zero; Physics.rb.angularVelocity = Vector3.zero; }
+            { Physics.rb.linearVelocity = Vector3.zero; Physics.rb.angularVelocity = Vector3.zero; }
             foreach (Behaviour behaviour in _paused)
                 if (behaviour != null) behaviour.enabled = true;
             _paused.Clear();
@@ -135,7 +135,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
         }
         if (Time.time < _nextScan || _carriers.Count == 0) return;
         _nextScan = Time.time + 0.1f;
-        PhysGrabObject[] objects = UnityEngine.Object.FindObjectsOfType<PhysGrabObject>();
+        PhysGrabObject[] objects = UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsSortMode.InstanceID);
         foreach (Carrier carrier in _carriers.Values)
         {
             if (carrier.Retiring) continue;
@@ -261,7 +261,7 @@ internal sealed class PorterRuntime(StageRolesConfig config)
             Vector3 position = cart != null ? PorterCart.DropPosition(cart, index) : DropPosition(carrier, index);
             cargo.Restore(position);
             if (cart != null && cargo.Physics.rb != null && !cargo.Physics.rb.isKinematic)
-                cargo.Physics.rb.velocity = PorterCart.Velocity(cart, position);
+                cargo.Physics.rb.linearVelocity = PorterCart.Velocity(cart, position);
             _storeBlockedUntil[cargo.Id] = Time.time + 3f;
             Remove(carrier, cargo);
             return true;

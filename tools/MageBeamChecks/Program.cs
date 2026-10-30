@@ -64,7 +64,7 @@ foreach (bool remote in new[] { false, true })
     for (int frame = 0; frame < 1600; frame++)
     {
         body.isKinematic = false; body.useGravity = true;
-        body.velocity = new(1, -8, 3); body.angularVelocity = new(0, 4, 0);
+        body.linearVelocity = new(1, -8, 3); body.angularVelocity = new(0, 4, 0);
         body.constraints = RigidbodyConstraints.None;
         phys.KinematicSeconds = phys.GravitySeconds = phys.GrabDisableSeconds = 0;
         root.transform.position = body.position = new(1, -10, 9);
@@ -80,7 +80,7 @@ foreach (bool remote in new[] { false, true })
         marker!.Maintain();
         Check(!staffMesh.enabled && !staffParticles.enabled && !staffLight.enabled && !staffCollider.enabled, "Carrier remains invisible and ungrabbable");
         Check(beamRenderer.enabled && beamHitRenderer.enabled && beamLight.enabled && beamCollider.enabled, "Beam rendering, light and damage stay active");
-        Check(body.isKinematic && !body.useGravity && body.constraints == RigidbodyConstraints.FreezeAll && body.velocity == Vector3.zero && body.angularVelocity == Vector3.zero, "Gravity and momentum cannot move carrier");
+        Check(body.isKinematic && !body.useGravity && body.constraints == RigidbodyConstraints.FreezeAll && body.linearVelocity == Vector3.zero && body.angularVelocity == Vector3.zero, "Gravity and momentum cannot move carrier");
         Check(body.position == expectedPosition && root.transform.position == expectedPosition && body.rotation == expectedRotation && root.transform.rotation == expectedRotation,
             remote ? "Guests preserve received origin and direction" : "Unbound host carrier resists physics displacement");
         Check(phys.KinematicSeconds > 0 && phys.GravitySeconds > 0 && phys.GrabDisableSeconds > 0, "Native overrides are continuously refreshed");

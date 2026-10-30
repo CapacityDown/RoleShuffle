@@ -183,8 +183,8 @@ internal static class HunterBatteryRuntime
 internal static class HunterBatteryPatches
 {
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(ItemBattery), nameof(ItemBattery.Drain))]
-    private static void ItemBatteryDrainPrefix(ItemBattery __instance, ref float __0)
+    [HarmonyPatch(typeof(ItemBattery), "DrainContinuous")]
+    private static void ItemBatteryDrainContinuousPrefix(ItemBattery __instance, ref float __0)
     {
         HunterBatteryRuntime.TryScaleDrain(__instance, ref __0);
     }
@@ -240,18 +240,4 @@ internal static class HunterBatteryPatches
         HunterBatteryRuntime.Refund(__state);
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ItemLeafBlower), nameof(ItemLeafBlower.BatteryDrain))]
-    private static void ItemLeafBlowerBatteryDrainPrefix(
-        ItemLeafBlower __instance,
-        ref float __0)
-    {
-        ItemBattery? battery = __instance.GetComponent<ItemBattery>() ??
-            __instance.GetComponentInChildren<ItemBattery>() ??
-            __instance.GetComponentInParent<ItemBattery>();
-        if (battery != null)
-        {
-            HunterBatteryRuntime.TryScaleDrain(battery, ref __0);
-        }
-    }
 }

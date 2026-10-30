@@ -3,10 +3,11 @@ using UnityEngine;
 
 namespace UnityEngine
 {
+    public enum FindObjectsSortMode { InstanceID }
     public class Object
     {
         public static readonly List<Object> World = new();
-        public static T[] FindObjectsOfType<T>() => World.OfType<T>().ToArray();
+        public static T[] FindObjectsByType<T>(FindObjectsSortMode sort) => World.OfType<T>().ToArray();
     }
     public class Component : Object
     {
@@ -48,7 +49,7 @@ namespace UnityEngine
         public static Vector3 operator +(Vector3 a,Vector3 b)=>new(a.x+b.x,a.y+b.y,a.z+b.z);
         public static Vector3 operator *(Vector3 a,float b)=>new(a.x*b,a.y*b,a.z*b);
     }
-    public class Rigidbody : Component { public bool isKinematic; public bool detectCollisions=true; public Vector3 velocity,angularVelocity; public Vector3 GetPointVelocity(Vector3 position)=>velocity; }
+    public class Rigidbody : Component { public bool isKinematic; public bool detectCollisions=true; public Vector3 linearVelocity,angularVelocity; public Vector3 GetPointVelocity(Vector3 position)=>linearVelocity; }
     public class Collider : Component { }
     public class SphereCollider : Collider { public float radius=0.25f; }
     public enum QueryTriggerInteraction { Ignore }
@@ -109,7 +110,7 @@ public class PhysGrabber
     public void OverrideGrabRelease(int view,float seconds)
     {
         Releases++;
-        foreach(var item in UnityEngine.Object.FindObjectsOfType<PhysGrabObject>()) item.playerGrabbing.Remove(this);
+        foreach(var item in UnityEngine.Object.FindObjectsByType<PhysGrabObject>(UnityEngine.FindObjectsSortMode.InstanceID)) item.playerGrabbing.Remove(this);
     }
 }
 public class RoomVolume : Component { public bool Truck,Extraction; }

@@ -96,6 +96,26 @@ foreach (int index in Enumerable.Range(1, 6))
     Check(casts.Count == before + 4, "Peer stop, reset and unowned RPC cannot cast");
 }
 
+// v0.5.0 wheel selections are committed once, not every animation frame.
+var wheelPlayer = new PlayerAvatar(); MenuManager.instance = new(); Time.unscaledTime = 0;
+int wheelBefore = casts.Count;
+Call("WheelPostfix", wheelPlayer.playerExpression, new List<int> { 1, 3, 0, 99 });
+Set(wheelPlayer, 1); Set(wheelPlayer, 3); Set(wheelPlayer, 1); Set(wheelPlayer, 99);
+Check(casts.Count == wheelBefore + 2, "Committed wheel expressions each authorize one cast; invalid selections cannot");
+Call("WheelPostfix", new PlayerExpression(wheelPlayer), new List<int> { 2 }); Set(wheelPlayer, 2);
+Check(casts.Count == wheelBefore + 2, "Wheel preview avatar cannot authorize a cast");
+MenuManager.instance.PageForTests = new();
+Call("WheelPostfix", wheelPlayer.playerExpression, new List<int> { 2 });
+MenuManager.instance.PageForTests = null; Set(wheelPlayer, 2);
+Check(casts.Count == wheelBefore + 2, "Menu wheel input cannot leak into gameplay");
+Call("WheelPostfix", wheelPlayer.playerExpression, new List<int> { 2 }); Time.unscaledTime = 1; Set(wheelPlayer, 2);
+Check(casts.Count == wheelBefore + 2, "Expired wheel intent cannot authorize later restoration");
+
+bool SameType(TypeReference native, Type managed) => native is GenericInstanceType generic
+    ? managed.IsGenericType && generic.ElementType.FullName == managed.GetGenericTypeDefinition().FullName &&
+        generic.GenericArguments.Zip(managed.GetGenericArguments()).All(pair => SameType(pair.First, pair.Second))
+    : native.FullName == managed.FullName;
+
 // Confirm the patch target names and parameter bindings against the installed
 // game, not just against the stand-ins above. No proprietary code is copied.
 string path = args.Length > 0 ? args[0] : @"E:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\Assembly-CSharp.dll";
@@ -106,7 +126,7 @@ foreach (var patch in hook.GetCustomAttributes<HarmonyPatch>())
     var target = game.MainModule.Types.Single(t => t.Name == patch.info.declaringType.Name)
         .Methods.Single(m => m.Name == patch.info.methodName);
     foreach (var parameter in hook.GetParameters().Where(p => p.Name != "__instance"))
-        Check(target.Parameters.Any(p => p.Name == parameter.Name && p.ParameterType.FullName == parameter.ParameterType.FullName),
+        Check(target.Parameters.Any(p => p.Name == parameter.Name && SameType(p.ParameterType, parameter.ParameterType)),
             $"Installed {target.Name} accepts {parameter.Name}");
 }
 var expression = game.MainModule.Types.Single(t => t.Name == "PlayerExpression");

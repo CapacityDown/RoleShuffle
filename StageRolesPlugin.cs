@@ -10,14 +10,14 @@ using UnityEngine.SceneManagement;
 namespace REPOJP.StageRoles;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-[BepInDependency(RepoConfigGuid, BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency(MenuLibGuid, BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(RepoConfigGuid, "1.2.7")]
+[BepInDependency(MenuLibGuid, "2.6.0")]
 [BepInDependency(StageFluxGuid, BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class StageRolesPlugin : BaseUnityPlugin
 {
     public const string PluginGuid = "REPOJP.RoleShuffle";
     public const string PluginName = "RoleShuffle";
-    public const string PluginVersion = "4.6.1";
+    public const string PluginVersion = "5.0.0";
     public const string StageFluxGuid = "REPOJP.StagePhysicsEvents";
     public const string RepoConfigGuid = "nickklmao.repoconfig";
     public const string MenuLibGuid = "nickklmao.menulib";

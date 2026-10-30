@@ -117,7 +117,7 @@ namespace UnityEngine
     }
     public class MonoBehaviour : Component { public object StartCoroutine(IEnumerator routine) => routine; }
     public enum RigidbodyConstraints { None, FreezeAll }
-    public class Rigidbody : Component { public bool isKinematic; public Vector3 velocity, angularVelocity; public RigidbodyConstraints constraints; }
+    public class Rigidbody : Component { public bool isKinematic; public Vector3 linearVelocity, angularVelocity; public RigidbodyConstraints constraints; }
     public struct Vector3
     {
         public float x, y, z;

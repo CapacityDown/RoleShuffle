@@ -213,7 +213,7 @@ internal sealed class RoleHud : MonoBehaviour
         label.outlineColor = new Color(0f, 0f, 0f, 0.95f);
         label.outlineWidth = 0.15f;
         label.raycastTarget = false;
-        label.enableWordWrapping = false;
+        label.textWrappingMode = TextWrappingModes.NoWrap;
         label.richText = false;
         label.overflowMode = TextOverflowModes.Truncate;
         label.alignment = TextAlignmentOptions.Left;

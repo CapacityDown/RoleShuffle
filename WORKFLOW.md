@@ -10,7 +10,7 @@ historical version numbers, deployment profiles and superseded design choices.
 
 - Work in `RoleShuffle`; preserve the original `StageRoles` checkout and previous
   release artifacts so the stable version can be restored.
-- Keep the MOD name RoleShuffle. Continue the current development version (4.6.1)
+- Keep the MOD name RoleShuffle. Continue the current development version (5.0.0)
   unless the user changes it. Do not revive the old overhaul setting.
 - On 2026-10-03 the user requested a complete rollback of the Tuna changes in
   build503. Retain Tuna's build502 behavior: per-frame movement checks, stage-start
@@ -26,7 +26,7 @@ historical version numbers, deployment profiles and superseded design choices.
   into `main`, including the role-safety audit, its diagnostic results and
   hashes, and the verification tools committed as `d4c2698`.
 - Perform development in `RoleShuffle` on a branch named `version/<version>`;
-  the current working branch is `version/4.6.1`. Commit and push ongoing work
+  the current working branch is `version/5.0.0`. Commit and push ongoing work
   to that version's branch instead of directly to `main`.
 - When the user changes the version, complete the relevant verification and
   merge the outgoing version's branch into `main`, then push and verify `main`.
@@ -55,14 +55,22 @@ historical version numbers, deployment profiles and superseded design choices.
 
 - On 2026-10-19 the user assigned the Courier difficulty easing and later work
   to v4.6.1. The v4.6.0 feature boundary is build540; its source tree is integrated
-  into main at `7525180`. Continue the longer Courier grace periods in
-  `version/4.6.1`, with a separate v4.6.1 CHANGELOG entry and release ZIP.
+  into main at `7525180`. Those changes were originally developed in
+  `version/4.6.1`; the 2026-10-30 version migration below supersedes that release name.
 
 - After final extraction, Courier automatic HP loss stays disabled until stage end,
   including after role reassignment or revival. Other damage remains unchanged.
 
+- On 2026-10-30 the user moved the v4.6.1 contents to v5.0.0 and requested
+  R.E.P.O. v0.5.0 compatibility. Develop on `version/5.0.0`; the previous
+  v4.6.1 branch and release archives remain recoverable. The v5.0.0 changelog
+  includes Courier easing and final-extraction protection.
+
 ## Builds and deployment
 
+- Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set
+  `REPO_GAME_DIR` or local `Directory.Repo.props`; do not commit game DLLs.
+  Require MenuLib 2.6.0 and REPOConfig 1.2.7 from REPOModding.
 - Increment the Role UI build number before each main build attempt. Keep the
   build number in the Role UI, and include it when reporting a build result.
 - Build Release with automatic profile copying disabled:

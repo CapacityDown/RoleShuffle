@@ -3,6 +3,7 @@ using Photon.Pun;
 using REPOJP.StageRoles;
 namespace UnityEngine
 {
+    public enum FindObjectsSortMode { InstanceID }
     public class Object
     {
         public static List<Object> World = new();
@@ -10,7 +11,7 @@ namespace UnityEngine
         private readonly int _id = ++_next;
         public Object() { World.Add(this); }
         public int GetInstanceID() => _id;
-        public static T[] FindObjectsOfType<T>() => World.OfType<T>().ToArray();
+        public static T[] FindObjectsByType<T>(FindObjectsSortMode sort) => World.OfType<T>().ToArray();
     }
     public class Component : Object
     {

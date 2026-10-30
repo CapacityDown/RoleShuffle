@@ -151,7 +151,7 @@ internal static class PlayerState
         {
             physGrabObject.rb.position = position;
             physGrabObject.rb.rotation = rotation;
-            physGrabObject.rb.velocity = Vector3.zero;
+            physGrabObject.rb.linearVelocity = Vector3.zero;
             physGrabObject.rb.angularVelocity = Vector3.zero;
         }
         deathHead.transform.position = position;

@@ -42,7 +42,7 @@ internal sealed class DeathHeadStillness
         // The transform checks also catch heads moved by network interpolation,
         // a carrier or teleportation while the host Rigidbody reports zero speed.
         if (!continuous ||
-            !(phys.rb.velocity.sqrMagnitude <= MaximumLinearSpeedSquared) ||
+            !(phys.rb.linearVelocity.sqrMagnitude <= MaximumLinearSpeedSquared) ||
             !(phys.rb.angularVelocity.sqrMagnitude <= MaximumAngularSpeedSquared) ||
             !((position - _anchorPosition).sqrMagnitude <= MaximumPositionDriftSquared) ||
             !(Quaternion.Angle(rotation, _anchorRotation) <= MaximumRotationDriftDegrees))

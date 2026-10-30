@@ -24,7 +24,7 @@ foreach (string staff in new[] { "ItemStaffTorque", "ItemStaffZeroGravity", "Ite
     Check(calls.Any(m => m.DeclaringType.Name == "SlowProjectile" && m.Name == "SetSpawner"), staff + " identifies actual staff");
     Check(calls.Any(m => m.DeclaringType.Name == "SlowProjectile" && m.Name == "Launch"), staff + " launches after setup");
 }
-foreach (string name in new[] { "DestroyRPC", "ExplosionRPC" })
+foreach (string name in new[] { "DestroyLogic", "ExplosionRPC" })
 {
     var calls = Calls(Method("SlowProjectile", name)).ToList();
     Check(calls.Any(m => m.DeclaringType.FullName == "Photon.Pun.PhotonNetwork" &&

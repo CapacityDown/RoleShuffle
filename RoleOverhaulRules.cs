@@ -82,17 +82,26 @@ internal static class RoleOverhaulRules
         return ceiling;
     }
 
-    // R.E.P.O. 0.4.4.3 PhysGrabObject reduces both translation and rotation,
-    // with denominator 7 below mass 2 and 20 otherwise. Rotation omits the
-    // strength-30 cap in the reduced value. Both curves are non-monotonic.
-    // Used by King's non-weakening bonus selection and Lifter's effective peak.
-    // Lifter's native display remains level 200.
+    // v0.5.0 GrabStrengthGet holds the pre-penalty peak at higher levels.
+    // Mirror the native three Newton iterations; grip caps the divider at 30,
+    // while rotation has no divider cap. King and Lifter use the same curve.
     internal static double EffectiveGrabStrength(int level, bool lightObject, bool rotation = false)
     {
         double strength = 1d + 0.2d * Math.Clamp(level, 0, 200);
+        double denominator = lightObject ? 7d : 20d;
+        double peak = 1d + denominator * 0.5d;
+        for (int i = 0; i < 3; i++)
+        {
+            double inverse = 1d / (1d + peak);
+            peak -= (peak - 1d + inverse * inverse - denominator * 0.5d) /
+                (1d - 2d * inverse * inverse * inverse);
+        }
+        double capped = Math.Min(strength, peak);
+        double floor = capped + (capped / (1d + capped) - capped) *
+            Math.Min((capped - 1d) / denominator, 0.9d);
         double reduced = strength / (1d + (rotation ? strength : Math.Min(strength, 30d)));
-        double blend = Math.Min((strength - 1d) / (lightObject ? 7d : 20d), 0.9d);
-        return strength + (reduced - strength) * blend;
+        double blend = Math.Min((strength - 1d) / denominator, 0.9d);
+        return Math.Max(floor, strength + (reduced - strength) * blend);
     }
 }
 

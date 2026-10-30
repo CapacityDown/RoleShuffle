@@ -4,19 +4,20 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using UnityEngine;
 
 namespace REPOJP.StageRoles;
 
-[HarmonyPatch(typeof(PhysGrabObject), "PhysicsGrabbingManipulation")]
+[HarmonyPatch]
 internal static class LifterStrengthPatch
 {
+    private static bool _gripPatched;
+    private static bool _torquePatched;
+
     internal static void Install(Harmony harmony)
     {
-        RoleOverhaulRules.LifterPhysicsAvailable = false;
+        RoleOverhaulRules.LifterPhysicsAvailable = _gripPatched = _torquePatched = false;
         try
         {
-            // Holding prefixes stay inert until the shared physics patch succeeds.
             harmony.PatchAll(typeof(LifterMeleeHoldingPatch));
             harmony.PatchAll(typeof(LifterStrengthPatch));
         }
@@ -29,52 +30,62 @@ internal static class LifterStrengthPatch
             StageRolesPlugin.ModLogger.LogWarning("Fixed-strength Lifter is unavailable and excluded from random assignment.");
     }
 
+    private static IEnumerable<MethodBase> TargetMethods()
+    {
+        yield return AccessTools.Method(typeof(PhysGrabObject), "PhysicsGrabbingManipulation");
+        yield return AccessTools.Method(typeof(PhysGrabObject), "GrabTorqueGet");
+    }
+
     [HarmonyTranspiler]
     internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase __originalMethod)
     {
         var source = instructions.ToList();
+        bool rotation = __originalMethod.Name == "GrabTorqueGet";
+        if (rotation) _torquePatched = false; else _gripPatched = false;
         RoleOverhaulRules.LifterPhysicsAvailable = false;
-        MethodInfo lerp = AccessTools.Method(typeof(Mathf), nameof(Mathf.Lerp), new[] { typeof(float), typeof(float), typeof(float) });
-        var sites = source.Select((code, index) => (code, index)).Where(item => item.code.Calls(lerp)).ToArray();
-        var grabbers = __originalMethod.GetMethodBody()?.LocalVariables.Where(local => local.LocalType == typeof(PhysGrabber)).ToArray();
+        MethodInfo helper = AccessTools.Method(typeof(PhysGrabObject), "GrabStrengthGet");
         FieldInfo strength = AccessTools.Field(typeof(PhysGrabber), nameof(PhysGrabber.grabStrength));
-        // 0.4.4.3 has precisely two scalar blends and two raw strength loads
-        // from the same foreach grabber: translation first, rotation second.
-        if (!LifterStrengthRuntime.FieldsAvailable || sites.Length != 2 || grabbers?.Length != 1)
-            return source;
-        int local = grabbers[0].LocalIndex;
+        var sites = source.Select((code, index) => (code, index)).Where(x => x.code.Calls(helper)).ToArray();
         var loads = source.Select((code, index) => (code, index))
-            .Where(item => item.code.opcode == OpCodes.Ldfld && Equals(item.code.operand, strength)).ToArray();
-        if (loads.Length != 2 || loads[0].index == 0 || loads[1].index == 0 ||
-            LoadIndex(source[loads[0].index - 1]) != local || LoadIndex(source[loads[1].index - 1]) != local ||
-            !(loads[0].index < sites[0].index && sites[0].index < loads[1].index && loads[1].index < sites[1].index))
-            return source;
-
-        MethodInfo replacement = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Blend));
-        MethodInfo nativeInput = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.NativeStrengthInput));
-        var result = new List<CodeInstruction>(source.Count + 12);
-        int site = 0;
-        foreach (CodeInstruction instruction in source)
+            .Where(x => x.code.opcode == OpCodes.Ldfld && Equals(x.code.operand, strength)).ToArray();
+        var locals = __originalMethod.GetMethodBody()?.LocalVariables.Where(x => x.LocalType == typeof(PhysGrabber)).ToArray();
+        if (!LifterStrengthRuntime.FieldsAvailable || sites.Length != 1 || loads.Length != 1 ||
+            loads[0].index == 0 || sites[0].index < 3) return source;
+        int grabberLocal = rotation ? -1 : locals?.Length == 1 ? locals[0].LocalIndex : -1;
+        CodeInstruction grabber = rotation ? new CodeInstruction(OpCodes.Ldarg_1) : new CodeInstruction(OpCodes.Ldloc, grabberLocal);
+        if (rotation ? __originalMethod.GetParameters().FirstOrDefault()?.ParameterType != typeof(PhysGrabber) ||
+                source[loads[0].index - 1].opcode != OpCodes.Ldarg_1
+            : grabberLocal < 0 || LoadIndex(source[loads[0].index - 1]) != grabberLocal) return source;
+        int site = sites[0].index;
+        // Both native call sites are this, local raw strength, constant divider.
+        int rawLocal = LoadIndex(source[site - 2]);
+        if (source[site - 3].opcode != OpCodes.Ldarg_0 || rawLocal < 0 ||
+            source[site - 1].opcode != OpCodes.Ldc_R4 ||
+            !Equals(source[site - 1].operand, rotation ? float.PositiveInfinity : 30f) ||
+            loads[0].index >= site) return source;
+        MethodInfo adjust = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.Adjust));
+        MethodInfo input = AccessTools.Method(typeof(LifterStrengthRuntime), nameof(LifterStrengthRuntime.NativeStrengthInput));
+        var result = new List<CodeInstruction>(source.Count + 8);
+        for (int i = 0; i < source.Count; i++)
         {
-            if (instruction.opcode == OpCodes.Ldfld && Equals(instruction.operand, strength))
+            result.Add(source[i]);
+            if (i == loads[0].index)
             {
-                result.Add(instruction);
                 result.Add(new CodeInstruction(OpCodes.Ldarg_0));
-                result.Add(new CodeInstruction(OpCodes.Ldloc, local));
-                result.Add(new CodeInstruction(OpCodes.Call, nativeInput));
-                continue;
+                result.Add(new CodeInstruction(grabber));
+                result.Add(new CodeInstruction(OpCodes.Call, input));
             }
-            if (!instruction.Calls(lerp)) { result.Add(instruction); continue; }
-            var owner = new CodeInstruction(OpCodes.Ldarg_0);
-            owner.MoveLabelsFrom(instruction);
-            owner.MoveBlocksFrom(instruction);
-            result.Add(owner);
-            result.Add(new CodeInstruction(OpCodes.Ldloc, local));
-            result.Add(new CodeInstruction(site++ == 0 ? OpCodes.Ldc_I4_0 : OpCodes.Ldc_I4_1));
-            instruction.operand = replacement;
-            result.Add(instruction);
+            if (i == site)
+            {
+                result.Add(new CodeInstruction(OpCodes.Ldloc, rawLocal));
+                result.Add(new CodeInstruction(OpCodes.Ldarg_0));
+                result.Add(new CodeInstruction(grabber));
+                result.Add(new CodeInstruction(rotation ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0));
+                result.Add(new CodeInstruction(OpCodes.Call, adjust));
+            }
         }
-        RoleOverhaulRules.LifterPhysicsAvailable = true;
+        if (rotation) _torquePatched = true; else _gripPatched = true;
+        RoleOverhaulRules.LifterPhysicsAvailable = _gripPatched && _torquePatched;
         return result;
     }
 

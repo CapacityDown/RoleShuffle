@@ -6,6 +6,7 @@ namespace UnityEngine
     public static class Input { public static Vector2 mouseScrollDelta; }
     public static class Mathf
     {
+        public static float Sign(float value) => value >= 0 ? 1 : -1;
         public static float Abs(float value) => Math.Abs(value);
         public static bool Approximately(float a, float b) => Math.Abs(a - b) < 0.00001f;
         public static float Clamp(float value, float min, float max) => Math.Clamp(value, min, max);
@@ -13,6 +14,7 @@ namespace UnityEngine
 }
 public class MenuScrollBox
 {
+    public float scrollWheelStep = 15;
     public float scrollHeight = 1000;
     public float scrollerStartPosition = 1000;
     public float scrollerEndPosition = 0;

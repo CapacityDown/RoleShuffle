@@ -241,7 +241,7 @@ internal sealed class DiverRoleRuntime
             if (!state.Underfloor)
             {
                 state.LastPosition = position;
-                state.LastVelocity = rigidbody.velocity;
+                state.LastVelocity = rigidbody.linearVelocity;
                 continue;
             }
 
@@ -401,7 +401,7 @@ internal sealed class DiverRoleRuntime
             return;
         }
 
-        Vector3 velocity = rigidbody.velocity;
+        Vector3 velocity = rigidbody.linearVelocity;
         StartDive(
             state,
             player,
@@ -505,14 +505,14 @@ internal sealed class DiverRoleRuntime
         Vector3 entryPosition = floorPoint - floorNormal * UnderfloorOffset;
         phys.Teleport(entryPosition, rigidbody.rotation);
         rigidbody.position = entryPosition;
-        rigidbody.velocity = Vector3.ProjectOnPlane(velocity, floorNormal);
+        rigidbody.linearVelocity = Vector3.ProjectOnPlane(velocity, floorNormal);
         rigidbody.angularVelocity = Vector3.zero;
         state.ControlledPosition = entryPosition;
         state.LastExitProbePosition = entryPosition;
         state.MinimumControlledY = floorPoint.y - MaximumControlledDepth;
         state.AwaitingNeutralInput = true;
         state.LastPosition = entryPosition;
-        state.LastVelocity = rigidbody.velocity;
+        state.LastVelocity = rigidbody.linearVelocity;
         MaintainUnderfloorMovement(
             state,
             player,
@@ -628,7 +628,7 @@ internal sealed class DiverRoleRuntime
         }
         phys.Teleport(state.ControlledPosition, rigidbody.rotation);
         rigidbody.position = state.ControlledPosition;
-        rigidbody.velocity = Vector3.zero;
+        rigidbody.linearVelocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
     }
 
@@ -695,7 +695,7 @@ internal sealed class DiverRoleRuntime
         {
             rigidbody.position = position;
             rigidbody.rotation = rotation;
-            rigidbody.velocity = Vector3.zero;
+            rigidbody.linearVelocity = Vector3.zero;
             rigidbody.angularVelocity = Vector3.zero;
         }
         player.Spawn(position, rotation);
@@ -734,7 +734,7 @@ internal sealed class DiverRoleRuntime
         {
             avatarBody.position = position;
             avatarBody.rotation = rotation;
-            avatarBody.velocity = Vector3.zero;
+            avatarBody.linearVelocity = Vector3.zero;
             avatarBody.angularVelocity = Vector3.zero;
         }
         PlayerAvatarCollision? avatarCollision =
@@ -754,7 +754,7 @@ internal sealed class DiverRoleRuntime
             {
                 tumblePhys.rb.position = position;
                 tumblePhys.rb.rotation = rotation;
-                tumblePhys.rb.velocity = Vector3.zero;
+                tumblePhys.rb.linearVelocity = Vector3.zero;
                 tumblePhys.rb.angularVelocity = Vector3.zero;
             }
         }

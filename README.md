@@ -5,9 +5,9 @@ R.E.P.O.向け役職MODのソース管理用リポジトリです。
 バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
 過去タスクから引き継いだ作業方法は[作業ガイド](WORKFLOW.md)を参照してください。
 
-## v4.6.0開発
+## v5.0.0開発
 
-`version/4.6.0`ブランチで開発しています。v4.5.4として開発していた内容をv4.6.0へ移行し、移行前の内容は`main`へ統合済みです。
+`version/5.0.0`ブランチでR.E.P.O. v0.5.0に対応しています。v4.6.1の内容をv5.0.0へ移行し、移行前の内容は`main`へ統合済みです。
 以前のバージョンのブランチと配布ZIP、元の`StageRoles`フォルダは保持します。
 仕様・分岐元・検証状況は[開発記録](docs/OVERHAUL_4.5.0.md)を参照してください。
 Tank・Runner・Lifter・Courier・Kingの更新はv4.5.0の標準仕様です。旧仕様への切り替え設定は廃止し、設定移行時にバックアップを作成します。
@@ -34,18 +34,19 @@ GitHubアカウントでログインするとIssueを投稿できます。
 
 .NET SDK 9.0.xを使用します。`global.json`でSDKの範囲を指定しています。
 NuGet依存関係は`StageRoles.csproj`に定義し、MenuLibのビルド参照は
-`lib/MenuLib.dll`を同梱しています。
+`lib/MenuLib.dll`（2.6.0）を同梱しています。ゲーム本体の参照は、インストール済みのR.E.P.O. v0.5.0（Unity 6）を使用します。`REPO_GAME_DIR`をゲームのインストール先に設定してください。ローカルの`Directory.Repo.props`で`RepoManagedDirectory`を指定することもできます。この設定ファイルとゲームDLLはGitに含めません。
 
 ビルド前に`RoleMenu.cs`の`RoleUiBuildNumber`を1増やしてください。
 失敗したビルドもカウントします。
 
 ```powershell
+$env:REPO_GAME_DIR = 'E:/SteamLibrary/steamapps/common/REPO'
 dotnet restore StageRoles.csproj
 dotnet build StageRoles.csproj -c Release --no-restore
 ```
 
 出力先は`bin/Release/netstandard2.1/RoleShuffle.dll`です。
-ビルド後は`pwsh -NoProfile -File tools/Test-GameFieldAccess.ps1`を実行し、実ゲームDLLの非公開フィールドを直接参照していないことを確認してください。ビルド用GameLibsの公開範囲と実ゲームの公開範囲は異なります。ゲームが別の場所にある場合は`-GameAssembly`で`Assembly-CSharp.dll`のパスを指定します。
+ビルド後は`pwsh -NoProfile -File tools/Test-GameFieldAccess.ps1`を実行し、実ゲームDLLの非公開フィールドを直接参照していないことを確認してください。`pwsh -NoProfile -File tools/Test-Repo050Compatibility.ps1`でゲームへの呼び出し、Harmonyの対象、リフレクションの参照先も検証します。ゲームが別の場所にある場合は`-GameAssembly`で`Assembly-CSharp.dll`のパスを指定します。
 このプロジェクトのビルドではゲームへの自動配備を行いません。
 ゲームで使用する際は、`package/manifest.json`に記載された依存MODを別途導入してください。
 

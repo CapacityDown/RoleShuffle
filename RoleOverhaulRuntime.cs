@@ -44,7 +44,7 @@ internal sealed class RoleOverhaulRuntime
             if (assignment.Role == StageRole.Jobless)
             {
                 ObserveCourierLife(assignment);
-                candidates ??= UnityEngine.Object.FindObjectsOfType<PhysGrabObject>();
+                candidates ??= UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsSortMode.InstanceID);
                 TickContract(assignment, candidates, notifier);
             }
             else state.ResetCargo();

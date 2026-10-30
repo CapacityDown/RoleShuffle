@@ -47,8 +47,8 @@ Check(RoleOverhaulRules.UpgradeTarget("Health", 100, 21, 1.5, 3101) == 150, "Rou
 Check(RoleOverhaulRules.UpgradeTarget("Health", 10, 21, double.NaN, 4100) == 21, "Invalid multiplier preserves floor");
 Check(!RoleOverhaulRules.GrowsWithBase(StageRole.Rammer), "Rammer locks stay outside growth rules");
 
-Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(20, true) - 2.619047619d) < 1e-8, "Light-force reference");
-Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(50, false) - 5.958333333d) < 1e-8, "Heavy-force peak at 50");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(20, true) - 2.6592489377492012d) < 1e-8, "Light-force reference");
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(50, false) - 5.958335747394438d) < 1e-8, "Heavy-force peak at 50");
 Check(Math.Ceiling(Enumerable.Range(0, 201).Max(n => Math.Max(
     RoleOverhaulRules.EffectiveGrabStrength(n, true), RoleOverhaulRules.EffectiveGrabStrength(n, false)))) ==
     RoleOverhaulRules.MaximumValue("Strength"), "Strength cap uses the entire level range");
@@ -56,16 +56,12 @@ double[] Forces(int level) => new[] {
     RoleOverhaulRules.EffectiveGrabStrength(level, true), RoleOverhaulRules.EffectiveGrabStrength(level, false),
     RoleOverhaulRules.EffectiveGrabStrength(level, true, true), RoleOverhaulRules.EffectiveGrabStrength(level, false, true) };
 Check(!RoleOverhaulRules.GrowsWithBase(StageRole.Lifter), "Lifter no longer uses Base multipliers");
-Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false) - 5.290322580645d) < 1e-8,
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false) - 5.958335747394438d) < 1e-8,
     "Vanilla level-200 grip reference before Lifter correction");
-Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false, true) - 4.978571428571d) < 1e-8,
+Check(Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(200, false, true) - 5.958335747394438d) < 1e-8,
     "Vanilla level-200 rotation reference before Lifter correction");
-Check(Enumerable.Range(0, 201).Where(n => RoleOverhaulRules.EffectiveGrabStrength(n, false) >
-    RoleOverhaulRules.EffectiveGrabStrength(200, false)).SequenceEqual(Enumerable.Range(32, 37)),
-    "Vanilla Strength 200 reduces heavy grip from Base 32 through 68");
-Check(Enumerable.Range(0, 201).Where(n => RoleOverhaulRules.EffectiveGrabStrength(n, false, true) >
-    RoleOverhaulRules.EffectiveGrabStrength(200, false, true)).SequenceEqual(Enumerable.Range(28, 45)),
-    "Vanilla Strength 200 reduces heavy rotation coefficient from Base 28 through 72");
+Check(Enumerable.Range(50, 151).All(n => Math.Abs(RoleOverhaulRules.EffectiveGrabStrength(n, false) -
+    RoleOverhaulRules.EffectiveGrabStrength(50, false)) < 1e-9), "v0.5.0 holds heavy strength at its peak");
 
 var state = new RoleOverhaulState();
 state.Start(10, 30); state.Start(20, 30);
@@ -380,8 +376,8 @@ UpgradeService.EnsureAtLeastLevels("a", new[] { new UpgradeGrant("Speed", "playe
 Check(Level("a", "Speed") == 15, "Returning-role minimum is evaluated without aura");
 Check(KingUpgradeAura.WithoutBonus("a", "playerUpgradeSpeed", 15) == 13, "Dynamic roles snapshot baseline without temporary aura");
 Set("a", "Speed", 200); Set("a", "Range", 199); Set("a", "Strength", 50); Aura();
-Check(Level("a", "Speed") == 200 && Level("a", "Range") == 200 && Level("a", "Strength") == 50,
-    "Level cap and non-monotonic Strength peak are respected");
+Check(Level("a", "Speed") == 200 && Level("a", "Range") == 200 && Level("a", "Strength") == 55,
+    "Level cap and v0.5.0 non-weakening Strength plateau are respected");
 foreach (int baseline in Enumerable.Range(0, 201))
 foreach (int request in new[] { 0, 1, 5, 200 })
 {

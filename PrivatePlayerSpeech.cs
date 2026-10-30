@@ -16,7 +16,7 @@ internal static class PrivatePlayerSpeech
         {
             bool local = receiver.photonView.Owner == PhotonNetwork.LocalPlayer;
             if (local) StageFluxCompatibility.ExpectNotification(receiver, message);
-            receiver.photonView.RPC(nameof(PlayerAvatar.ChatMessageSendRPC), receiver.photonView.Owner, new object[] { message, false });
+            receiver.photonView.RPC(nameof(PlayerAvatar.ChatMessageSendRPC), receiver.photonView.Owner, new object[] { message, false, "en-US" });
             if (local) PlayerMessageActivity.Observe(receiver);
             else PlayerMessageActivity.ReserveRemote(receiver, Math.Clamp(3f + message.Length * 0.35f, 4f, 120f));
             return true;

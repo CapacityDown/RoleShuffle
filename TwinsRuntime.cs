@@ -286,7 +286,7 @@ internal sealed partial class StageRoleController
     private void ObserveTwinsCargo(TwinPair pair)
     {
         PhysGrabObject? shared = null;
-        foreach (PhysGrabObject item in UnityEngine.Object.FindObjectsOfType<PhysGrabObject>())
+        foreach (PhysGrabObject item in UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsSortMode.InstanceID))
             if (TwinsCarrying(item)) { shared = item; pair.Cargo.Add(item); break; }
         pair.Cooperation.ObserveCarry(shared == null ? 0 : shared.GetInstanceID(), shared != null,
             shared != null && TwinsDeliveryArea(shared, false), Time.time, _config.TwinsDeliveryCarrySeconds.Value);

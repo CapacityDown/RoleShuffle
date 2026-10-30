@@ -24,6 +24,8 @@ object? Operand(object? value)
 {
     if (value is MethodReference method && method.DeclaringType.Name == "SemiFunc" && method.Name == "InputScrollY")
         return typeof(SemiFunc).GetMethod(method.Name)!;
+    if (value is MethodReference sign && sign.DeclaringType.Name == "Mathf" && sign.Name == "Sign")
+        return typeof(UnityEngine.Mathf).GetMethod("Sign")!;
     if (value is FieldReference field && field.DeclaringType.Name == "MenuScrollBox")
         return (object?)typeof(MenuScrollBox).GetField(field.Name) ?? value;
     return value;
@@ -41,7 +43,9 @@ Check(original.All(i => patched.Contains(i) && i.labels.Count == 0), "Original i
 int helperIndex = patched.FindIndex(i => i.Calls(helper));
 var dynamic = new DynamicMethod("PatchedNativeWheel", typeof(float), new[] { typeof(MenuScrollBox) }, typeof(Program).Module, true);
 var il = dynamic.GetILGenerator();
-foreach (var instruction in patched.GetRange(helperIndex - 11, 12))
+// The native expression starts with a wheel local; load its input directly.
+il.Emit(OpCodes.Call, typeof(SemiFunc).GetMethod("InputScrollY")!);
+foreach (var instruction in patched.GetRange(helperIndex - 14, 15))
 {
     switch (instruction.operand)
     {
@@ -84,9 +88,9 @@ foreach (float invalid in new[] { 0f, float.NaN, float.PositiveInfinity, float.N
 }
 SemiFunc.Scroll = 120;
 var otherBox = new MenuScrollBox();
-Check(Close(wheelStep(otherBox), 120 / (otherBox.scrollHeight * 0.01f)), "Unrelated menus keep the native wheel calculation");
+Check(Close(wheelStep(otherBox), otherBox.scrollWheelStep / (otherBox.scrollHeight * 0.01f)), "Unrelated menus keep the native wheel calculation");
 RoleMenu.Open = false;
-Check(Close(wheelStep(box), 120 / (box.scrollHeight * 0.01f)), "Closed menu keeps the native calculation");
+Check(Close(wheelStep(box), box.scrollWheelStep / (box.scrollHeight * 0.01f)), "Closed menu keeps the native calculation");
 RoleMenu.Open = true;
 box.scrollerStartPosition = 0;
 Check(wheelStep(box) == 0, "Content with no travel adds no movement");

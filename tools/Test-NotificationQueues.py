@@ -84,6 +84,7 @@ namespace Photon.Pun {
   public int ViewID; public Photon.Realtime.Player? Owner;
   public void RPC(string name,Photon.Realtime.Player receiver,object[] args) {
    if(Clock.RpcFailure) throw new Exception("RPC unavailable");
+   if(name != "ChatMessageSendRPC" || args.Length != 3 || args[1] is not false || args[2] is not "en-US") throw new Exception("Invalid v0.5.0 private chat payload");
    Clock.Rpcs.Add((ViewID,receiver.ActorNumber,(string)args[0]));
    var listener=Clock.Players.Single(p=>p.photonView.Owner?.ActorNumber==receiver.ActorNumber);
    if(listener.isLocal) {

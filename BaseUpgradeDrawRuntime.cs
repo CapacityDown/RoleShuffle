@@ -1355,7 +1355,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         text.fontSize = fontSize;
         text.color = color;
         text.alignment = TextAlignmentOptions.Center;
-        text.enableWordWrapping = false;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
         text.overflowMode = TextOverflowModes.Ellipsis;
         text.outlineColor = new Color(0f, 0f, 0f, 0.95f);
         text.outlineWidth = 0.16f;
@@ -1422,7 +1422,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         headerText.fontStyle = FontStyles.Bold;
         headerText.color = RepoOrange;
         headerText.alignment = TextAlignmentOptions.Left;
-        headerText.enableWordWrapping = false;
+        headerText.textWrappingMode = TextWrappingModes.NoWrap;
         headerText.raycastTarget = false;
 
         GameObject viewport = new(
@@ -1471,7 +1471,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         text.fontSize = fontSize;
         text.color = Color.white;
         text.alignment = TextAlignmentOptions.Center;
-        text.enableWordWrapping = false;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
         text.overflowMode = TextOverflowModes.Overflow;
         text.outlineColor = new Color(0f, 0f, 0f, 0.95f);
         text.outlineWidth = 0.16f;

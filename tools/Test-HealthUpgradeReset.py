@@ -21,7 +21,7 @@ def extract(file, start, end):
     return body
 
 
-for file in ('HealthUpgradeReset.cs', 'UpgradeService.cs'):
+for file in ('HealthUpgradeReset.cs', 'UpgradeService.cs', 'PorterSpeed.cs', 'PorterRules.cs'):
     body = (root / file).read_text(encoding='utf-8-sig')
     (out / file).write_text(body, encoding='utf-8')
     sources.append(dict(file=file, sha256=hashlib.sha256(body.encode()).hexdigest()))
@@ -158,6 +158,7 @@ namespace REPOJP.StageRoles {
     }
     internal sealed class TestController {
         internal bool Assigned = true;
+        internal void ForgetTwinsSpeed(string id, string key) { }
         internal void StageEnding() {
             if (!Assigned) return;
             UpgradeService.SetLevels("p", new[] { new UpgradeGrant("Health", "playerUpgradeHealth", 1) });

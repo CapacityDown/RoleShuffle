@@ -100,7 +100,7 @@ internal sealed class MageBeamCarrier : MonoBehaviour
         {
             if (!_body.isKinematic)
             {
-                _body.velocity = Vector3.zero;
+                _body.linearVelocity = Vector3.zero;
                 _body.angularVelocity = Vector3.zero;
             }
             _body.useGravity = false;

@@ -77,7 +77,7 @@ namespace UnityEngine
     {
         public bool isKinematic;
         public bool useGravity = true;
-        public Vector3 velocity;
+        public Vector3 linearVelocity;
         public Vector3 angularVelocity;
         public Vector3 position;
         public Quaternion rotation;

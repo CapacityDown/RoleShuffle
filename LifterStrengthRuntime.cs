@@ -59,12 +59,12 @@ internal static class LifterStrengthRuntime
         IsLevelOneItem(owner)
             ? 1f + 0.2f * StageRolesPlugin.Instance.Controller.LifterItemLevel : raw;
 
-    // Replaces only the two vanilla penalty blends, inside the individual
-    // grabber loop. Never changes the shared grabber state or other players.
-    internal static float Blend(float raw, float reduced, float blend,
+    // Decorates the native helper result per grabber; keeps v0.5.0 force and
+    // torque stabilization and never changes shared player Strength.
+    internal static float Adjust(float vanilla, float raw,
         PhysGrabObject owner, PhysGrabber grabber, bool rotation)
     {
-        float vanilla = Mathf.Lerp(raw, reduced, blend);
+        if (!RoleOverhaulRules.LifterPhysicsAvailable) return vanilla;
         if (owner != null && grabber != null && grabber.playerAvatar != null)
             vanilla *= StageRolesPlugin.Instance?.Controller?.TwinsGrabMultiplier(owner, grabber.playerAvatar) ?? 1f;
         if (!RoleOverhaulRules.LifterPhysicsAvailable || owner == null || owner.rb == null ||

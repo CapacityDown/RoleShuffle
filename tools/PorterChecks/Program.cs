@@ -31,7 +31,7 @@ PhysGrabObject Item(float mass,ValuableVolume.Type size=ValuableVolume.Type.Smal
     item.Components.Add(typeof(ValuableTestEffect),new ValuableTestEffect());
     UnityEngine.Object.World.Add(item);return item;
 }
-void Grab(PhysGrabObject item){foreach(var other in UnityEngine.Object.FindObjectsOfType<PhysGrabObject>())other.playerGrabbing.Clear();item.playerGrabbing.Add(player.physGrabber);}
+void Grab(PhysGrabObject item){foreach(var other in UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsSortMode.InstanceID))other.playerGrabbing.Clear();item.playerGrabbing.Add(player.physGrabber);}
 var first=Item(7.5f);Tick(0);Tick(3.01f);
 Check(first.Stored&&runtime.Weight(player.Id)==7.5f&&player.physGrabber.Releases==1,"Authority stores original and releases owner grip");
 Check(!first.GetComponent<ValuableTestEffect>()!.enabled&&first.GetComponent<ValuableObject>()!.dollarValueCurrent==100,"Pause special effect and preserve original value");
@@ -99,7 +99,7 @@ PhysGrabCart Cart(int id,float x)
 {
     var cart=new PhysGrabCart();
     cart.transform.Children["In Cart"]=new Transform{position=new(x,2,8),localScale=new(2,2,3)};
-    cart.Components[typeof(Rigidbody)]=new Rigidbody{velocity=new(2,0,3)};
+    cart.Components[typeof(Rigidbody)]=new Rigidbody{linearVelocity=new(2,0,3)};
     var view=new Photon.Pun.PhotonView{ViewID=id};view.Components[typeof(PhysGrabCart)]=cart;
     Photon.Pun.PhotonView.Views[id]=view;return cart;
 }
@@ -116,7 +116,7 @@ player.clientPhysRidingID=102;Tick(102);Check(runtime.UnloadReadyAt(player.Id)==
 var area=cartB.transform.Find("In Cart")!;area.position=new(35,3,12);area.rotation=new Quaternion{Yaw=MathF.PI/2};
 Tick(107.1f);Check(!cartCargo.Stored&&runtime.Weight(player.Id)==0,"Unloading returns all cargo into ridden cart");
 Check(Math.Abs(cartCargo.transform.position.x-35)<0.001f&&Math.Abs(cartCargo.transform.position.y-3.4f)<0.001f&&Math.Abs(cartCargo.transform.position.z-12)<0.001f,"Drop uses the cart's current cargo area after moving");
-Check(cartCargo.rb.velocity.x==2&&cartCargo.rb.velocity.z==3&&UpgradeService.Speeds[player.Id]==10,"Dropped cargo inherits moving cart velocity and restores Speed");
+Check(cartCargo.rb.linearVelocity.x==2&&cartCargo.rb.linearVelocity.z==3&&UpgradeService.Speeds[player.Id]==10,"Dropped cargo inherits moving cart velocity and restores Speed");
 int finished=notices.Messages.Count(x=>x=="Unloaded");Tick(108);Check(notices.Messages.Count(x=>x=="Unloaded")==finished,"Empty cart does not repeat completion notices");
 Grab(cartCargo);Tick(109);Tick(113);Check(!cartCargo.Stored,"Cannot automatically reabsorb cargo while aboard cart");cartCargo.playerGrabbing.Clear();
 for(int i=0;i<200;i++)

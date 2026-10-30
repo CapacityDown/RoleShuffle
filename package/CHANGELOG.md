@@ -1,4 +1,5 @@
-## 4.6.1
+## 5.0.0
+- Updated compatibility for R.E.P.O. v0.5.0.
 - Eased Courier with a 120-second HP-loss pause at stage start and after revival. Delivery pauses now last 90/120/180/240/240/240/300 seconds for Tiny/Small/Medium/Big/Wide/Tall/VeryTall valuables. Automatic HP loss stops after the final extraction for the rest of the stage.
 
 ## 4.6.0

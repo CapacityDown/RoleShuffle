@@ -62,7 +62,7 @@ namespace UnityEngine {
  }
  public class GameObject { public bool activeInHierarchy=true; }
  public class Transform { public Vector3 position; public Quaternion rotation; }
- public class Rigidbody { public Vector3 velocity; public Vector3 angularVelocity; }
+ public class Rigidbody { public Vector3 linearVelocity; public Vector3 angularVelocity; }
 }
 public class PhysGrabber {}
 public class PhysGrabObject {
@@ -162,9 +162,9 @@ Time.time=0; Check(!state.Observe(p),"First observation cannot revive");
 Time.time=0.2f; Check(!state.Observe(p),"A short pause is not enough");
 Time.time=0.4f; Check(!state.Observe(p),"Stillness needs half a second");
 Time.time=0.6f; Check(state.Observe(p),"Stationary head becomes ready");
-p.playerDeathHead!.physGrabObject!.rb!.velocity=new(1,0,0);
+p.playerDeathHead!.physGrabObject!.rb!.linearVelocity=new(1,0,0);
 Check(!state.Observe(p),"Translation invalidates readiness immediately");
-p.playerDeathHead.physGrabObject.rb.velocity=default;
+p.playerDeathHead.physGrabObject.rb.linearVelocity=default;
 p.playerDeathHead.physGrabObject.rb.angularVelocity=new(0,1,0);
 Still(state,p,1); Check(!state.Observe(p),"Rotation alone blocks revival");
 p.playerDeathHead.physGrabObject.rb.angularVelocity=default;
@@ -186,7 +186,7 @@ p.playerDeathHead.gameObject.activeInHierarchy=true; p.playerDeathHead.physGrabO
 Check(!state.Observe(p),"Missing rigidbody cannot revive");
 p.playerDeathHead=null; Check(!state.Observe(p),"Missing head cannot revive");
 p.playerDeathHead=new(); Still(state,p,14);
-p.playerDeathHead.physGrabObject!.rb!.velocity=new(float.NaN,0,0);
+p.playerDeathHead.physGrabObject!.rb!.linearVelocity=new(float.NaN,0,0);
 Check(!state.Observe(p),"Invalid velocity cannot count as stationary");
 
 foreach(int fps in new[]{30,60,144}) {
@@ -207,7 +207,7 @@ RoleAssignment nearby=new("nearby",StageRole.Tank),held=new("held",StageRole.Tan
 RoleAssignment bystander=new("bystander",StageRole.Tank); bystander.Player.Alive=true;
 nearby.Player.playerDeathHead!.transform.position=new(1,0,0);
 held.Player.playerDeathHead!.transform.position=new(10,0,0);
-held.Player.playerDeathHead.physGrabObject!.rb!.velocity=new(5,0,0);
+held.Player.playerDeathHead.physGrabObject!.rb!.linearVelocity=new(5,0,0);
 held.Player.playerDeathHead.physGrabObject.rb.angularVelocity=new(0,3,0);
 rescue._assignments.AddRange(new[]{rescuer,nearby,held,bystander});
 for(int i=0;i<40;i++) rescue.Tick(i*0.1f);
@@ -257,7 +257,7 @@ Probe priority=new(); priority._config.RescuerReviveDelaySeconds.Value=0;
 RoleAssignment rp=new("rp",StageRole.Rescuer),tp=new("tp",StageRole.Phoenix);
 rp.Player.Alive=true; priority._assignments.AddRange(new[]{rp,tp});
 tp.Player.playerDeathHead!.physGrabObject!.playerGrabbing.Add(rp.Player.physGrabber!);
-tp.Player.playerDeathHead.physGrabObject.rb!.velocity=new(5,0,0);
+tp.Player.playerDeathHead.physGrabObject.rb!.linearVelocity=new(5,0,0);
 priority.Tick(40);
 Check(tp.Player.ReviveCalls==0&&rp.RescuerRevivesUsed==0,"Grab rescue does not bypass an unused Phoenix");
 tp.Role=StageRole.Tank; tp.Player.SecondChance=true; priority.Tick(40.1f);
@@ -277,13 +277,13 @@ Check(!PlayerState.IsGrabbingDeathHead(r1.Player,null),"Missing head target is r
 foreach(var role in new[]{StageRole.Phoenix,StageRole.Superbot}) {
  Probe phoenix=new(); RoleAssignment a=new("phoenix",role);
  phoenix._assignments.Add(a); a.Player.Immediate=false;
- a.Player.playerDeathHead!.physGrabObject!.rb!.velocity=new(0,0,-2);
+ a.Player.playerDeathHead!.physGrabObject!.rb!.linearVelocity=new(0,0,-2);
  for(int i=0;i<=3000;i++) {
   phoenix.Tick(i*0.1f);
   Check(phoenix.TryPreventPhoenixRetake(),"No game over during a five-minute moving-head wait");
  }
  Check(!a.PhoenixUsed&&!a.PhoenixRevivePending&&a.Player.ReviveCalls==0,"Moving Phoenix retains charge without request");
- a.Player.playerDeathHead.physGrabObject.rb.velocity=default;
+ a.Player.playerDeathHead.physGrabObject.rb.linearVelocity=default;
  a.Player.playerDeathHead.setup=false;
  for(int i=3001;i<3011;i++) phoenix.Tick(i*0.1f);
  Check(phoenix.TryPreventPhoenixRetake()&&!a.PhoenixUsed&&a.Player.ReviveCalls==0,"Uninitialized head preserves charge and stage");

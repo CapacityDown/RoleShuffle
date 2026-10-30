@@ -191,10 +191,10 @@ internal sealed class RoleResourceHud : MonoBehaviour
         text.characterSpacing = source.characterSpacing;
         text.wordSpacing = source.wordSpacing;
         text.margin = source.margin;
-        text.enableKerning = source.enableKerning;
+        text.fontFeatures = new(source.fontFeatures);
         text.extraPadding = source.extraPadding;
         text.enableAutoSizing = false;
-        text.enableWordWrapping = false;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
         text.overflowMode = TextOverflowModes.Overflow;
         text.richText = true;
         text.raycastTarget = false;

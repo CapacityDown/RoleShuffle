@@ -95,7 +95,7 @@ internal sealed class UtilityRoleRuntime
                 assignment.MechanicRepairPercentUsed < Mathf.Clamp(
                     _config.MechanicMaximumRepairPercentPerStage.Value, 0f, 100f))
             {
-                heldCandidates ??= UnityEngine.Object.FindObjectsOfType<PhysGrabObject>();
+                heldCandidates ??= UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsSortMode.InstanceID);
                 TickMechanic(assignment, heldCandidates, elapsed);
             }
             if (RoleCatalog.HasCapability(
@@ -105,7 +105,7 @@ internal sealed class UtilityRoleRuntime
                 assignment.ElectricianChargePercentUsed < Mathf.Clamp(
                     _config.ElectricianMaximumChargePercentPerStage.Value, 0f, 1000f))
             {
-                heldCandidates ??= UnityEngine.Object.FindObjectsOfType<PhysGrabObject>();
+                heldCandidates ??= UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsSortMode.InstanceID);
                 TickElectrician(assignment, heldCandidates, elapsed);
             }
             if (RoleCatalog.HasCapability(assignment.Role, StageRole.Ninja))

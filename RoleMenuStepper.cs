@@ -35,7 +35,7 @@ internal sealed class RoleMenuStepper
         valueText.enableAutoSizing = true;
         valueText.fontSizeMin = 18f;
         valueText.fontSizeMax = 21f;
-        valueText.enableWordWrapping = false;
+        valueText.textWrappingMode = TextWrappingModes.NoWrap;
         valueText.alignment = TextAlignmentOptions.Right;
         valueText.raycastTarget = false;
         valueText.rectTransform.anchorMin = valueText.rectTransform.anchorMax = valueText.rectTransform.pivot = Vector2.zero;
@@ -108,7 +108,7 @@ internal sealed class RoleMenuStepper
         label.font = font;
         label.fontSize = 20f;
         label.enableAutoSizing = false;
-        label.enableWordWrapping = false;
+        label.textWrappingMode = TextWrappingModes.NoWrap;
         label.alignment = TextAlignmentOptions.Center;
         label.raycastTarget = false;
         label.rectTransform.anchorMin = label.rectTransform.anchorMax = label.rectTransform.pivot = Vector2.zero;
