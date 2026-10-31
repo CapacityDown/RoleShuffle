@@ -12,8 +12,10 @@ and RoleShuffle-S002 (`01a091a3-dc1e-7463-bad9-ef2e5a5fd3d9`), reconfirmed on
 - Match the flat colors, simple shading and dark outlines of the existing set.
 - Use a clear role-specific action or prop; avoid unrelated decoration.
 - Fill the badge well enough to remain recognizable in the HUD.
-- Keep actual Semibot anatomy: dome head, protruding eyes above the mouth slit,
+- Keep actual Semibot anatomy: dome head, protruding eyes,
   a distinct shallow cylindrical jaw/neck band, cylindrical torso and cone legs.
+- Negotiator and Rigger have no mouth, as requested on 2026-10-31. Remove only
+  the facial mouth slit; retain the structural contour of the head and neck band.
 - Arms attach high on the torso, just below the jaw band. Keep them short and
   tapered. Do not add human elbows, wrists, fingers or extra joints.
 - Reference approved original icons such as Tank and Medic for anatomy. Do not
@@ -51,7 +53,7 @@ is neutral and is not recolored as a role category.
 
 Keep a full-resolution master and its generation prompt. Export a 256 × 256 RGBA
 runtime PNG named with the existing role ID convention. Preserve true alpha.
-Inspect the neck band, mouth location, arm attachment and silhouette at full size
+Inspect the neck band, the mouthless faces of Negotiator/Rigger, arm attachment and silhouette at full size
 and at HUD size. Existing icons remain unchanged when adding a new role.
 
 Secret-role icons remain concealed in public documents and unrevealed UI.
