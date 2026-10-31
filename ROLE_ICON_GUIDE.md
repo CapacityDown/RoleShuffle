@@ -7,7 +7,8 @@ The user's instructions in RoleShuffle-S001 (`019fbdb5-6974-7f70-b783-b426be968f
 and RoleShuffle-S002 (`01a091a3-dc1e-7463-bad9-ef2e5a5fd3d9`), reconfirmed on
 2026-09-21, take precedence over the earlier frameless concept.
 
-- Preserve the hexagonal frame, cream edging and interior illustration.
+- Preserve the broad, softly rounded hexagonal frame of Tank/Medic, cream edging
+  and interior illustration. Do not substitute a narrow, sharp-cornered badge.
 - Make only the exterior of the hexagon transparent.
 - Match the flat colors, simple shading and dark outlines of the existing set.
 - Use a clear role-specific action or prop; avoid unrelated decoration.
@@ -16,6 +17,9 @@ and RoleShuffle-S002 (`01a091a3-dc1e-7463-bad9-ef2e5a5fd3d9`), reconfirmed on
   a distinct shallow cylindrical jaw/neck band, cylindrical torso and cone legs.
 - Negotiator and Rigger have no mouth, as requested on 2026-10-31. Remove only
   the facial mouth slit; retain the structural contour of the head and neck band.
+- Keep both the shallow neck band below the dome and the lower waist band above
+  the legs visibly separate from the torso. Do not collapse either band to a
+  single thin line; use the original Medic proportions as the reference.
 - Arms attach high on the torso, just below the jaw band. Keep them short and
   tapered. Do not add human elbows, wrists, fingers or extra joints.
 - Reference approved original icons such as Tank and Medic for anatomy. Do not

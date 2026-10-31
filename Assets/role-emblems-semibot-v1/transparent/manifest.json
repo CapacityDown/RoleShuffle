@@ -1629,26 +1629,26 @@
       "category": "Support",
       "background_color": "#24563E",
       "detected_background_rgb": [
-        36,
-        89,
+        37,
+        93,
         64
       ],
       "background_color_tolerance": 24,
-      "background_core_pixels": 343018,
-      "background_mask_pixels": 371883,
+      "background_core_pixels": 491954,
+      "background_mask_pixels": 521027,
       "outside_mask_pixels_unchanged": true,
       "alpha_preserved_during_recolor": true,
       "name": "45-Rigger",
       "source": "Assets/role-emblems-semibot-v1/selected/45-Rigger.png",
-      "method": "Built-in image_gen mouth-only edit; category background normalization",
+      "method": "Built-in image_gen rounded-frame and Semibot-band edits; native alpha preserved; category background normalization",
       "native_source_alpha": true,
       "source_size": [
         1254,
         1254
       ],
-      "source_sha256": "673d79730b1500136505c27c3d395a9999e259a356d3d7b6d8472ab479956c89",
-      "master_sha256": "bb19110138af54643d32eaa0bee4fc3835477d4833115ff52978e17b0ceee790",
-      "runtime_sha256": "2f5f54fbd00138fc51dd092778f77320ad2c65ecb1a173482f2d2ee88630f760",
+      "source_sha256": "404c3b759b2423003fac20848f459a741d1279d808d05309b4ecb217cf6220bc",
+      "master_sha256": "eafbeef458fc427c5462ffadd21fc5df0acc88bc30cae3b529c6d3a1aaeeaa32",
+      "runtime_sha256": "1659a1142f88a5ab8f73631d5eeb075e0535e2a01fbb3c28e5672ba9125ead40",
       "runtime_size": [
         256,
         256
@@ -1658,26 +1658,26 @@
       "category": "Support",
       "background_color": "#24563E",
       "detected_background_rgb": [
-        38,
-        97,
-        74
+        39,
+        90,
+        66
       ],
       "background_color_tolerance": 24,
-      "background_core_pixels": 415430,
-      "background_mask_pixels": 439097,
+      "background_core_pixels": 482392,
+      "background_mask_pixels": 506411,
       "outside_mask_pixels_unchanged": true,
       "alpha_preserved_during_recolor": true,
       "name": "46-Negotiator",
       "source": "Assets/role-emblems-semibot-v1/selected/46-Negotiator.png",
-      "method": "Built-in image_gen mouth-only edit; category background normalization",
+      "method": "Built-in image_gen rounded-frame and Semibot-band edits; native alpha preserved; category background normalization",
       "native_source_alpha": true,
       "source_size": [
         1254,
         1254
       ],
-      "source_sha256": "def98a8870334472dcecc67c53af70da905ac97f94e14a5ea663b58c26bd54da",
-      "master_sha256": "2a9caf472ace849b2793c2b321ad2be996801776cdd6ec79635cad3ffb362a73",
-      "runtime_sha256": "8d712bf9f38a489bca0f8f9ec10a50a14affd46552f4e1ec7945e97dad57fab4",
+      "source_sha256": "46f460af8fc71e3d3541f3e1ca065beb0d4ca51a568e8706ee91d05c2e27c4ab",
+      "master_sha256": "e46defffe384b6cb6963b74819c2ee252abb22f0ea592f13083923256e5e5cd8",
+      "runtime_sha256": "89a849a4a46dab07b73cec69a49104e1058198695d2fd5a5eb2d1f29a5558b84",
       "runtime_size": [
         256,
         256
