@@ -3,6 +3,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using Mono.Cecil;
 using REPOJP.StageRoles;
+using UnityEngine.InputSystem;
 
 int checks = 0;
 void Check(bool result, string label)
@@ -16,6 +17,20 @@ bool Close(float a, float b) => Math.Abs(a - b) < 0.01f;
 // MenuLib's obsolete scrollSpeed hook runs. Unity objects remain stand-ins.
 string gamePath = args.Length > 0 ? args[0] : @"E:\SteamLibrary\steamapps\common\REPO\REPO_Data\Managed\Assembly-CSharp.dll";
 using var game = AssemblyDefinition.ReadAssembly(gamePath);
+// Confirm the installed Unity UI module normalizes using the same internal
+// runtime tick size; a hard-coded Windows delta is no longer a valid contract.
+using var input = AssemblyDefinition.ReadAssembly(Path.Combine(Path.GetDirectoryName(gamePath)!, "Unity.InputSystem.dll"));
+var tickGetter = input.MainModule.Types.Single(t => t.FullName == "UnityEngine.InputSystem.InputSystem")
+    .Methods.Single(m => m.Name == "get_scrollWheelDeltaPerTick");
+Check(tickGetter.IsAssembly && tickGetter.IsStatic && tickGetter.ReturnType.FullName == "System.Single",
+    "Installed Input System has the internal static float getter used by the cached delegate");
+Check(tickGetter.Body.Instructions.Any(i => i.Operand is MethodReference m && m.Name == "get_scrollWheelDeltaPerTick"),
+    "Wheel tick size comes from the active input runtime");
+var nativeScrollCallback = input.MainModule.Types.Single(t => t.FullName == "UnityEngine.InputSystem.UI.InputSystemUIInputModule")
+    .Methods.Single(m => m.Name == "OnScrollCallback");
+var nativeTickCall = nativeScrollCallback.Body.Instructions.Single(i => i.Operand is MethodReference m && m.FullName == tickGetter.FullName);
+Check(nativeTickCall.Next.Operand is MethodReference divide && divide.Name == "op_Division",
+    "Installed Unity UI divides scroll input by the runtime tick size");
 var update = game.MainModule.Types.Single(t => t.Name == "MenuScrollBox").Methods.Single(m => m.Name == "Update");
 var opcodes = typeof(OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static)
     .Where(f => f.FieldType == typeof(OpCode)).Select(f => (OpCode)f.GetValue(null)!)
@@ -59,34 +74,47 @@ foreach (var instruction in patched.GetRange(helperIndex - 14, 15))
 il.Emit(OpCodes.Ret);
 var wheelStep = dynamic.CreateDelegate<Func<MenuScrollBox, float>>();
 var box = RoleMenu.Box;
-foreach (float wheel in new[] { 0.01f, 1f, 120f, 600f, -0.01f, -120f })
+foreach (float unitsPerTick in new[] { 1f, 120f, 10f })
+foreach (float notches in new[] { 0.01f, 0.5f, 1f, 5f, -0.01f, -0.5f, -1f, -5f })
 foreach (var geometry in new[] { (1000f, 50000f), (320f, 4000f), (250f, 100f) })
 foreach (float staleHeight in new[] { 200f, 4000f, 100000f })
 {
-    SemiFunc.Scroll = wheel;
-    UnityEngine.Input.mouseScrollDelta = new UnityEngine.Vector2 { y = 0 };
+    InputSystem.scrollWheelDeltaPerTick = unitsPerTick;
+    SemiFunc.Scroll = notches * unitsPerTick;
     box.scrollHeight = staleHeight;
     box.scrollerStartPosition = geometry.Item2;
     box.scrollBarBackground.rect = new UnityEngine.Rect { height = geometry.Item1 };
     float delta = wheelStep(box);
     float contentDistance = delta * geometry.Item2 / (geometry.Item1 - box.scrollHandle.sizeDelta.y);
-    Check(Close(contentDistance, wheel / 120f * 97.5f), "Actual patched expression gives three body lines per detent despite stale native height or page geometry");
+    Check(Close(contentDistance, notches * 97.5f), "Actual patched expression gives three body lines per detent despite stale native height or page geometry");
 }
 
-SemiFunc.Scroll = 120;
+InputSystem.scrollWheelDeltaPerTick = 1f;
+SemiFunc.Scroll = 1;
 float single = wheelStep(box);
-SemiFunc.Scroll = 600;
+SemiFunc.Scroll = 5;
 Check(Close(wheelStep(box), single * 5), "Five detents in one low-FPS input frame equal five separate detents");
-SemiFunc.Scroll = 60;
+SemiFunc.Scroll = 0.5f;
 Check(Close(wheelStep(box) * 2, single), "Fractional high-resolution input retains its accumulated distance");
 
-SemiFunc.Scroll = 120;
+SemiFunc.Scroll = 1;
 foreach (float invalid in new[] { 0f, float.NaN, float.PositiveInfinity, float.NegativeInfinity })
 {
     SemiFunc.Scroll = invalid;
     Check(wheelStep(box) == 0, "Idle or invalid input adds no movement");
 }
-SemiFunc.Scroll = 120;
+SemiFunc.Scroll = 1;
+foreach (float invalidTick in new[] { 0f, -1f, float.NaN, float.PositiveInfinity, float.NegativeInfinity })
+{
+    InputSystem.scrollWheelDeltaPerTick = invalidTick;
+    Check(wheelStep(box) == 0, "Invalid runtime tick size adds no movement");
+}
+InputSystem.scrollWheelDeltaPerTick = 120f;
+SemiFunc.Scroll = 120f;
+Check(Close(wheelStep(box), single), "A runtime unit change preserves the distance of one detent");
+InputSystem.scrollWheelDeltaPerTick = 1f;
+SemiFunc.Scroll = 1f;
+Check(Close(wheelStep(box), single), "Switching back to normalized input preserves distance");
 var otherBox = new MenuScrollBox();
 Check(Close(wheelStep(otherBox), otherBox.scrollWheelStep / (otherBox.scrollHeight * 0.01f)), "Unrelated menus keep the native wheel calculation");
 RoleMenu.Open = false;

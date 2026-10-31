@@ -1,5 +1,5 @@
 ## 5.0.0
-- Updated compatibility for R.E.P.O. v0.5.0, including the Roles menu and Japanese text display.
+- Updated compatibility for R.E.P.O. v0.5.0, including the Roles menu, Japanese text display and mouse-wheel scrolling.
 - Menus follow the game language automatically. Roulette upgrade names use each player’s game-language translations; long names fit within the reel.
 - Strength role bonuses use upgrades: Lifter sets a configurable level (default 200), King grants up to five temporary levels, and Twins co-carrying grants temporary levels targeting about 1.5x Strength (level cap 200). Heavy-object handling follows the game; temporary levels are removed when their effect ends.
 - Eased Courier with a 120-second HP-loss pause at stage start and after revival. Delivery pauses now last 90/120/180/240/240/240/300 seconds for Tiny/Small/Medium/Big/Wide/Tall/VeryTall valuables. Automatic HP loss stops after the final extraction for the rest of the stage.

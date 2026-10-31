@@ -3,13 +3,19 @@ namespace UnityEngine
     public struct Vector2 { public float y; }
     public struct Rect { public float height; }
     public class RectTransform { public Vector2 sizeDelta; public Rect rect; }
-    public static class Input { public static Vector2 mouseScrollDelta; }
     public static class Mathf
     {
         public static float Sign(float value) => value >= 0 ? 1 : -1;
         public static float Abs(float value) => Math.Abs(value);
         public static bool Approximately(float a, float b) => Math.Abs(a - b) < 0.00001f;
         public static float Clamp(float value, float min, float max) => Math.Clamp(value, min, max);
+    }
+}
+namespace UnityEngine.InputSystem
+{
+    public static class InputSystem
+    {
+        internal static float scrollWheelDeltaPerTick { get; set; } = 1f;
     }
 }
 public class MenuScrollBox
