@@ -46,6 +46,7 @@ internal enum StageRole
     Twins,
     Porter,
     DualWielder,
+    Rigger,
     Superbot = 1001,
     Disaster = 1002
 }

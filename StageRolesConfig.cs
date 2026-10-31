@@ -500,6 +500,11 @@ internal sealed class StageRolesConfig
         InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
         TwinsEnabled = RoleEnabled(config, "Twins");
+        RiggerEnabled = RoleEnabled(config, "Rigger");
+        RiggerWeight = RoleWeight(config, "Rigger");
+        RiggerEnemyHoldMultiplier = BindFloat(config, "Rigger", "EnemyHoldDurationMultiplier", 1.5f, 1f, 3f, "Enemy restraint duration multiplier while using the Human Adventure Cable.");
+        RiggerDurabilityMultiplier = BindFloat(config, "Rigger", "DurabilityConsumptionMultiplier", 0.5f, 0.1f, 1f, "Human Adventure Cable durability consumed on hits and throws. 0.5 means half the normal cost.");
+
         DualWielderEnabled = RoleEnabled(config, "DualWielder");
         DualWielderWeight = RoleWeight(config, "DualWielder");
         DualWielderDelaySeconds = BindFloat(config, "DualWielder", "FollowDelaySeconds", 0.3f, 0.05f, 2f, "Seconds by which the second melee weapon follows the first. Battery and durability are shared; both weapons consume them on hit.");
@@ -532,6 +537,10 @@ internal sealed class StageRolesConfig
     }
 
     internal ConfigEntry<bool> TwinsEnabled { get; }
+    internal ConfigEntry<bool> RiggerEnabled { get; }
+    internal ConfigEntry<int> RiggerWeight { get; }
+    internal ConfigEntry<float> RiggerEnemyHoldMultiplier { get; }
+    internal ConfigEntry<float> RiggerDurabilityMultiplier { get; }
     internal ConfigEntry<bool> DualWielderEnabled { get; }
     internal ConfigEntry<int> DualWielderWeight { get; }
     internal ConfigEntry<float> DualWielderDelaySeconds { get; }
@@ -924,6 +933,7 @@ internal sealed class StageRolesConfig
         StageRole.Twins => TwinsEnabled,
         StageRole.Porter => PorterEnabled,
         StageRole.DualWielder => DualWielderEnabled,
+        StageRole.Rigger => RiggerEnabled,
         StageRole.Superbot => SuperbotEnabled,
         StageRole.Disaster => DisasterEnabled,
         _ => null
@@ -975,6 +985,7 @@ internal sealed class StageRolesConfig
         StageRole.Twins => TwinsWeight.Value,
         StageRole.Porter => PorterWeight.Value,
         StageRole.DualWielder => DualWielderWeight.Value,
+        StageRole.Rigger => RiggerWeight.Value,
         StageRole.Superbot => 1,
         StageRole.Disaster => 1,
         _ => 0

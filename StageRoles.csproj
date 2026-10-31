@@ -61,6 +61,7 @@
     <Compile Include="PorterCart.cs" />
     <Compile Include="DualWielderHistory.cs" />
     <Compile Include="DualWielderRuntime.cs" />
+    <Compile Include="RiggerRuntime.cs" />
     <Compile Include="PorterSpeed.cs" />
     <Compile Include="PrivatePlayerSpeech.cs" />
     <Compile Include="RoleGuidePresentation.cs" />

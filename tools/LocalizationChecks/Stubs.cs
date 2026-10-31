@@ -45,12 +45,15 @@ internal enum StageRole
     Twins,
     Porter,
     DualWielder,
+    Rigger,
     Superbot = 1001,
     Disaster = 1002
 }
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal Entry<float> RiggerEnemyHoldMultiplier { get; } = new(1.5f);
+    internal Entry<float> RiggerDurabilityMultiplier { get; } = new(0.5f);
     internal Entry<float> DualWielderDelaySeconds { get; } = new(0.3f);
     internal Entry<float> DualWielderLeftOffset { get; } = new(0.5f);
     internal readonly HashSet<StageRole> DisabledRoles = new();

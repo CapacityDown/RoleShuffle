@@ -62,14 +62,19 @@ __PARSE__
         Check(TryParseRole("???2",out parsed) && parsed==StageRole.Disaster,"command secret alias 2");
         Check(TryParseRole("Disaster",out parsed) && parsed==StageRole.Disaster,"command real name");
         Check(!TryParseRole("999",out parsed) && !TryParseRole("1000",out parsed),"old IDs no longer assigned");
-        Check(!TryParseRole("45",out parsed),"hidden roles have no ordinary numeric alias");
+        Check(!TryParseRole("46",out parsed) && !TryParseRole("47",out parsed),"hidden roles have no ordinary numeric alias");
         Check(TryParseRole("43",out parsed) && parsed==StageRole.Porter,"Porter compact ID");
+        Check(TryParseRole("45",out parsed) && parsed==StageRole.Rigger,"Rigger compact ID");
+        Check(TryParseRole("Rigger",out parsed) && parsed==StageRole.Rigger,"Rigger name");
+        Check(TryParseRole("捕縛師",out parsed) && parsed==StageRole.Rigger,"Rigger alias");
         Check(TryParseRole("44",out parsed) && parsed==StageRole.DualWielder,"DualWielder compact ID");
         Check(!TryParseRole("Signalman",out parsed),"Removed role name rejected");
         Check(TryParseRole("41",out parsed) && parsed==StageRole.Influenza,"Influenza appended without renumbering existing roles");
         Check(TryParseRole("40",out parsed) && parsed==StageRole.Brawler,"standard IDs preserved");
         foreach(StageRole role in Enum.GetValues<StageRole>())
             Check(RoleCatalog.HasCapability(StageRole.Disaster,role)==(role is StageRole.Disaster or StageRole.Bomber or StageRole.Stinker or StageRole.Tuna or StageRole.Influenza),"Disaster capability "+role);
+        Check(RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Rigger),"Superbot includes Rigger");
+        Check(RoleCatalog.CanBeCopiedByImitator(StageRole.Rigger),"Rigger can be copied");
         Check(!RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Disaster),"Superbot excludes Disaster");
         Check(!RoleCatalog.HasCapability(StageRole.Superbot,StageRole.Influenza),"Superbot excludes Influenza");
         Check(!RoleCatalog.CanBeCopiedByImitator(StageRole.Influenza),"Influenza is acquired through infection, not copying");

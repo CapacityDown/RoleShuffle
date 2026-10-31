@@ -26,6 +26,7 @@ catch (ArgumentException) { Check(true, "Oversized guide rejected before transpo
 var config = new StageRolesConfig();
 Check(RoleWireId.Encode(StageRole.Twins) == 42 && RoleWireId.Decode(42) == StageRole.Twins,
     "Compacted Twins keeps its existing room identity");
+Check(RoleWireId.Encode(StageRole.Rigger) == 45 && RoleWireId.Decode(44) == StageRole.DualWielder && RoleWireId.Decode(45) == StageRole.Rigger, "New Rigger wire ID does not alias DualWielder");
 Check(!Enum.IsDefined(RoleWireId.Decode(41)), "Removed role data cannot become Twins");
 foreach (var role in RoleCatalog.AllRoles) Check(RoleWireId.Decode(RoleWireId.Encode(role)) == role, "Role wire round-trip");
 foreach (var language in Enum.GetValues<RoleGuideLanguage>())

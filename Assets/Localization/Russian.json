@@ -280,5 +280,7 @@
   "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "Тяжёлые предметы легче поднимать и поворачивать.\nУстанавливает Strength на уровень {0}. После окончания роли восстанавливается обычный уровень Strength.",
   "Base Upgrade Draw": "Розыгрыш базовых улучшений",
   "Upgrade": "Улучшение",
-  "Change": "Изменение"
+  "Change": "Изменение",
+  "The Human Adventure Cable restrains enemies longer and consumes less durability.": "Human Adventure Cable дольше удерживает врагов и расходует меньше прочности.",
+  "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cable удерживает врагов в {0} раза дольше и расходует {1}% обычной прочности при попаданиях и бросках. Срабатывает автоматически при обычном использовании троса. Время удержания игроков и урон не меняются. Бонусы прекращаются при смерти или смене роли. Обычно исключается из розыгрыша, если троса нет."
 }

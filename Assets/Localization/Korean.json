@@ -280,5 +280,7 @@
   "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "무거운 물체를 들거나 돌리기 쉬워집니다.\nStrength를 레벨 {0}으로 설정합니다. 역할이 끝나면 원래 Strength 레벨로 돌아갑니다.",
   "Base Upgrade Draw": "기본 업그레이드 추첨",
   "Upgrade": "업그레이드",
-  "Change": "변화"
+  "Change": "변화",
+  "The Human Adventure Cable restrains enemies longer and consumes less durability.": "Human Adventure Cable로 적을 더 오래 묶고 내구도 소모를 줄입니다.",
+  "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cable의 적 구속 시간이 {0}배가 되며, 명중과 던지기에 드는 내구도가 기본 소모량의 {1}%가 됩니다. 케이블을 평소처럼 사용하면 자동 적용됩니다. 플레이어 구속 시간과 피해량은 변하지 않습니다. 사망하거나 역할이 바뀌면 보너스가 중단됩니다. 케이블이 없으면 일반 추첨에서 제외됩니다."
 }

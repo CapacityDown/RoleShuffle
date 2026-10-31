@@ -49,6 +49,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaSummary,
             StageRole.Twins => TwinsSummary,
+            StageRole.Rigger => "The Human Adventure Cable restrains enemies longer and consumes less durability.",
             StageRole.DualWielder => "A second melee weapon follows your swings with a short delay.",
             StageRole.Porter => "Stores small valuables for hands-free transport. Capacity is limited by total weight; enemy hits spill cargo and unloading takes time.",
             StageRole.Tank => "Increases maximum health, making the player harder to defeat.",
@@ -101,6 +102,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaSummaryJapanese,
             StageRole.Twins => "2人1組でHPと感染を共有します。一緒に運ぶ・休む・合流する・納品することで能力を発揮します。",
+            StageRole.Rigger => "Human Adventure Cableで敵を長く拘束でき、耐久度の消費も減ります。",
             StageRole.DualWielder => "近接武器を持つと、少し遅れて同じ動きをする2本目の武器が現れます。",
             StageRole.Porter => "小さな貴重品を収納し、手ぶらで運びます。総重量に上限があり、敵からの被弾で荷物を落とし、荷下ろしには時間がかかります。",
             StageRole.Rider => "運転中の車両が敵へ与える衝突ダメージと、プレイヤーへのノックバックが増加します。",
@@ -163,6 +165,7 @@ internal static class RoleGuideCatalog
             StageRole.Twins => TwinsDescription(config, false),
             StageRole.Porter => PorterDescription(config, false),
             StageRole.DualWielder => DualWielderDescription(config, false),
+            StageRole.Rigger => RiggerDescription(config, false),
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
             StageRole.Launcher =>
@@ -275,6 +278,7 @@ internal static class RoleGuideCatalog
             StageRole.Twins => TwinsDescription(config, true),
             StageRole.Porter => PorterDescription(config, true),
             StageRole.DualWielder => DualWielderDescription(config, true),
+            StageRole.Rigger => RiggerDescription(config, true),
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",
             StageRole.Influencer =>
@@ -380,6 +384,10 @@ internal static class RoleGuideCatalog
             ? $"2人以上で最大1組。2人の現在HP・最大HPを合算し、被弾と回復を共有します。片方の死亡で2人とも死亡し、片方への蘇生で2人とも復活します。相方へのHP渡しは無効です。片方への感染で2人ともInfluenzaになり、共有を解除します。ステージ終了・相方の離脱でも解除し、残りHPの割合を保ちます。\n\n共同運搬：同じ貴重品を2人でつかむ間、Strengthを約{Number(c.TwinsCarryStrengthMultiplier.Value)}倍相当に強化するアップグレードを付与（上限Lv200）。衝突による価値減少を{Number(c.TwinsCollisionReductionPercent.Value)}％軽減。購入装備は対象外です。\n共同休憩：{Number(c.TwinsRestRadius.Value)}m以内で2人ともしゃがみ、被弾せず{Number(c.TwinsRestHoldSeconds.Value)}秒静止すると共有最大HPの{Number(c.TwinsRestHealPercent.Value)}％を回復し、両者のスタミナを全回復します。再使用は{Number(c.TwinsRestCooldownSeconds.Value)}秒後。\n合流支援：{Number(c.TwinsRendezvousStartRange.Value)}m以上離れると、相方へ走る間の速度を約{Number(c.TwinsRendezvousSpeedMultiplier.Value)}倍にします。{Number(c.TwinsRendezvousEndRange.Value)}m以内で終了。\n共同納品：納品エリア外で同じ貴重品を{Number(c.TwinsDeliveryCarrySeconds.Value)}秒共同運搬し、2人がその品の{Number(c.TwinsDeliveryRadius.Value)}m以内にいる状態でトラック・納品所へ入れると価値＋{Number(c.TwinsDeliveryBonusPercent.Value)}％。1品1回、ステージ合計上限${c.TwinsDeliveryStageLimit.Value}。"
             : $"At least two players; at most one pair. Combine current and maximum HP and share damage and healing. Either death kills both; either revival revives both. HP transfers within the pair are disabled. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving also ends sharing, preserving each player's remaining HP proportion.\n\nCarry: holding the same valuable together grants temporary Strength upgrades targeting about {Number(c.TwinsCarryStrengthMultiplier.Value)}x Strength (maximum level 200) and reduces collision value loss by {Number(c.TwinsCollisionReductionPercent.Value)}%. Shop equipment is excluded.\nRest: both crouch within {Number(c.TwinsRestRadius.Value)} m and stay still without damage for {Number(c.TwinsRestHoldSeconds.Value)} seconds to heal {Number(c.TwinsRestHealPercent.Value)}% of shared maximum HP and refill both players' stamina. Pair cooldown: {Number(c.TwinsRestCooldownSeconds.Value)} seconds.\nReunite: after separating by {Number(c.TwinsRendezvousStartRange.Value)} m, sprint toward your partner at about {Number(c.TwinsRendezvousSpeedMultiplier.Value)}x speed until within {Number(c.TwinsRendezvousEndRange.Value)} m.\nDeliver: carry a valuable together outside delivery areas for {Number(c.TwinsDeliveryCarrySeconds.Value)} seconds, then bring it into the truck or extraction area with both players within {Number(c.TwinsDeliveryRadius.Value)} m of it. Value +{Number(c.TwinsDeliveryBonusPercent.Value)}%, once per item; stage bonus cap ${c.TwinsDeliveryStageLimit.Value}.";
     }
+
+    private static string RiggerDescription(StageRolesConfig c, bool japanese) => japanese
+        ? $"Human Adventure Cableで敵を拘束できる時間が{Number(c.RiggerEnemyHoldMultiplier.Value)}倍になり、命中・投げで消費する耐久度が通常の{Number(c.RiggerDurabilityMultiplier.Value * 100f)}％になります。通常のケーブル操作で自動発動します。プレイヤーの拘束時間やダメージは変わりません。死亡・役職変更後は強化が止まります。ケーブルがない場合は通常の抽選から除外されます。"
+        : $"The Human Adventure Cable restrains enemies for {Number(c.RiggerEnemyHoldMultiplier.Value)}x as long and consumes {Number(c.RiggerDurabilityMultiplier.Value * 100f)}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.";
 
     private static string DualWielderDescription(StageRolesConfig c, bool japanese) => japanese
         ? $"近接武器を1人で持つと、同じ武器を左{Number(c.DualWielderLeftOffset.Value)}mに1本生成します。2本目は元の武器の動きと攻撃を{Number(c.DualWielderDelaySeconds.Value)}秒遅れて再現します。電池・耐久度は共有し、2本目の命中分も消費します。手放す・持ち替える・死亡する・役職が変わると2本目は消えます。生成した武器は拾って持ち帰れません。近接武器がない場合は通常の抽選から除外されます。"

@@ -3045,6 +3045,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 }
             }
 
+            if (roles.Contains(StageRole.Rigger) && !HasNonValuableWeaponContext<ItemMeleeWhip>())
+                roles.Remove(StageRole.Rigger);
+
             bool engineerTargetFound = false;
             foreach (PhysGrabObject valuable in
                      UnityEngine.Object.FindObjectsByType<PhysGrabObject>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))

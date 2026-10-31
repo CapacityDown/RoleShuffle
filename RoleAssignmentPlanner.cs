@@ -30,7 +30,8 @@ internal sealed class RoleAssignmentPlanner
         StageRole.Electrician,
         StageRole.Warden,
         StageRole.Bodyguard,
-        StageRole.Porter
+        StageRole.Porter,
+        StageRole.Rigger
     };
 
     private static readonly HashSet<StageRole> DangerRoles = new()

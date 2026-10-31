@@ -189,5 +189,7 @@
   "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "重い物を持ち上げたり、回転させたりしやすくなります。\nStrengthをレベル{0}に変更します。役職が終了すると、本来のStrengthレベルに戻ります。",
   "Base Upgrade Draw": "基本アップグレード抽選",
   "Upgrade": "アップグレード",
-  "Change": "増減"
+  "Change": "増減",
+  "The Human Adventure Cable restrains enemies longer and consumes less durability.": "Human Adventure Cableで敵を長く拘束でき、耐久度の消費も減ります。",
+  "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cableで敵を拘束できる時間が{0}倍になり、命中・投げで消費する耐久度が通常の{1}％になります。通常のケーブル操作で自動発動します。プレイヤーの拘束時間やダメージは変わりません。死亡・役職変更後は強化が止まります。ケーブルがない場合は通常の抽選から除外されます。"
 }

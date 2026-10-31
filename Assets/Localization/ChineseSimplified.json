@@ -280,5 +280,7 @@
   "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "更容易举起和转动重物。\n将Strength设为{0}级。角色结束后，恢复原本的Strength等级。",
   "Base Upgrade Draw": "基础升级抽奖",
   "Upgrade": "升级",
-  "Change": "变化"
+  "Change": "变化",
+  "The Human Adventure Cable restrains enemies longer and consumes less durability.": "Human Adventure Cable可更长时间束缚敌人，并减少耐久消耗。",
+  "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cable对敌人的束缚时间变为{0}倍，命中和投掷仅消耗正常耐久的{1}%。正常使用缆绳时自动生效。对玩家的束缚时间和伤害不变。死亡或更换职业后加成停止。没有缆绳时，通常不会被随机分配。"
 }

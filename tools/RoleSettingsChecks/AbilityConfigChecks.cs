@@ -13,6 +13,8 @@ internal static class AbilityConfigChecks
         var config = new StageRolesConfig(file);
         var cases = new (string Section, string Key, object Default, object Min, object Max)[]
         {
+            ("Rigger", "EnemyHoldDurationMultiplier", 1.5f, 1f, 3f),
+            ("Rigger", "DurabilityConsumptionMultiplier", 0.5f, 0.1f, 1f),
             ("DualWielder", "FollowDelaySeconds", 0.3f, 0.05f, 2f),
             ("DualWielder", "LeftOffset", 0.5f, 0.1f, 1.5f),
             ("Porter", "Capacity", 15f, 1f, 100f),

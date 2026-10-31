@@ -280,5 +280,7 @@
   "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "Ağır nesneleri kaldırmak ve döndürmek kolaylaşır.\nStrength seviyesini {0} yapar. Rol sona erdiğinde normal Strength seviyen geri yüklenir.",
   "Base Upgrade Draw": "Temel yükseltme çekilişi",
   "Upgrade": "Yükseltme",
-  "Change": "Değişim"
+  "Change": "Değişim",
+  "The Human Adventure Cable restrains enemies longer and consumes less durability.": "Human Adventure Cable düşmanları daha uzun süre tutar ve daha az dayanıklılık tüketir.",
+  "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cable düşmanları normal sürenin {0} katı kadar tutar ve isabetlerde ve fırlatmalarda normal dayanıklılığın %{1} kadarını tüketir. Normal kablo kullanımı sırasında otomatik etkinleşir. Oyuncuları tutma süresi ve hasar değişmez. Ölüm veya rol değişiminde bonuslar sona erer. Kablo yoksa normalde rol çekilişine dahil edilmez."
 }

@@ -33,7 +33,7 @@ internal static class RolePresets
             StageRole.Tank, StageRole.Runner, StageRole.Lifter, StageRole.Tracker, StageRole.Ghost,
             StageRole.Medic, StageRole.Phoenix, StageRole.Rescuer, StageRole.Musician, StageRole.Engineer,
             StageRole.Trickster, StageRole.Mechanic, StageRole.Electrician, StageRole.Warden,
-            StageRole.Influencer, StageRole.Bodyguard, StageRole.Twins, StageRole.Porter),
+            StageRole.Influencer, StageRole.Bodyguard, StageRole.Twins, StageRole.Porter, StageRole.Rigger),
         new RolePresetDefinition(RolePreset.Chaos, "Chaos",
             "Explosions, magic and risky roles.",
             StageRole.Bomber, StageRole.King, StageRole.Tuna, StageRole.Mage, StageRole.Gambler,
@@ -43,7 +43,7 @@ internal static class RolePresets
             "High risk; no dedicated healers or revivers.",
             StageRole.Jobless, StageRole.Tuna, StageRole.Vampire, StageRole.Mage, StageRole.Gambler,
             StageRole.Hunter, StageRole.Executioner, StageRole.Werewolf, StageRole.Berserker,
-            StageRole.Rammer, StageRole.Diver, StageRole.Sniper, StageRole.Brawler, StageRole.Avenger, StageRole.Influenza, StageRole.DualWielder)
+            StageRole.Rammer, StageRole.Diver, StageRole.Sniper, StageRole.Brawler, StageRole.Avenger, StageRole.Influenza, StageRole.DualWielder, StageRole.Rigger)
     };
 
     internal static RolePresetDefinition? Find(RolePreset id)
