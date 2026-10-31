@@ -186,5 +186,8 @@
   "Combines many roles' upgrades and abilities.": "多くの役職のアップグレードと能力を併せ持ちます。",
   "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber・Stinker・Tuna・Influenzaの能力と危険性を併せ持ちます。",
   "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\n最終納品が完了すると、ステージ終了までCourierの自動HP減少が止まります。",
-  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "重い物を持ち上げたり、回転させたりしやすくなります。\nStrengthをレベル{0}に変更します。役職が終了すると、本来のStrengthレベルに戻ります。"
+  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "重い物を持ち上げたり、回転させたりしやすくなります。\nStrengthをレベル{0}に変更します。役職が終了すると、本来のStrengthレベルに戻ります。",
+  "Base Upgrade Draw": "基本アップグレード抽選",
+  "Upgrade": "アップグレード",
+  "Change": "増減"
 }

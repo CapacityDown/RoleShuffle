@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 550;
+    private const int RoleUiBuildNumber = 553;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -41,7 +41,6 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private static REPOButton? _historyButton;
     private static REPOButton? _toolsButton;
     private static string _utilityMessage = string.Empty;
-    private static REPOButton? _languageButton;
     private static REPOButton? _backButton;
     private static REPOLabel? _versionLabel;
     private static string _openSignature = string.Empty;
@@ -124,7 +123,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
 
         _nextRefreshAt = Time.unscaledTime + RefreshIntervalSeconds;
         if (RoleHudEditor.IsOpen || _issuesDialog != null) return;
-        RoleGuideLanguage savedLanguage = SavedLanguage;
+        RoleGuideLanguage savedLanguage = GameLocalization.Language;
         if (_guideLanguage != savedLanguage)
         { _guideLanguage = savedLanguage; _utilityMessage = string.Empty; SwitchView(_openPage, _activeView); return; }
         if (_activeView is RoleMenuView.Settings or RoleMenuView.Presets)
@@ -189,6 +188,18 @@ internal sealed partial class RoleMenu : MonoBehaviour
 
     private static void OpenRolePage(bool assignmentsEnabled)
     {
+        try { BuildRolePage(assignmentsEnabled); }
+        catch (Exception exception)
+        {
+            REPOPopupPage? failedPage = _openPage;
+            ClearOpenPageTracking();
+            if (failedPage != null) Destroy(failedPage.gameObject);
+            StageRolesPlugin.ModLogger.LogError($"Could not open Roles: {exception}");
+        }
+    }
+
+    private static void BuildRolePage(bool assignmentsEnabled)
+    {
         REPOPopupPage page = MenuAPI.CreateREPOPopupPage(
             "Roles",
             REPOPopupPage.PresetSide.Right,
@@ -206,7 +217,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _activeView = assignmentsEnabled
             ? RoleMenuView.Assignments
             : RoleMenuView.Guide;
-        _guideLanguage = SavedLanguage;
+        _guideLanguage = GameLocalization.Language;
         _guideDetails = false;
         _utilityMessage = string.Empty;
         _openSignature = string.Empty;
@@ -234,12 +245,6 @@ internal sealed partial class RoleMenu : MonoBehaviour
             _baseUpgradesButton.labelTMP.fontSize = 20f;
             _historyButton = CreateNavigationButton("DRAW HISTORY", () => SwitchView(page, RoleMenuView.History), parent, new Vector2(108f, 144f));
             _toolsButton = CreateNavigationButton("TOOLS", () => SwitchView(page, RoleMenuView.Tools), parent, new Vector2(108f, 112f));
-            _languageButton = CreateNavigationButton(
-                "LANGUAGE: ENGLISH",
-                () => ToggleLanguage(page),
-                parent,
-                new Vector2(108f, 80f));
-            _languageButton.labelTMP.fontSize = 18f;
             _versionLabel = MenuAPI.CreateREPOLabel(
                 $"RoleShuffle v{StageRolesPlugin.PluginVersion}" +
                 $"(build-{RoleUiBuildNumber})",
@@ -357,21 +362,6 @@ internal sealed partial class RoleMenu : MonoBehaviour
         RefreshBaseUpgradeRows(page);
     }
 
-    private static void ToggleLanguage(REPOPopupPage page)
-    {
-        if (!ReferenceEquals(_openPage, page))
-        {
-            return;
-        }
-
-        _guideLanguage = RoleLanguage.Next(_guideLanguage);
-        _utilityMessage = string.Empty;
-        _config.GuideLanguage.Value = RoleLanguage.NativeName(_guideLanguage);
-        StageRolesPlugin.Instance.SaveLocalSettings();
-        SwitchView(page, _activeView);
-    }
-
-    private static RoleGuideLanguage SavedLanguage => RoleLanguage.Parse(_config.GuideLanguage.Value);
     private static bool UseLanguageFont => _guideLanguage != RoleGuideLanguage.English;
     private static string Localized(string english, string? japanese = null) => RoleText.Get(english, _guideLanguage, japanese);
 
@@ -384,7 +374,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             button.labelTMP.font = RoleGuideFont.ForLanguage(button.labelTMP.font, _guideLanguage);
             button.labelTMP.enableAutoSizing = true;
             button.labelTMP.fontSizeMin = 12;
-            button.labelTMP.fontSizeMax = button == _languageButton ? 18 : 20;
+            button.labelTMP.fontSizeMax = 20;
         }
         Button(_assignmentsButton, "CURRENT ROLES", _activeView == RoleMenuView.Assignments);
         Button(_guideButton, "ROLE GUIDE", _activeView == RoleMenuView.Guide);
@@ -393,12 +383,6 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Button(_historyButton, "DRAW HISTORY", _activeView == RoleMenuView.History);
         Button(_toolsButton, "TOOLS", _activeView is RoleMenuView.Tools or RoleMenuView.Report);
         Button(_backButton, "Back", false);
-        Button(_languageButton, "", false);
-        if (_languageButton != null)
-        {
-            _languageButton.labelTMP.text = "LANG: " + RoleLanguage.NativeName(_guideLanguage);
-            _languageButton.rectTransform.gameObject.SetActive(true);
-        }
         if (_openPage != null)
         {
             _openPage.headerTMP.text = Localized(_activeView switch
@@ -844,64 +828,70 @@ internal sealed partial class RoleMenu : MonoBehaviour
         TextWrappingModes previousWrapping = measurementText.textWrappingMode;
         bool previousAutoSizing = measurementText.enableAutoSizing;
         TMP_FontAsset previousFont = measurementText.font;
-        float wrapWidth = contentWidth;
-        if (language != RoleGuideLanguage.English)
+        try
         {
-            TMP_FontAsset primaryFont = _roleRows.Count > 0
-                ? _roleRows[0].DefaultFont
-                : previousFont;
-            TMP_FontAsset? mixedFont = RoleGuideFont.ForLanguage(primaryFont, language);
-            if (mixedFont != null)
+            float wrapWidth = contentWidth;
+            if (language != RoleGuideLanguage.English)
             {
-                measurementText.font = mixedFont;
-            }
-            wrapWidth *= LanguageWrapWidthMultiplier;
-        }
-        measurementText.fontSize = GuideFontSize;
-        measurementText.fontStyle = FontStyles.Normal;
-        measurementText.textWrappingMode = TextWrappingModes.NoWrap;
-        measurementText.enableAutoSizing = false;
-        StringBuilder line = new();
-        foreach (string token in tokens)
-        {
-            if (token == "\n")
-            {
-                if (line.Length > 0)
+                TMP_FontAsset primaryFont = _roleRows.Count > 0
+                    ? _roleRows[0].DefaultFont
+                    : previousFont;
+                TMP_FontAsset? mixedFont = RoleGuideFont.ForLanguage(primaryFont, language);
+                if (mixedFont != null)
                 {
-                    lines.Add(line.ToString().TrimEnd());
-                    line.Clear();
+                    measurementText.font = mixedFont;
                 }
-                continue;
+                wrapWidth *= LanguageWrapWidthMultiplier;
             }
-            if (line.Length == 0 && string.IsNullOrWhiteSpace(token))
+            measurementText.fontSize = GuideFontSize;
+            measurementText.fontStyle = FontStyles.Normal;
+            measurementText.textWrappingMode = TextWrappingModes.NoWrap;
+            measurementText.enableAutoSizing = false;
+            StringBuilder line = new();
+            foreach (string token in tokens)
             {
-                continue;
-            }
-            string candidate = line + token;
-            if (line.Length == 0 ||
-                measurementText.GetPreferredValues(candidate).x <= wrapWidth)
-            {
-                line.Clear();
-                line.Append(candidate);
-                continue;
-            }
+                if (token == "\n")
+                {
+                    if (line.Length > 0)
+                    {
+                        lines.Add(line.ToString().TrimEnd());
+                        line.Clear();
+                    }
+                    continue;
+                }
+                if (line.Length == 0 && string.IsNullOrWhiteSpace(token))
+                {
+                    continue;
+                }
+                string candidate = line + token;
+                if (line.Length == 0 ||
+                    measurementText.GetPreferredValues(candidate).x <= wrapWidth)
+                {
+                    line.Clear();
+                    line.Append(candidate);
+                    continue;
+                }
 
-            lines.Add(line.ToString().TrimEnd());
-            line.Clear();
-            if (!string.IsNullOrWhiteSpace(token))
+                lines.Add(line.ToString().TrimEnd());
+                line.Clear();
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    line.Append(token);
+                }
+            }
+            if (line.Length > 0)
             {
-                line.Append(token);
+                lines.Add(line.ToString().TrimEnd());
             }
         }
-        if (line.Length > 0)
+        finally
         {
-            lines.Add(line.ToString().TrimEnd());
+            measurementText.fontSize = previousFontSize;
+            measurementText.fontStyle = previousFontStyle;
+            measurementText.textWrappingMode = previousWrapping;
+            measurementText.enableAutoSizing = previousAutoSizing;
+            measurementText.font = previousFont;
         }
-        measurementText.fontSize = previousFontSize;
-        measurementText.fontStyle = previousFontStyle;
-        measurementText.textWrappingMode = previousWrapping;
-        measurementText.enableAutoSizing = previousAutoSizing;
-        measurementText.font = previousFont;
         return lines;
     }
 
@@ -1197,7 +1187,6 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _baseUpgradesButton = null;
         _historyButton = null;
         _toolsButton = null;
-        _languageButton = null;
         _backButton = null;
         _versionLabel = null;
         _roleRows.Clear();

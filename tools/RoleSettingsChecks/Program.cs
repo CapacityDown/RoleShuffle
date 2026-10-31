@@ -9,6 +9,17 @@ Directory.CreateDirectory(directory);
 string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
+string languagePath = Path.Combine(directory, "game-language.cfg");
+const string languageBefore = "[Migration]\nConfigVersion = 45\n[UI]\nGuideLanguage = Japanese\n[HUD]\nFontSize = 34\n[Lifter]\nStrengthLevel = 123\n";
+File.WriteAllText(languagePath, languageBefore);
+var languageFile = new ConfigFile(languagePath, false) { SaveOnConfigSet = false };
+var languageConfig = new StageRolesConfig(languageFile); languageFile.Save();
+Check(File.ReadAllText(languagePath + ".pre-v5.0.0-game-language.bak") == languageBefore, "Exact manual language migration backup");
+Check(!File.ReadAllText(languagePath).Contains("GuideLanguage") && !languageFile.Any(x => x.Key.Key == "GuideLanguage"), "Manual language override removed from file and REPOConfig");
+Check(languageConfig.LifterStrengthLevel.Value == 123 && languageConfig.HudFontSize.Value == 34, "Language migration preserves role and HUD preferences");
+string languageAfter = File.ReadAllText(languagePath); RoleConfigMigration.Apply(languageFile);
+Check(File.ReadAllText(languagePath) == languageAfter, "Language migration is idempotent");
+
 Check(config.DualWielderEnabled.Value && config.DualWielderWeight.Value == 100, "DualWielder normal selection defaults");
 Check(config.DualWielderDelaySeconds.Value == .3f && config.DualWielderLeftOffset.Value == .5f, "DualWielder follow defaults");
 Check(RolePresets.Find(RolePreset.Standard)!.Includes(StageRole.DualWielder) && RolePresets.Find(RolePreset.Challenge)!.Includes(StageRole.DualWielder), "DualWielder presets");
@@ -84,7 +95,7 @@ foreach (string variant in new[] { "defaults", "decimal-radius", "custom", "mixe
     string supportBackup = supportPath + ".pre-v4.5.1-king-support.bak";
     Check(current ? !File.Exists(supportBackup) : File.ReadAllText(supportBackup) == before, "Exact King rollback backup: " + variant);
     string after = File.ReadAllText(supportPath);
-    Check(after.Contains("ConfigVersion = 45"), "King migration uses current schema: " + variant);
+    Check(after.Contains("ConfigVersion = 46"), "King migration uses current schema: " + variant);
     RoleConfigMigration.Apply(supportFile);
     Check(File.ReadAllText(supportPath) == after && (current || File.ReadAllText(supportBackup) == before),
         "King migration is repeatable without replacing the backup: " + variant);
@@ -108,7 +119,7 @@ Check(!migratedLifterSection.Contains("StrengthMultiplier") && !migratedLifterSe
 Check(!lifterText.Split("[Lifter]")[1].Split("\n[")[0].Contains("StrengthUpgradeLevels") && !lifterConfig.LifterEnabled.Value && lifterConfig.LifterWeight.Value == 75,
     "Fixed Lifter migration removes the unused level setting and preserves selection preferences");
 Check(File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText, "Back up exact schema 34 config");
-Check(lifterText.Contains("ConfigVersion = 45"), "Config uses the current v4.5 role schema");
+Check(lifterText.Contains("ConfigVersion = 46"), "Config uses the current v4.5 role schema");
 RoleConfigMigration.Apply(lifterFile);
 Check(File.ReadAllText(oldLifterPath) == lifterText && File.ReadAllText(oldLifterPath + ".pre-v4.5.0-lifter-200.bak") == oldLifterText,
     "Repeated migration preserves settings and rollback backup");
@@ -161,7 +172,7 @@ foreach (bool wasEnabled in new[] { false, true })
     Check(!standard.HudResourcesEnabled.Value && standard.HudResourceOffsetX.Value == 40 && standard.HudResourceScale.Value == 125,
         "Standard rules preserve resource HUD preferences");
     string backup = standardPath + ".pre-v4.5.0-standard-roles.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 45"), "Exact rollback backup and schema upgrade");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 46"), "Exact rollback backup and schema upgrade");
     RoleConfigMigration.Apply(standardFile);
     Check(File.ReadAllText(standardPath) == after && File.ReadAllText(backup) == before, "Standard migration is idempotent");
 }
@@ -179,7 +190,7 @@ foreach (int oldHeal in new[] { 0, 10, 100 })
         !after.Contains("ContractsPerStage") && jobless.JoblessDamage.Value == 2 && !jobless.JoblessEnabled.Value,
         "Full healing preserves other contract, damage and selection settings");
     string backup = joblessPath + ".pre-v4.5.0-jobless-full-heal.bak";
-    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 45"), "Exact pre-full-heal config backup");
+    Check(File.ReadAllText(backup) == before && after.Contains("ConfigVersion = 46"), "Exact pre-full-heal config backup");
     RoleConfigMigration.Apply(joblessFile);
     Check(File.ReadAllText(joblessPath) == after && File.ReadAllText(backup) == before, "Full-heal migration is idempotent");
 }

@@ -277,5 +277,8 @@
   "Combines many roles' upgrades and abilities.": "兼具多個角色的升級與能力。",
   "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "兼具Bomber、Stinker、Tuna和Influenza的能力及危險。",
   "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\n完成最後一次提取後，Courier的自動生命值流失將停止，直到本關結束。",
-  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "更容易舉起和轉動重物。\n將Strength設為{0}級。角色結束後，恢復原本的Strength等級。"
+  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "更容易舉起和轉動重物。\n將Strength設為{0}級。角色結束後，恢復原本的Strength等級。",
+  "Base Upgrade Draw": "基礎升級抽獎",
+  "Upgrade": "升級",
+  "Change": "變化"
 }

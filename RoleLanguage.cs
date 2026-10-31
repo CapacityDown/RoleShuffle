@@ -32,6 +32,23 @@ internal static class RoleLanguage
         return Enum.TryParse(value, out RoleGuideLanguage language) && Enum.IsDefined(typeof(RoleGuideLanguage), language)
             ? language : RoleGuideLanguage.English;
     }
+    internal static RoleGuideLanguage FromLocaleCode(string? code)
+    {
+        string normalized = (code ?? string.Empty).Replace('_', '-').ToLowerInvariant();
+        if (normalized.StartsWith("zh"))
+            return normalized.Contains("hant") || normalized is "zh-tw" or "zh-hk" or "zh-mo"
+                ? RoleGuideLanguage.ChineseTraditional : RoleGuideLanguage.ChineseSimplified;
+        string language = normalized.Split('-')[0];
+        return language switch
+        {
+            "ja" => RoleGuideLanguage.Japanese, "ko" => RoleGuideLanguage.Korean,
+            "fr" => RoleGuideLanguage.French, "de" => RoleGuideLanguage.German,
+            "es" => RoleGuideLanguage.Spanish, "pt" => RoleGuideLanguage.PortugueseBrazilian,
+            "it" => RoleGuideLanguage.Italian, "ru" => RoleGuideLanguage.Russian,
+            "pl" => RoleGuideLanguage.Polish, "tr" => RoleGuideLanguage.Turkish,
+            "uk" => RoleGuideLanguage.Ukrainian, _ => RoleGuideLanguage.English
+        };
+    }
     internal static RoleGuideLanguage Next(RoleGuideLanguage current) =>
         (RoleGuideLanguage)(((int)current + 1) % Names.Length);
     internal static string NativeName(RoleGuideLanguage language) => language switch

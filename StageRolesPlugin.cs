@@ -124,7 +124,6 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
 
     private void Update()
     {
-        RoleGuideFont.InstallNativeNameFallback();
         if (Time.unscaledTime >= _nextPrivacyRefresh)
         { _nextPrivacyRefresh = Time.unscaledTime + 1f; BugReport.RememberPlayers(); }
         if (GameManager.instance == null) return;

@@ -21,21 +21,6 @@ internal static class RoleGuideFont
     private static readonly Dictionary<(int, RoleGuideLanguage), TMP_FontAsset> LocalizedFonts = new();
     private static readonly Dictionary<int, TMP_FontAsset> OriginalFonts = new();
     private static readonly Dictionary<string, TMP_FontAsset?> UnicodeFonts = new();
-    private static bool _nativeNamesInstalled;
-
-    // Also supplies native language names to REPOConfig's own dropdown labels.
-    internal static void InstallNativeNameFallback()
-    {
-        if (_nativeNamesInstalled || TMP_Settings.instance == null) return;
-        _nativeNamesInstalled = true;
-        foreach (string name in new[] { "Names", "European" })
-        {
-            TMP_FontAsset? font = LoadUnicode(name);
-            if (font != null && !TMP_Settings.fallbackFontAssets.Contains(font))
-                TMP_Settings.fallbackFontAssets.Add(font);
-        }
-    }
-
     internal static TMP_FontAsset? ForLanguage(TMP_FontAsset? primary, RoleGuideLanguage language)
     {
         if (primary != null && OriginalFonts.TryGetValue(primary.GetInstanceID(), out var original)) primary = original;
@@ -82,7 +67,7 @@ internal static class RoleGuideFont
             var source = new UnityEngine.Font(path) { hideFlags = HideFlags.HideAndDontSave };
             var font = TMP_FontAsset.CreateFontAsset(source, 48, 5, GlyphRenderMode.SDFAA,
                 1024, 1024, AtlasPopulationMode.Dynamic, true);
-            if (font == null) throw new InvalidOperationException("TMP font creation failed: " + name);
+            if (!RoleFontMaterial.Ensure(font)) throw new InvalidOperationException("TMP font creation failed: " + name);
             font.name = "RoleShuffle " + name;
             font.hideFlags = HideFlags.HideAndDontSave;
             // Match fallback glyphs to the game's Latin text, including the
@@ -213,6 +198,11 @@ internal static class RoleGuideFont
                     return null;
                 }
 
+                if (!RoleFontMaterial.Ensure(selected))
+                {
+                    StageRolesPlugin.ModLogger.LogWarning("Japanese font has no usable SDF material or atlas.");
+                    return null;
+                }
                 selected.hideFlags = HideFlags.HideAndDontSave;
                 StageRolesPlugin.ModLogger.LogInfo(
                     $"Loaded Japanese Role Guide font: {selected.name}.");

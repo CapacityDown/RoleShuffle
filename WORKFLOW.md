@@ -78,6 +78,15 @@ historical version numbers, deployment profiles and superseded design choices.
   Influencer and Berserker already grant ordinary upgrades; inherited/copied Lifter
   abilities use the same Lifter settings and restoration.
 
+- On 2026-10-31 the user requested native game-language following. Roles menus
+  and roulette labels read the local R.E.P.O. language, never a separate saved
+  MOD override. The roulette uses vanilla upgrade display-name translations and
+  keeps canonical IDs on the network. Preserve the existing 14 menu catalogs,
+  with English fallback for other languages. Retire UI.GuideLanguage with a backup.
+- Repair the legacy Japanese font's missing Unity 6 material from its original
+  atlas and the current game SDF shader before it can become a fallback font.
+  Keep glyph metrics intact and avoid inserting MOD fonts into global TMP settings.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

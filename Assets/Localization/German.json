@@ -277,5 +277,8 @@
   "Combines many roles' upgrades and abilities.": "Vereint Verbesserungen und Fähigkeiten vieler Rollen.",
   "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Vereint Bomber, Stinker, Tuna und Influenza samt ihren Gefahren.",
   "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\nNach Abschluss der letzten Extraktion verliert Courier bis zum Ende der Stufe nicht mehr automatisch HP.",
-  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "Schwere Objekte lassen sich leichter heben und drehen.\nSetzt Strength auf Stufe {0}. Wenn die Rolle endet, wird deine normale Strength-Stufe wiederhergestellt."
+  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "Schwere Objekte lassen sich leichter heben und drehen.\nSetzt Strength auf Stufe {0}. Wenn die Rolle endet, wird deine normale Strength-Stufe wiederhergestellt.",
+  "Base Upgrade Draw": "Basisupgrade-Auslosung",
+  "Upgrade": "Upgrade",
+  "Change": "Änderung"
 }

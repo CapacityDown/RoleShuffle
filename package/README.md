@@ -426,11 +426,11 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 - **Role guide:** opens in `Overview` with short ability summaries. Select `Details` for the host's configured values, conditions and limits.
 - **HUD editor:** in `TOOLS`, drag the HUD sample and adjust its anchor, alignment, text/icon size, scale, mode and visibility. `SAVE` keeps local settings; `CANCEL` or Esc discards them; `RESET` previews defaults. Mouse controls also work in the lobby.
 - **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports contain mod versions, settings and recent activity, are saved in `BepInEx/RoleShuffleReports`, and are never sent automatically.
-- **Language:** `UI.GuideLanguage` and the Roles toggle share a saved choice, defaulting to English. All 14 languages appear by native name. Menus, role descriptions, HUD editor, history and sync status follow it; role names, upgrade identifiers, commands and diagnostics remain English.
+- **Language:** Roles menus, descriptions, HUD editor, history and sync status follow the language selected in R.E.P.O. There is no separate MOD language setting. The 14 available menu translations are used automatically; other languages fall back to English. Roulette upgrade names use the game’s own translations for each player. Role names, setting identifiers, commands and diagnostics remain English.
 - **Sync status:** `TOOLS` shows whether roles, guide, Base Upgrades and history are current. `REFRESH DISPLAY DATA` refreshes these displays without changing roles or upgrades.
 - **Draw history:** shows the latest 50 completed truck draws, including level, target, rolled change and actual before/after targets. Zero/capped results are retained; cancelled draws are omitted. History is saved with the host’s run and shared with installed participants.
 
-`HUD.FontSize` defaults to 28 (range 16–48). `UI.GuideLanguage` defaults to `English`. Both are personal settings. The default HUD display mode is `NameOnly`.
+`HUD.FontSize` defaults to 28 (range 16–48) and is a personal setting. The default HUD display mode is `NameOnly`.
 
 ### Notifications and HUD
 
@@ -907,11 +907,11 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - **ロールガイド：** 最初は「概要」で能力を短く表示。「詳細」に切り替えると、ホストが設定した値・発動条件・制限を確認できます。
 - **HUD編集：** `TOOLS`でサンプルをドラッグし、基準位置・整列・文字／アイコンサイズ・全体倍率・表示形式・表示切替を調整します。「保存」で個人設定を保存、「取消」またはEscで破棄、「初期値」で初期状態をプレビューします。ロビーでもマウスで操作可能です。
 - **不具合レポート：** `TOOLS`からコピーまたはファイルを開き、内容と発生手順を確認してGitHub Issuesへ投稿します。MODのバージョン・設定・最近の動作状況を含み、`BepInEx/RoleShuffleReports`へ保存します。自動送信はしません。
-- **言語：** `UI.GuideLanguage`とRoles内の切替は同じ選択を保存します。初期値は英語、全14言語を各言語の名称で表示。メニュー・説明・HUD編集・履歴・同期状態に適用し、役職名・アップグレード識別名・コマンド・診断本文は英語です。
+- **言語：** メニュー・説明・HUD編集・履歴・同期状態はR.E.P.O.本体で選んだ言語に連動します。MOD側での言語設定は不要です。対応する14言語の翻訳を自動で使用し、それ以外は英語で表示します。ルーレットのアップグレード名は各プレイヤーの本体言語に合わせた公式名称になります。役職名・設定の識別名・コマンド・診断本文は英語です。
 - **同期状態：** `TOOLS`で役職・ガイド・Base Upgrade・履歴が最新か確認します。「表示データを再取得」は表示だけを更新し、役職や強化値を変えません。
 - **抽選履歴：** 完了したトラック抽選の直近50回を表示。レベル・対象・抽選値・実際の目標値の前後を記録し、変化なしや上限到達も残します。ホストのセーブに保存してMOD導入済み参加者と共有し、中断した抽選は記録しません。
 
-`HUD.FontSize`の初期値は28（範囲16～48）、`UI.GuideLanguage`の初期値は`English`です。どちらも個人設定。HUDの初期表示形式は`NameOnly`です。
+`HUD.FontSize`の初期値は28（範囲16～48）で、個人設定です。HUDの初期表示形式は`NameOnly`です。
 
 ### 通知とHUD
 

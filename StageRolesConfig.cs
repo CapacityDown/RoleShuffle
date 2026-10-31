@@ -44,11 +44,6 @@ internal sealed class StageRolesConfig
         UniqueRoles = BindBool(config, "General", "UniqueRoles", true, "Avoids duplicate roles until every enabled role has been assigned once.");
         ShopUpgradeItemCount = BindInt(config, "General", "ShopUpgradeItemCount", 0, 0, 30, "Number of upgrade items requested for each shop.");
 
-        // REPOConfig displays sections in registration order.
-        GuideLanguage = config.Bind("UI", "GuideLanguage", "English",
-            new ConfigDescription("Local language for the role guide and utility pages. Default: English. Language names are shown in their native spelling. Also changes the in-menu language toggle; both controls save the same setting.",
-                new RoleLanguageValues()));
-
         EnhancedEnemyRewardsEnabled = BindBool(
             config,
             "Compatibility",
@@ -612,7 +607,6 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> AnnouncementsEnabled { get; }
     internal ConfigEntry<float> AnnouncementDelaySeconds { get; }
     internal ConfigEntry<float> StageFluxAnnouncementDelaySeconds { get; }
-    internal ConfigEntry<string> GuideLanguage { get; }
     internal ConfigEntry<int> HudFontSize { get; }
     internal ConfigEntry<bool> HudEnabled { get; }
     internal ConfigEntry<string> HudRoleDisplay { get; }

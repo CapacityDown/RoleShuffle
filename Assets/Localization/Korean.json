@@ -277,5 +277,8 @@
   "Combines many roles' upgrades and abilities.": "여러 역할의 업그레이드와 능력을 함께 가집니다.",
   "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber, Stinker, Tuna, Influenza의 능력과 위험을 함께 가집니다.",
   "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\n마지막 회수가 완료되면 스테이지가 끝날 때까지 Courier의 자동 HP 감소가 멈춥니다.",
-  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "무거운 물체를 들거나 돌리기 쉬워집니다.\nStrength를 레벨 {0}으로 설정합니다. 역할이 끝나면 원래 Strength 레벨로 돌아갑니다."
+  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "무거운 물체를 들거나 돌리기 쉬워집니다.\nStrength를 레벨 {0}으로 설정합니다. 역할이 끝나면 원래 Strength 레벨로 돌아갑니다.",
+  "Base Upgrade Draw": "기본 업그레이드 추첨",
+  "Upgrade": "업그레이드",
+  "Change": "변화"
 }

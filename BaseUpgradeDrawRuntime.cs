@@ -36,22 +36,13 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         new(0.72f, 0.18f, 0.01f, 0.8f);
     private static readonly UpgradeGrant AllUpgrades =
         new("AllUpgrades", string.Empty, 0);
-    private static readonly string[] FallbackDisplayNames =
+    private static readonly string[] FallbackUpgradeCommands =
     {
-        "HEALTH",
-        "STAMINA",
-        "EXTRA JUMP",
-        "SPEED",
-        "STRENGTH",
-        "RANGE",
-        "LAUNCH",
-        "TUMBLE CLIMB",
-        "TUMBLE WINGS",
-        "CROUCH REST",
-        "MAP PLAYER COUNT",
-        "DEATH HEAD BATTERY",
-        "ALL UPGRADES"
+        "Health", "Stamina", "ExtraJump", "Speed", "Strength", "Range", "Launch",
+        "TumbleClimb", "TumbleWings", "CrouchRest", "MapPlayerCount", "DeathHeadBattery", "AllUpgrades"
     };
+    private string _uiLocale = string.Empty;
+    private string? _shownUpgradeCommand;
     private readonly List<UpgradeGrant> _allBaseUpgrades = new();
     private readonly HashSet<string> _enabledDrawNames = new(StringComparer.Ordinal);
     private bool _allUpgradesEnabledForDraw;
@@ -435,8 +426,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
 
         SetUpgradeSlot(
             _selected.Count > 0
-                ? DisplayName(_selected[0])
-                : "NONE");
+                ? _selected[0].CommandName
+                : string.Empty);
         while (CanContinue(generation) &&
                Time.realtimeSinceStartup < finishAt)
         {
@@ -466,8 +457,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         CompletePersistentDrawAndSave();
         SetUpgradeSlot(
             _selected.Count > 0
-                ? DisplayName(_selected[0])
-                : "NONE");
+                ? _selected[0].CommandName
+                : string.Empty);
         SetDeltaSlot(DeltaText(_selectedDelta));
         AnnounceResult();
 
@@ -913,6 +904,11 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
 
     private void Update()
     {
+        if (_panelObject != null && _panelObject.activeSelf && _uiLocale != GameLocalization.Code)
+        {
+            TryApplyFont();
+            if (_shownUpgradeCommand != null) SetUpgradeSlot(_shownUpgradeCommand);
+        }
         if (!SemiFunc.IsMultiplayer() ||
             PhotonNetwork.IsMasterClient ||
             !PhotonNetwork.InRoom)
@@ -1054,7 +1050,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
             yield break;
         }
 
-        SetUpgradeSlot(DisplayName(upgradeName));
+        SetUpgradeSlot(upgradeName);
         while (RemoteCanContinue(generation))
         {
             float elapsed = ElapsedSeconds(startTimestamp);
@@ -1076,7 +1072,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
             yield break;
         }
 
-        SetUpgradeSlot(DisplayName(upgradeName));
+        SetUpgradeSlot(upgradeName);
         SetDeltaSlot(DeltaText(delta));
         while (RemoteCanContinue(generation) &&
                MillisecondsUntil(hideTimestamp) > 0)
@@ -1152,8 +1148,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
     {
         if (_displayCandidates.Count == 0)
         {
-            return FallbackDisplayNames[
-                UnityEngine.Random.Range(0, FallbackDisplayNames.Length)];
+            return DisplayName(FallbackUpgradeCommands[
+                UnityEngine.Random.Range(0, FallbackUpgradeCommands.Length)]);
         }
         return DisplayName(
             _displayCandidates[
@@ -1213,20 +1209,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
     private static string DisplayName(UpgradeGrant upgrade) =>
         DisplayName(upgrade.CommandName);
 
-    private static string DisplayName(string upgradeName) =>
-        string.IsNullOrEmpty(upgradeName)
-            ? "NONE"
-            : upgradeName switch
-        {
-            "ExtraJump" => "EXTRA JUMP",
-            "TumbleClimb" => "TUMBLE CLIMB",
-            "TumbleWings" => "TUMBLE WINGS",
-            "CrouchRest" => "CROUCH REST",
-            "MapPlayerCount" => "MAP PLAYER COUNT",
-            "DeathHeadBattery" => "DEATH HEAD BATTERY",
-            "AllUpgrades" => "ALL UPGRADES",
-            _ => upgradeName.ToUpperInvariant()
-        };
+    private static string DisplayName(string upgradeName) => GameLocalization.UpgradeName(upgradeName);
 
     private static bool IsAllUpgrades(UpgradeGrant upgrade) =>
         string.Equals(
@@ -1469,6 +1452,9 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         textRect.offsetMin = new Vector2(3f, 0f);
         textRect.offsetMax = new Vector2(-3f, 0f);
         text.fontSize = fontSize;
+        text.enableAutoSizing = true;
+        text.fontSizeMin = 20f;
+        text.fontSizeMax = fontSize;
         text.color = Color.white;
         text.alignment = TextAlignmentOptions.Center;
         text.textWrappingMode = TextWrappingModes.NoWrap;
@@ -1509,9 +1495,10 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         image.raycastTarget = false;
     }
 
-    private void SetUpgradeSlot(string value)
+    private void SetUpgradeSlot(string command)
     {
-        SetReelValue(_upgradeSlotText, _upgradeSlotNextText, value);
+        _shownUpgradeCommand = command;
+        SetReelValue(_upgradeSlotText, _upgradeSlotNextText, DisplayName(command));
     }
 
     private void SetDeltaSlot(string value)
@@ -1575,6 +1562,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
 
     private void SetVisible(bool visible)
     {
+        if (visible) _shownUpgradeCommand = null;
         if (_panelObject != null && _panelObject.activeSelf != visible)
         {
             _panelObject.SetActive(visible);
@@ -1600,35 +1588,19 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         {
             return;
         }
-        if (_titleText != null)
-        {
-            _titleText.font = source.font;
-        }
-        if (_upgradeSlotText != null)
-        {
-            _upgradeSlotText.font = source.font;
-        }
-        if (_upgradeSlotNextText != null)
-        {
-            _upgradeSlotNextText.font = source.font;
-        }
-        if (_deltaSlotText != null)
-        {
-            _deltaSlotText.font = source.font;
-        }
-        if (_deltaSlotNextText != null)
-        {
-            _deltaSlotNextText.font = source.font;
-        }
+        _uiLocale = GameLocalization.Code;
+        RoleGuideLanguage language = GameLocalization.Language;
+        TMP_FontAsset font = RoleGuideFont.ForLanguage(source.font, language) ?? source.font;
+        if (_titleText != null) _titleText.text = RoleText.Get("Base Upgrade Draw", language);
         if (_panelObject != null)
         {
-            foreach (TMP_Text text in
-                     _panelObject.GetComponentsInChildren<TMP_Text>(true))
+            foreach (TMP_Text text in _panelObject.GetComponentsInChildren<TMP_Text>(true))
             {
-                if (text != null && text.font != source.font)
-                {
-                    text.font = source.font;
-                }
+                if (text == null) continue;
+                if (text.font != font) text.font = font;
+                if (text.gameObject.name == "UpgradeSlotHeader") text.text = RoleText.Get("Upgrade", language);
+                if (text.gameObject.name == "DeltaSlotHeader") text.text = RoleText.Get("Change", language);
+                text.isRightToLeftText = (text == _upgradeSlotText || text == _upgradeSlotNextText) && GameLocalization.RightToLeft;
             }
         }
     }

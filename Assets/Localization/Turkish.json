@@ -277,5 +277,8 @@
   "Combines many roles' upgrades and abilities.": "Birçok rolün yükseltme ve yeteneklerini birleştirir.",
   "Combines Bomber, Stinker, Tuna and Influenza, including their hazards.": "Bomber, Stinker, Tuna ve Influenza yeteneklerini tehlikeleriyle birlikte birleştirir.",
   "\n\nAfter the final extraction is completed, Courier's automatic HP loss stops for the rest of the stage.": "\n\nSon tahliye tamamlandığında Courier, bölümün sonuna kadar otomatik olarak HP kaybetmez.",
-  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "Ağır nesneleri kaldırmak ve döndürmek kolaylaşır.\nStrength seviyesini {0} yapar. Rol sona erdiğinde normal Strength seviyen geri yüklenir."
+  "Heavy objects are easier to lift and turn.\nSets Strength to level {0}. When the role ends, your normal Strength level is restored.": "Ağır nesneleri kaldırmak ve döndürmek kolaylaşır.\nStrength seviyesini {0} yapar. Rol sona erdiğinde normal Strength seviyen geri yüklenir.",
+  "Base Upgrade Draw": "Temel yükseltme çekilişi",
+  "Upgrade": "Yükseltme",
+  "Change": "Değişim"
 }

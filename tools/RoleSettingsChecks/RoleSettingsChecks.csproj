@@ -10,7 +10,6 @@
     <Compile Include="../../RoleUpgradeScaling.cs" Link="RoleUpgradeScaling.cs" />
     <Compile Include="../../TruckDrawWeight.cs" Link="TruckDrawWeight.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
-    <Compile Include="../../RoleLanguageValues.cs" Link="RoleLanguageValues.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
     <Compile Include="../../RolePresets.cs" Link="RolePresets.cs" />
     <Compile Include="../../RoleSelectionSettings.cs" Link="RoleSelectionSettings.cs" />

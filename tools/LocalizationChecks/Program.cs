@@ -13,18 +13,13 @@ void Check(bool condition, string message)
 var languages = Enum.GetValues<RoleGuideLanguage>();
 Check(languages.Length == 14, "Expected 14 supported languages");
 Check(RoleLanguage.Names.Distinct().Count() == languages.Length, "Native names must be unique");
-var choices = new RoleLanguageValues();
-Check(choices is AcceptableValueList<string>, "REPOConfig dropdown compatibility");
 foreach (var language in languages)
 {
     string native = RoleLanguage.NativeName(language);
     Check(RoleLanguage.Parse(native) == language, "Native parsing: " + native);
     Check(RoleLanguage.Parse(language.ToString()) == language, "Legacy parsing: " + language);
-    Check((string)choices.Clamp(language.ToString()) == native, "Legacy migration: " + language);
-    Check(choices.IsValid(native), "Native acceptable value: " + native);
     Check(RoleLanguage.Parse(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(native))) == language, "UTF8: " + native);
 }
-Check((string)choices.Clamp("unsupported") == "English", "Invalid settings default to English");
 var current = RoleGuideLanguage.English;
 foreach (var _ in languages) current = RoleLanguage.Next(current);
 Check(current == RoleGuideLanguage.English, "Toggle wraps through all languages");
@@ -82,23 +77,6 @@ config.MageAutoRecoveryEnabled.Value = false;
 foreach (var language in languages.Where(RoleLanguage.NeedsTranslation))
     Check(RoleGuideCatalog.Description(StageRole.Mage, config, language) != RoleGuideCatalog.Description(StageRole.Mage, config), "Mage disabled branch");
 
-// Exercise BepInEx's real serializer and reload path, not a substitute parser.
-string temp = Path.Combine(Path.GetTempPath(), "RoleShuffle-LanguageCheck-" + Guid.NewGuid() + ".cfg");
-try
-{
-    foreach (var language in languages)
-    {
-        File.WriteAllText(temp, "[UI]\nGuideLanguage = " + language + "\n", new UTF8Encoding(false));
-        var file = new ConfigFile(temp, false);
-        var entry = file.Bind("UI", "GuideLanguage", "English", new ConfigDescription("Language", new RoleLanguageValues()));
-        Check(entry.Value == RoleLanguage.NativeName(language), "Config migration: " + language);
-        file.Save();
-        var reloaded = new ConfigFile(temp, false);
-        var saved = reloaded.Bind("UI", "GuideLanguage", "English", new ConfigDescription("Language", new RoleLanguageValues()));
-        Check(saved.Value == entry.Value, "Config persistence: " + language);
-    }
-}
-finally { if (File.Exists(temp)) File.Delete(temp); }
 config.LifterStrengthLevel.Value = 17;
 config.InfluenzaIncubationSeconds.Value = 17;
 config.InfluenzaMaximumHealth.Value = 123;

@@ -13,7 +13,7 @@ internal static class CourierGraceMigrationChecks
         float[] Durations(StageRolesConfig c) => new[] { c.JoblessInitialGrace.Value, c.JoblessTinyGrace.Value,
             c.JoblessSmallGrace.Value, c.JoblessMediumGrace.Value, c.JoblessBigGrace.Value,
             c.JoblessWideGrace.Value, c.JoblessTallGrace.Value, c.JoblessVeryTallGrace.Value };
-        foreach (int schema in new[] { 38, 42, 43, 44, 45, 99 })
+        foreach (int schema in new[] { 38, 42, 43, 44, 45, 46, 99 })
         foreach (string variant in new[] { "default", "decimal", "exponent", "zero", "custom", "mixed" })
         {
             string section = schema == 38 ? "Jobless" : "Courier";
@@ -38,7 +38,7 @@ internal static class CourierGraceMigrationChecks
                 "Custom attrition, delivery, healing, draw settings and unrelated role values survive");
             if (schema == 43)
                 Check(File.ReadAllText(path + ".pre-v4.6.1-courier-grace.bak") == text, "Exact rollback backup");
-            if (schema >= 45) Check(File.ReadAllText(path) == text, "Current/future schema is not rewritten");
+            if (schema >= 46) Check(File.ReadAllText(path) == text, "Current/future schema is not rewritten");
             file.Save();
             string once = File.ReadAllText(path);
             RoleConfigMigration.Apply(file);
