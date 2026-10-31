@@ -1011,5 +1011,5 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 
 [i43]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c5c96682f06f981c33c897d7c74c4111d04d37cb/docs/icons/43.png
 [i44]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c5c96682f06f981c33c897d7c74c4111d04d37cb/docs/icons/44.png
-[i45]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c90ddb670afc53aac50eb20d85c72b6d4d5e90c3/docs/icons/45.png
-[i46]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c90ddb670afc53aac50eb20d85c72b6d4d5e90c3/docs/icons/46.png
+[i45]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/5e797dc79e6475a412ef1cf507c17b7287ae962b/docs/icons/45.png
+[i46]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/5e797dc79e6475a412ef1cf507c17b7287ae962b/docs/icons/46.png
