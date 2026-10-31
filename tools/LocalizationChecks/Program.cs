@@ -114,4 +114,14 @@ Check(RoleGuideCatalog.Description(StageRole.Brawler, config).Contains("up to 3x
 foreach (var language in languages)
     Check(Regex.Matches(RoleGuideCatalog.Description(StageRole.Brawler, config, language), "3").Count == 2,
         "Brawler starting multiplier and effective cap agree in " + language);
+config.RiggerEnemyDamageMultiplier.Value = 2.75f;
+foreach (var language in languages)
+{
+    string detail = RoleGuideCatalog.Description(StageRole.Rigger, config, language);
+    Check(detail.Contains("2.75"), "Rigger host damage setting appears in details: " + language);
+    Check(!detail.Contains("{") && !detail.Contains("}"), "Rigger damage placeholder resolved: " + language);
+    if (RoleLanguage.NeedsTranslation(language))
+        Check(RoleText.Description(RoleGuideCatalog.Description(StageRole.Rigger, config), language) == detail,
+            "Rigger guest damage description follows host setting: " + language);
+}
 Console.WriteLine($"Localization checks passed: {checks}");

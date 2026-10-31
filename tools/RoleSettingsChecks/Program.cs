@@ -23,7 +23,7 @@ Check(File.ReadAllText(languagePath) == languageAfter, "Language migration is id
 Check(config.NegotiatorEnabled.Value && config.NegotiatorWeight.Value == 100, "Negotiator selection defaults");
 Check(RolePresets.Find(RolePreset.Cooperative)!.Includes(StageRole.Negotiator), "Negotiator cooperative preset");
 Check(config.RiggerEnabled.Value && config.RiggerWeight.Value == 100, "Rigger selection defaults");
-Check(config.RiggerEnemyHoldMultiplier.Value == 1.5f && config.RiggerDurabilityMultiplier.Value == .5f, "Rigger ability defaults");
+Check(config.RiggerEnemyDamageMultiplier.Value == 2f && config.RiggerEnemyHoldMultiplier.Value == 1.5f && config.RiggerDurabilityMultiplier.Value == .5f, "Rigger ability defaults");
 Check(RolePresets.Find(RolePreset.Standard)!.Includes(StageRole.Rigger) && RolePresets.Find(RolePreset.Cooperative)!.Includes(StageRole.Rigger) && RolePresets.Find(RolePreset.Challenge)!.Includes(StageRole.Rigger), "Rigger presets");
 Check(config.DualWielderEnabled.Value && config.DualWielderWeight.Value == 100, "DualWielder normal selection defaults");
 Check(config.DualWielderDelaySeconds.Value == .3f && config.DualWielderLeftOffset.Value == .5f, "DualWielder follow defaults");

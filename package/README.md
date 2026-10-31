@@ -120,7 +120,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i42]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together grants temporary Strength upgrades targeting about 1.5x Strength (maximum level 200) and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
 |![][i43]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In delivery areas or aboard a cart, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
 |![][i44]<br>DualWielder|Holding a melee weapon alone creates a matching weapon 0.5 m left, repeating its movement and attacks 0.3 s later. Both share and consume battery/durability.|Copy disappears on release, switching, death or role change. Cannot be picked up or kept. Excluded without melee weapons.|Delay, left offset|
-|![][i45]<br>Rigger|Human Adventure Cable restrains enemies 1.5x as long and uses 50% durability on hits and throws.|Automatic. Player restraint and damage unchanged. Normally excluded without a cable. Included in Standard, Cooperative and Challenge.|Hold duration, durability cost|
+|![][i45]<br>Rigger|Human Adventure Cable: 2x enemy hit damage, 1.5x enemy restraint time, 50% hit/throw durability cost.|Automatic. Player effects unchanged. Requires a cable for normal draws. Standard/Cooperative/Challenge.|All three multipliers|
 |![][i46]<br>Negotiator|One guaranteed negotiation in the next shop. Present a shop item to the Shopkeeper yourself for the normal successful discount, without rejection damage or spending shared attempts.|Persists through death/role changes. No stacking; expires after that shop. Interrupted attempts are free. Role and remaining use appear in the shop; `/roles` and an entry announcement also identify the holder. Standard/Cooperative.|Selection settings only|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
@@ -151,7 +151,7 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 
 |Setting|Default|Range|Effect|
 |---|---|---|---|
-|`Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|1.5 / 0.5|1–3 / 0.1–1|Enemy restraint duration / durability cost.|
+|`Rigger.EnemyDamageMultiplier` / `Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|2 / 1.5 / 0.5|1–10 / 1–3 / 0.1–1|Enemy hit damage / restraint time / durability cost.|
 |`DualWielder.FollowDelaySeconds` / `DualWielder.LeftOffset`|0.3 s / 0.5 m|0.05–2 s / 0.1–1.5 m|Copy delay and offset.|
 |`Porter.Capacity`|15|1–100|Total cargo weight limit; no item-count limit. HUD: weight, current cargo value and unloading time.|
 |`Porter.HoldSeconds`|3|1–30 s|Continuous solo hold before storage.|
@@ -598,7 +598,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i42]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむとStrengthを約1.5倍相当に強化するアップグレードを付与（上限Lv200）し、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
 |![][i43]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所・カート上で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
 |![][i44]<br>DualWielder|近接武器を1人で持つと左0.5mに同じ武器が現れ、動きと攻撃を0.3秒遅れで再現。電池・耐久度は共有し、2本目の命中分も消費。|手放す・持ち替え・死亡・役職変更で消滅。持ち帰り不可。近接武器がなければ抽選対象外。|遅延、左への距離|
-|![][i45]<br>Rigger|Human Adventure Cableで敵を拘束できる時間が1.5倍、命中・投げの耐久消費が50％に。|通常操作で自動発動。プレイヤーの拘束時間・ダメージは変更なし。ケーブルがなければ通常抽選から除外。Standard・Cooperative・Challengeに含まれます。|拘束時間倍率、耐久消費倍率|
+|![][i45]<br>Rigger|Human Adventure Cable：敵への命中ダメージ2倍、拘束時間1.5倍、命中・投げの耐久消費50％。|自動発動。対プレイヤーは変化なし。ケーブルがなければ通常抽選から除外。Standard・Cooperative・Challenge。|各倍率|
 |![][i46]<br>Negotiator|次のショップで1回、本人が商品を店主に見せると必ず値引き。拒否による破損を起こさず、通常の成功時と同じ値引きを受けます。共通の交渉回数は消費しません。|死亡・役職変更後も保持。蓄積不可で、そのショップを出ると失効。中断時は消費なし。ショップでも役職・残数を表示し、入店時の通知と`/roles`でも確認できます。Standard・Cooperativeに含まれます。|抽選設定のみ|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
@@ -629,7 +629,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 |設定|初期値|範囲|効果|
 |---|---|---|---|
-|`Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|1.5 / 0.5|1–3 / 0.1–1|敵の拘束時間／耐久消費の倍率。|
+|`Rigger.EnemyDamageMultiplier` / `Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|2 / 1.5 / 0.5|1～10 / 1～3 / 0.1～1|敵への命中ダメージ／拘束時間／耐久消費。|
 |`DualWielder.FollowDelaySeconds` / `DualWielder.LeftOffset`|0.3秒 / 0.5m|0.05～2秒 / 0.1～1.5m|追従の遅延と左への距離。|
 |`Porter.Capacity`|15|1～100|収納重量の上限。個数制限なし。HUDに重量・収納品の現在合計金額・荷下ろし残り時間を表示。|
 |`Porter.HoldSeconds`|3|1～30秒|収納まで1人でつかみ続ける時間。|

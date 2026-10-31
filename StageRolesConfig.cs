@@ -502,6 +502,7 @@ internal sealed class StageRolesConfig
         TwinsEnabled = RoleEnabled(config, "Twins");
         NegotiatorEnabled = RoleEnabled(config, "Negotiator");
         NegotiatorWeight = RoleWeight(config, "Negotiator");
+        RiggerEnemyDamageMultiplier = BindFloat(config, "Rigger", "EnemyDamageMultiplier", 2f, 1f, 10f, "Human Adventure Cable direct hit damage multiplier against enemies.");
         RiggerEnabled = RoleEnabled(config, "Rigger");
         RiggerWeight = RoleWeight(config, "Rigger");
         RiggerEnemyHoldMultiplier = BindFloat(config, "Rigger", "EnemyHoldDurationMultiplier", 1.5f, 1f, 3f, "Enemy restraint duration multiplier while using the Human Adventure Cable.");
@@ -541,6 +542,7 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> TwinsEnabled { get; }
     internal ConfigEntry<bool> NegotiatorEnabled { get; }
     internal ConfigEntry<int> NegotiatorWeight { get; }
+    internal ConfigEntry<float> RiggerEnemyDamageMultiplier { get; }
     internal ConfigEntry<bool> RiggerEnabled { get; }
     internal ConfigEntry<int> RiggerWeight { get; }
     internal ConfigEntry<float> RiggerEnemyHoldMultiplier { get; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using UnityEngine;
 
@@ -12,14 +13,74 @@ internal sealed partial class StageRoleController
 {
     internal float RiggerMultiplier(PlayerAvatar? player, bool duration)
     {
-        if (!_config.Enabled.Value || !IsAuthority() || !PlayerState.IsLiving(player) ||
-            !PlayerHasRole(player, StageRole.Rigger)) return 1f;
+        if (!RiggerActive(player)) return 1f;
         return duration ? _config.RiggerEnemyHoldMultiplier.Value : _config.RiggerDurabilityMultiplier.Value;
     }
+
+    internal float RiggerDamageMultiplier(PlayerAvatar? player) =>
+        RiggerActive(player) ? _config.RiggerEnemyDamageMultiplier.Value : 1f;
+
+    private bool RiggerActive(PlayerAvatar? player) =>
+        _config.Enabled.Value && IsAuthority() && PlayerState.IsLiving(player) &&
+        PlayerHasRole(player, StageRole.Rigger);
 }
 
 internal static class RiggerPatches
 {
+    // Awake reparents the cable's strike collider under a separate cast point,
+    // so hierarchy lookup cannot identify it. Weak keys release destroyed cables.
+    private static readonly ConditionalWeakTable<HurtCollider, ItemMeleeWhip> StrikeOwners = new();
+    private static readonly FieldInfo StrikeAttacker =
+        AccessTools.Field(typeof(HurtCollider), "playerCausingHurtOverride");
+
+    [HarmonyPatch(typeof(ItemMeleeWhip), "Awake"), HarmonyPostfix]
+    internal static void RegisterStrike(ItemMeleeWhip __instance)
+    {
+        HurtCollider collider = __instance.crackHurtCollider;
+        if (collider == null) return;
+        StrikeOwners.Remove(collider);
+        StrikeOwners.Add(collider, __instance);
+    }
+
+    internal static int EnemyDamage(int damage, HurtCollider? collider)
+    {
+        if (damage <= 0 || !SemiFunc.IsMasterClientOrSingleplayer() || collider == null ||
+            !StrikeOwners.TryGetValue(collider, out ItemMeleeWhip? whip) || whip == null ||
+            !whip.isActiveAndEnabled || !ReferenceEquals(whip.crackHurtCollider, collider)) return damage;
+        // Native CrackImpactPlay captures the original swing's attacker here.
+        // Never attribute an in-flight hit to a new holder of the same cable.
+        PlayerAvatar? attacker = StrikeAttacker.GetValue(collider) as PlayerAvatar;
+        float multiplier = StageRolesPlugin.Instance?.Controller?.RiggerDamageMultiplier(attacker) ?? 1f;
+        if (float.IsNaN(multiplier) || float.IsInfinity(multiplier)) return damage;
+        multiplier = Mathf.Clamp(multiplier, 1f, 10f);
+        return multiplier == 1f ? damage : Mathf.RoundToInt(Mathf.Clamp(damage * multiplier, 0f, 100000f));
+    }
+
+    [HarmonyPatch(typeof(HurtCollider), "EnemyHurt"), HarmonyTranspiler]
+    internal static IEnumerable<CodeInstruction> DamageTranspiler(IEnumerable<CodeInstruction> instructions)
+    {
+        List<CodeInstruction> code = instructions.ToList();
+        FieldInfo damage = AccessTools.Field(typeof(HurtCollider), "enemyDamage");
+        FieldInfo force = AccessTools.Field(typeof(HurtCollider), "applyForce");
+        int matches = 0;
+        for (int i = 0; i + 2 < code.Count; i++)
+        {
+            // Scale only Hurt's damage argument, leaving the > 0 gate, stun,
+            // death-pit/instant-kill paths and the collider's saved stats intact.
+            if (!code[i].LoadsField(damage) || code[i + 1].opcode != OpCodes.Ldarg_0 ||
+                code[i + 2].opcode != OpCodes.Ldflda || !Equals(code[i + 2].operand, force)) continue;
+            code.InsertRange(i + 1, new[]
+            {
+                new CodeInstruction(OpCodes.Ldarg_0),
+                CodeInstruction.Call(typeof(RiggerPatches), nameof(EnemyDamage))
+            });
+            matches++;
+            i += 2;
+        }
+        RequireOne(matches, nameof(EnemyDamage));
+        return code;
+    }
+
     // Work only at native spending points, never rewrite a weapon's saved stats.
     // Read the role on every call, so release, death and role changes cannot
     // leave a permanent bonus on a cable passed to another player.

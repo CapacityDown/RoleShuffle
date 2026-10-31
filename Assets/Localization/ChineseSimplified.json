@@ -281,8 +281,8 @@
   "Base Upgrade Draw": "基础升级抽奖",
   "Upgrade": "升级",
   "Change": "变化",
-  "The Human Adventure Cable restrains enemies longer and consumes less durability.": "Human Adventure Cable可更长时间束缚敌人，并减少耐久消耗。",
-  "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cable对敌人的束缚时间变为{0}倍，命中和投掷仅消耗正常耐久的{1}%。正常使用缆绳时自动生效。对玩家的束缚时间和伤害不变。死亡或更换职业后加成停止。没有缆绳时，通常不会被随机分配。",
+  "The Human Adventure Cable deals more damage to enemies, restrains them longer and consumes less durability.": "Human Adventure Cable对敌人的伤害提高，束缚时间延长，耐久消耗减少。",
+  "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Direct cable hits deal {2}x damage to enemies. Activates automatically during normal cable use. Player restraint duration and damage to players are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cable对敌人的束缚时间变为{0}倍，命中和投掷仅消耗正常耐久的{1}%。正常使用缆绳时自动生效。缆绳直接命中敌人的伤害变为{2}倍。对玩家的束缚时间和对玩家造成的伤害不变。死亡或更换职业后加成停止。没有缆绳时，通常不会被随机分配。",
   "Grants one guaranteed discount in the next shop. Present the item to the Shopkeeper yourself.": "下次商店可获得一次必定成功的折扣。请亲自向店主展示商品。",
   "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or role changes do not remove the right; it cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "获得一次下次商店可用的必定成功议价机会。亲自向店主展示商品，即可获得普通议价成功时的折扣，且不会因拒绝而损坏商品。不消耗全员共用的议价次数。死亡或更换角色后仍然保留，但不可累积，离开该商店后失效。中断议价不会消耗次数。商店内也会显示你的角色和剩余次数。",
   "Negotiations": "议价"

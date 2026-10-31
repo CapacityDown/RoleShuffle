@@ -4,12 +4,17 @@ Run `dotnet run --project tools/RiggerChecks -c Release` from the repository roo
 An optional argument selects the installed Assembly-CSharp.dll.
 
 The checks apply the production Harmony transpilers to the installed game's IL
-for EnemyHoldTick, ReleasePhysics and CrackDurabilityUse. They verify that only
+for EnemyHoldTick, ReleasePhysics, CrackDurabilityUse and HurtCollider.EnemyHurt. They verify that only
 one calculation is changed in each method and native gates remain in order.
 Delayed-hit costs must use the original hit window holder, not a new cable holder.
 Runtime checks cover duration at different frame rates, fractional durability,
 role changes, death, stage cleanup, disabled mod, non-host clients and invalid
-settings. Unity/player/controller lookup objects are stand-ins.
+settings. Damage checks cover the default 2x/configurable 1–10x multiplier,
+integer rounding, overflow, inactive/replaced/unregistered colliders, original
+swing ownership after handoff, repeated hits without compounding, and unchanged
+player damage. The strike collider is identified through an Awake registration
+because the native game reparents it outside the weapon. Unity/player/controller
+lookup objects are stand-ins.
 
 Also run RoleSettingsChecks, LocalizationChecks, GuideSyncChecks,
 Test-SecretRoles.ps1, Test-GameFieldAccess.ps1 and Test-Repo050Compatibility.ps1.

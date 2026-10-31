@@ -53,6 +53,7 @@ internal enum StageRole
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal Entry<float> RiggerEnemyDamageMultiplier { get; } = new(2f);
     internal Entry<float> RiggerEnemyHoldMultiplier { get; } = new(1.5f);
     internal Entry<float> RiggerDurabilityMultiplier { get; } = new(0.5f);
     internal Entry<float> DualWielderDelaySeconds { get; } = new(0.3f);

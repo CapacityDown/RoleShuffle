@@ -1,6 +1,6 @@
 ## 5.0.0
 - Added Negotiator: one guaranteed negotiation in the next shop, using the normal successful discount without rejection damage or spending shared attempts. The right survives death and role changes, cannot stack, and expires after that shop. Shop role displays, remaining-use HUD and notices identify its holder. Available in Standard and Cooperative presets.
-- Added Rigger: Human Adventure Cable holds enemies 1.5x as long and consumes half durability on hits and throws. Both bonuses are configurable. Normally excluded without a cable; available in Standard, Cooperative and Challenge presets.
+- Added Rigger: Human Adventure Cable deals 2x direct hit damage to enemies, holds them 1.5x as long and consumes half durability on hits and throws. All three bonuses are configurable. Normally excluded without a cable; available in Standard, Cooperative and Challenge presets.
 - Updated compatibility for R.E.P.O. v0.5.0, including the Roles menu, Japanese text display and mouse-wheel scrolling.
 - Menus follow the game language automatically. Roulette upgrade names use each player’s game-language translations; long names fit within the reel.
 - Strength role bonuses use upgrades: Lifter sets a configurable level (default 200), King grants up to five temporary levels, and Twins co-carrying grants temporary levels targeting about 1.5x Strength (level cap 200). Heavy-object handling follows the game; temporary levels are removed when their effect ends.

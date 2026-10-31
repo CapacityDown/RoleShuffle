@@ -54,7 +54,7 @@ internal static class RoleGuideCatalog
             StageRole.Influenza => InfluenzaSummary,
             StageRole.Twins => TwinsSummary,
             StageRole.Negotiator => NegotiatorSummary,
-            StageRole.Rigger => "The Human Adventure Cable restrains enemies longer and consumes less durability.",
+            StageRole.Rigger => "The Human Adventure Cable deals more damage to enemies, restrains them longer and consumes less durability.",
             StageRole.DualWielder => "A second melee weapon follows your swings with a short delay.",
             StageRole.Porter => "Stores small valuables for hands-free transport. Capacity is limited by total weight; enemy hits spill cargo and unloading takes time.",
             StageRole.Tank => "Increases maximum health, making the player harder to defeat.",
@@ -108,7 +108,7 @@ internal static class RoleGuideCatalog
             StageRole.Influenza => InfluenzaSummaryJapanese,
             StageRole.Twins => "2人1組でHPと感染を共有します。一緒に運ぶ・休む・合流する・納品することで能力を発揮します。",
             StageRole.Negotiator => NegotiatorSummaryJapanese,
-            StageRole.Rigger => "Human Adventure Cableで敵を長く拘束でき、耐久度の消費も減ります。",
+            StageRole.Rigger => "Human Adventure Cableで敵に与えるダメージが増え、拘束時間が延び、耐久度の消費も減ります。",
             StageRole.DualWielder => "近接武器を持つと、少し遅れて同じ動きをする2本目の武器が現れます。",
             StageRole.Porter => "小さな貴重品を収納し、手ぶらで運びます。総重量に上限があり、敵からの被弾で荷物を落とし、荷下ろしには時間がかかります。",
             StageRole.Rider => "運転中の車両が敵へ与える衝突ダメージと、プレイヤーへのノックバックが増加します。",
@@ -394,8 +394,8 @@ internal static class RoleGuideCatalog
     }
 
     private static string RiggerDescription(StageRolesConfig c, bool japanese) => japanese
-        ? $"Human Adventure Cableで敵を拘束できる時間が{Number(c.RiggerEnemyHoldMultiplier.Value)}倍になり、命中・投げで消費する耐久度が通常の{Number(c.RiggerDurabilityMultiplier.Value * 100f)}％になります。通常のケーブル操作で自動発動します。プレイヤーの拘束時間やダメージは変わりません。死亡・役職変更後は強化が止まります。ケーブルがない場合は通常の抽選から除外されます。"
-        : $"The Human Adventure Cable restrains enemies for {Number(c.RiggerEnemyHoldMultiplier.Value)}x as long and consumes {Number(c.RiggerDurabilityMultiplier.Value * 100f)}% of normal durability on hits and throws. Activates automatically during normal cable use. Player restraint duration and damage are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.";
+        ? $"Human Adventure Cableで敵を拘束できる時間が{Number(c.RiggerEnemyHoldMultiplier.Value)}倍になり、命中・投げで消費する耐久度が通常の{Number(c.RiggerDurabilityMultiplier.Value * 100f)}％になります。通常のケーブル操作で自動発動します。ケーブルの直接命中で敵に与えるダメージは{Number(c.RiggerEnemyDamageMultiplier.Value)}倍になります。プレイヤーの拘束時間やプレイヤーへのダメージは変わりません。死亡・役職変更後は強化が止まります。ケーブルがない場合は通常の抽選から除外されます。"
+        : $"The Human Adventure Cable restrains enemies for {Number(c.RiggerEnemyHoldMultiplier.Value)}x as long and consumes {Number(c.RiggerDurabilityMultiplier.Value * 100f)}% of normal durability on hits and throws. Direct cable hits deal {Number(c.RiggerEnemyDamageMultiplier.Value)}x damage to enemies. Activates automatically during normal cable use. Player restraint duration and damage to players are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.";
 
     private static string DualWielderDescription(StageRolesConfig c, bool japanese) => japanese
         ? $"近接武器を1人で持つと、同じ武器を左{Number(c.DualWielderLeftOffset.Value)}mに1本生成します。2本目は元の武器の動きと攻撃を{Number(c.DualWielderDelaySeconds.Value)}秒遅れて再現します。電池・耐久度は共有し、2本目の命中分も消費します。手放す・持ち替える・死亡する・役職が変わると2本目は消えます。生成した武器は拾って持ち帰れません。近接武器がない場合は通常の抽選から除外されます。"
