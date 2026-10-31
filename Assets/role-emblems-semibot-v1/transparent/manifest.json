@@ -2,7 +2,7 @@
   "method": "Preserve native alpha or remove perimeter-connected near-black exterior; normalize category interiors through a color-region mask",
   "generator": "Python / Pillow / NumPy",
   "black_limit": 64,
-  "count": 48,
+  "count": 49,
   "assets": [
     {
       "name": "01-Tank",
@@ -1649,6 +1649,35 @@
       "source_sha256": "0b187f03f101b3eb07509caf1d2e4fab8d8aa2b492dce8384baf4bfcfe6f0c56",
       "master_sha256": "d95674e370e483b8457e8fa3e712608db94b0c44c3ecc8126aedc6995f5805b1",
       "runtime_sha256": "c7660b43bc21e152ffb075716cad50719dc3824ac88b335455e5c51346009b9b",
+      "runtime_size": [
+        256,
+        256
+      ]
+    },
+    {
+      "category": "Support",
+      "background_color": "#24563E",
+      "detected_background_rgb": [
+        40,
+        97,
+        72
+      ],
+      "background_color_tolerance": 24,
+      "background_core_pixels": 416789,
+      "background_mask_pixels": 440459,
+      "outside_mask_pixels_unchanged": true,
+      "alpha_preserved_during_recolor": true,
+      "name": "46-Negotiator",
+      "source": "Assets/role-emblems-semibot-v1/selected/46-Negotiator.png",
+      "method": "Built-in image_gen",
+      "native_source_alpha": true,
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_sha256": "fa5ecd5063790bc608d9663187e03ceafe3f900b436ab0770066b5de442bf505",
+      "master_sha256": "13e03c1eea0ab63061b0b40f8674daf5a83ab6cf4450ff717efaae074f0fe98a",
+      "runtime_sha256": "3d3037104f5016263ce894b0df3420a395b7f9b5aa9733d2e69638abde9ee4cb",
       "runtime_size": [
         256,
         256
