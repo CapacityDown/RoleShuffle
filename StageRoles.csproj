@@ -139,6 +139,8 @@
     <Compile Include="TruckDrawWeight.cs" />
     <Compile Include="BomberRoleRuntime.cs" />
     <Compile Include="MedicRoleRuntime.cs" />
+    <Compile Include="MusicianRoleRuntime.cs" />
+    <Compile Include="MusicianPatches.cs" />
     <Compile Include="RoleHealingRuntime.cs" />
     <Compile Include="MageRoleRuntime.cs" />
     <Compile Include="MageSpellAim.cs" />

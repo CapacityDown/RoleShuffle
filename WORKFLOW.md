@@ -87,6 +87,14 @@ historical version numbers, deployment profiles and superseded design choices.
   atlas and the current game SDF shader before it can become a fallback font.
   Keep glyph metrics intact and avoid inserting MOD fonts into global TMP settings.
 
+- On 2026-10-31 the user approved Musician support for Pan Flute, Harmonica and
+  Mouth Harp. All old/new instruments share a per-performer healing cooldown
+  (default one second) and a combined self/allies stage budget (default 1000 HP).
+  Continuous instruments require audible play while attached at the mouth.
+  Preserve the budget/cooldown across instrument swaps, role changes and revival;
+  reset on stage end. Both settings are configurable; show remaining budget on
+  the resource HUD and notify exhaustion with `MusicEmpty`.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

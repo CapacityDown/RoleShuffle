@@ -436,13 +436,6 @@ internal static class LifecyclePatches
         StageRolesPlugin.Instance?.Controller?
             .ShouldKeepDiverTumbling(__instance) != true;
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(MusicalValuableLogic), nameof(MusicalValuableLogic.MusicKeyPressedRPC))]
-    private static void MusicalValuableLogicMusicKeyPressedRpcPostfix(int grabberID)
-    {
-        StageRolesPlugin.Instance?.Controller?.InstrumentNotePlayed(grabberID);
-    }
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Trap), "TrapActivateSync")]
     private static bool TrapActivateSyncPrefix(Trap __instance) =>

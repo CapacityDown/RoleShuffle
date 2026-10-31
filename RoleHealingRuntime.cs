@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace REPOJP.StageRoles;
 
-// One outstanding capped heal per recipient, shared by Medic and Mage.
+// One outstanding capped heal per recipient, shared by capped healing abilities.
 // An unacknowledged request keeps its budget reservation: refunding it on a
 // timer could exceed the cap if the owner's RPC arrives after the timeout.
 internal static class RoleHealingRuntime

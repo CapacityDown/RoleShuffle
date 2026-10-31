@@ -18,7 +18,6 @@
   "Recovers health when an enemy dies nearby. Stronger enemies restore more health.": "附近敵人死亡時恢復生命值。敵人越強，恢復越多。",
   "Receives the vanilla Crown for the stage. Only one King can be assigned.": "在本關獲得原版Crown。最多隻能分配一名King。",
   "Takes continuous damage after standing still too long. Moving stops the damage.": "靜止過久後持續受到傷害。移動即可停止傷害。",
-  "Heals itself and nearby living players whenever it plays an instrument note.": "每演奏一個音符，都會治療自身及附近存活的玩家。",
   "Uses chat or configured facial expressions to cast five vanilla attacks and recovers health after avoiding damage. Magic cast using a held staff lasts 1.3 times as long.": "透過聊天或設定的面部表情釋放五種原版攻擊，並在一段時間未受傷後恢復生命值。使用手持法杖釋放的魔法持續時間為原來的1.3倍。",
   "Risks a held valuable for a chance to multiply its value; losing destroys it.": "以手持貴重物品為賭注，有機會使其價值倍增；失敗則銷燬物品。",
   "Uses less weapon battery and earns extra orbs from personal kills.": "減少武器電池消耗，並透過親自擊殺獲得額外寶珠。",
@@ -58,7 +57,6 @@
   "Approaching within {0} m of a dead teammate's Death Head revives them with up to {1} HP. It can revive {2} times per stage.": "靠近已死亡隊友的Death Head至{0}米內，可將其復活並最多恢復{1}點生命值。每關可復活{2}次。",
   "Recovers health when an enemy dies within {0} m. Danger Level 1 restores {1} HP, Level 2 restores {2} HP, and Level 3 restores {3} HP.": "{0}米內有敵人死亡時恢復生命值。危險等級1恢復{1}點，等級2恢復{2}點，等級3恢復{3}點。",
   "After a 5-second grace period, standing still for {0} seconds causes {1} damage every {2} seconds. Moving resets the timer and stops the damage, but does not restore lost health.": "5秒寬限期後，靜止{0}秒會開始每{2}秒受到{1}點傷害。移動會重置計時並停止傷害，但不會恢復已損失的生命值。",
-  "Each instrument note played by the Musician heals itself and living players within {0} m for {1} HP. A vanilla musical valuable must be played by the Musician.": "Musician每演奏一個音符，會為自身及{0}米記憶體活的玩家恢復{1}點生命值。必須由Musician演奏原版樂器類貴重物品。",
   "Type star, gravity, roll, void, or laser in chat to cast a vanilla attack for {0}, {1}, {2}, {3}, or {4} HP. The configured facial expressions also cast them: {5}=star, {6}=gravity, {7}=roll, {8}=void, and {9}=laser. Spells share a {10}-second cooldown and cannot be cast if the HP cost would be fatal. Magic cast using a held staff lasts 1.3 times as long; chat and expression casts are unchanged. ": "在聊天中輸入star、gravity、roll、void或laser，分別消耗{0}、{1}、{2}、{3}或{4}點生命值釋放原版攻擊。也可使用設定的面部表情：{5}=star、{6}=gravity、{7}=roll、{8}=void、{9}=laser。所有法術共用{10}秒冷卻；若生命消耗會致命，則無法施放。使用手持法杖釋放的魔法持續時間為1.3倍；聊天和表情施法不受影響。",
   "After taking no damage for {0} seconds, restores {1} HP every {2} seconds, up to {3} HP total per stage.": "連續{0}秒未受傷後，每{2}秒恢復{1}點生命值，每關累計最多恢復{3}點。",
   "Automatic health recovery is disabled.": "自動恢復生命值已禁用。",
@@ -285,5 +283,7 @@
   "The Human Adventure Cable restrains enemies for {0}x as long and consumes {1}% of normal durability on hits and throws. Direct cable hits deal {2}x damage to enemies. Activates automatically during normal cable use. Player restraint duration and damage to players are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.": "Human Adventure Cable對敵人的束縛時間變為{0}倍，命中和投擲僅消耗正常耐久的{1}%。正常使用纜繩時自動生效。纜繩直接命中敵人的傷害變為{2}倍。對玩家的束縛時間和對玩家造成的傷害不變。死亡或更換職業後加成停止。沒有纜繩時，通常不會被隨機分配。",
   "Grants one guaranteed discount in the next shop. Present the item to the Shopkeeper yourself.": "下次商店可獲得一次必定成功的折扣。請親自向店主展示商品。",
   "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or role changes do not remove the right; it cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "獲得一次下次商店可用的必定成功議價機會。親自向店主展示商品，即可獲得普通議價成功時的折扣，且不會因拒絕而損壞商品。不消耗全員共用的議價次數。死亡或更換角色後仍然保留，但不可累積，離開該商店後失效。中斷議價不會消耗次數。商店內也會顯示你的角色和剩餘次數。",
-  "Negotiations": "議價"
+  "Negotiations": "議價",
+  "Playing instruments heals yourself and nearby living teammates, with a shared cooldown and stage healing budget.": "演奏樂器可治療自己和附近存活的隊友。所有樂器共用冷卻時間和本關治療額度。",
+  "Playing instruments heals yourself and living teammates within {0} m for {1} HP. All instruments share a {2}-second healing cooldown and a {3} HP total budget per stage for self and allies. Pan Flute, Harmonica and Mouth Harp heal while played at the mouth; silent instruments do not heal. Death, revival and role changes do not reset the budget.": "演奏樂器可為自己及{0}公尺內存活的隊友恢復{1} HP。所有樂器共用{2}秒的治療冷卻，本關對自己和隊友的治療總額度為{3} HP。排簫、口琴和口簧琴在嘴邊演奏時可觸發治療；不發聲時不會治療。死亡、復活和更換角色均不重置額度。"
 }

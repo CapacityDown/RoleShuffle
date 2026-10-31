@@ -190,6 +190,8 @@ internal sealed class StageRolesConfig
     internal Entry<int> MedicTotalHealingLimit { get; } = new(17);
     internal Entry<int> MusicianHealAmount { get; } = new(17);
     internal Entry<float> MusicianHealRadius { get; } = new(7.25f);
+    internal Entry<float> MusicianHealCooldownSeconds { get; } = new(7.25f);
+    internal Entry<int> MusicianTotalHealingLimit { get; } = new(17);
     internal Entry<float> NinjaVisionRecognitionMultiplier { get; } = new(7.25f);
     internal Entry<int> PhoenixRevivalHealth { get; } = new(17);
     internal Entry<int> RammerSelfDamage { get; } = new(17);

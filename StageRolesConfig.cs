@@ -319,8 +319,10 @@ internal sealed class StageRolesConfig
 
         MusicianEnabled = RoleEnabled(config, "Musician");
         MusicianWeight = RoleWeight(config, "Musician", 60);
-        MusicianHealAmount = BindInt(config, "Musician", "HealAmount", 5, 1, 100, "Health restored to the Musician and each nearby player when an instrument note is played.");
-        MusicianHealRadius = BindFloat(config, "Musician", "HealRadius", 10f, 1f, 50f, "Maximum healing distance from the Musician when an instrument note is played.");
+        MusicianHealAmount = BindInt(config, "Musician", "HealAmount", 5, 1, 100, "HP per healing pulse for the Musician and each nearby living player while playing.");
+        MusicianHealRadius = BindFloat(config, "Musician", "HealRadius", 10f, 1f, 50f, "Maximum healing distance from the Musician while playing.");
+        MusicianHealCooldownSeconds = BindFloat(config, "Musician", "HealCooldownSeconds", 1f, 0.1f, 30f, "Minimum seconds between healing pulses, shared by all instruments played by this Musician.");
+        MusicianTotalHealingLimit = BindInt(config, "Musician", "TotalHealingLimit", 1000, 1, 10000, "Combined healing budget for self and allies per stage. Death, revival and role changes do not reset it.");
 
         MageEnabled = RoleEnabled(config, "Mage");
         MageWeight = RoleWeight(config, "Mage");
@@ -749,6 +751,8 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> MusicianWeight { get; }
     internal ConfigEntry<int> MusicianHealAmount { get; }
     internal ConfigEntry<float> MusicianHealRadius { get; }
+    internal ConfigEntry<float> MusicianHealCooldownSeconds { get; }
+    internal ConfigEntry<int> MusicianTotalHealingLimit { get; }
     internal ConfigEntry<bool> MageEnabled { get; }
     internal ConfigEntry<int> MageWeight { get; }
     internal ConfigEntry<float> MageCastIntervalSeconds { get; }

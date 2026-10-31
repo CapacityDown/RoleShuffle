@@ -37,6 +37,7 @@ internal sealed partial class StageRoleController
             if (readyAt > Time.time) Seconds(AbilityMetric.PorterUnload, readyAt);
         }
         if (Has(StageRole.Medic)) Budget(AbilityMetric.Medic, _medic.HealingUsed(assignment.SteamId), _config.MedicTotalHealingLimit.Value);
+        if (Has(StageRole.Musician)) Budget(AbilityMetric.MusicianHealing, _musician.HealingUsed(assignment.SteamId), _config.MusicianTotalHealingLimit.Value);
         if (Has(StageRole.Rescuer)) Budget(AbilityMetric.Rescuer, assignment.RescuerRevivesUsed, _config.RescuerMaximumRevives.Value);
         if (Has(StageRole.Phoenix)) Budget(AbilityMetric.Phoenix, assignment.PhoenixUsed || assignment.PhoenixRevivePending ? 1 : 0, 1);
         if (Has(StageRole.Mage))

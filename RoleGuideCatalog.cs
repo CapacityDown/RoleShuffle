@@ -5,6 +5,7 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleGuideCatalog
 {
+    internal const string MusicianDescription = "Playing instruments heals yourself and living teammates within {0} m for {1} HP. All instruments share a {2}-second healing cooldown and a {3} HP total budget per stage for self and allies. Pan Flute, Harmonica and Mouth Harp heal while played at the mouth; silent instruments do not heal. Death, revival and role changes do not reset the budget.";
     internal const string NegotiatorSummary = "Grants one guaranteed discount in the next shop. Present the item to the Shopkeeper yourself.";
     internal const string NegotiatorDescription = "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or role changes do not remove the right; it cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.";
     private const string NegotiatorSummaryJapanese = "次のショップで1回、必ず値引きに成功します。本人が商品を店主に見せて交渉します。";
@@ -74,7 +75,7 @@ internal static class RoleGuideCatalog
             StageRole.Vampire => "Recovers health when an enemy dies nearby. Stronger enemies restore more health.",
             StageRole.King => "Grants nearby teammates temporary movement and grabbing upgrades, and receives a Crown.",
             StageRole.Tuna => "Takes continuous damage after standing still too long. Moving stops the damage.",
-            StageRole.Musician => "Heals itself and nearby living players whenever it plays an instrument note.",
+            StageRole.Musician => "Playing instruments heals yourself and nearby living teammates, with a shared cooldown and stage healing budget.",
             StageRole.Mage => "Uses chat or configured facial expressions to cast five attacks at an HP cost, with recovery after avoiding damage. Held-staff magic lasts longer.",
             StageRole.Gambler => "Risks a held valuable for a chance to multiply its value; losing destroys it.",
             StageRole.Hunter => "Uses less weapon battery and earns extra orbs from personal kills.",
@@ -139,7 +140,7 @@ internal static class RoleGuideCatalog
             StageRole.Vampire => "近くで敵が死亡するとHPを回復します。強い敵ほど回復量が増えます。",
             StageRole.King => "近くの仲間の移動・つかむ能力を一時的に強化し、自分はCrownを受け取ります。",
             StageRole.Tuna => "長時間静止すると継続的にダメージを受けます。移動するとダメージが止まります。",
-            StageRole.Musician => "楽器で音を鳴らすたびに、自分と周囲の生存中のプレイヤーを回復します。",
+            StageRole.Musician => "楽器の演奏で自分と近くの生存中の仲間を回復します。全楽器でクールタイムとステージ中の回復上限を共有します。",
             StageRole.Mage => "チャットや設定した表情でHPを消費して5種類の攻撃を発動し、被弾しない時間が続くとHPを回復します。保持した杖の魔法は長く続きます。",
             StageRole.Gambler => "保持したValuableを賭け、成功すると価格を倍増させ、失敗すると破壊します。",
             StageRole.Hunter => "武器のバッテリー消費を抑え、自分で倒した敵から追加オーブを獲得します。",
@@ -204,9 +205,9 @@ internal static class RoleGuideCatalog
             StageRole.Tuna => (
                 $"After a 5-second grace period, standing still for {Number(config.TunaStationaryDelaySeconds.Value)} seconds causes {config.TunaDamage.Value} damage every {Number(config.TunaDamageIntervalSeconds.Value)} seconds. " +
                 "Moving resets the timer and stops the damage, but does not restore lost health."),
-            StageRole.Musician => (
-                $"Each instrument note played by the Musician heals itself and living players within {Number(config.MusicianHealRadius.Value)} m for " +
-                $"{config.MusicianHealAmount.Value} HP. A vanilla musical valuable must be played by the Musician."),
+            StageRole.Musician => string.Format(CultureInfo.InvariantCulture, MusicianDescription,
+                Number(config.MusicianHealRadius.Value), config.MusicianHealAmount.Value,
+                Number(config.MusicianHealCooldownSeconds.Value), config.MusicianTotalHealingLimit.Value),
             StageRole.Mage => (
                 $"Type star, gravity, roll, void, or laser in chat to cast a vanilla attack for {config.MageStarHealthCost.Value}, {config.MageGravityHealthCost.Value}, " +
                 $"{config.MageRollHealthCost.Value}, {config.MageVoidHealthCost.Value}, or {config.MageLaserHealthCost.Value} HP. " +
@@ -331,9 +332,9 @@ internal static class RoleGuideCatalog
             StageRole.Tuna =>
                 $"ステージ開始から5秒の猶予後、{Number(config.TunaStationaryDelaySeconds.Value)}秒間静止すると、{Number(config.TunaDamageIntervalSeconds.Value)}秒ごとに{config.TunaDamage.Value}ダメージを受けます。" +
                 "移動するとタイマーとダメージが止まりますが、失ったHPは戻りません。",
-            StageRole.Musician =>
-                $"Musicianが楽器で音を鳴らすたびに、自分と半径{Number(config.MusicianHealRadius.Value)}m以内の生存中のプレイヤーを{config.MusicianHealAmount.Value}HP回復します。" +
-                "Musician自身がバニラの楽器Valuableを演奏する必要があります。",
+            StageRole.Musician => string.Format(CultureInfo.InvariantCulture, "楽器を演奏すると、自分と{0}m以内の生存中の仲間を{1}HP回復します。回復は全楽器共通で{2}秒に1回まで。自分と仲間を合わせ、1ステージで合計{3}HPまで回復できます。パンフルート・ハーモニカ・口琴は口元で演奏中に回復し、音を出していない間は回復しません。死亡・蘇生・役職変更でも残量はリセットされません。",
+                Number(config.MusicianHealRadius.Value), config.MusicianHealAmount.Value,
+                Number(config.MusicianHealCooldownSeconds.Value), config.MusicianTotalHealingLimit.Value),
             StageRole.Mage =>
                 $"チャットでstar、gravity、roll、void、laserと入力し、順に{config.MageStarHealthCost.Value}、{config.MageGravityHealthCost.Value}、{config.MageRollHealthCost.Value}、" +
                 $"{config.MageVoidHealthCost.Value}、{config.MageLaserHealthCost.Value}HPを消費してバニラ攻撃を発動します。共通クールダウンは{Number(config.MageCastIntervalSeconds.Value)}秒で、HP不足では発動しません。" +

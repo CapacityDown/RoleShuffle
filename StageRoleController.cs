@@ -96,6 +96,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
     private static readonly (StageRole Ability, string Message)[] ExhaustionMessages =
     {
         (StageRole.Medic, "MedicEmpty"),
+        (StageRole.Musician, "MusicEmpty"),
         (StageRole.Mage, "MageHealEmpty"),
         (StageRole.Mechanic, "RepairEmpty"),
         (StageRole.Electrician, "ChargeEmpty")
@@ -1463,6 +1464,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         return ability switch
         {
             StageRole.Medic => _medic.IsExhausted(assignment.SteamId),
+            StageRole.Musician => _musician.HealingUsed(assignment.SteamId) >= Mathf.Clamp(_config.MusicianTotalHealingLimit.Value, 1, 10000),
             StageRole.Mage => _config.MageAutoRecoveryEnabled.Value &&
                 assignment.MageAutoRecoveryUsed >= Mathf.Clamp(_config.MageAutoRecoveryTotalHealingLimit.Value, 1, 10000),
             StageRole.Mechanic => assignment.MechanicRepairPercentUsed > 0f &&
@@ -2473,71 +2475,29 @@ internal sealed partial class StageRoleController : MonoBehaviour
         return false;
     }
 
+    private readonly MusicianRoleRuntime _musician = new();
+
     internal void InstrumentNotePlayed(int grabberViewId)
     {
-        if (!_stageReady || !IsAuthority())
-        {
-            return;
-        }
+        if (_stageReady && IsAuthority()) InstrumentPlayed(ResolveInstrumentPlayer(grabberViewId));
+    }
 
-        PlayerAvatar? musician = ResolveInstrumentPlayer(grabberViewId);
-        if (musician == null)
-        {
-            return;
-        }
-        string musicianSteamId = PlayerIdentity.SteamId(musician);
-        bool assignedMusician = false;
+    internal void InstrumentPlayed(PlayerAvatar? musician)
+    {
+        if (!_stageReady || !IsAuthority() || musician == null || GameDirector.instance == null) return;
+        string steamId = PlayerIdentity.SteamId(musician);
         foreach (RoleAssignment assignment in _assignments)
         {
-            if (RoleCatalog.HasCapability(
-                    assignment.Role,
-                    StageRole.Musician) &&
+            if (RoleCatalog.HasCapability(assignment.Role, StageRole.Musician) &&
                 (ReferenceEquals(assignment.Player, musician) ||
-                 (!string.IsNullOrEmpty(musicianSteamId) &&
-                  string.Equals(
-                      assignment.SteamId,
-                      musicianSteamId,
-                      StringComparison.Ordinal))))
+                 (!string.IsNullOrEmpty(steamId) && string.Equals(assignment.SteamId, steamId, StringComparison.Ordinal))))
             {
-                assignedMusician = true;
-                musician = assignment.Player;
-                break;
+                _musician.Play(assignment.Player, assignment.SteamId, GameDirector.instance.PlayerList,
+                    _config.MusicianHealAmount.Value, _config.MusicianHealRadius.Value,
+                    _config.MusicianHealCooldownSeconds.Value, _config.MusicianTotalHealingLimit.Value);
+                return;
             }
         }
-        if (!assignedMusician || !PlayerState.IsLiving(musician))
-        {
-            return;
-        }
-
-        float radius = Mathf.Clamp(_config.MusicianHealRadius.Value, 1f, 50f);
-        float radiusSquared = radius * radius;
-        int healAmount = Mathf.Clamp(_config.MusicianHealAmount.Value, 1, 100);
-        int healedPlayers = 0;
-        if (GameDirector.instance == null)
-        {
-            return;
-        }
-        foreach (PlayerAvatar player in GameDirector.instance.PlayerList)
-        {
-            if (!PlayerState.IsLiving(player) ||
-                (player.transform.position - musician.transform.position).sqrMagnitude >
-                radiusSquared)
-            {
-                continue;
-            }
-            try
-            {
-                player.playerHealth?.HealOther(healAmount, true);
-                healedPlayers++;
-            }
-            catch (Exception exception)
-            {
-                StageRolesPlugin.ModLogger.LogDebug(
-                    $"Musician healing was skipped: {exception.Message}");
-            }
-        }
-        StageRolesPlugin.ModLogger.LogDebug(
-            $"Musician note healed {healedPlayers} player(s) for {healAmount} HP.");
     }
 
     private static PlayerAvatar? ResolveInstrumentPlayer(int grabberViewId)
@@ -2545,8 +2505,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
         try
         {
             PhysGrabber? grabber = null;
-            if (SemiFunc.IsMultiplayer() && grabberViewId >= 0)
+            if (SemiFunc.IsMultiplayer())
             {
+                if (grabberViewId < 0) return null;
                 PhotonView? view = PhotonView.Find(grabberViewId);
                 grabber = view != null ? view.GetComponent<PhysGrabber>() : null;
             }
@@ -3026,7 +2987,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         try
         {
-            if (UnityEngine.Object.FindObjectsByType<MusicalValuableLogic>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID).Length == 0)
+            if (!MusicianPatches.HasInstrumentContext())
             {
                 roles.Remove(StageRole.Musician);
             }
@@ -3232,6 +3193,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _dualWielder?.Stop();
         _notifier?.End();
         RoleHealingRuntime.Clear();
+        _musician.Clear();
         _bomber?.Stop();
         _medic?.Stop();
         _mage?.Stop();

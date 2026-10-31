@@ -5,7 +5,7 @@ using System.Text;
 
 namespace REPOJP.StageRoles;
 
-internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, TwinRest = 21, TwinDelivery, GhostHealing, PorterLoad, PorterUnload, PorterValue, Negotiation }
+internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, TwinRest = 21, TwinDelivery, GhostHealing, PorterLoad, PorterUnload, PorterValue, Negotiation, MusicianHealing }
 
 internal readonly struct AbilityValue(AbilityMetric metric, int remaining, int limit)
 {
@@ -90,7 +90,7 @@ internal static class RoleAbilityText
     {
         (string en, string ja) = metric switch
         {
-            AbilityMetric.Medic or AbilityMetric.GhostHealing => ("Healing", "回復"),
+            AbilityMetric.Medic or AbilityMetric.GhostHealing or AbilityMetric.MusicianHealing => ("Healing", "回復"),
             AbilityMetric.Rescuer => ("Revives", "蘇生"),
             AbilityMetric.Phoenix => ("Self revive", "自己蘇生"),
             AbilityMetric.MageRecovery => ("Recovery", "自動回復"),
@@ -156,7 +156,7 @@ internal static class RoleAbilityResources
     internal static bool IsResource(AbilityMetric metric) => metric is
         AbilityMetric.Medic or AbilityMetric.Rescuer or AbilityMetric.Phoenix or
         AbilityMetric.MageRecovery or AbilityMetric.Repair or AbilityMetric.Charge or
-        AbilityMetric.Wager or AbilityMetric.Contracts or AbilityMetric.TwinDelivery or AbilityMetric.GhostHealing or AbilityMetric.PorterLoad or AbilityMetric.Negotiation;
+        AbilityMetric.Wager or AbilityMetric.Contracts or AbilityMetric.TwinDelivery or AbilityMetric.GhostHealing or AbilityMetric.PorterLoad or AbilityMetric.Negotiation or AbilityMetric.MusicianHealing;
 
     internal static string Number(AbilityValue value, bool limit) => value.Metric == AbilityMetric.PorterLoad
         ? ((limit ? value.Limit : value.Remaining) / 10f).ToString("0.#", CultureInfo.InvariantCulture)
@@ -175,7 +175,7 @@ internal static class RoleAbilityResources
 
     internal static string Unit(AbilityMetric metric) => metric switch
     {
-        AbilityMetric.Medic or AbilityMetric.MageRecovery or AbilityMetric.GhostHealing => " HP",
+        AbilityMetric.Medic or AbilityMetric.MageRecovery or AbilityMetric.GhostHealing or AbilityMetric.MusicianHealing => " HP",
         AbilityMetric.Repair or AbilityMetric.Charge => "%",
         _ => string.Empty
     };
@@ -183,6 +183,7 @@ internal static class RoleAbilityResources
     internal static StageRole Emblem(AbilityMetric metric) => metric switch
     {
         AbilityMetric.Medic => StageRole.Medic,
+        AbilityMetric.MusicianHealing => StageRole.Musician,
         AbilityMetric.GhostHealing => StageRole.Ghost,
         AbilityMetric.Rescuer => StageRole.Rescuer,
         AbilityMetric.Phoenix => StageRole.Phoenix,

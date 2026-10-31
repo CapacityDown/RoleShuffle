@@ -13,6 +13,8 @@ internal static class AbilityConfigChecks
         var config = new StageRolesConfig(file);
         var cases = new (string Section, string Key, object Default, object Min, object Max)[]
         {
+            ("Musician", "HealCooldownSeconds", 1f, 0.1f, 30f),
+            ("Musician", "TotalHealingLimit", 1000, 1, 10000),
             ("Rigger", "EnemyDamageMultiplier", 2f, 1f, 10f),
             ("Rigger", "EnemyHoldDurationMultiplier", 1.5f, 1f, 3f),
             ("Rigger", "DurabilityConsumptionMultiplier", 0.5f, 0.1f, 1f),

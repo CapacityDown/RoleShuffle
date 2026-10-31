@@ -12,14 +12,16 @@ Upgrade items are removed from shops by default; roles grant temporary upgrades.
 
 ### Contact
 
-Questions, bugs and feedback: [GitHub Issues](https://github.com/CapacityDown/RoleShuffle/issues). GitHub account required.
+Feedback: [GitHub Issues](https://github.com/CapacityDown/RoleShuffle/issues). GitHub account required.
 
 ### Requirements
 
 - R.E.P.O. v0.5.0
-- BepInExPack 5.4.2305 or a later compatible version
-- REPOConfig 1.2.7 or a later compatible version
-- MenuLib 2.6.0 or a later compatible version
+- BepInExPack 5.4.2305
+- REPOConfig 1.2.7
+- MenuLib 2.6.0
+
+Later compatible MOD versions are also supported.
 
 ### Installation
 
@@ -34,7 +36,7 @@ Install with a mod manager or place `RoleShuffle.dll` in the profile's `BepInEx/
 
 ### Role selection and presets
 
-Open `ROLES` → `ROLE SETTINGS` in the lobby or Escape menu. Host toggles, including secrets, affect future assignments only and share MOD settings. Guests can view them if supported by the host.
+Lobby/Escape → `ROLES` → `ROLE SETTINGS`: host toggles, including secrets, share MOD settings and affect future assignments. Guests can view supported hosts’ settings.
 
 `PRESETS` replaces role switches only. Weights, abilities, balance, Base Upgrades and HUD settings stay. Weight 0 stays excluded. Manual selections show `Custom` and remain until applying a preset.
 
@@ -50,8 +52,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 
 ### Role command
 
-- Enter `/roles` in the in-game chat to announce only your assigned role name.
-- Vanilla participants can use this command when the host has RoleShuffle installed.
+- Chat `/roles` announces only your assigned role name; vanilla guests can also use it.
 - In shops, Negotiator holders can confirm their role. Otherwise, outside stages: `YourRole:Unavailable`.
 
 ### How roles are assigned
@@ -68,7 +69,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
 - `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, and `Twins` are not selected in single-player or a one-player session.
 - `Imitator` requires another active player with a copyable role.
-- By default, context roles need a suitable target: Musician, Engineer, Electrician and Rider need their corresponding objects; Sniper needs a gun or melee weapon; Brawler/DualWielder need melee weapons; Rigger needs a Human Adventure Cable. Weapon-like valuables and staffs do not satisfy weapon requirements.
+- Context roles normally require their objects: Musician/Engineer/Electrician/Rider; Sniper needs a gun or melee weapon, Brawler/DualWielder a melee weapon, Rigger a Human Adventure Cable. Weapon-like valuables and staffs do not count.
 - Leaving removes a player from the role list. Returning restores their role; new arrivals receive a role, upgrades and announcement.
 - Roles and effects end with the stage. They stay if revival cancels a failed-stage transition.
 
@@ -93,7 +94,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i15]<br>Vampire|Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50.|Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy.|Amount per tier, radius|
 |![][i16]<br>King|Crown; grants nearby allies Speed/Range +2 and up to Strength +5 within 12 m.|No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage.|Radius and bonus levels|
 |![][i17]<br>Tuna|After a 5-second grace period at stage start, standing still for 3 seconds causes 1 damage every 0.1 seconds until moving.|Can kill the player. The stationary timer starts after the initial grace period. Moving resets it immediately; lost health is not restored.|Delay, damage, interval|
-|![][i18]<br>Musician|Each instrument note played by the Musician heals the Musician and living players within 10 m for 5 HP.|Requires a vanilla musical valuable. By default, not randomly selected if none is present.|Amount, radius|
+|![][i18]<br>Musician|Playing heals self and living allies within 10 m for 5 HP. All instruments share a 1-second cooldown and 1000 HP stage budget.|Piano, Harp, Guitar, Banjo; Pan Flute, Harmonica and Mouth Harp while sounding at the mouth. Normally excluded without instruments. Death/role changes preserve the budget.|Amount, radius, cooldown, budget|
 |![][i19]<br>Mage|Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long.|Matching expressions cast spells; clearing them does not. Spells share a 3-second cooldown, require surviving the HP cost, and can harm players or valuables. The staff duration bonus excludes chat/expression casts and the Star Wand's instant attack.|Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit|
 |![][i20]<br>Gambler|A held valuable has a 50% chance to double its value; otherwise it breaks. Gambit: green heals 50 HP, red deals 100 damage, black kills, white fully heals and adds 5 Health levels for the stage.|One wager is available at a time and returns after extraction. Damaged valuables use their reduced value.|Win chance, win multiplier, Gambit green heal, red damage, white temporary Health levels|
 |![][i21]<br>Hunter|Weapons use 75% battery. Personal kills of orb-dropping enemies have a 10% chance of double drops and a 0.5% chance of 10 orbs. Every 5 qualifying kills guarantees at least 1 extra orb.|Random extras satisfy the guarantee. Count resets each stage. Only held/equipped weapons and confirmed personal kills qualify. Enhanced rewards affect extra-orb quality only.|Battery, orb chances/count, guarantee interval|
@@ -335,8 +336,10 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Tuna.StationaryDelaySeconds`|3|0.1–30|Seconds without movement before damage begins.|
 |`Tuna.Damage`|1|1–100|Damage per hit while stationary.|
 |`Tuna.DamageIntervalSeconds`|0.1|0.05–10|Seconds between stationary damage.|
-|`Musician.HealAmount`|5|1–100|Health restored to the Musician and each living player in range per instrument note.|
-|`Musician.HealRadius`|10|1–50|Maximum healing distance in meters from the Musician.|
+|`Musician.HealAmount`|5|1–100|HP per healing pulse per living recipient.|
+|`Musician.HealRadius`|10|1–50|Healing radius (m).|
+|`Musician.HealCooldownSeconds`|1|0.1–30|Healing interval (s), shared by all instruments.|
+|`Musician.TotalHealingLimit`|1000|1–10000|Self + allies per stage; remaining budget on HUD.|
 |`Mage.CastIntervalSeconds`|3|0.1–30|Minimum seconds between spell activations.|
 |`Mage.BeamDurationSeconds`|5|0.1–30|Laser spell duration in seconds. Held staff attacks are unchanged.|
 |`Mage.StarExpression`|`Angry`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|Facial expression that casts `star`.|
@@ -484,7 +487,7 @@ Elite Enemy Variants is optional and not required.
 
 RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘などの能力を付与。基礎アップグレードはステージ外でも維持され、ランの進行に応じて強化可能です。
 
-ゲームプレイ効果はホストだけの導入で利用でき、最大30人のセッションをサポートします。MODを導入していない参加者にも、役職、アップグレード、効果、バニラのチャット／TTS通知が適用されます。RoleShuffleを導入している参加者は、すべての役職を確認できるHUDも利用可能です。
+ホストのみの導入で最大30人に対応。未導入の参加者にも役職・アップグレード・効果・チャット／TTS通知が適用されます。導入済みの参加者は全員の役職を確認できるHUDも利用できます。
 
 デフォルトでは、役職による一時強化を中心にするため、ショップのアップグレードアイテム出現数は0です。
 
@@ -507,14 +510,14 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 - 役職の抽選とゲームプレイ設定はホストが管理します。
 - MOD未導入の参加者にも対応しており、RoleShuffleの導入は不要です。
-- MOD導入済みの参加者には全員の役職を確認できるHUDと、Escメニュー内のスクロール可能な`Roles`ページが表示されます。HUDの配置は各プレイヤーが個別に変更可能です。
+- 導入済みの参加者は役職HUDとEscメニューのスクロール可能な`Roles`ページを利用できます。HUD配置は個別に変更可能です。
 - MageとTricksterは表情の解除では能力を発動しません。ホスト自身のメニュー終了時の表情復帰も除外しますが、参加者のメニュー終了時に復帰した表情では能力が発動する場合があります。
 
 ### ロール選択とプリセット
 
-ロビーまたはEscメニューの`ROLES`から`ロール設定`を開くと、ホストが各ロールのON/OFFを切り替えられます。無効なロールや2種類のシークレットも一覧に残ります。変更はMOD設定と同じ`Enabled`へ保存され、途中参加者を含む次のロール抽選から反映されます。割当済みのロールは維持されます。参加者はホストの設定を閲覧できますが、変更はできません。情報を提供しない旧ホストでは未受信と表示。
+ロビー／Escメニューの`ROLES`→`ロール設定`で、ホストが各役職のON/OFFを変更できます。無効な役職とシークレットも表示。設定は`Enabled`に保存され、途中参加者を含む次の抽選から適用し、割当済みの役職は維持します。参加者は閲覧のみ可能で、非対応の旧ホストでは未受信と表示します。
 
-`プリセット`から遊び方を選んで適用すると、全ロールのON/OFFを置き換えます。抽選重み・能力値・バランスルール・Base Upgrade・HUD設定は保持します。重み0のロールはONでも抽選されません。個別に変更した組み合わせは`カスタム`と表示されます。既存の設定はプリセットを適用するまで変更されません。
+`プリセット`は全役職のON/OFFのみを置き換えます。重み・能力値・バランス・Base Upgrade・HUD設定は維持。重み0の役職はONでも抽選されません。個別設定は`カスタム`と表示され、プリセットを適用するまで維持されます。
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
@@ -571,7 +574,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i15]<br>Vampire|10 m以内で敵が死亡すると、Tier 1は5、Tier 2は10、Tier 3は50回復します。|敵のバニラDanger Levelを使用します。Elite Enemy Variants導入時にEnhanced報酬補正が有効なら、Enhanced個体を最大Tier 3まで1段階上として扱います。Vampireが生存し、死亡した敵の近くにいる必要があります。|Tier別回復量、範囲|
 |![][i16]<br>King|Crownと12mの強化範囲。味方へSpeed・Range各＋2、Strength最大＋5。|自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。|半径・追加レベル|
 |![][i17]<br>Tuna|ステージ開始時の5秒間の猶予後、3秒間停止すると、移動するまで0.1秒ごとに1ダメージを受けます。|死亡する可能性があります。停止時間の計測は最初の猶予後に始まります。動くと即座にリセットし、失った体力は回復しません。|停止時間、ダメージ、間隔|
-|![][i18]<br>Musician|Musicianが楽器で音を鳴らすたびに、本人を含む10 m以内の生存プレイヤーを5 HP回復します。|バニラの楽器系貴重品が必要です。デフォルトでは存在しない場合に抽選されません。|回復量、範囲|
+|![][i18]<br>Musician|演奏中、本人と10m以内の生存者を5HP回復。全楽器共通で1秒間隔、1ステージ合計1000HPまで。|ピアノ・ハープ・ギター・バンジョーに対応。パンフルート・ハーモニカ・口琴は口元で発音中に回復。楽器がなければ通常は抽選対象外。死亡・役職変更でも残量を維持。|回復量・範囲・間隔・上限|
 |![][i19]<br>Mage|チャットで`star`、`gravity`、`roll`、`void`、`laser`を入力するか、設定した表情を選択し、順に10、10、15、30、50 HPを消費してバニラ攻撃を発動します。10秒間ダメージを受けなければ、2秒ごとに1 HP回復します。自動回復は1ステージの累計120 HPまでです。保持した杖で発動する魔法の効果時間は1.3倍になります。|表情を解除して標準へ戻す操作では発動しません。全魔法で3秒のクールダウンを共有し、消費で死亡する場合は発動しません。攻撃はプレイヤーやValuableにも危険です。効果時間の延長はチャット・表情での魔法や、星杖の瞬間的な攻撃には適用しません。|魔法ごとの表情、発射クールダウン、魔法ごとのHP消費量、自動回復の有効化、待機時間、間隔、回復量、ステージごとの回復上限|
 |![][i20]<br>Gambler|持ったValuableは50%の確率で現在価格が2倍になり、失敗すると破壊されます。Gambitは緑で50 HP回復、赤で100ダメージ、黒で死亡、白で全回復してステージ中のHealthを5レベル増やします。|賭けは一度に1回だけ使用でき、納品後に復帰します。傷ついたValuableは低下後の価格を基準にします。|勝率、勝利倍率、Gambitの緑回復量、赤ダメージ、白の一時Healthレベル|
 |![][i21]<br>Hunter|武器のバッテリー消費は通常の75％。自分が倒したオーブを落とす敵は10％でオーブ2倍、0.5％で10個。対象の敵を5体倒すごとに追加オーブを最低1個保証。|抽選の追加分は保証分を兼ねます。撃破数はステージごとにリセット。本人が保持・装備する武器と、本人の撃破が対象。Enhanced報酬は追加オーブの品質だけに影響します。|バッテリー、オーブの確率・個数、保証間隔|
@@ -819,8 +822,10 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Tuna.StationaryDelaySeconds`|3|0.1～30|停止してからダメージが始まるまでの秒数。|
 |`Tuna.Damage`|1|1～100|停止中に1回ごとに受けるダメージです。|
 |`Tuna.DamageIntervalSeconds`|0.1|0.05～10|停止中にダメージを受ける間隔です。|
-|`Musician.HealAmount`|5|1～100|楽器で音を鳴らすたびに、本人と範囲内の各生存プレイヤーを回復する量です。|
-|`Musician.HealRadius`|10|1～50|Musicianから回復可能な最大距離。単位はメートルです。|
+|`Musician.HealAmount`|5|1～100|1回につき生存者1人を回復するHP。|
+|`Musician.HealRadius`|10|1～50|回復範囲（m）。|
+|`Musician.HealCooldownSeconds`|1|0.1～30|全楽器共通の回復間隔（秒）。|
+|`Musician.TotalHealingLimit`|1000|1～10000|1ステージの合計回復HP。本人と味方で共用。HUDに残量を表示。|
 |`Mage.CastIntervalSeconds`|3|0.1～30|魔法発動の最短間隔です。|
 |`Mage.BeamDurationSeconds`|5|0.1～30|ビーム魔法の継続秒数。手持ちの杖には適用しません。|
 |`Mage.StarExpression`|`Angry`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`star`を発動する表情です。|

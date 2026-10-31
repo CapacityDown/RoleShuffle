@@ -526,9 +526,14 @@ Check(RoleAbilityText.Format(new[] { new AbilityValue(AbilityMetric.RoyalSupport
 
 var metrics = new[] { new AbilityValue(AbilityMetric.Medic, 90, 150), new AbilityValue(AbilityMetric.MageCooldown, 2, 0) };
 var resources = new[] { AbilityMetric.Medic, AbilityMetric.Rescuer, AbilityMetric.Phoenix,
-    AbilityMetric.MageRecovery, AbilityMetric.Repair, AbilityMetric.Charge, AbilityMetric.Wager, AbilityMetric.Contracts, AbilityMetric.TwinDelivery, AbilityMetric.GhostHealing, AbilityMetric.PorterLoad, AbilityMetric.Negotiation };
+    AbilityMetric.MageRecovery, AbilityMetric.Repair, AbilityMetric.Charge, AbilityMetric.Wager, AbilityMetric.Contracts, AbilityMetric.TwinDelivery, AbilityMetric.GhostHealing, AbilityMetric.PorterLoad, AbilityMetric.Negotiation, AbilityMetric.MusicianHealing };
 foreach (AbilityMetric metric in Enum.GetValues<AbilityMetric>())
     Check(RoleAbilityResources.IsResource(metric) == resources.Contains(metric), "Budgets and cargo weight use the resource HUD");
+Check((int)AbilityMetric.Negotiation == 27 && (int)AbilityMetric.MusicianHealing == 28, "New Musician metric preserves existing wire IDs");
+var musicStatus = new AbilitySnapshot("music", StageRole.Musician, StageRole.Musician,
+    new[]{ new AbilityValue(AbilityMetric.MusicianHealing, 987, 1000) });
+Check(RoleAbilityCodec.Decode(RoleAbilityCodec.Encode(new[]{musicStatus}))["music"].Values.Single().Remaining == 987,
+    "Musician stage budget survives status wire");
 var allMetrics = Enum.GetValues<AbilityMetric>().Select(m => new AbilityValue(m, 0, 0)).ToArray();
 Check(RoleAbilityResources.ForHud(allMetrics).Count == resources.Length + 3 && RoleAbilityResources.ForHud(allMetrics).Any(v => v.Metric == AbilityMetric.GhostHealing), "Budgets and cargo plus Twin rest and unload timers");
 Check(RoleAbilityResources.Number(new AbilityValue(AbilityMetric.PorterLoad, 75, 150), false) == "7.5" &&

@@ -62,6 +62,11 @@ internal static class RoleResourceSymbols
         }
         switch (metric)
         {
+            case AbilityMetric.MusicianHealing:
+                Circle(6,19,3.5f); Circle(18,16,3.5f);
+                Line(9,19,9,5,2.8f); Line(21,16,21,2.5f,2.8f);
+                Fill(7.6f,4,22.4f,1,22.4f,6,7.6f,9);
+                break;
             case AbilityMetric.Negotiation:
                 Line(4,4,15,4,2.4f); Line(15,4,22,12,2.4f); Line(22,12,12,22,2.4f);
                 Line(12,22,4,14,2.4f); Line(4,14,4,4,2.4f); Circle(8,8,1.5f);
