@@ -1,6 +1,6 @@
 {
   "generationMode": "Built-in image_gen",
-  "count": 46,
+  "count": 47,
   "format": "Original opaque PNGs with near-black exterior; Courier and Influenza use native transparent alpha",
   "status": "46 role emblems integrated",
   "references": {
@@ -38,7 +38,8 @@
         "Electrician",
         "Warden",
         "Bodyguard",
-        "Porter"
+        "Porter",
+        "Rigger"
       ]
     ],
     [
@@ -522,6 +523,14 @@
       "category": "Combat",
       "background": "#80451F",
       "prompt": "Create one production-ready role emblem for a R.E.P.O. mod role \"DualWielder\". No lettering or text anywhere. Use the two attached existing approved icons solely as visual/style/anatomy references, not edit targets. Square 1024x1024 raster, centered full badge, true transparent exterior. Preserve their exact design language: tall pointy hexagonal badge with thin dark outline and thick warm cream edging, flat solid colors, smooth clean dark outlines, minimal shading, no grain, mosaic, blur, gradients or realistic rendering. Interior background is Combat category solid #80451F. A single cream Semibot in the center, with dome head, two protruding round eyes above a horizontal mouth slit, clearly visible shallow cylindrical jaw/neck band, short cylinder torso, two small tapering cone legs. Short tapered arms attach just below the neck band, with NO human elbows, hands, fingers or wrists. Role action: the Semibot is wielding two identical orange-red baseball bats, one on each side, visibly separated in a strong symmetric V-shaped ready stance. Keep both eyes and the entire neck band unobstructed. Two bats exactly, same size and appearance. No third weapon, no shield, no floating symbols, no extra character. Fill the badge for readability at 64px. Match reference line weight, cream color and flat editorial cartoon style. Exterior must be alpha transparent; the brown interior must remain opaque.",
+      "method": "Built-in image_gen; native alpha preserved, background normalized with existing region-mask tool."
+    },
+    {
+      "role": "Rigger",
+      "file": "45-Rigger.png",
+      "category": "Support",
+      "background": "#24563E",
+      "prompt": "Use case: stylized-concept. Asset type: one production RoleShuffle role emblem, Rigger, for a R.E.P.O. mod. Square 1024x1024 badge. Tall pointed-top pointed-bottom hexagonal badge with thick warm cream edging and a thin dark contour, true transparent alpha outside the hexagon only. Flat uniform Support category green #24563E inside. The original R.E.P.O. Semibot anatomy: a cream dome head with two protruding circular eyes above a thin horizontal mouth slit; visibly distinct shallow cylindrical jaw/neck band below the mouth; short cylindrical torso, two short conical legs. Arms are short single-piece tapered cones attached high directly below the jaw band, no fingers, hands, elbows or human joints. A single cream Semibot holding a simple orange-brown cable handle in one short arm, with one thick orange cable making a clear big loop in front and to the side of its body, evoking a tether/lasso used to restrain monsters. Keep eyes and jaw/neck band fully visible. No second character, no enemy, no tools beyond this handle and one cable loop. Flat smooth color blocks, crisp dark fine outlines, minimal two-tone shading, cream body, simple cartoon drawing, generous silhouette readable at 64 px. Match a restrained existing cream-robot hexagonal badge set, not a glossy or realistic robot. No text, lettering, numbers, watermark, particles, glow, mosaic, grain, gradient or photorealism. The green interior and all illustration remain opaque; only outside hexagonal border is transparent.",
       "method": "Built-in image_gen; native alpha preserved, background normalized with existing region-mask tool."
     }
   ],
