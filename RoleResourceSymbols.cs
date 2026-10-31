@@ -62,6 +62,11 @@ internal static class RoleResourceSymbols
         }
         switch (metric)
         {
+            case AbilityMetric.Negotiation:
+                Line(4,4,15,4,2.4f); Line(15,4,22,12,2.4f); Line(22,12,12,22,2.4f);
+                Line(12,22,4,14,2.4f); Line(4,14,4,4,2.4f); Circle(8,8,1.5f);
+                Line(15,10,15,16,2.2f); Fill(11,14,15,18,19,14);
+                break;
             case AbilityMetric.PorterValue:
                 RoundedFrame(2,6,21,13,2);
                 Circle(12.5f,12.5f,3.1f);

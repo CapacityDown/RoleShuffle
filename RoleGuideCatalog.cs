@@ -5,6 +5,10 @@ namespace REPOJP.StageRoles;
 
 internal static class RoleGuideCatalog
 {
+    internal const string NegotiatorSummary = "Grants one guaranteed discount in the next shop. Present the item to the Shopkeeper yourself.";
+    internal const string NegotiatorDescription = "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or role changes do not remove the right; it cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.";
+    private const string NegotiatorSummaryJapanese = "次のショップで1回、必ず値引きに成功します。本人が商品を店主に見せて交渉します。";
+    private const string NegotiatorDescriptionJapanese = "次のショップで使える交渉権を1回分獲得します。本人が商品を店主に見せると、拒否による破損を起こさず、通常の交渉成功時と同じ値引きを受けられます。全員共通の交渉回数は消費しません。死亡や役職変更では消えませんが、蓄積はできず、そのショップを出ると失効します。中断した交渉では消費しません。ショップでも役職と残り回数を確認できます。";
     internal const string TwinsSummary = "Two teammates share one HP pool and infection. Cooperate to carry, rest, reunite and earn delivery bonuses.";
     private const string RevivalStillnessDescription = " Revival waits until the Death Head has stopped moving.";
     private const string PhoenixWaitDescription = " An unused revival prevents game over, regardless of how long the wait takes.";
@@ -49,6 +53,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaSummary,
             StageRole.Twins => TwinsSummary,
+            StageRole.Negotiator => NegotiatorSummary,
             StageRole.Rigger => "The Human Adventure Cable restrains enemies longer and consumes less durability.",
             StageRole.DualWielder => "A second melee weapon follows your swings with a short delay.",
             StageRole.Porter => "Stores small valuables for hands-free transport. Capacity is limited by total weight; enemy hits spill cargo and unloading takes time.",
@@ -102,6 +107,7 @@ internal static class RoleGuideCatalog
         {
             StageRole.Influenza => InfluenzaSummaryJapanese,
             StageRole.Twins => "2人1組でHPと感染を共有します。一緒に運ぶ・休む・合流する・納品することで能力を発揮します。",
+            StageRole.Negotiator => NegotiatorSummaryJapanese,
             StageRole.Rigger => "Human Adventure Cableで敵を長く拘束でき、耐久度の消費も減ります。",
             StageRole.DualWielder => "近接武器を持つと、少し遅れて同じ動きをする2本目の武器が現れます。",
             StageRole.Porter => "小さな貴重品を収納し、手ぶらで運びます。総重量に上限があり、敵からの被弾で荷物を落とし、荷下ろしには時間がかかります。",
@@ -165,6 +171,7 @@ internal static class RoleGuideCatalog
             StageRole.Twins => TwinsDescription(config, false),
             StageRole.Porter => PorterDescription(config, false),
             StageRole.DualWielder => DualWielderDescription(config, false),
+            StageRole.Negotiator => NegotiatorDescription,
             StageRole.Rigger => RiggerDescription(config, false),
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
@@ -278,6 +285,7 @@ internal static class RoleGuideCatalog
             StageRole.Twins => TwinsDescription(config, true),
             StageRole.Porter => PorterDescription(config, true),
             StageRole.DualWielder => DualWielderDescription(config, true),
+            StageRole.Negotiator => NegotiatorDescriptionJapanese,
             StageRole.Rigger => RiggerDescription(config, true),
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",

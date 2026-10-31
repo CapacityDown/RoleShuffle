@@ -57,20 +57,29 @@ internal static class RoleAssignmentSync
 
     internal static void Publish(IReadOnlyList<RoleAssignment> assignments)
     {
-        List<string> records = new();
+        List<RoleSnapshot> roles = new();
         foreach (RoleAssignment assignment in assignments)
+            roles.Add(new RoleSnapshot(assignment.SteamId, PlayerIdentity.Name(assignment.Player),
+                assignment.AssignedRole, assignment.Role));
+        PublishSnapshots(roles);
+    }
+
+    internal static void PublishSnapshots(IReadOnlyList<RoleSnapshot> roles)
+    {
+        List<string> records = new();
+        foreach (RoleSnapshot role in roles)
         {
-            if (!string.IsNullOrEmpty(assignment.SteamId))
-            {
-                string playerName = PlayerIdentity.Name(assignment.Player);
-                string encodedName = Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes(playerName ?? string.Empty));
-                records.Add(
-                    $"{assignment.SteamId},{RoleWireId.Encode(assignment.AssignedRole)}," +
-                    $"{RoleWireId.Encode(assignment.Role)},{encodedName}");
-            }
+            if (string.IsNullOrEmpty(role.SteamId)) continue;
+            string encodedName = Convert.ToBase64String(Encoding.UTF8.GetBytes(role.PlayerName ?? string.Empty));
+            records.Add($"{role.SteamId},{RoleWireId.Encode(role.Role)},{RoleWireId.Encode(role.EffectiveRole)},{encodedName}");
         }
-        _localRoleMap = string.Join(";", records);
+        string payload = string.Join(";", records);
+        bool unchanged = payload == _localRoleMap;
+        _localRoleMap = payload;
+        if (unchanged && (!SemiFunc.IsMultiplayer() ||
+            (PhotonNetwork.CurrentRoom != null &&
+             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(RoleMapKey, out object existing) &&
+             existing is string text && text == payload))) return;
 
         if (SemiFunc.IsMultiplayer() && PhotonNetwork.IsMasterClient &&
             PhotonNetwork.CurrentRoom != null)

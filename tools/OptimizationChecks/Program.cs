@@ -232,3 +232,18 @@ Console.WriteLine($"PASS: {assertions} assertions.");
 Console.WriteLine($"5000 reads, 30 assignments: cached {assignmentCached:N0} bytes; forced reparse {assignmentCold:N0} bytes.");
 Console.WriteLine($"5000 guide signatures (stub role text): cached {guideCached:N0} bytes; forced regeneration {guideCold:N0} bytes.");
 Console.WriteLine("These checks do not simulate Unity frame time, network transport, or live multiplayer.");
+
+RoleAssignmentSync.ClearPreview();
+SemiFunc.Multiplayer = true; PhotonNetwork.IsMasterClient = true;
+PhotonNetwork.CurrentRoom = new TestRoom();
+var shopRoles = new[] { new RoleSnapshot("negotiator", "交渉担当", StageRole.Negotiator, StageRole.Negotiator) };
+RoleAssignmentSync.PublishSnapshots(shopRoles);
+int shopWrites = PhotonNetwork.CurrentRoom.Writes;
+RoleAssignmentSync.PublishSnapshots(shopRoles);
+Check(PhotonNetwork.CurrentRoom.Writes == shopWrites, "Unchanged shop map does not repeat room writes");
+Check(RoleAssignmentSync.Read().Single().EffectiveRole == StageRole.Negotiator, "Negotiator shop role round trip");
+PhotonNetwork.CurrentRoom = new TestRoom();
+RoleAssignmentSync.PublishSnapshots(shopRoles);
+Check(PhotonNetwork.CurrentRoom.Writes == 1, "Same map is published after changing rooms");
+RoleAssignmentSync.Clear();
+Console.WriteLine("PASS: Negotiator shop snapshots and unchanged-payload network suppression.");

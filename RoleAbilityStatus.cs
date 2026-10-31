@@ -5,7 +5,7 @@ using System.Text;
 
 namespace REPOJP.StageRoles;
 
-internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, TwinRest = 21, TwinDelivery, GhostHealing, PorterLoad, PorterUnload, PorterValue }
+internal enum AbilityMetric { Medic, Rescuer, Phoenix, MageRecovery, MageCooldown, Repair, Charge, King, Contracts, Grace, Carry, CloudDistance, DecoyActive, DecoyCooldown, DiveActive, DiveCooldown, Wager, Avenger, GrenadeDistance, RoyalSupport, TwinRest = 21, TwinDelivery, GhostHealing, PorterLoad, PorterUnload, PorterValue, Negotiation }
 
 internal readonly struct AbilityValue(AbilityMetric metric, int remaining, int limit)
 {
@@ -114,6 +114,7 @@ internal static class RoleAbilityText
             AbilityMetric.PorterLoad => ("Cargo weight", "収納重量"),
             AbilityMetric.PorterUnload => ("Unloading", "荷下ろし"),
             AbilityMetric.PorterValue => ("Cargo value", "収納金額"),
+            AbilityMetric.Negotiation => ("Negotiations", "交渉"),
             _ => ("Revenge", "復讐")
         };
         return RoleText.Get(en, language, ja);
@@ -155,7 +156,7 @@ internal static class RoleAbilityResources
     internal static bool IsResource(AbilityMetric metric) => metric is
         AbilityMetric.Medic or AbilityMetric.Rescuer or AbilityMetric.Phoenix or
         AbilityMetric.MageRecovery or AbilityMetric.Repair or AbilityMetric.Charge or
-        AbilityMetric.Wager or AbilityMetric.Contracts or AbilityMetric.TwinDelivery or AbilityMetric.GhostHealing or AbilityMetric.PorterLoad;
+        AbilityMetric.Wager or AbilityMetric.Contracts or AbilityMetric.TwinDelivery or AbilityMetric.GhostHealing or AbilityMetric.PorterLoad or AbilityMetric.Negotiation;
 
     internal static string Number(AbilityValue value, bool limit) => value.Metric == AbilityMetric.PorterLoad
         ? ((limit ? value.Limit : value.Remaining) / 10f).ToString("0.#", CultureInfo.InvariantCulture)

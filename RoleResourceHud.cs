@@ -37,7 +37,7 @@ internal sealed class RoleResourceHud : MonoBehaviour
             !RoleHudEditor.IsOpen && RunManager.instance != null && GameManager.instance != null &&
             PlayerController.instance != null && HealthUI.instance != null && EnergyUI.instance != null &&
             HUD.instance != null && !HUD.instance.hidden && !HealthUI.instance.isHidden &&
-            SemiFunc.RunIsLevel() && PlayerState.IsLiving(SemiFunc.PlayerGetLocal());
+            (SemiFunc.RunIsLevel() || SemiFunc.RunIsShop()) && PlayerState.IsLiving(SemiFunc.PlayerGetLocal());
         if (!visible)
         {
             if (_root != null) _root.SetActive(false);

@@ -503,6 +503,7 @@ internal sealed class RoleTestCommandService : MonoBehaviour
 
     private static bool TryParseRole(string value, out StageRole role)
     {
+        if (string.Equals(value, "交渉人", StringComparison.Ordinal)) { role = StageRole.Negotiator; return true; }
         if (string.Equals(value, "捕縛師", StringComparison.Ordinal)) { role = StageRole.Rigger; return true; }
         if (string.Equals(value, "二刀流", StringComparison.Ordinal)) { role = StageRole.DualWielder; return true; }
         if (string.Equals(value, "Courier", StringComparison.OrdinalIgnoreCase))

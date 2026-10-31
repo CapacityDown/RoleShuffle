@@ -62,6 +62,9 @@
     <Compile Include="DualWielderHistory.cs" />
     <Compile Include="DualWielderRuntime.cs" />
     <Compile Include="RiggerRuntime.cs" />
+    <Compile Include="NegotiatorState.cs" />
+    <Compile Include="NegotiatorRuntime.cs" />
+    <Compile Include="NegotiatorPatches.cs" />
     <Compile Include="PorterSpeed.cs" />
     <Compile Include="PrivatePlayerSpeech.cs" />
     <Compile Include="RoleGuidePresentation.cs" />

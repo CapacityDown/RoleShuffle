@@ -4,7 +4,7 @@
 
 ### Overview
 
-RoleShuffle assigns stage-long movement, healing, combat and other roles. Base Upgrades persist between stages and can grow during the run.
+RoleShuffle assigns stage roles. Base Upgrades persist and can grow between stages.
 
 Supports up to 30 players with only the host installed. Vanilla guests receive roles, upgrades, effects and chat/TTS notices. Installed guests also get the role HUD.
 
@@ -40,9 +40,9 @@ Open `ROLES` → `ROLE SETTINGS` in the lobby or Escape menu. Host toggles, incl
 
 |Preset|Enabled roles|Play style|
 |---|---|---|
-|Standard|47|Every role, including both secret roles; restores the default ON/OFF selection.|
+|Standard|48|Every role, including both secret roles; restores the default ON/OFF selection.|
 |Beginner|20|Upgrades, recovery and protection; Porter. Excludes passive hazards and Hardship.|
-|Cooperative|19|Team support, healing, repairs and shared survival; Twins/Porter.|
+|Cooperative|20|Team support, healing, repairs and shared survival; Twins/Porter.|
 |Chaos|16|Explosions, magic, gambles and unpredictable effects; Twins.|
 |Challenge|17|Risky and specialized roles without dedicated healing or revival roles.|
 
@@ -52,7 +52,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 
 - Enter `/roles` in the in-game chat to announce only your assigned role name.
 - Vanilla participants can use this command when the host has RoleShuffle installed.
-- Outside an active stage, the response is `YourRole:Unavailable`.
+- In shops, Negotiator holders can confirm their role. Otherwise, outside stages: `YourRole:Unavailable`.
 
 ### How roles are assigned
 
@@ -61,14 +61,14 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 - `General.UniqueRoles = true` avoids duplicates until all eligible roles have been used.
 - `King` is assigned to at most one player per stage.
 - Showcase and Support groups have configurable minimum assignments by party size; see Role balance.
-- Default minimums: Showcase and Support each reach four at 24 players. Danger maximum: one, two at 8 players, three at 16. Hardship maximum: one, two at 12. Parties of four or fewer get at most one role across both risk groups. Influencer is Showcase, outside Danger.
+- Party-size limits are listed under Role balance. Small parties receive fewer hazardous roles.
 - Roles in a player's last five assignments use half weight for that player; others' histories have no effect.
 - No consecutive repeat roles. After `Courier`, `Tuna`, or `Influenza`, that player avoids all three for two stages. Restrictions relax only as needed to assign everyone a role.
 - `Jumper`, `Launcher`, `Climber`, and `Flyer` are excluded from random assignment whenever any matching base upgrade target is equal to or higher than that role's configured target, including increases from truck draws.
 - `Influencer` is excluded from random assignment when none of the upgrade targets reachable with the current party size exceed the current Base Upgrades.
 - `Tracker`, `Ghost`, `Medic`, `Courier`, `Rescuer`, `Influencer`, `Werewolf`, `Bodyguard`, `Imitator`, `Avenger`, `Influenza`, and `Twins` are not selected in single-player or a one-player session.
 - `Imitator` requires another active player with a copyable role.
-- By default, context-dependent roles are excluded when their ability has no usable target. This includes `Musician`, `Engineer`, `Electrician`, and `Rider` when their required object is absent, `Sniper` when neither a melee weapon nor a gun is available, and `Brawler` or `DualWielder` when no melee weapon is available. Weapon-like valuables do not count as weapons for these roles' assignment, and staffs do not count for Sniper assignment.
+- By default, context roles need a suitable target: Musician, Engineer, Electrician and Rider need their corresponding objects; Sniper needs a gun or melee weapon; Brawler/DualWielder need melee weapons; Rigger needs a Human Adventure Cable. Weapon-like valuables and staffs do not satisfy weapon requirements.
 - Leaving removes a player from the role list. Returning restores their role; new arrivals receive a role, upgrades and announcement.
 - Roles and effects end with the stage. They stay if revival cancels a failed-stage transition.
 
@@ -121,6 +121,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i43]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In delivery areas or aboard a cart, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
 |![][i44]<br>DualWielder|Holding a melee weapon alone creates a matching weapon 0.5 m left, repeating its movement and attacks 0.3 s later. Both share and consume battery/durability.|Copy disappears on release, switching, death or role change. Cannot be picked up or kept. Excluded without melee weapons.|Delay, left offset|
 |![][i45]<br>Rigger|Human Adventure Cable restrains enemies 1.5x as long and uses 50% durability on hits and throws.|Automatic. Player restraint and damage unchanged. Normally excluded without a cable. Included in Standard, Cooperative and Challenge.|Hold duration, durability cost|
+|![][i46]<br>Negotiator|One guaranteed negotiation in the next shop. Present a shop item to the Shopkeeper yourself for the normal successful discount, without rejection damage or spending shared attempts.|Persists through death/role changes. No stacking; expires after that shop. Interrupted attempts are free. Role and remaining use appear in the shop; `/roles` and an entry announcement also identify the holder. Standard/Cooperative.|Selection settings only|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -200,7 +201,7 @@ All settings are available through REPOConfig. Host-controlled settings affect t
 
 #### Role balance
 
-Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, `Porter`, and `Rigger`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
+Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, `Rider`, `Influencer`, and `Diver`. Support roles are `Medic`, `Rescuer`, `Mechanic`, `Electrician`, `Warden`, `Bodyguard`, `Porter`, `Rigger`, and `Negotiator`. Danger roles are `Bomber`, `Stinker`, `Werewolf`, and `Influenza`; Hardship roles are `Courier`, `Tuna`, and `Influenza`. Influencer is not a Danger role. If these rules leave no eligible role, RoleShuffle gradually loosens the limits so every player can still receive a role.
 
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
@@ -517,9 +518,9 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
-|標準|47|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
+|標準|48|シークレットを含む全ロール。初期状態のON/OFF構成へ戻します。|
 |初心者向け|20|基本強化・回復・防御。Porterを含み、自動加害役・ハンデ役は除外。|
-|協力重視|19|チーム支援・回復・修理・共有生存。Twins・Porterを含む。|
+|協力重視|20|チーム支援・回復・修理・共有生存。Twins・Porterを含む。|
 |カオス|16|爆発・魔法・ギャンブルなど予測しづらい展開。Twinsを含む。|
 |高難度|17|専用の回復・蘇生役を外し、リスクのある特化型ロールで挑みます。|
 
@@ -529,7 +530,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 - ゲーム内チャットで`/roles`を入力すると、自分に割り当てられた役職名だけを通知します。
 - ホストがRoleShuffleを導入していれば、MOD未導入の参加者も使用可能です。
-- ステージ外では`YourRole:Unavailable`と応答します。
+- ショップでもNegotiatorの担当者は役職を確認できます。それ以外のステージ外では`YourRole:Unavailable`と応答します。
 
 ### 役職の抽選
 
@@ -598,6 +599,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i43]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所・カート上で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
 |![][i44]<br>DualWielder|近接武器を1人で持つと左0.5mに同じ武器が現れ、動きと攻撃を0.3秒遅れで再現。電池・耐久度は共有し、2本目の命中分も消費。|手放す・持ち替え・死亡・役職変更で消滅。持ち帰り不可。近接武器がなければ抽選対象外。|遅延、左への距離|
 |![][i45]<br>Rigger|Human Adventure Cableで敵を拘束できる時間が1.5倍、命中・投げの耐久消費が50％に。|通常操作で自動発動。プレイヤーの拘束時間・ダメージは変更なし。ケーブルがなければ通常抽選から除外。Standard・Cooperative・Challengeに含まれます。|拘束時間倍率、耐久消費倍率|
+|![][i46]<br>Negotiator|次のショップで1回、本人が商品を店主に見せると必ず値引き。拒否による破損を起こさず、通常の成功時と同じ値引きを受けます。共通の交渉回数は消費しません。|死亡・役職変更後も保持。蓄積不可で、そのショップを出ると失効。中断時は消費なし。ショップでも役職・残数を表示し、入店時の通知と`/roles`でも確認できます。Standard・Cooperativeに含まれます。|抽選設定のみ|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -679,7 +681,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 この表はすべてホスト設定。
 
-Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Porter`、`Rigger`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
+Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`、`Rider`、`Influencer`、`Diver`です。Support役は`Medic`、`Rescuer`、`Mechanic`、`Electrician`、`Warden`、`Bodyguard`、`Porter`、`Rigger`、`Negotiator`です。Danger役は`Bomber`、`Stinker`、`Werewolf`、`Influenza`、Hardship役は`Courier`、`Tuna`、`Influenza`です。InfluencerはDanger役ではありません。これらの条件で割り当て可能な役職がなくなる場合は、全員に役職を割り当てられるまで制限を段階的に緩和します。
 
 |キー|デフォルト|範囲・値|内容|
 |---|---:|---|---|
@@ -1010,3 +1012,4 @@ Elite Enemy Variantsは任意の対応MODであり、RoleShuffleの必須MODで�
 [i43]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c5c96682f06f981c33c897d7c74c4111d04d37cb/docs/icons/43.png
 [i44]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/c5c96682f06f981c33c897d7c74c4111d04d37cb/docs/icons/44.png
 [i45]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/ea93c5885f8e462c0af8e5196a5ebe510de043d9/docs/icons/45.png
+[i46]: https://raw.githubusercontent.com/CapacityDown/RoleShuffle/598b87aa9a19793afa49b4ca7b809d17b19aeefd/docs/icons/46.png

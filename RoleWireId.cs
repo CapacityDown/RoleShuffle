@@ -10,6 +10,7 @@ internal static class RoleWireId
         StageRole.Porter => 43,
         StageRole.DualWielder => 44,
         StageRole.Rigger => 45,
+        StageRole.Negotiator => 46,
         _ => (int)role
     };
 
@@ -20,6 +21,7 @@ internal static class RoleWireId
         43 => StageRole.Porter,
         44 => StageRole.DualWielder,
         45 => StageRole.Rigger,
+        46 => StageRole.Negotiator,
         _ => (StageRole)value
     };
 }

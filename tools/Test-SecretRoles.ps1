@@ -62,8 +62,11 @@ __PARSE__
         Check(TryParseRole("???2",out parsed) && parsed==StageRole.Disaster,"command secret alias 2");
         Check(TryParseRole("Disaster",out parsed) && parsed==StageRole.Disaster,"command real name");
         Check(!TryParseRole("999",out parsed) && !TryParseRole("1000",out parsed),"old IDs no longer assigned");
-        Check(!TryParseRole("46",out parsed) && !TryParseRole("47",out parsed),"hidden roles have no ordinary numeric alias");
+        Check(!TryParseRole("47",out parsed) && !TryParseRole("48",out parsed),"hidden roles have no ordinary numeric alias");
         Check(TryParseRole("43",out parsed) && parsed==StageRole.Porter,"Porter compact ID");
+        Check(TryParseRole("46",out parsed) && parsed==StageRole.Negotiator,"Negotiator compact ID");
+        Check(TryParseRole("交渉人",out parsed) && parsed==StageRole.Negotiator,"Negotiator alias");
+        Check(RoleCatalog.CanBeCopiedByImitator(StageRole.Negotiator),"Negotiator copy supported with once-per-stage entitlement");
         Check(TryParseRole("45",out parsed) && parsed==StageRole.Rigger,"Rigger compact ID");
         Check(TryParseRole("Rigger",out parsed) && parsed==StageRole.Rigger,"Rigger name");
         Check(TryParseRole("捕縛師",out parsed) && parsed==StageRole.Rigger,"Rigger alias");

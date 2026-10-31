@@ -668,7 +668,7 @@ internal sealed class RoleHud : MonoBehaviour
     {
         try
         {
-            return SemiFunc.RunIsLevel() &&
+            return SemiFunc.RunIsShop() || SemiFunc.RunIsLevel() &&
                    !SemiFunc.RunIsLobby() &&
                    !SemiFunc.RunIsShop() &&
                    !SemiFunc.RunIsArena() &&

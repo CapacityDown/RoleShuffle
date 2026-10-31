@@ -127,7 +127,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _eventRoles = new EventRoleRuntime(this, config);
         _diver = new DiverRoleRuntime(config);
         _overhaul = new RoleOverhaulRuntime(config);
-        _notifier = new RoleNotifier(this, config);
+        _notifier = new RoleNotifier(StageRolesPlugin.Instance, config);
         _tracker = new TrackerRoleRuntime(config, _notifier);
         _porter = new PorterRuntime(config);
         _dualWielder = new DualWielderRuntime(config);
@@ -156,6 +156,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         }
         StageEndingInternal(restoreBaseUpgrades: true, deactivate: false);
         _stageReady = true;
+        StageRolesPlugin.Instance.Negotiator.BeginStage();
         _assignmentsInitialized = false;
         _tunaStageGraceUntil = Time.time + TunaStageStartGraceSeconds;
         _levelGeneratorInstanceId = instanceId;
@@ -947,6 +948,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _eventRoles.Begin(_assignments);
         _diver.Begin(_assignments);
         ApplyKingCrown();
+        StageRolesPlugin.Instance.Negotiator.Capture(_assignments);
         RoleAssignmentSync.Publish(_assignments);
         BeginTwins();
     }
@@ -1221,7 +1223,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         string response = requesterAssignment != null
             ? $"YourRole:{RoleCatalog.AssignmentName(requesterAssignment.AssignedRole, requesterAssignment.Role)}"
-            : "YourRole:Unavailable";
+            : StageRolesPlugin.Instance.Negotiator.HasShopRole(requester)
+                ? "YourRole:Negotiator" : "YourRole:Unavailable";
         _notifier.NotifyResponse(requester, response);
         StageRolesPlugin.ModLogger.LogInfo(
             $"Queued a role query response for player {requesterId}.");
@@ -1339,6 +1342,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         // Begin announcements before Twins queues its partner notifications.
         _notifier.Begin(_assignments);
         CompleteStagePreparation();
+        StageRolesPlugin.Instance.Negotiator.Capture(_assignments);
         RoleAssignmentSync.Publish(_assignments);
         RoleGuideSync.Publish(_config);
     }
@@ -2853,6 +2857,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
         if (assignmentsChanged)
         {
+            StageRolesPlugin.Instance.Negotiator.Capture(_assignments);
             RoleAssignmentSync.Publish(_assignments);
         }
     }
@@ -2990,6 +2995,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         _medic.AddPlayer(mimic);
         _mage.AddPlayer(mimic);
         _eventRoles.AddPlayer(mimic);
+        StageRolesPlugin.Instance.Negotiator.Capture(_assignments);
         RoleAssignmentSync.Publish(_assignments);
         _notifier.Notify(
             mimic.Player,

@@ -500,6 +500,8 @@ internal sealed class StageRolesConfig
         InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
         TwinsEnabled = RoleEnabled(config, "Twins");
+        NegotiatorEnabled = RoleEnabled(config, "Negotiator");
+        NegotiatorWeight = RoleWeight(config, "Negotiator");
         RiggerEnabled = RoleEnabled(config, "Rigger");
         RiggerWeight = RoleWeight(config, "Rigger");
         RiggerEnemyHoldMultiplier = BindFloat(config, "Rigger", "EnemyHoldDurationMultiplier", 1.5f, 1f, 3f, "Enemy restraint duration multiplier while using the Human Adventure Cable.");
@@ -537,6 +539,8 @@ internal sealed class StageRolesConfig
     }
 
     internal ConfigEntry<bool> TwinsEnabled { get; }
+    internal ConfigEntry<bool> NegotiatorEnabled { get; }
+    internal ConfigEntry<int> NegotiatorWeight { get; }
     internal ConfigEntry<bool> RiggerEnabled { get; }
     internal ConfigEntry<int> RiggerWeight { get; }
     internal ConfigEntry<float> RiggerEnemyHoldMultiplier { get; }
@@ -934,6 +938,7 @@ internal sealed class StageRolesConfig
         StageRole.Porter => PorterEnabled,
         StageRole.DualWielder => DualWielderEnabled,
         StageRole.Rigger => RiggerEnabled,
+        StageRole.Negotiator => NegotiatorEnabled,
         StageRole.Superbot => SuperbotEnabled,
         StageRole.Disaster => DisasterEnabled,
         _ => null
@@ -986,6 +991,7 @@ internal sealed class StageRolesConfig
         StageRole.Porter => PorterWeight.Value,
         StageRole.DualWielder => DualWielderWeight.Value,
         StageRole.Rigger => RiggerWeight.Value,
+        StageRole.Negotiator => NegotiatorWeight.Value,
         StageRole.Superbot => 1,
         StageRole.Disaster => 1,
         _ => 0

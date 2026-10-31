@@ -20,6 +20,8 @@ Check(languageConfig.LifterStrengthLevel.Value == 123 && languageConfig.HudFontS
 string languageAfter = File.ReadAllText(languagePath); RoleConfigMigration.Apply(languageFile);
 Check(File.ReadAllText(languagePath) == languageAfter, "Language migration is idempotent");
 
+Check(config.NegotiatorEnabled.Value && config.NegotiatorWeight.Value == 100, "Negotiator selection defaults");
+Check(RolePresets.Find(RolePreset.Cooperative)!.Includes(StageRole.Negotiator), "Negotiator cooperative preset");
 Check(config.RiggerEnabled.Value && config.RiggerWeight.Value == 100, "Rigger selection defaults");
 Check(config.RiggerEnemyHoldMultiplier.Value == 1.5f && config.RiggerDurabilityMultiplier.Value == .5f, "Rigger ability defaults");
 Check(RolePresets.Find(RolePreset.Standard)!.Includes(StageRole.Rigger) && RolePresets.Find(RolePreset.Cooperative)!.Includes(StageRole.Rigger) && RolePresets.Find(RolePreset.Challenge)!.Includes(StageRole.Rigger), "Rigger presets");
@@ -220,8 +222,8 @@ RoleConfigMigration.Apply(courierFile);
 Check(File.ReadAllText(courierPath) == courierText, "Courier migration is idempotent");
 StageRolesPlugin.Instance.RoleSettings = service;
 var roles = Enum.GetValues<StageRole>();
-Check(roles.Length == 47 && (int)StageRole.Twins == 41 && (int)StageRole.DualWielder == 43 && (int)StageRole.Porter == 42 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Normal role identifiers are compacted; secret IDs stay fixed");
-Check(roles.Where(r => (int)r < 1000).Select(r => (int)r).SequenceEqual(Enumerable.Range(0, 45)), "No holes in normal role numbers");
+Check(roles.Length == 48 && (int)StageRole.Twins == 41 && (int)StageRole.DualWielder == 43 && (int)StageRole.Porter == 42 && (int)StageRole.Superbot == 1001 && (int)StageRole.Disaster == 1002, "Normal role identifiers are compacted; secret IDs stay fixed");
+Check(roles.Where(r => (int)r < 1000).Select(r => (int)r).SequenceEqual(Enumerable.Range(0, 46)), "No holes in normal role numbers");
 foreach (StageRole role in roles)
 {
     var entry = config.RoleEnabledEntry(role);

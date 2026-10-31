@@ -40,6 +40,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     internal RoleSelectionSettings RoleSettings { get; private set; } = null!;
     internal BaseUpgradeSelectionSettings BaseUpgradeSettings { get; private set; } = null!;
     internal StageRoleController Controller { get; private set; } = null!;
+    internal NegotiatorRuntime Negotiator { get; private set; } = null!;
     internal BaseUpgradeDrawRuntime BaseUpgradeDraw { get; private set; } = null!;
 
     private void Awake()
@@ -61,6 +62,8 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         _controllerObject.transform.SetParent(transform, false);
         Controller = _controllerObject.AddComponent<StageRoleController>();
         Controller.Initialize(Settings);
+        Negotiator = gameObject.AddComponent<NegotiatorRuntime>();
+        Negotiator.Initialize(Settings);
         RoleHud hud = gameObject.AddComponent<RoleHud>();
         hud.Initialize(Settings);
         gameObject.AddComponent<RoleResourceHud>().Initialize(Settings);
@@ -95,6 +98,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             _harmony.PatchAll(typeof(HunterBatteryPatches));
             _harmony.PatchAll(typeof(DualWielderPatches));
             _harmony.PatchAll(typeof(RiggerPatches));
+            _harmony.PatchAll(typeof(NegotiatorPatches));
             _harmony.PatchAll(typeof(MageStaffProjectilePatch));
             _harmony.PatchAll(typeof(MageBeamCarrierStartPatch));
             _harmony.PatchAll(typeof(MageBeamCarrierAimPatch));
@@ -121,6 +125,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         RoleHudEditor.Instance?.Close(false);
         BaseUpgradeHistory.ClearDisplayPreview();
         Controller?.StageEnding();
+        Negotiator?.SceneChanged();
     }
 
     private void Update()
