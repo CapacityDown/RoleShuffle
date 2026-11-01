@@ -30,10 +30,14 @@ internal sealed partial class RoleMenu
         bool available = editable || RoleGuideSync.VisibilitySignature(_config) != "*";
         RoleMenuView view = _activeView;
         List<RoleMenuEntry> entries = new();
-        void Text(string value)
+        void Text(string value, bool separatorBefore = false)
         {
             foreach (string line in WrapGuideText(MeasurementText(page), value, ContentWidth(page), _guideLanguage))
-                entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
+            {
+                entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight,
+                    false, UseLanguageFont, separatorBefore: separatorBefore));
+                separatorBefore = false;
+            }
         }
         void Button(string label, Action action, bool enabled = true, StageRole? emblem = null,
             bool emblemGrayedOut = false, bool separatorBefore = false)
@@ -62,7 +66,7 @@ internal sealed partial class RoleMenu
 
         if (view == RoleMenuView.Presets)
         {
-            Button(Localized("BACK TO ROLE SETTINGS"), () => SwitchView(page, RoleMenuView.Settings));
+            Button(Localized("BACK TO ROLE SETTINGS"), () => SwitchView(page, RoleMenuView.Settings), separatorBefore: true);
             Text(Localized("Presets change role ON/OFF only."));
             if (editable)
             {
@@ -74,7 +78,8 @@ internal sealed partial class RoleMenu
                     string name = RoleText.Format("Custom {0}", _guideLanguage, slot + 1);
                     var preset = saved.Get(slot);
                     Text(name + " — " + (preset == null ? Localized("Empty") :
-                        RoleText.Format("Enabled roles: {0}/{1}", _guideLanguage, preset.Count, RoleCatalog.AllRoles.Count)));
+                        RoleText.Format("Enabled roles: {0}/{1}", _guideLanguage, preset.Count, RoleCatalog.AllRoles.Count)),
+                        separatorBefore: true);
                     Button(RoleText.Format("Apply: {0}", _guideLanguage, name), () =>
                     {
                         if (StageRolesPlugin.Instance.RoleSettings.TryApplyCustomPreset(index)) SwitchView(page, RoleMenuView.Settings);
@@ -98,7 +103,7 @@ internal sealed partial class RoleMenu
                 {
                     if (StageRolesPlugin.Instance.RoleSettings.TryApplyPreset(preset.Id))
                         SwitchView(page, RoleMenuView.Settings);
-                }, editable, separatorBefore: preset.Id == RolePreset.Standard);
+                }, editable, separatorBefore: true);
                 Text(Localized(preset.Description));
                 Text(RoleText.Format("Enabled roles: {0}/{1}", _guideLanguage, preset.Count, RoleCatalog.AllRoles.Count));
             }

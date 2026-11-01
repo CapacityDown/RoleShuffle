@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 570;
+    private const int RoleUiBuildNumber = 571;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -958,7 +958,9 @@ internal sealed partial class RoleMenu : MonoBehaviour
             // A divider belongs to an item or feature, never to every wrapped
             // body line. Keep it inside the existing padding so wheel distance
             // and row heights are unaffected on all Roles pages.
-            bool separate = entry.SeparatorBefore || control || entry.EmblemRole.HasValue || entry.Adjustment != null;
+            // Presets place dividers at section starts, including custom-slot headings.
+            bool separate = entry.SeparatorBefore || (_activeView != RoleMenuView.Presets &&
+                (control || entry.EmblemRole.HasValue || entry.Adjustment != null));
             // Adjacent buttons form one group unless an explicit divider starts a new one.
             bool consecutiveButtons = index > 0 && (control || entry.Adjustment != null) &&
                 (entries[index - 1].OnClick != null || entries[index - 1].IsControl || entries[index - 1].Adjustment != null);
