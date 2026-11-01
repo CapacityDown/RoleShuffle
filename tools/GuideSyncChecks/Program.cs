@@ -65,6 +65,11 @@ PhotonNetwork.IsMasterClient = false;
 foreach (var language in Enum.GetValues<RoleGuideLanguage>())
 foreach (var role in RoleCatalog.AllRoles)
     Check(RoleGuideSync.Read(config, language)[role] == RoleGuideCatalog.Description(role, config, language), "Every role and language retains host values");
+foreach (var language in Enum.GetValues<RoleGuideLanguage>())
+{
+    string negotiated = RoleGuideSync.Read(config, language)[StageRole.Negotiator];
+    Check(negotiated.Contains("37.5") && negotiated.Contains("Small, Wide") && negotiated.Contains("Tier2") && !negotiated.Contains("{0}"), "Host Negotiator conditions survive translation and transport: " + language);
+}
 string signature = RoleGuideSync.CurrentSignature(config);
 PhotonNetwork.IsMasterClient = true;
 config.PorterCapacity.Value = 12; config.DisabledRoles.Add(StageRole.Porter); RoleGuideSync.Invalidate(); RoleGuideSync.Publish(config);

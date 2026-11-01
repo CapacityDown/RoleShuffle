@@ -2103,12 +2103,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             _config.SniperMaximumDamageMultiplier.Value,
             1f,
             10f);
-        float maximumDistance = Mathf.Max(
-            referenceDistance + 0.1f,
-            Mathf.Clamp(
-                _config.SniperMaximumMultiplierDistance.Value,
-                1f,
-                100f));
+        float maximumDistance = _config.SniperEffectiveMaximumDistance;
         float multiplier = distance <= referenceDistance
             ? Mathf.Lerp(
                 minimumMultiplier,
@@ -2531,7 +2526,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         }
     }
 
-    internal static int ResolveEnemyTier(EnemyHealth enemyHealth)
+    internal static int ResolveEnemyTier(EnemyHealth enemyHealth, int unknownTier = 1)
     {
         try
         {
@@ -2552,9 +2547,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
         catch (Exception exception)
         {
             StageRolesPlugin.ModLogger.LogDebug(
-                $"Vampire enemy tier resolution failed: {exception.Message}");
+                $"Enemy tier resolution failed: {exception.Message}");
         }
-        return 1;
+        return unknownTier;
     }
 
     private int ResolveEnemyRewardTier(EnemyHealth enemyHealth)

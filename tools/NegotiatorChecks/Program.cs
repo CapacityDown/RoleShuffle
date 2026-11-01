@@ -279,4 +279,20 @@ active=Fresh();runtime.EnemyDefeated(active,3);cargo=Cargo(active);Carry20(activ
 Check(runtime.Remaining(one.Id)==0,"Death revokes both rights");
 active=Fresh();cargo=Cargo(active);Move(active,0);Move(active,50);Deliver(active,cargo);
 Check(runtime.Remaining(one.Id)==1,"High native Speed levels still accumulate legitimate carried distance");
+
+active=Fresh();config.NegotiatorDeliveryCarryDistance.Value=5;config.NegotiatorDeliveryAllowedSizes.Value=" small, BIG ,Unknown";config.NegotiatorEnemyTier.Value=2;
+cargo=Cargo(active,ValuableVolume.Type.Small);Move(active,0);Move(active,4);Deliver(active,cargo);
+Check(runtime.Remaining(one.Id)==0,"Configured distance below threshold does not reward");
+cargo.Holder=one;Move(active,4);Move(active,5);Deliver(active,cargo);
+Check(runtime.Remaining(one.Id)==1,"Custom size and distance take effect");
+runtime.EnemyDefeated(active,3);Check(runtime.Remaining(one.Id)==1,"Tier selection is exact, not minimum tier");
+runtime.EnemyDefeated(active,2);Check(runtime.Remaining(one.Id)==2,"Configured exact enemy tier earns the independent right");
+config.NegotiatorDeliveryCarryDistance.Value=200;config.NegotiatorDeliveryAllowedSizes.Value="";config.NegotiatorEnemyTier.Value=1;
+Check(runtime.Remaining(one.Id)==2,"Editing conditions preserves existing rights");
+active=Fresh();cargo=Cargo(active);Carry20(active);Deliver(active,cargo);
+Check(runtime.Remaining(one.Id)==0,"Blank size list disables delivery earnings");
+Check(!NegotiatorRules.AllowsSize("99,Unknown","99") && !NegotiatorRules.AllowsSize("99,Unknown","Big"),"Invalid sizes never enable arbitrary enum values");
+Check(NegotiatorRules.DisplaySizes("Small, Small, BIG,unknown")=="Small, Big" && NegotiatorRules.DisplaySizes("")=="—","Guide displays canonical sizes without duplicates or unknown tokens");
+active=Fresh();config.NegotiatorEnemyTier.Value=1;runtime.EnemyDefeated(active,0);
+Check(runtime.Remaining(one.Id)==0,"Unknown native tier never qualifies even when Tier1 is selected");
 Console.WriteLine($"PASS: {checks} Negotiator earning, revocation, shop and installed-game patch checks.");

@@ -4,6 +4,7 @@
     <Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../NegotiatorRules.cs" Link="NegotiatorRules.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
     <Compile Include="../../RoleGuideCatalog.cs" Link="RoleGuideCatalog.cs" />

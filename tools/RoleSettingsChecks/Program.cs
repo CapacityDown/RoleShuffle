@@ -9,6 +9,18 @@ Directory.CreateDirectory(directory);
 string path = Path.Combine(directory, "RoleShuffle.cfg");
 var file = new ConfigFile(path, false) { SaveOnConfigSet = false };
 var config = new StageRolesConfig(file);
+if (args.Length == 2 && args[0] == "--inventory")
+{
+    var entries = file.OrderBy(p => p.Key.Section).ThenBy(p => p.Key.Key).Select(p => new {
+        section=p.Key.Section, key=p.Key.Key, type=p.Value.SettingType.Name,
+        defaultValue=p.Value.DefaultValue, description=p.Value.Description.Description,
+        range=p.Value.Description.AcceptableValues?.ToDescriptionString()
+    });
+    File.WriteAllText(args[1], System.Text.Json.JsonSerializer.Serialize(entries, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+    Console.WriteLine($"Exported {file.Count} bound settings.");
+    return;
+}
+ConfigurationAuditChecks.Run(directory);
 string languagePath = Path.Combine(directory, "game-language.cfg");
 const string languageBefore = "[Migration]\nConfigVersion = 45\n[UI]\nGuideLanguage = Japanese\n[HUD]\nFontSize = 34\n[Lifter]\nStrengthLevel = 123\n";
 File.WriteAllText(languagePath, languageBefore);

@@ -53,6 +53,11 @@ internal enum StageRole
 internal sealed class Entry<T>(T value) { public T Value { get; set; } = value; }
 internal sealed class StageRolesConfig
 {
+    internal Entry<float> NegotiatorDeliveryCarryDistance { get; } = new(37.5f);
+    internal Entry<string> NegotiatorDeliveryAllowedSizes { get; } = new("Small,Wide");
+    internal Entry<int> NegotiatorEnemyTier { get; } = new(2);
+    internal float SniperEffectiveMaximumDistance => Math.Max(SniperReferenceDistance.Value + 0.1f, SniperMaximumMultiplierDistance.Value);
+
     internal Entry<float> RiggerEnemyDamageMultiplier { get; } = new(2f);
     internal Entry<float> RiggerEnemyHoldMultiplier { get; } = new(1.5f);
     internal Entry<float> RiggerDurabilityMultiplier { get; } = new(0.5f);

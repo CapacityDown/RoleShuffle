@@ -77,7 +77,13 @@ namespace REPOJP.StageRoles
     internal class RoleAssignment(string id, StageRole role) { internal string SteamId = id; internal StageRole Role = role; internal PlayerAvatar Player = SemiFunc.Players.First(p => p.Id == id); }
     internal static class RoleCatalog { internal static bool HasCapability(StageRole role, StageRole capability) => role == capability || role == StageRole.Superbot; }
     internal class Entry<T>(T value) { internal T Value = value; }
-    internal class StageRolesConfig { internal Entry<bool> Enabled = new(true); }
+    internal class StageRolesConfig
+    {
+        internal Entry<bool> Enabled = new(true);
+        internal Entry<float> NegotiatorDeliveryCarryDistance = new(20f);
+        internal Entry<string> NegotiatorDeliveryAllowedSizes = new("Big,Wide,Tall,VeryTall");
+        internal Entry<int> NegotiatorEnemyTier = new(3);
+    }
     internal static class UtilityRoleRuntime { internal static bool IsHeldBy(PhysGrabObject item, RoleAssignment a) => item.Holder == a.Player; }
     internal static class PlayerState { internal static bool IsInTruck(PlayerAvatar p) => p.InTruck; internal static bool IsLiving(PlayerAvatar? p) => p?.Alive == true; }
     internal static class PlayerIdentity

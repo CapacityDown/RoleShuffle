@@ -131,6 +131,14 @@ historical version numbers, deployment profiles and superseded design choices.
   shop exit expires them. Each completed discount consumes one; interruptions
   and repeated completion callbacks do not consume an extra right.
 
+- The 2026-11-02 settings review exposes Negotiator DeliveryCarryDistance
+  (20 m, 1-200), DeliveryAllowedSizes (Big,Wide,Tall,VeryTall), and EnemyTier
+  (exact native tier 3, 1-3). Per-source once/stage and maximum two rights remain
+  fixed. Existing rights survive edits; death/role-loss revocation is unchanged.
+  Keep current BepInEx keys/defaults compatible, audit the actual binding inventory,
+  and compare README keys/defaults/ranges in both languages. Dynamic upgrade
+  levels accept 0-200 except MapPlayerCount 0-1; do not reintroduce the old 100 cap.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

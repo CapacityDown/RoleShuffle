@@ -6,10 +6,10 @@ namespace REPOJP.StageRoles;
 internal static class RoleGuideCatalog
 {
     internal const string MusicianDescription = "Playing instruments heals yourself and living teammates within {0} m for {1} HP. All instruments share a {2}-second healing cooldown and a {3} HP total budget per stage for self and allies. Pan Flute, Harmonica and Mouth Harp heal while played at the mouth; silent instruments do not heal. Death, revival and role changes do not reset the budget.";
-    internal const string NegotiatorSummary = "Earn up to two guaranteed shop discounts through large valuable deliveries and Tier3 kills.";
-    internal const string NegotiatorDescription = "Start with no negotiation rights. Once per stage, earn one by carrying a Big, Wide, Tall or VeryTall valuable at least 20 m outside the truck and releasing it at an extraction point, and one by killing a Tier3 enemy yourself. Hold up to two. In the next shop, present an item yourself for a guaranteed normal discount without rejection damage or shared attempt use. Death or losing this ability revokes all rights and prevents earning more that stage. Unused rights expire on shop exit; interrupted negotiations cost nothing. The HUD shows remaining rights.";
-    private const string NegotiatorSummaryJapanese = "大型の貴重品の納品とTier3の敵討伐で、次のショップで必ず値引きに成功する交渉権を最大2回分獲得します。";
-    private const string NegotiatorDescriptionJapanese = "交渉権0回から開始します。ステージごとに、Big・Wide・Tall・VeryTallの貴重品を本人がトラック外で20m以上運び、納品所で手放すと1回分、Tier3の敵を本人が倒すと1回分を獲得します。各条件は1回まで、最大2回分を保持できます。次のショップで本人が商品を店主に見せると、拒否による破損や全員共通の交渉回数の消費なしで、通常の成功時と同じ値引きを受けられます。死亡するか、この能力を失うと全失効し、そのステージでは再獲得できません。未使用分はショップ退出で失効します。交渉の中断では消費しません。HUDに残数を表示します。";
+    internal const string NegotiatorSummary = "Earn up to two guaranteed shop discounts through valuable deliveries and enemy kills.";
+    internal const string NegotiatorDescription = "Start with no negotiation rights. Once per stage, earn one by carrying a {0} valuable at least {1} m outside the truck and releasing it at an extraction point, and one by killing a Tier{2} enemy yourself. Hold up to two. In the next shop, present an item yourself for a guaranteed normal discount without rejection damage or shared attempt use. Death or losing this ability revokes all rights and prevents earning more that stage. Unused rights expire on shop exit; interrupted negotiations cost nothing. The HUD shows remaining rights.";
+    private const string NegotiatorSummaryJapanese = "貴重品の納品と敵討伐で、次のショップで必ず値引きに成功する交渉権を最大2回分獲得します。";
+    private const string NegotiatorDescriptionJapanese = "交渉権0回から開始します。ステージごとに、{0}の貴重品を本人がトラック外で{1}m以上運び、納品所で手放すと1回分、Tier{2}の敵を本人が倒すと1回分を獲得します。各条件は1回まで、最大2回分を保持できます。次のショップで本人が商品を店主に見せると、拒否による破損や全員共通の交渉回数の消費なしで、通常の成功時と同じ値引きを受けられます。死亡するか、この能力を失うと全失効し、そのステージでは再獲得できません。未使用分はショップ退出で失効します。交渉の中断では消費しません。HUDに残数を表示します。";
     internal const string TwinsSummary = "Two teammates share one HP pool and infection. Cooperate to carry, rest, reunite and earn delivery bonuses.";
     private const string RevivalStillnessDescription = " Revival waits until the Death Head has stopped moving.";
     private const string PhoenixWaitDescription = " An unused revival prevents game over, regardless of how long the wait takes.";
@@ -172,7 +172,7 @@ internal static class RoleGuideCatalog
             StageRole.Twins => TwinsDescription(config, false),
             StageRole.Porter => PorterDescription(config, false),
             StageRole.DualWielder => DualWielderDescription(config, false),
-            StageRole.Negotiator => NegotiatorDescription,
+            StageRole.Negotiator => NegotiatorConfiguredDescription(config, false),
             StageRole.Rigger => RiggerDescription(config, false),
             StageRole.Jumper =>
                 $"Adds extra jumps that can be used before landing. Extra Jump is set to level {config.JumperExtraJumpLevels.Value}.",
@@ -267,7 +267,7 @@ internal static class RoleGuideCatalog
             StageRole.Diver =>
                 $"Tumbling while continuing to look down at a fixed floor starts underfloor movement for up to {Number(config.DiverUnderfloorDurationSeconds.Value)} seconds. Failing to return through a floor before it expires kills Diver. Returning above a floor restores normal movement and starts a cooldown equal to 1.5 times the time spent below the floor.",
             StageRole.Sniper =>
-                $"Identifiable attacks against enemies scale continuously with distance: {Number(config.SniperMinimumDamageMultiplier.Value)}x at point-blank range, 1x at {Number(config.SniperReferenceDistance.Value)} m, and up to {Number(config.SniperMaximumDamageMultiplier.Value)}x at {Number(config.SniperMaximumMultiplierDistance.Value)} m. Vehicle impacts and Tumble Attacks are unchanged.",
+                $"Identifiable attacks against enemies scale continuously with distance: {Number(config.SniperMinimumDamageMultiplier.Value)}x at point-blank range, 1x at {Number(config.SniperReferenceDistance.Value)} m, and up to {Number(config.SniperMaximumDamageMultiplier.Value)}x at {Number(config.SniperEffectiveMaximumDistance)} m. Vehicle impacts and Tumble Attacks are unchanged.",
             StageRole.Imitator =>
                 "Starts with only Base Upgrades. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. Imitator cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Twins, or ???1 or ???2.",
             StageRole.Avenger => $"An ally dying within {Number(config.AvengerTriggerRadius.Value)} m grants {Number(config.AvengerDamageMultiplier.Value)}x enemy damage for {Number(config.AvengerDurationSeconds.Value)} seconds. An ally within {Number(config.AvengerHitTriggerRadius.Value)} m losing at least {config.AvengerHitDamageThreshold.Value} HP to one enemy hit grants {Number(config.AvengerHitDamageMultiplier.Value)}x damage for {Number(config.AvengerHitDuration.Value)} seconds, with a {Number(config.AvengerHitCooldown.Value)}-second cooldown. Only the stronger active bonus applies. Self-damage and friendly fire do not trigger the hit bonus.",
@@ -286,7 +286,7 @@ internal static class RoleGuideCatalog
             StageRole.Twins => TwinsDescription(config, true),
             StageRole.Porter => PorterDescription(config, true),
             StageRole.DualWielder => DualWielderDescription(config, true),
-            StageRole.Negotiator => NegotiatorDescriptionJapanese,
+            StageRole.Negotiator => NegotiatorConfiguredDescription(config, true),
             StageRole.Rigger => RiggerDescription(config, true),
             StageRole.Rider =>
                 $"バニラ車両を運転している間、敵への衝突ダメージが{Number(config.RiderEnemyDamageMultiplier.Value)}倍になります。プレイヤーへのダメージは増やさず、元から発生するTumbleノックバックだけを{Number(config.RiderPlayerKnockbackMultiplier.Value)}倍にします。",
@@ -377,7 +377,7 @@ internal static class RoleGuideCatalog
                 $"攻撃前からスタンしていた敵への直接攻撃ダメージが{Number(config.ExecutionerStunnedDamageMultiplier.Value)}倍になります。" +
                 "最初にスタンを発生させる攻撃と、物理衝突だけによるダメージには効果がありません。",
             StageRole.Sniper =>
-                $"攻撃者を特定できる敵へのダメージが距離に応じて連続変化します。密着時は{Number(config.SniperMinimumDamageMultiplier.Value)}倍、{Number(config.SniperReferenceDistance.Value)}mで1倍、{Number(config.SniperMaximumMultiplierDistance.Value)}mで最大{Number(config.SniperMaximumDamageMultiplier.Value)}倍になります。車両衝突とTumble Attackは変化しません。",
+                $"攻撃者を特定できる敵へのダメージが距離に応じて連続変化します。密着時は{Number(config.SniperMinimumDamageMultiplier.Value)}倍、{Number(config.SniperReferenceDistance.Value)}mで1倍、{Number(config.SniperEffectiveMaximumDistance)}mで最大{Number(config.SniperMaximumDamageMultiplier.Value)}倍になります。車両衝突とTumble Attackは変化しません。",
             StageRole.Imitator =>
                 "最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。\nImitator、King、Bomber、Stinker、Werewolf、\nCourier、Tuna、Influenza、Twins、???1、???2はコピーしません。",
             StageRole.Avenger => $"{Number(config.AvengerTriggerRadius.Value)}m以内の味方が死亡すると、{Number(config.AvengerDurationSeconds.Value)}秒間、敵へのダメージが{Number(config.AvengerDamageMultiplier.Value)}倍になります。また、{Number(config.AvengerHitTriggerRadius.Value)}m以内の味方が敵の1回の攻撃で{config.AvengerHitDamageThreshold.Value}HP以上失うと、{Number(config.AvengerHitDuration.Value)}秒間、敵へのダメージが{Number(config.AvengerHitDamageMultiplier.Value)}倍になります。被弾による発動は{Number(config.AvengerHitCooldown.Value)}秒ごと。効果は強い方だけが適用され、自傷・味方からの攻撃では被弾効果が発動しません。",
@@ -413,4 +413,9 @@ internal static class RoleGuideCatalog
 
     private static string Number(float value) =>
         value.ToString("0.##", CultureInfo.InvariantCulture);
+    private static string NegotiatorConfiguredDescription(StageRolesConfig config, bool japanese) =>
+        string.Format(CultureInfo.InvariantCulture,
+            japanese ? NegotiatorDescriptionJapanese : NegotiatorDescription,
+            NegotiatorRules.DisplaySizes(config.NegotiatorDeliveryAllowedSizes.Value),
+            Number(config.NegotiatorDeliveryCarryDistance.Value), config.NegotiatorEnemyTier.Value);
 }

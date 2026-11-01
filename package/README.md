@@ -79,28 +79,28 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |---|---|---|---|
 |![][i01]<br>Tank|Raises maximum HP to 1.5 times Base, up to the 4,100 HP growth limit.|Health minimum 21.|Minimum, multiplier, cap|
 |![][i02]<br>Runner|Raises sprint speed and stamina to 1.5 times Base, with growth limits of 205 and 2,040.|Minimum Speed 6, Stamina 46.|Minimums, multipliers, caps|
-|![][i03]<br>Jumper|Adds up to 10 extra jumps before landing by setting Extra Jump to level 10.|Passive upgrade.|Extra Jump target 0–100|
+|![][i03]<br>Jumper|Adds up to 10 extra jumps before landing by setting Extra Jump to level 10.|Passive upgrade.|Extra Jump target 0–200|
 |![][i04]<br>Lifter|Strength becomes Lv200, making heavy objects, carts and bikes easier to handle.|Normal Strength returns when the role ends. Excluded if Base already provides the same heavy-object strength (default: Lv50).|Strength level|
-|![][i05]<br>Launcher|Launches the player farther forward when starting a Tumble. Launch is level 10.|Passive upgrade.|Launch target 0–100|
-|![][i06]<br>Climber|Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20.|Passive upgrade.|Tumble Climb and Range targets 0–100|
-|![][i07]<br>Flyer|Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10.|Passive upgrade.|Tumble Wings target 0–100|
+|![][i05]<br>Launcher|Launches the player farther forward when starting a Tumble. Launch is level 10.|Passive upgrade.|Launch target 0–200|
+|![][i06]<br>Climber|Improves Tumble climbing and allows objects to be grabbed from farther away. Tumble Climb is level 50 and Range is level 20.|Passive upgrade.|Tumble Climb and Range targets 0–200|
+|![][i07]<br>Flyer|Keeps Tumble Wings active longer for extended movement through the air. Tumble Wings is level 10.|Passive upgrade.|Tumble Wings target 0–200|
 |![][i08]<br>Tracker|Passively reports the nearest enemy within 25m, warns within 8m, and tracks the nearest teammate's Death Head at any distance. Health minimum 3; Map Player Count minimum 1; preserves stronger Base upgrades.|Private reports only on meaningful changes, normally 20s apart. Close warnings bypass the wait without repeating while danger stays nearby. Straight-line directions relative to your view, including above/below. No item or command needed; requires 2+ players.|Health 0–200; detection, warning, interval and distance-change settings below.|
-|![][i09]<br>Ghost|Death Head Battery Lv50. While dead, heals living allies within 5 m of its head for 1 HP every 2 seconds, up to 50 HP per stage. Head carriers gain Speed +1.|Revival does not replenish healing. Multiple heads do not stack; the stronger King Speed bonus takes priority. Excluded with one player; high Base levels do not exclude it.|Battery, healing, carrier Speed|
+|![][i09]<br>Ghost|Boosts Death Head Battery. While dead, heals living allies near its head within a stage budget. Head carriers gain Speed.|Revival does not replenish healing. Multiple heads do not stack; the stronger King Speed bonus takes priority. Excluded with one player; high Base levels do not exclude it.|Battery, healing, carrier Speed|
 |![][i10]<br>Bomber|Drops a random armed grenade every 8 m traveled. Up to 30 generated grenades remain active per Bomber, and the oldest is removed at the limit.|Grenades can injure players and damage valuables. Only Bomber can hold generated grenades. Movement inside the truck does not count while truck placement is disabled.|Distance, limit, truck placement, grenade types|
-|![][i11]<br>Medic|Heals nearby teammates for 5 HP every 2 seconds within 5 m, up to 150 total HP per stage.|Never heals the Medic. Only living teammates within range are affected. Healing stops when that Medic's stage limit is exhausted. Never selected randomly when only one player is present.|Amount, interval, radius, total limit|
+|![][i11]<br>Medic|Heals nearby teammates for 5 HP every 2 seconds within 5 m, up to 150 total HP per stage.|Never heals the Medic. Only living teammates within range are affected. Healing stops when that Medic's stage limit is exhausted. Requires 2+ players for random assignment.|Amount, interval, radius, total limit|
 |![][i12]<br>Phoenix|Automatically revives itself with 25 HP once per stage after dying.|Requires a stationary Death Head. An unused revival prevents game over without a time limit. Revival HP cannot exceed maximum HP.|Revival HP, revival delay|
 |![][i13]<br>Courier|Carry a valuable worth money 5 m while holding it outside delivery areas, then place it in the truck or an extraction point. Delivery heals HP and pauses HP loss by size (below).|120-second pause at stage start/revival. Otherwise loses 1 HP/0.1 s outside the truck; can die. Automatic HP loss stops after the final extraction until stage end. Other damage still applies. Unlimited deliveries; each item rewards each player once per stage. Early drops reset distance. Not selected solo.|Delivery and HP loss|
-|![][i14]<br>Rescuer|While alive, grab a dead teammate's Death Head to revive them with 25 HP, even while the head is moving.|Keep holding until revival; releasing while waiting cancels the rescue. Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Never selected randomly when only one player is present.|Revival HP, delay, maximum revivals|
+|![][i14]<br>Rescuer|While alive, grab a dead teammate's Death Head to revive them with 25 HP, even while the head is moving.|Keep holding until revival; releasing while waiting cancels the rescue. Up to 2 revivals per stage. Revival HP cannot exceed the target's maximum HP. Requires 2+ players for random assignment.|Revival HP, delay, maximum revivals|
 |![][i15]<br>Vampire|Heals when an enemy dies within 10 m: Tier 1 = 5, Tier 2 = 10, Tier 3 = 50.|Uses the enemy's vanilla Danger Level. When Enhanced enemy rewards are enabled with Elite Enemy Variants, Enhanced enemies count one tier higher up to Tier 3. The Vampire must be alive and close to the dying enemy.|Amount per tier, radius|
 |![][i16]<br>King|Crown; grants nearby allies Speed/Range +2 and up to Strength +5 within 12 m.|No self-buff or stacking. Level cap 200; Strength cannot weaken grip/rotation. Leaving removes only King bonuses. One King per stage.|Radius and bonus levels|
 |![][i17]<br>Tuna|After a 5-second grace period at stage start, standing still for 3 seconds causes 1 damage every 0.1 seconds until moving.|Can kill the player. The stationary timer starts after the initial grace period. Moving resets it immediately; lost health is not restored.|Delay, damage, interval|
 |![][i18]<br>Musician|Playing heals self and living allies within 10 m for 5 HP. All instruments share a 1-second cooldown and 1000 HP stage budget.|Piano, Harp, Guitar, Banjo; Pan Flute, Harmonica and Mouth Harp while sounding at the mouth. Normally excluded without instruments. Death/role changes preserve the budget.|Amount, radius, cooldown, budget|
-|![][i19]<br>Mage|Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat, or the configured facial expressions, to cast vanilla attacks for 10, 10, 15, 30, or 50 HP. After 10 seconds without damage, restores 1 HP every 2 seconds, up to 120 HP total per stage. Magic cast using a held staff lasts 1.3 times as long.|Matching expressions cast spells; clearing them does not. Spells share a 3-second cooldown, require surviving the HP cost, and can harm players or valuables. The staff duration bonus excludes chat/expression casts and the Star Wand's instant attack.|Facial expression per spell, cast cooldown, health cost per spell, automatic recovery toggle, delay, interval, amount, and stage limit|
+|![][i19]<br>Mage|Uses `star`, `gravity`, `roll`, `void`, or `laser` in chat or configured facial expressions to cast HP-consuming attacks. After a damage-free delay, gradually heals within a stage budget. Held-staff magic lasts 1.3x as long.|Shared cast cooldown; must survive the HP cost. Spells can harm players/valuables. Selecting a matching expression casts; clearing it does not. Staff bonus excludes chat/expression casts and the Star Wand’s instant attack.|Expressions, cooldown, HP costs, recovery toggle/delay/interval/amount/budget|
 |![][i20]<br>Gambler|A held valuable has a 50% chance to double its value; otherwise it breaks. Gambit: green heals 50 HP, red deals 100 damage, black kills, white fully heals and adds 5 Health levels for the stage.|One wager is available at a time and returns after extraction. Damaged valuables use their reduced value.|Win chance, win multiplier, Gambit green heal, red damage, white temporary Health levels|
-|![][i21]<br>Hunter|Weapons use 75% battery. Personal kills of orb-dropping enemies have a 10% chance of double drops and a 0.5% chance of 10 orbs. Every 5 qualifying kills guarantees at least 1 extra orb.|Random extras satisfy the guarantee. Count resets each stage. Only held/equipped weapons and confirmed personal kills qualify. Enhanced rewards affect extra-orb quality only.|Battery, orb chances/count, guarantee interval|
-|![][i22]<br>Stinker|Leaves a harmful uranium cloud after every 2 m traveled. Clouds appear one at a time after Stinker moves at least 2 m away from the newest location. Spawned uranium valuables have a 0.5-second grace period before breaking.|Clouds can damage other players, and Stinker can be hurt by walking back into one. Truck placement is disabled by default.|Distance, safety distance, truck spawning, break delay|
+|![][i21]<br>Hunter|Reduces weapon battery use. Personal kills of orb-dropping enemies can give doubled/jackpot drops; repeated qualifying kills guarantee extra orbs.|Random extras satisfy the guarantee. Count resets each stage. Only held/equipped weapons and confirmed personal kills qualify. Enhanced rewards affect extra-orb quality only.|Battery, orb chances/count, guarantee interval|
+|![][i22]<br>Stinker|Leaves harmful uranium clouds after moving the required distance, one at a time after clearing the newest spawn’s safety radius. Spawned uranium breaks after a short grace period.|Clouds can damage other players, and Stinker can be hurt by walking back into one. Truck placement is disabled by default.|Distance, safety distance, truck spawning, break delay|
 |![][i23]<br>Engineer|Prevents supported effect valuables from activating while the Engineer holds them.|Camera, Propane Tank, Snowmobile, Flashlight, Clown Doll, and Love Potion are not affected. By default, not randomly selected if no supported effect valuable is present.|Selection only|
-|![][i24]<br>Trickster|Type `decoy` in chat or select the configured facial expression to place a fixed Scream Doll that repeatedly attracts enemies within 40 m for 25 seconds.|Another decoy cannot be placed while one is active. Its cooldown begins after the decoy ends: 45 seconds if it attracted an enemy, or 10 seconds if it attracted none. The decoy cannot be grabbed, damaged, or delivered.|Decoy facial expression, active time, normal and no-target cooldowns, radius, pulse interval, placement distance|
+|![][i24]<br>Trickster|Type `decoy` or select its expression to place a fixed Scream Doll that repeatedly attracts nearby enemies.|One active decoy. Cooldown starts when it ends, with a shorter wait if no enemy was attracted. Cannot be grabbed, damaged or delivered.|Expression, active time, both cooldowns, radius, pulse interval, placement distance|
 |![][i25]<br>Mechanic|Directly holding damaged valuables restores a shared 2% of original value per second, up to 50 percentage points per stage.|Only restored value counts. Ignores fully repaired and non-valuable objects. Multiple objects share the repair rate and limit. Visual damage may remain.|Repair rate, total stage limit|
 |![][i26]<br>Electrician|Holding inactive rechargeable items restores a shared 10 battery percentage per second, up to 100 per stage.|Active, full, and unchargeable items are ignored. By default, not randomly selected if no rechargeable item is present.|Charge rate, total stage limit|
 |![][i27]<br>Warden|Extends enemy stuns caused by Warden's weapons, grenades, or held damaging objects by 3 seconds.|Requires a normally stunning attack.|Additional stun time|
@@ -108,21 +108,21 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i29]<br>Executioner|Deals 2x direct attack damage to enemies that were already stunned before the hit.|No bonus for the initial stunning hit or collisions alone.|Stunned-enemy damage multiplier|
 |![][i30]<br>Rider|While driving a vanilla vehicle, deals 3x impact damage to enemies and doubles existing Tumble knockback against players.|Player damage is not increased. By default, not randomly selected if no vanilla vehicle is present.|Enemy damage and player knockback multipliers|
 |![][i31]<br>Influencer|Gains stronger upgrades as more living teammates enter a 20 m radius and periodically speaks an English TTS line.|Its footsteps, landings, VC, and chat TTS reach enemies from twice as far away.|Radius, check rate, per-upgrade player-count scaling, noise multiplier, TTS timing and radius|
-|![][i32]<br>Werewolf|Deals 2x damage to another player when Werewolf can be identified as the attacker.|Self-damage, environment damage, and damage with no identifiable player attacker are unchanged. Never selected randomly when only one player is present.|Player damage multiplier|
+|![][i32]<br>Werewolf|Deals 2x damage to another player when Werewolf can be identified as the attacker.|Self-damage, environment damage, and damage with no identifiable player attacker are unchanged. Requires 2+ players for random assignment.|Player damage multiplier|
 |![][i33]<br>Berserker|Gains stronger upgrades as remaining HP becomes lower.|Bonuses decrease again when healed.|Per-upgrade HP-percentage scaling|
 |![][i34]<br>Bodyguard|Sets Health to level 11 and absorbs 50% of enemy damage dealt to a teammate within 15 m.|Transferred damage cannot reduce Bodyguard below 1 HP.|Health target, radius, damage share|
 |![][i35]<br>Rammer|Tumble Attack deals 100 damage to enemies and deals 15 damage to Rammer after a successful hit.|Launch, Tumble Climb, and Tumble Wings are fixed at level 0 for the stage regardless of Base Upgrades.|Tumble Attack and self damage|
 |![][i36]<br>Diver|Tumbling while continuing to look down at a fixed floor enables movement below it for up to 10 seconds.|Failing to return through a floor in time kills Diver. Returning above the floor starts a cooldown equal to 1.5 times the previous dive time. The countdown and ready state are announced by TTS.|Underfloor duration, movement force|
 |![][i37]<br>Sniper|Enemy damage scales with distance: 0.5x at point-blank range, 1x at 6 m, and up to 2x at 18 m.|Requires an identifiable attacker. Vehicle impacts and Tumble Attacks are unchanged.|Distances and multipliers|
-|![][i38]<br>Imitator|Starts with Base Upgrades only. Grabbing another player's health-transfer point copies that teammate's upgrades, abilities, and drawbacks for the rest of the stage. The assignment list then shows the copied role beside Imitator.|Cannot copy Imitator, King, Bomber, Stinker, Werewolf, Courier, Tuna, Influenza, Twins, or ???1 or ???2; announces `CannotCopy` on an ineligible attempt. The first valid copy is fixed for the stage. Never selected randomly when only one player is present.|Selection only|
-|![][i39]<br>Avenger|An ally losing at least 15 HP to one enemy hit within 15 m grants 1.25x enemy damage for 10 seconds (20-second cooldown). An ally dying within 30 m grants 1.5x for 30 seconds.|Activation and expiration are announced. Only the stronger active bonus applies. Deaths refresh their bonus without waiting for the hit cooldown. Self-damage and friendly fire do not trigger the hit bonus. Own death does not activate it. Excluded with one player.|Hit/death range, threshold, multipliers, durations, cooldown|
+|![][i38]<br>Imitator|Starts with Base Upgrades. Grab a teammate’s health-transfer point to copy their upgrades, abilities and drawbacks for the stage; the role list identifies the copy.|Cannot copy Imitator/King/Bomber/Stinker/Werewolf/Courier/Tuna/Influenza/Twins/???1/???2; invalid attempts announce `CannotCopy`. First valid copy is fixed. Requires 2+ players for random assignment.|Selection only|
+|![][i39]<br>Avenger|Enemy hits on nearby allies and nearby ally deaths temporarily increase your damage against enemies.|Activation/expiry notices. Only the stronger bonus applies. Deaths refresh the death bonus without the hit cooldown. Self-damage/friendly fire cannot trigger the hit bonus; own death grants nothing. Excluded with one player.|Hit/death range, threshold, multipliers, durations, cooldown|
 |![][i40]<br>Brawler|Melee hits on the same enemy rise from 1.25x by 0.25 per hit, up to 2x. Guns, staff projectiles and lasers deal 0.75x.|Changing enemy or 4 seconds without a hit resets the combo. Friendly fire stays at 1.25x. Vehicle impacts, Tumble Attacks, grenades and ordinary objects are unchanged.|Melee/ranged multipliers, combo step/cap/timeout|
-|![][i41]<br>Influenza|**Onset:** 30 seconds after becoming Influenza, maximum HP is fixed at 75; only symptomatic players spread it.<br>**Sneezing:** automatic every 30–90 seconds (about once a minute). Each teammate in front within 5m and 20° to either side has a 60% infection chance.<br>**Voice/chat:** after onset, each utterance or message gives each teammate in front within 3m and 30° to either side a 30% chance.|**If infected:** the teammate immediately becomes Influenza, losing their previous role. They develop symptoms after 30 seconds and can then infect others.<br>**Enemy attention:** sneezes can be heard in every direction (base radius 5m; varies with enemy hearing).<br>Death/revival does not reset the timer. Infection ends with the stage. Excluded from solo draws.|Onset, HP, sneeze intervals, infection range/angle/chance, hearing|
-|![][i42]<br>Twins|Two players share their combined current and maximum HP. Carrying the same valuable together grants temporary Strength upgrades targeting about 1.5x Strength (maximum level 200) and halves collision value loss. Both crouching still within 3 m for 3 seconds restores 10% of shared maximum HP and all stamina, with a shared 60-second cooldown. Sprinting toward a partner separated by 15 m gives about 1.25x speed until within 5 m. Co-carry a valuable outside delivery areas for 3 seconds, then deliver with both players within 5 m for +10% value, once per item, up to $5,000 per stage.|At least two players; at most one fixed pair. Either death kills both; one revival revives both using one revival’s HP amount. Infection turns both into Influenza and ends sharing. Stage end or a partner leaving ends the link and preserves remaining HP proportion. No HP transfers within the pair. Cannot be copied; shop equipment gets no carry bonus.|Selection, carry, rest, reunion and delivery|
+|![][i41]<br>Influenza|After incubation, forces maximum HP to the configured value. Automatic sneezes can infect teammates in front and alert enemies in every direction. Ordinary voice utterances and chat messages can also infect nearby teammates in front. Only symptomatic players spread infection.|Infection immediately replaces the teammate’s role with Influenza, followed by their incubation. Death/revival preserves the timer; stage end clears infection. Continuous speech counts as one utterance. Enemy hearing changes sneeze audibility. Excluded from solo draws.|Onset, HP, sneeze timing, infection range/angle/chance, hearing|
+|![][i42]<br>Twins|Shares combined current/max HP between two players. Co-carrying a valuable grants temporary Strength upgrades (cap Lv200) and reduces collision loss. Crouching still together heals shared HP and fully restores stamina. Sprinting toward a distant partner grants a temporary speed boost. Joint delivery adds value once per item, within the stage budget; both partners must be near the cargo.|Requires 2+ players; at most one fixed pair. Either death kills both; one revival revives both with one revival’s HP. Infection changes both to Influenza and ends sharing. Stage end/disconnect ends sharing and preserves HP proportion. No HP transfers within the pair, copying, or shop-equipment carry bonus.|Selection, carry, rest, reunion, delivery|
 |![][i43]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In delivery areas or aboard a cart, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
 |![][i44]<br>DualWielder|Holding a melee weapon alone creates a matching weapon 0.5 m left, repeating its movement and attacks 0.3 s later. Both share and consume battery/durability.|Copy disappears on release, switching, death or role change. Cannot be picked up or kept. Excluded without melee weapons.|Delay, left offset|
 |![][i45]<br>Rigger|Human Adventure Cable: 2x enemy hit damage, 1.5x enemy restraint time, 50% hit/throw durability cost.|Automatic. Player effects unchanged. Requires a cable for normal draws. Standard/Cooperative/Challenge.|All three multipliers|
-|![][i46]<br>Negotiator|Starts at 0. Big/Wide/Tall/VeryTall carried personally 20 m outside the truck, then released at extraction: +1. Personal Tier3 kill: +1. Each once/stage; max 2. Next shop: present items yourself for guaranteed normal discounts without rejection damage or shared attempts.|Death/ability loss revokes all; no re-earning that stage. Expires on shop exit; interruptions free. Shop role/HUD, `/roles`, entry notice. Standard/Cooperative.|Selection only|
+|![][i46]<br>Negotiator|Starts at 0. Qualifying personal delivery at extraction: +1; personal kill of the selected tier: +1. Each once/stage, max 2. In the next shop, present items yourself for guaranteed normal discounts without rejection damage or shared attempts.|Truck delivery excluded. Death/ability loss revokes all and blocks re-earning that stage. Shop exit expires rights; interruptions free. Shop role/HUD, `/roles`, entry notice. Standard/Cooperative.|Selection, delivery distance/sizes, exact enemy tier|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -130,7 +130,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 
 |Key|Default|Range|Effect|
 |---|---|---|---|
-|`Tank.HealthMultiplier` / `Tank.MaximumHealth`|1.5 / 4100|1–10 / 100–4100|Maximum HP|
+|`Tank.HealthMultiplier` / `Tank.MaximumHealth`|1.5 / 4100|1–10 / 100–4100|Max HP|
 |`Runner.SpeedMultiplier` / `Runner.MaximumSprintSpeed`|1.5 / 205|1–10 / 5–205|Sprint speed|
 |`Runner.StaminaMultiplier` / `Runner.MaximumStamina`|1.5 / 2040|1–10 / 40–2040|Stamina capacity|
 |`Courier.ContractDistance`|5|1–50 m|Carry distance outside delivery areas.|
@@ -161,10 +161,20 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 |`Porter.AllowedSizes`|Tiny,Small,Medium|Comma-separated: Tiny, Small, Medium, Big, Wide, Tall, VeryTall|Allowed sizes; empty/unknown entries allow no additional sizes.|
 |`Lifter.StrengthLevel`|200|0–200|Strength upgrade level while the role is active.|
 |`Twins.CarryStrengthMultiplier`|1.5|1–3|Co-carry Strength target multiplier, granted as temporary upgrades up to level 200.|
+|`Negotiator.DeliveryCarryDistance`|20|1–200 m|Personal carry distance outside the truck before release at extraction.|
+|`Negotiator.DeliveryAllowedSizes`|Big,Wide,Tall,VeryTall|Comma-separated native size names|Allowed delivery sizes; case/spacing ignored. Blank disables delivery earnings; unknown names ignored.|
+|`Negotiator.EnemyTier`|3|1–3|Exact native tier for a personal kill; Enhanced reward bonuses do not qualify.|
+|`Twins.CollisionReductionPercent`|50|0–100%|Co-carry collision loss prevented.|
+|`Twins.RestRadius` / `RestHoldSeconds`|3 / 3|0.5–10 m / 1–30 s|Rest distance / continuous crouched stillness without damage.|
+|`Twins.RestHealPercent` / `RestCooldownSeconds`|10 / 60|0–100% / 1–600 s|Shared max-HP healing / pair cooldown. Interrupted rest costs nothing.|
+|`Twins.RendezvousStartRange` / `RendezvousEndRange`|15 / 5|1–100 m / 0.5–100 m|Reunion assist start/end; smaller value is always the end.|
+|`Twins.RendezvousSpeedMultiplier`|1.25|1–2|Sprint multiplier toward a distant partner, rounded up to Speed levels.|
+|`Twins.DeliveryCarrySeconds` / `DeliveryRadius`|3 / 5|1–30 s / 0.5–20 m|Joint carry time outside delivery areas / both partners’ distance at delivery.|
+|`Twins.DeliveryBonusPercent` / `DeliveryStageLimit`|10 / 5000|0–100% / 0–10000|Value bonus / pair’s stage budget; each item pays once.|
 |`Lifter.LightItemStrengthLevel`|1|0–200|Holding level for light objects/shop equipment, excluding carts/bikes.|
 |`Stinker.BreakGraceSeconds`|0.5|0–10 s|Delay before a spawned uranium valuable breaks.|
 |`Influenza.IncubationSeconds`|30|0–300 s|Delay from infection to symptoms.|
-|`Influenza.MaximumHealth`|75|1–10000 HP|Maximum HP after onset. Increasing it does not heal.|
+|`Influenza.MaximumHealth`|75|1–10000 HP|Max HP after onset. Increasing it does not heal.|
 |`Influenza.SneezeMinimumSeconds` / `Influenza.SneezeMaximumSeconds`|30 / 90|1–600 s|Random interval; endpoints are sorted. Equal values give a regular interval.|
 |`Influenza.SneezeRange` / `Influenza.SpeechRange`|5 / 3|0.1–30 m|Infection distance for sneezes / voice and text chat.|
 |`Influenza.SneezeAngleDegrees` / `Influenza.SpeechAngleDegrees`|40 / 60|1–360°|Full infection angle. Half applies on each side.|
@@ -174,31 +184,31 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 
 ### Configuration
 
-All settings are available through REPOConfig. Host-controlled settings affect the session. Local settings affect only the installed player's HUD.
+Edit through REPOConfig. All settings are host-controlled except `HUD.*`, which affects only your display. Grouped keys share the first section.
 
 #### General, notifications, and HUD
 
-|Key|Default|Range / values|Effect|Control|
-|---|---:|---|---|---|
-|`General.Enabled`|true|On/Off|Enables stage role assignment.|Host|
-|`General.UniqueRoles`|true|On/Off|Avoids duplicates until every enabled eligible role has been assigned once.|Host|
-|`General.ShopUpgradeItemCount`|0|0–30|Requests this number of upgrade items for each shop. 0 removes upgrade items from the shop pool.|Host|
-|`Compatibility.EnhancedEnemyRewardsEnabled`|true|On/Off|When enabled, Elite Enemy Variants Enhanced enemies count one reward tier higher for Vampire healing and Hunter bonus-orb quality.|Host|
-|`Notifications.Enabled`|true|On/Off|Enables role-name and role-effect chat and TTS notifications.|Host|
-|`Notifications.DelaySeconds`|2.5|0–30|Delay before role announcements without Stage Flux.|Host|
-|`Notifications.StageFluxDelaySeconds`|5|0–30|Minimum delay before role announcements when Stage Flux is installed. RoleShuffle also waits for Stage Flux TTS to finish and for a 1.5-second quiet period.|Host|
-|`HUD.Enabled`|true|On/Off|Shows the current roles during a stage.|Local|
-|`HUD.RoleDisplay`|`NameOnly`|`IconAndName`, `NameOnly`, `IconOnly`|Shows role icons and names, names only, or icons only. Player names remain visible.|Local|
-|`HUD.IconSize`|64|32–128|Role icon size before HUD scaling. The HUD grows for six rows and scales to fit the screen.|Local|
-|`HUD.Anchor`|`BottomLeft`|`TopLeft`, `TopCenter`, `TopRight`, `MiddleLeft`, `MiddleCenter`, `MiddleRight`, `BottomLeft`, `BottomCenter`, `BottomRight`|Selects the HUD anchor.|Local|
-|`HUD.Alignment`|`Left`|`Left`, `Center`, `Right`|Selects the role text alignment.|Local|
-|`HUD.OffsetX`|0|`-3840`–3840|Horizontal offset from the anchor in pixels.|Local|
-|`HUD.OffsetY`|80|`-2160`–2160|Vertical offset from the anchor in pixels.|Local|
-|`HUD.ScalePercent`|70|50–200|HUD display scale percentage.|Local|
-|`HUD.PlayersPerPage`|8|2–20|Maximum players shown at once, including the pinned local player. Values of 6 or more reserve room for at least six, even with taller fonts or icons.|Local|
-|`HUD.PageIntervalSeconds`|5|1–30|Seconds each role page remains visible.|Local|
-|`HUD.TransitionDurationSeconds`|0.2|0–1|Duration of the fade between role pages.|Local|
-|`HUD.PinLocalPlayer`|true|On/Off|Keeps the local player's role visible on every page.|Local|
+|Key|Default|Range / values|Effect|
+|---|---:|---|---|
+|`General.Enabled`|true|On/Off|Enables stage role assignment.|
+|`General.UniqueRoles`|true|On/Off|Avoids duplicates until every enabled eligible role has been assigned once.|
+|`General.ShopUpgradeItemCount`|0|0–30|Requests this number of upgrade items per shop. 0 removes upgrade items from the shop pool.|
+|`Compatibility.EnhancedEnemyRewardsEnabled`|true|On/Off|When enabled, Elite Enemy Variants Enhanced enemies count one reward tier higher for Vampire healing and Hunter bonus-orb quality.|
+|`Notifications.Enabled`|true|On/Off|Enables role-name and role-effect chat and TTS notifications.|
+|`Notifications.DelaySeconds`|2.5|0–30|Delay before role announcements without Stage Flux.|
+|`Notifications.StageFluxDelaySeconds`|5|0–30|Stage Flux announcement delay; also waits for its TTS to end and 1.5 s of silence.|
+|`HUD.Enabled`|true|On/Off|Shows the current roles during a stage.|
+|`HUD.RoleDisplay`|`NameOnly`|`IconAndName`, `NameOnly`, `IconOnly`|Shows role icons and names, names only, or icons only. Player names remain visible.|
+|`HUD.IconSize`|64|32–128|Role icon size before HUD scaling. The HUD grows for six rows and scales to fit the screen.|
+|`HUD.Anchor`|`BottomLeft`|`TopLeft`, `TopCenter`, `TopRight`, `MiddleLeft`, `MiddleCenter`, `MiddleRight`, `BottomLeft`, `BottomCenter`, `BottomRight`|Selects the HUD anchor.|
+|`HUD.Alignment`|`Left`|`Left`, `Center`, `Right`|Selects the role text alignment.|
+|`HUD.OffsetX`|0|`-3840`–3840|Horizontal offset from the anchor in pixels.|
+|`HUD.OffsetY`|80|`-2160`–2160|Vertical offset from the anchor in pixels.|
+|`HUD.ScalePercent`|70|50–200|HUD display scale percentage.|
+|`HUD.PlayersPerPage`|8|2–20|Max visible players including the pinned local player. At 6+, reserves six rows even with tall fonts/icons.|
+|`HUD.PageIntervalSeconds`|5|1–30|Seconds each role page remains visible.|
+|`HUD.TransitionDurationSeconds`|0.2|0–1|Duration of the fade between role pages.|
+|`HUD.PinLocalPlayer`|true|On/Off|Keeps the local player's role visible on every page.|
 
 #### Role balance
 
@@ -207,16 +217,16 @@ Showcase roles are `Bomber`, `Stinker`, `Mage`, `Gambler`, `Trickster`, `King`, 
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
 |`Role Balance - Guarantees.ShowcaseEnabled`|true|On/Off|Enables party-size-based minimum Showcase assignments.|
-|`Role Balance - Guarantees.ShowcaseMinimums`|`3:1,7:2,14:3,24:4`|`party size:minimum` pairs|Minimum Showcase assignments by party size.|
+|`Role Balance - Guarantees.ShowcaseMinimums`|`3:1,7:2,14:3,24:4`|`party size:minimum` pairs|Min Showcase assignments by party size.|
 |`Role Balance - Guarantees.SupportEnabled`|true|On/Off|Enables party-size-based minimum Support assignments.|
-|`Role Balance - Guarantees.SupportMinimums`|`4:1,8:2,14:3,24:4`|`party size:minimum` pairs|Minimum Support assignments by party size.|
+|`Role Balance - Guarantees.SupportMinimums`|`4:1,8:2,14:3,24:4`|`party size:minimum` pairs|Min Support assignments by party size.|
 |`Role Balance - Limits.Enabled`|true|On/Off|Enables Danger, Hardship, and small-party combined limits.|
-|`Role Balance - Limits.DangerMaximums`|`1:1,8:2,16:3`|`party size:limit` pairs|Maximum simultaneous `Bomber`, `Stinker`, `Werewolf`, and `Influenza` roles by party size.|
-|`Role Balance - Limits.HardshipMaximums`|`1:1,12:2`|`party size:limit` pairs|Maximum simultaneous `Courier`, `Tuna`, and `Influenza` roles by party size.|
+|`Role Balance - Limits.DangerMaximums`|`1:1,8:2,16:3`|`party size:limit` pairs|Max simultaneous `Bomber`, `Stinker`, `Werewolf`, and `Influenza` roles by party size.|
+|`Role Balance - Limits.HardshipMaximums`|`1:1,12:2`|`party size:limit` pairs|Max simultaneous `Courier`, `Tuna`, and `Influenza` roles by party size.|
 |`Role Balance - Limits.SmallPartyMaximumPlayers`|4|1–30|Largest party size using the combined Danger and Hardship limit.|
-|`Role Balance - Limits.SmallPartyCombinedMaximum`|1|1–30|Maximum combined Danger and Hardship roles in a small party.|
+|`Role Balance - Limits.SmallPartyCombinedMaximum`|1|1–30|Max combined Danger and Hardship roles in a small party.|
 |`Role Balance - Variety.PreventSameRole`|true|On/Off|Prevents the same player receiving the same role in consecutive stages when alternatives exist.|
-|`Role Balance - Variety.HardshipCooldownStages`|2|0–10|Stages after `Courier`, `Tuna`, or `Influenza` during which that player is normally excluded from these roles.|
+|`Role Balance - Variety.HardshipCooldownStages`|2|0–10|Cooldown stages after Courier/Tuna/Influenza before that player can normally draw these roles.|
 |`Role Balance - Variety.ExcludeUnavailableRoles`|true|On/Off|Excludes context-dependent roles when their required enemy, weapon, or usable object is absent.|
 
 #### Base upgrades
@@ -251,8 +261,8 @@ Manual adjustments persist per save. Each +/- click changes the total by 1, with
 |`Base Upgrades.MapPlayerCountUpgradeLevels`|Blank|`level:value` pairs; value 0–1|Map Player Count target.|
 |`Base Upgrades.DeathHeadBatteryUpgradeLevels`|Blank|`level:value` pairs; value 0–200|Death Head Battery target.|
 |`Base Upgrade Draw.Enabled`|true|On/Off|Enables the shared Base Upgrade draw after leaving the shop.|
-|`Base Upgrade Draw.MaximumLevel`|200|0–200|Maximum target that positive truck draws can reach. Map Player Count remains limited to 1.|
-|`Base Upgrade Draw.CappedUpgradeWeightMultiplier`|0.25|0–1|Upgrade weights decrease as their combined configured and truck levels approach the draw maximum, reaching this multiplier at the maximum. 0 excludes capped upgrades; 1 disables the decrease. All Upgrades is unaffected.|
+|`Base Upgrade Draw.MaximumLevel`|200|0–200|Max target that positive truck draws can reach. Map Player Count remains limited to 1.|
+|`Base Upgrade Draw.CappedUpgradeWeightMultiplier`|0.25|0–1|Weight falls toward this multiplier as configured + truck levels approach the cap. 0 excludes capped types; 1 stops the decrease. All Upgrades is unaffected.|
 |`Base Upgrade Draw.WeightFalloffExponent`|2|0.1–10|Controls the weight decrease curve. 1 decreases evenly; larger values preserve more weight until near the maximum.|
 |`Base Upgrade Draw.ChangeAmountWeights`|`-1:10,0:15,1:60,2:15`|`change amount:weight` pairs; amount `-200`–200, weight 0–1000|Relative weights for the possible change amounts.|
 |`Base Upgrade Draw Selection.Health`|true|On/Off|Include in draws.|
@@ -292,14 +302,14 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
-|`Tank.HealthUpgradeLevels`|21|0–200|Minimum Health level guaranteed to Tank.|
-|`Tracker.HealthUpgradeLevels`|3|0–200|Minimum Health level; preserves stronger Base upgrades.|
+|`Tank.HealthUpgradeLevels`|21|0–200|Min Health level guaranteed to Tank.|
+|`Tracker.HealthUpgradeLevels`|3|0–200|Min Health level; preserves stronger Base upgrades.|
 |`Tracker.EnemyDetectionRange`|25|1–100|Enemy detection distance (m), including through walls.|
 |`Tracker.DangerAlertRange`|8|0–100|Close warning distance (m), capped at detection range. 0 disables warnings.|
-|`Tracker.NotificationIntervalSeconds`|20|5–120|Minimum report interval (s). Close warnings bypass normal reports' wait, with their own same-length interval.|
+|`Tracker.NotificationIntervalSeconds`|20|5–120|Min report interval (s). Close warnings bypass normal reports' wait, with their own same-length interval.|
 |`Tracker.DistanceChangeThreshold`|5|1–50|Distance change (m) for an update. Target changes, turns of 60° or above/below changes also update.|
-|`Runner.SpeedUpgradeLevels`|6|0–200|Minimum Speed level guaranteed to Runner.|
-|`Runner.StaminaUpgradeLevels`|46|0–200|Minimum Stamina level guaranteed to Runner.|
+|`Runner.SpeedUpgradeLevels`|6|0–200|Min Speed level guaranteed to Runner.|
+|`Runner.StaminaUpgradeLevels`|46|0–200|Min Stamina level guaranteed to Runner.|
 |`Jumper.ExtraJumpUpgradeLevels`|10|0–200|Extra Jump levels granted to Jumper.|
 |`Launcher.LaunchUpgradeLevels`|10|0–200|Launch levels granted to Launcher.|
 |`Climber.ClimbUpgradeLevels`|50|0–200|Tumble Climb levels granted to Climber.|
@@ -311,8 +321,8 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Ghost.HealIntervalSeconds`|2|0.5–60|Healing interval (s) while dead.|
 |`Ghost.TotalHealingLimit`|50|0–10000|Shared healing budget per stage; revival does not reset it.|
 |`Ghost.CarrierSpeedBonusLevels`|1|0–20|Temporary Speed levels while carrying the head. No stacking; stronger King Speed aura wins.|
-|`Bomber.DistancePerGrenade`|8|1–100|Travel distance in meters required for each grenade placement.|
-|`Bomber.MaximumActiveGrenades`|30|1–30|Maximum generated grenades retained per Bomber. Placing another removes the oldest one.|
+|`Bomber.DistancePerGrenade`|8|1–100|Travel distance (m) required per grenade placement.|
+|`Bomber.MaximumActiveGrenades`|30|1–30|Max generated grenades retained per Bomber. Placing another removes the oldest one.|
 |`Bomber.AllowTruckSpawns`|false|On/Off|Allows grenade placement inside the truck.|
 |`Bomber.ExplosiveGrenadesEnabled`|true|On/Off|Includes vanilla explosive grenades in the random selection.|
 |`Bomber.StunGrenadesEnabled`|true|On/Off|Includes vanilla stun grenades in the random selection.|
@@ -320,19 +330,19 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Bomber.DuctTapedGrenadesEnabled`|true|On/Off|Includes vanilla duct-taped grenades in the random selection.|
 |`Medic.HealAmount`|5|1–100|Health restored to each nearby teammate each time.|
 |`Medic.HealIntervalSeconds`|2|0.1–30|Seconds between each round of Medic healing.|
-|`Medic.HealRadius`|5|1–30|Maximum healing distance in meters.|
-|`Medic.TotalHealingLimit`|150|1–10000|Maximum total health restored by each Medic per stage. Only health actually missing from a target consumes the limit.|
-|`Phoenix.ReviveDelaySeconds`|2|2–10|Minimum seconds before revival; also waits for the Death Head to stop moving.|
+|`Medic.HealRadius`|5|1–30|Max healing distance (m).|
+|`Medic.TotalHealingLimit`|150|1–10000|Max total health restored by each Medic per stage. Only health actually missing from a target consumes the limit.|
+|`Phoenix.ReviveDelaySeconds`|2|2–10|M(s) before revival; also waits for the Death Head to stop moving.|
 |`Phoenix.RevivalHealth`|25|1–1000|Health after Phoenix revival, capped at their maximum health.|
 |`Courier.Damage`|1|1–100|Damage each time outside the truck.|
 |`Courier.DamageIntervalSeconds`|0.1|0.05–10|Seconds between damage outside the truck.|
-|`Rescuer.ReviveDelaySeconds`|2|0–10|Minimum seconds after death. Keep holding the head until revival is ready.|
-|`Rescuer.MaximumRevives`|2|1–10|Maximum revivals for each Rescuer per stage.|
+|`Rescuer.ReviveDelaySeconds`|2|0–10|M(s) after death. Keep holding the head until revival is ready.|
+|`Rescuer.MaximumRevives`|2|1–10|Max revivals per Rescuer per stage.|
 |`Rescuer.RevivalHealth`|25|1–1000|Health after a Rescuer revival, capped at the target's maximum health.|
 |`Vampire.Tier1HealAmount`|5|1–100|Health restored by a nearby Danger Level 1 enemy death.|
 |`Vampire.Tier2HealAmount`|10|1–100|Health restored by a nearby Danger Level 2 enemy death.|
 |`Vampire.Tier3HealAmount`|50|1–100|Health restored by a nearby Danger Level 3 enemy death.|
-|`Vampire.Radius`|10|1–50|Maximum distance in meters from the dying enemy.|
+|`Vampire.Radius`|10|1–50|Max distance (m) from the dying enemy.|
 |`Tuna.StationaryDelaySeconds`|3|0.1–30|Seconds without movement before damage begins.|
 |`Tuna.Damage`|1|1–100|Damage per hit while stationary.|
 |`Tuna.DamageIntervalSeconds`|0.1|0.05–10|Seconds between stationary damage.|
@@ -340,8 +350,8 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Musician.HealRadius`|10|1–50|Healing radius (m).|
 |`Musician.HealCooldownSeconds`|1|0.1–30|Healing interval (s), shared by all instruments.|
 |`Musician.TotalHealingLimit`|1000|1–10000|Self + allies per stage; remaining budget on HUD.|
-|`Mage.CastIntervalSeconds`|3|0.1–30|Minimum seconds between spell activations.|
-|`Mage.BeamDurationSeconds`|5|0.1–30|Laser spell duration in seconds. Held staff attacks are unchanged.|
+|`Mage.CastIntervalSeconds`|3|0.1–30|M(s) between spell activations.|
+|`Mage.BeamDurationSeconds`|5|0.1–30|Laser spell duration (s). Held staff attacks are unchanged.|
 |`Mage.StarExpression`|`Angry`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|Facial expression that casts `star`.|
 |`Mage.RollExpression`|`Sad`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|Facial expression that casts `roll`.|
 |`Mage.GravityExpression`|`Suspicious`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|Facial expression that casts `gravity`.|
@@ -351,7 +361,7 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Mage.AutoRecoveryDelaySeconds`|10|0–300|Seconds without taking damage before automatic recovery starts.|
 |`Mage.AutoRecoveryIntervalSeconds`|2|0.1–60|Seconds between each automatic recovery.|
 |`Mage.AutoRecoveryAmount`|1|0–100|HP restored each time automatic recovery occurs.|
-|`Mage.AutoRecoveryTotalHealingLimit`|120|1–10000|Maximum total automatic recovery per player per stage. Other healing is not counted. Death, revival, and role changes do not reset the amount already used.|
+|`Mage.AutoRecoveryTotalHealingLimit`|120|1–10000|Auto-healing budget per player/stage, excluding other healing. Death, revival and role changes preserve usage.|
 |`Mage.StarHealthCost`|10|0–100|Health consumed after a successful `star` cast.|
 |`Mage.GravityHealthCost`|10|0–100|Health consumed after a successful `gravity` cast.|
 |`Mage.RollHealthCost`|15|0–100|Health consumed after a successful `roll` cast.|
@@ -364,23 +374,23 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Gambler.GambitWhiteHealthUpgradeLevels`|5|0–200|Health upgrade levels added by Gambit's white result for the current stage only.|
 |`Hunter.WeaponBatteryConsumptionPercent`|75|0–100|Percentage of normal weapon battery consumption used by Hunter.|
 |`Hunter.DoubleOrbChancePercent`|10|0–100|Chance to double the normal orb count after Hunter defeats an enemy, checked only if the jackpot roll fails.|
-|`Hunter.JackpotOrbChancePercent`|0.5|0–100|Chance to use the jackpot target after Hunter defeats an enemy. Missing orbs are added, but a normal drop above the target is not reduced.|
+|`Hunter.JackpotOrbChancePercent`|0.5|0–100|Personal-kill jackpot chance. Adds missing orbs up to the target; larger normal drops are preserved.|
 |`Hunter.JackpotOrbCount`|10|1–30|Target orb count used by Hunter's jackpot result.|
 |`Hunter.GuaranteedOrbEveryKills`|5|0–100|Qualifying personal kills per guaranteed extra orb; 0 disables. Random extras count toward the guarantee.|
-|`Stinker.DistancePerCloud`|2|1–100|Travel distance in meters between recorded uranium-cloud trail points.|
-|`Stinker.MinimumSafetyDistance`|2|1–30|Minimum distance Stinker must be from the newest cloud position. Clouds appear one after another.|
+|`Stinker.DistancePerCloud`|2|1–100|Travel distance (m) between recorded uranium-cloud trail points.|
+|`Stinker.MinimumSafetyDistance`|2|1–30|Min distance Stinker must be from the newest cloud position. Clouds appear one after another.|
 |`Stinker.AllowTruckSpawns`|false|On/Off|Allows uranium-cloud trail points to be recorded and created inside the truck.|
 |`Trickster.ActiveSeconds`|25|1–120|Seconds before the active decoy is removed.|
 |`Trickster.DecoyExpression`|`Happy`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|Facial expression that places the decoy.|
 |`Trickster.CooldownSeconds`|45|1–300|Seconds after a decoy that attracted an enemy ends before another can be placed.|
 |`Trickster.NoTargetCooldownSeconds`|10|0–300|Seconds after a decoy that attracted no enemies ends before another can be placed.|
-|`Trickster.InvestigateRadius`|40|1–100|Enemy investigation radius around the decoy in meters.|
+|`Trickster.InvestigateRadius`|40|1–100|Enemy investigation radius around the decoy (m).|
 |`Trickster.PulseIntervalSeconds`|1|0.25–10|Seconds between enemy investigation pulses.|
-|`Trickster.PlacementDistance`|2|0.5–10|Placement distance in front of Trickster in meters.|
+|`Trickster.PlacementDistance`|2|0.5–10|Placement distance in front of Trickster (m).|
 |`Mechanic.RepairPercentPerSecond`|2|0–100|Shared original-value percentage repaired per second while Mechanic directly holds damaged valuables.|
-|`Mechanic.MaximumRepairPercentPerStage`|50|0–100|Maximum cumulative original-value percentage repaired by each Mechanic per stage.|
+|`Mechanic.MaximumRepairPercentPerStage`|50|0–100|Max cumulative original-value percentage repaired by each Mechanic per stage.|
 |`Electrician.ChargePercentPerSecond`|10|0–100|Shared battery percentage restored per second while Electrician directly holds inactive rechargeable items.|
-|`Electrician.MaximumChargePercentPerStage`|100|0–1000|Maximum cumulative battery percentage restored by each Electrician per stage.|
+|`Electrician.MaximumChargePercentPerStage`|100|0–1000|Max cumulative battery percentage restored by each Electrician per stage.|
 |`Warden.AdditionalStunSeconds`|3|0–30|Seconds added to enemy stuns caused by Warden.|
 |`Ninja.VisionRecognitionMultiplier`|2|1–10|Multiplier applied to the time enemies need to visually recognize Ninja.|
 |`Executioner.StunnedDamageMultiplier`|2|1–10|Direct attack damage multiplier against enemies already stunned before the hit.|
@@ -390,28 +400,28 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Influencer.PlayerCheckIntervalSeconds`|0.5|0.1–10|Seconds between nearby-player and dynamic-upgrade checks.|
 |`Influencer.NoiseRadiusMultiplier`|2|1–10|Multiplier for footstep, landing, VC, and chat TTS enemy investigation radii.|
 |`Influencer.TTSInvestigateRadius`|20|1–100|Enemy investigation radius of periodic TTS.|
-|`Influencer.MinimumTTSIntervalSeconds`|20|1–300|Minimum randomly selected periodic TTS interval.|
-|`Influencer.MaximumTTSIntervalSeconds`|40|1–300|Maximum randomly selected periodic TTS interval. Values are safely swapped when configured below the minimum.|
+|`Influencer.MinimumTTSIntervalSeconds`|20|1–300|Min randomly selected periodic TTS interval.|
+|`Influencer.MaximumTTSIntervalSeconds`|40|1–300|Max randomly selected periodic TTS interval. Values are safely swapped when configured below the minimum.|
 |`Influencer.TTSQuietPeriodSeconds`|1.5|0–10|Quiet time after this player's TTS before periodic speech.|
-|`Influencer.<Upgrade>UpgradeScaling`|Per upgrade|`count:level` pairs|Sets that upgrade's minimum target by nearby-player count without lowering its pre-role level. Example: Strength defaults to `1:1,2:4,3:9,4:13,5:20`. Available upgrades match Base Upgrades. Blank grants no level.|
+|`Influencer.<Upgrade>UpgradeScaling`|See defaults table|`count:level` pairs|Min target by nearby-player count; never lowers the pre-role level. Blank grants nothing.|
 |`Werewolf.PlayerDamageMultiplier`|2|1–10|Multiplier for identifiable damage Werewolf deals to another player.|
-|`Berserker.<Upgrade>UpgradeScaling`|Per upgrade|`HP%:level` pairs|Sets that upgrade's minimum target while remaining HP is at or below the percentage, without lowering its pre-role level. Example: Strength defaults to `80:1,60:4,40:9,20:13,10:20`. Available upgrades match Base Upgrades except Health. Blank grants no level.|
+|`Berserker.<Upgrade>UpgradeScaling`|See defaults table|`HP%:level` pairs|Min target at or below the HP threshold; never lowers the pre-role level. Blank grants nothing; Health is unavailable.|
 |`Bodyguard.HealthUpgradeLevels`|11|0–200|Health target while Bodyguard is assigned.|
-|`Bodyguard.ProtectionRadius`|15|1–100|Maximum teammate-protection distance in meters.|
+|`Bodyguard.ProtectionRadius`|15|1–100|Max teammate-protection distance (m).|
 |`Bodyguard.DamageSharePercent`|50|0–100|Percentage of enemy damage transferred without reducing Bodyguard below 1 HP.|
 |`Rammer.TumbleAttackDamage`|100|0–100000|Enemy damage dealt by Rammer's Tumble Attack.|
 |`Rammer.SelfDamage`|15|0–100000|Damage Rammer takes after its Tumble Attack hits an enemy.|
-|`Diver.UnderfloorDurationSeconds`|10|1–120|Maximum time below a floor before Diver dies.|
+|`Diver.UnderfloorDurationSeconds`|10|1–120|Max time below a floor before Diver dies.|
 |`Diver.MovementForce`|8|1–30|Free-movement force while Diver is below a floor.|
 |`Sniper.ReferenceDistance`|6|1–50|Distance (m) where enemy damage is unchanged.|
 |`Sniper.MinimumDamageMultiplier`|0.5|0–1|Enemy damage multiplier at point-blank range. Positive hits still deal at least 1 damage.|
-|`Sniper.MaximumDamageMultiplier`|2|1–10|Maximum enemy damage multiplier at long range.|
-|`Sniper.MaximumMultiplierDistance`|18|1–100|Distance (m) where the maximum multiplier is reached. Values at or below Reference Distance use a point just beyond it.|
+|`Sniper.MaximumDamageMultiplier`|2|1–10|Max enemy damage multiplier at long range.|
+|`Sniper.MaximumMultiplierDistance`|18|1–100|Max-damage distance; effective minimum is `ReferenceDistance + 0.1` m.|
 |`Avenger.DamageMultiplier`|1.5|1–10|Enemy damage multiplier after another player dies.|
 |`Avenger.DurationSeconds`|30|1–120|Duration of the enemy damage bonus. Another death refreshes this duration.|
-|`Avenger.TriggerRadius`|30|1–100|Maximum distance in meters from a dying player that activates Avenger.|
-|`Avenger.AllyHitDamageThreshold`|15|1–1000|Minimum HP lost to one enemy hit.|
-|`Avenger.AllyHitTriggerRadius`|15|1–100|Maximum distance to the hit ally (m).|
+|`Avenger.TriggerRadius`|30|1–100|Max distance (m) from a dying player that activates Avenger.|
+|`Avenger.AllyHitDamageThreshold`|15|1–1000|Min HP lost to one enemy hit.|
+|`Avenger.AllyHitTriggerRadius`|15|1–100|Max distance to the hit ally (m).|
 |`Avenger.AllyHitDamageMultiplier`|1.25|1–10|Hit-triggered enemy damage multiplier. Stronger active bonus wins.|
 |`Avenger.AllyHitDurationSeconds`|10|1–120|Hit-triggered bonus duration (s).|
 |`Avenger.AllyHitCooldownSeconds`|20|1–300|Hit-trigger cooldown (s); deaths bypass it.|
@@ -423,7 +433,6 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 
 The default Base level is Health 1 and 0 for other upgrades. Role upgrade settings specify the level used during that role; they are not levels added to Base. Influencer and Berserker preserve stronger upgrades when their conditions change. `Tracker` keeps stronger Base upgrades and remains eligible at high Base levels. `Rammer` sets Launch, Tumble Climb and Tumble Wings to 0 during the stage. Throw is unaffected.
 
-Influencer/Berserker use comma- or semicolon-separated `condition:level` pairs: the last reached player-count target for Influencer, or the lowest reached HP threshold for Berserker. Defaults omit zero-level pairs; add `condition:0` to force zero. Levels: 0–100 (Map Player Count: 0–1). Malformed entries are ignored.
 
 ### Player tools
 
@@ -432,25 +441,36 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 - **Role guide:** `Overview` summarizes abilities; `Details` shows host-configured values and limits. `Draw eligibility` shows your current candidates and exclusion reasons. Conditions may depend on other players; stage items remain unconfirmed until generation.
 - **Role changes:** with testing enabled, hosts can use `TOOLS` → `Change player roles` during stages. Select a player or all players; Twins requires two living players.
 - **HUD editor:** in `TOOLS`, drag the HUD sample and adjust its anchor, alignment, text/icon size, scale, mode and visibility. `SAVE` keeps local settings; `CANCEL` or Esc discards them; `RESET` previews defaults. Mouse controls also work in the lobby.
-- **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports contain mod versions, settings and recent activity, are saved in `BepInEx/RoleShuffleReports`, and are never sent automatically.
+- **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports include mod versions/settings/recent activity, save to `BepInEx/RoleShuffleReports`, and are never sent automatically.
 - **Language:** Menus support all 21 R.E.P.O. languages, including Arabic, Thai and regional Spanish/Portuguese. They follow the game setting. Roulette upgrade names use the game’s translations. Role names, setting identifiers, commands and diagnostics stay English.
 - **Sync status:** `TOOLS` shows whether roles, guide, Base Upgrades and history are current. `REFRESH DISPLAY DATA` refreshes these displays without changing roles or upgrades.
 - **Draw history:** shows the latest 50 completed truck draws, including level, target, rolled change and actual before/after targets. Zero/capped results are retained; cancelled draws are omitted. History is saved with the host’s run and shared with installed participants.
 
 `HUD.FontSize` defaults to 28 (range 16–48) and is a personal setting. The default HUD display mode is `NameOnly`.
 
+Dynamic scaling (`<Upgrade>UpgradeScaling`): comma/semicolon-separated pairs. Influencer uses the last reached player count (0–30); Berserker the lowest reached HP threshold (0–100%). Last duplicate wins; invalid pairs are ignored. Levels: 0–200 (MapPlayerCount 0–1). Blank/0 grants no role levels; stronger Base levels stay. Defaults: — blank, N/A unavailable.
+
+|Upgrade|Influencer|Berserker|
+|---|---|---|
+|Strength|`1:1,2:4,3:9,4:13,5:20`|`80:1,60:4,40:9,20:13,10:20`|
+|Speed|`1:1,2:2,3:3,4:3,5:3`|`80:1,60:2,40:3,20:3,10:4`|
+|Stamina|`1:3,2:6,3:10,4:12,5:15`|`80:3,60:6,40:10,20:12,10:20`|
+|ExtraJump|`2:1,3:2,4:4,5:5`|`60:1,40:2,20:4,10:5`|
+|TumbleWings|`1:1,2:2,3:3,4:4,5:5`|—|
+|Health|`4:6,5:11`|N/A|
+|Range, Launch, TumbleClimb, CrouchRest, MapPlayerCount, DeathHeadBattery|—|—|
+
 ### Notifications and HUD
 
 - **Resources:** the remaining healing, revives, repair, charge and wagers appear below stamina as cyan icons and numbers in one column. The display fits the available space, and empty resources turn red. It appears while you are alive and have the mod installed. Adjust it with `HUD.ResourceHud*`.
-- Mod users see role emblems in `CURRENT ROLES`, `ROLE GUIDE` and optionally the HUD. Hexagon exteriors are transparent; unrevealed secrets share a question-mark emblem.
-- At stage start, each player announces the assigned English role name through vanilla chat and TTS.
+- Mod users see role emblems in `CURRENT ROLES`, `ROLE GUIDE` and optionally the HUD. Icons have transparent exteriors; unrevealed secrets share a question mark.
+- At stage start, players announce their English role names via vanilla chat/TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
-- When Stage Flux is present, RoleShuffle uses the separate Stage Flux announcement delay to avoid overlapping stage-start messages.
-- RoleShuffle waits until Stage Flux TTS has finished and remains quiet for 1.5 seconds before announcing roles.
+- With Stage Flux, uses its separate announcement delay and waits for its TTS to end plus 1.5 s of silence.
 - Initial role announcements play one at a time. Later notices and replies wait only for the same player's chat/TTS; different players can speak together.
 - Influencer speech and Influenza sneezes wait for their own player's messages and remain audible to enemies. Diver counts at 15-second marks (30, 15), then every second from 10 to 0, interrupting previous speech; normal notices wait.
 - The local `ROLES` list defaults to names at the bottom left, with your role pinned and pages rotating every 5 seconds. It fits six multilingual/icon rows when `HUD.PlayersPerPage` is 6 or higher; smaller limits are respected. Long player names are shortened to keep role names visible. See HUD settings above.
-- The Base Upgrade draw animation is shown to the host and participants who have RoleShuffle installed.
+- Installed players see the Base Upgrade draw animation.
 - Open `ROLES` at the top-right of Escape (`CURRENT ROLES`) or the lobby (`ROLE GUIDE`; current roles unavailable). Your role appears first with its overview expanded; click players to toggle overviews. The left column also opens `BASE UPGRADES`: host targets, configured targets and accumulated truck-draw bonuses.
 - `ROLE GUIDE` explains enabled roles in your selected language. In multiplayer, descriptions use the host's settings. If a description is unavailable in your language, it appears in English. Single-player uses your own settings.
 
@@ -560,11 +580,11 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |---|---|---|---|
 |![][i01]<br>Tank|基礎の最大HPを1.5倍に強化します。倍率強化の上限は4,100HPです。|最低Health 21。|最低値・倍率・上限|
 |![][i02]<br>Runner|基礎の走行速度・スタミナを1.5倍に強化します。倍率強化の上限は205・2,040です。|最低Speed 6・Stamina 46。|最低値・倍率・上限|
-|![][i03]<br>Jumper|Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。|常時有効の強化。|Extra Jump目標値0～100|
+|![][i03]<br>Jumper|Extra Jumpがレベル10になり、着地するまでに最大10回の追加ジャンプを使えます。|常時有効の強化。|Extra Jump目標値0～200|
 |![][i04]<br>Lifter|StrengthをLv200に変更し、重い物・カート・バイクを扱いやすくします。|役職終了で本来のStrengthに戻ります。基礎値が重量物に対して同等の力に達すると抽選対象外（初期設定ではLv50）。|Strengthレベル|
-|![][i05]<br>Launcher|Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。|常時有効の強化。|Launch目標値0～100|
-|![][i06]<br>Climber|Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。|常時有効の強化。|Tumble ClimbとRangeの目標値0～100|
-|![][i07]<br>Flyer|Tumble Wingsの効果時間が延び、空中をより長く移動可能です。Tumble Wingsはレベル10です。|常時有効の強化。|Tumble Wings目標値0～100|
+|![][i05]<br>Launcher|Tumble開始時にプレイヤーをより遠く前方へ飛ばします。Launchはレベル10です。|常時有効の強化。|Launch目標値0～200|
+|![][i06]<br>Climber|Tumble中の登りやすさが増し、より遠くの物を掴めます。Tumble Climbはレベル50、Rangeはレベル20です。|常時有効の強化。|Tumble ClimbとRangeの目標値0～200|
+|![][i07]<br>Flyer|Tumble Wingsの効果時間が延び、空中をより長く移動可能です。Tumble Wingsはレベル10です。|常時有効の強化。|Tumble Wings目標値0～200|
 |![][i08]<br>Tracker|25m以内の最も近い敵を自動通知し、8m以内への接近を警告。死亡した仲間の最も近い頭は距離制限なく追跡。Health最低3、Map Player Count最低1となり、高い基礎強化を維持。|有意な変化があると本人だけに通常20秒間隔で通知。接近警告は待ち時間中も届きますが、危険が近くに留まる間は連発しません。視点基準の直線方向と上下を案内。アイテム・操作不要、2人以上で抽選。|Health 0～200。検知距離・警告距離・通知間隔・距離変化は下表。|
 |![][i09]<br>Ghost|Death Head BatteryはLv50。死亡中、頭から5m以内の味方を2秒ごとに1HP回復し、1ステージで合計50HPまで回復。頭を持つ味方はSpeed＋1。|蘇生しても回復上限は戻りません。複数の頭では重複せず、KingのSpeed支援とは強い方を優先。1人では抽選されません。Baseが高くても抽選対象。|Battery、回復、運搬者のSpeed|
 |![][i10]<br>Bomber|8 m移動するごとに起動済みグレネードをランダム設置します。Bomber 1人につき最大30個まで残り、上限では最も古いものを削除します。|グレネードはプレイヤーやValuableにも危険です。生成されたグレネードを持てるのはBomberだけです。トラック内設置が無効な場合、トラック内の移動距離は加算されません。|距離、上限、トラック内設置、グレネード種類|
@@ -576,12 +596,12 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i16]<br>King|Crownと12mの強化範囲。味方へSpeed・Range各＋2、Strength最大＋5。|自分は対象外。重複なし。上限200、掴む力・回転力の低下なし。範囲外で追加分を解除。1ステージ1人。|半径・追加レベル|
 |![][i17]<br>Tuna|ステージ開始時の5秒間の猶予後、3秒間停止すると、移動するまで0.1秒ごとに1ダメージを受けます。|死亡する可能性があります。停止時間の計測は最初の猶予後に始まります。動くと即座にリセットし、失った体力は回復しません。|停止時間、ダメージ、間隔|
 |![][i18]<br>Musician|演奏中、本人と10m以内の生存者を5HP回復。全楽器共通で1秒間隔、1ステージ合計1000HPまで。|ピアノ・ハープ・ギター・バンジョーに対応。パンフルート・ハーモニカ・口琴は口元で発音中に回復。楽器がなければ通常は抽選対象外。死亡・役職変更でも残量を維持。|回復量・範囲・間隔・上限|
-|![][i19]<br>Mage|チャットで`star`、`gravity`、`roll`、`void`、`laser`を入力するか、設定した表情を選択し、順に10、10、15、30、50 HPを消費してバニラ攻撃を発動します。10秒間ダメージを受けなければ、2秒ごとに1 HP回復します。自動回復は1ステージの累計120 HPまでです。保持した杖で発動する魔法の効果時間は1.3倍になります。|表情を解除して標準へ戻す操作では発動しません。全魔法で3秒のクールダウンを共有し、消費で死亡する場合は発動しません。攻撃はプレイヤーやValuableにも危険です。効果時間の延長はチャット・表情での魔法や、星杖の瞬間的な攻撃には適用しません。|魔法ごとの表情、発射クールダウン、魔法ごとのHP消費量、自動回復の有効化、待機時間、間隔、回復量、ステージごとの回復上限|
+|![][i19]<br>Mage|チャットの`star`・`gravity`・`roll`・`void`・`laser`または設定した表情でHPを消費して攻撃。無被弾時間後、ステージ予算内で徐々に回復。保持した杖の魔法持続時間は1.3倍。|全攻撃でクールタイム共有。HP消費後に生存できる場合のみ発動。味方や貴重品にも危険。対応表情を選ぶと発動し、解除時は発動しません。杖の延長はチャット/表情魔法とStar Wandの即時攻撃には適用しません。|表情・間隔・HP消費・回復ON/OFF/猶予/間隔/量/上限|
 |![][i20]<br>Gambler|持ったValuableは50%の確率で現在価格が2倍になり、失敗すると破壊されます。Gambitは緑で50 HP回復、赤で100ダメージ、黒で死亡、白で全回復してステージ中のHealthを5レベル増やします。|賭けは一度に1回だけ使用でき、納品後に復帰します。傷ついたValuableは低下後の価格を基準にします。|勝率、勝利倍率、Gambitの緑回復量、赤ダメージ、白の一時Healthレベル|
 |![][i21]<br>Hunter|武器のバッテリー消費は通常の75％。自分が倒したオーブを落とす敵は10％でオーブ2倍、0.5％で10個。対象の敵を5体倒すごとに追加オーブを最低1個保証。|抽選の追加分は保証分を兼ねます。撃破数はステージごとにリセット。本人が保持・装備する武器と、本人の撃破が対象。Enhanced報酬は追加オーブの品質だけに影響します。|バッテリー、オーブの確率・個数、保証間隔|
 |![][i22]<br>Stinker|2 m移動するごとに、ダメージを与えるウラン雲を残します。雲は、Stinkerが最新の発生位置から2 m以上離れた後に1つずつ発生します。出現したウラン貴重品は0.5秒の猶予後に壊れます。|ウラン雲はほかのプレイヤーへダメージを与えます。Stinkerも雲へ戻るとダメージを受ける可能性があります。デフォルトではトラック内に発生しません。|距離、安全距離、トラック内発生、破壊猶予|
 |![][i23]<br>Engineer|対応している効果付きValuableを保持している間、その効果が発動しないようにします。|Camera、Propane Tank、Snowmobile、Flashlight、Clown Doll、Love Potionは対象外です。デフォルトでは対応Valuableが存在しない場合に抽選されません。|抽選設定のみ|
-|![][i24]<br>Trickster|チャットで`decoy`と入力するか、設定した表情を選択すると、半径40 m以内の敵を25秒間繰り返し引きつける固定式Scream Dollを設置します。|デコイが有効な間は新しいデコイを設置できません。クールダウンは終了後から始まり、敵を引きつけた場合は45秒、一体も引きつけなかった場合は10秒です。デコイは掴む、破壊する、納品することができません。|デコイ用の表情、有効時間、通常時と空振り時のクールダウン、範囲、誘導間隔、設置距離|
+|![][i24]<br>Trickster|`decoy`のチャット入力または設定表情で、近くの敵を繰り返し引き寄せる固定Scream Dollを設置。|同時に1個。終了後にクールタイムが始まり、敵を引き寄せなかった場合は短縮。つかむ・破壊・納品はできません。|表情・持続・通常/空振り間隔・範囲・誘導間隔・設置距離|
 |![][i25]<br>Mechanic|破損したValuableを直接掴んでいる間、元の売却価格の合計2%を毎秒回復し、ステージごとに合計50ポイントまで回復します。|実際に回復した価格だけがステージ上限へ加算されます。修復済みのValuableとValuable以外は対象外です。複数を同時に掴んだ場合、回復速度とステージ上限を共有します。売却価格を回復する効果で、破損した外見は残る場合があります。|回復速度、ステージ合計上限|
 |![][i26]<br>Electrician|使用していない充電可能なアイテムを直接掴んでいる間、合計10%のバッテリーを毎秒回復し、ステージごとに合計100ポイントまで回復します。|使用中、満充電、充電不可能なアイテムは対象外です。デフォルトでは充電可能アイテムが存在しない場合に抽選されません。|充電速度、ステージ合計上限|
 |![][i27]<br>Warden|Wardenの武器、グレネード、保持している攻撃用オブジェクトによる敵のスタン時間を3秒延長します。|元の攻撃がその敵をスタンさせられる場合だけ適用。|追加スタン時間|
@@ -596,14 +616,14 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i36]<br>Diver|固定された床で下を向いたままタンブルすると床を抜け、最大10秒間、床下を移動可能です。|時間内に床を抜けて戻れないと死亡します。床上へ戻ると直前の潜航時間の1.5倍のクールダウンが始まり、残り時間と再使用可能状態はTTSで通知されます。|床下制限時間、移動力|
 |![][i37]<br>Sniper|敵へのダメージが距離に応じて連続変化し、密着時0.5倍、6mで1倍、18mで最大2倍。|攻撃者を特定できる場合に適用。車両衝突とTumble Attackは変化しません。|距離・倍率|
 |![][i38]<br>Imitator|最初はBase Upgradesだけが適用されます。他のプレイヤーへHPを渡すときと同じ位置をつかむと、その仲間のアップグレード、能力、デメリットを残りのステージ中コピーします。以後、割り当て一覧にはImitatorとコピー先の役職を併記します。|Imitator、King、Bomber、Stinker、Werewolf、Courier、Tuna、Influenza、Twins、???1、???2はコピーしません。対象外をつかむと`CannotCopy`（コピー不可）と通知します。最初に成功したコピーはそのステージ中固定です。1人のセッションでは抽選されません。|抽選設定のみ|
-|![][i39]<br>Avenger|15m以内の味方が敵の一撃で15HP以上失うと、10秒間、敵へのダメージが1.25倍（クールダウン20秒）。30m以内の味方が死亡すると30秒間1.5倍。|発動・終了を通知。強い方だけ適用。死亡効果は被弾効果のクールダウン中も発動し、再発動で時間を更新。自傷・味方の攻撃では被弾効果は発動しません。自分の死亡では発動せず、1人では抽選されません。|被弾・死亡の範囲、閾値、倍率、時間、クールダウン|
+|![][i39]<br>Avenger|近くの仲間への敵の攻撃や、近くの仲間の死亡で、敵へのダメージが一時増加。|発動・終了を通知。強い倍率のみ適用。仲間の死亡は被弾側クールタイムを無視して死亡側ボーナスを更新。自傷・味方攻撃では被弾ボーナスを得られず、自分の死亡でも発動しません。1人では抽選なし。|被弾/死亡の範囲・しきい値・倍率・時間・間隔|
 |![][i40]<br>Brawler|同じ敵への近接攻撃が1.25倍から命中ごとに0.25ずつ上昇し、最大2倍。銃・杖の弾・レーザーは0.75倍。|別の敵に命中、または4秒間命中しないと連撃をリセット。味方への攻撃は1.25倍のまま。車両衝突・Tumble Attack・グレネード・通常の保持物は変化しません。|近接・遠隔倍率、連撃の上昇幅・上限・猶予|
-|![][i41]<br>Influenza|**発症：** この役職になって30秒後、最大HPが75に固定。発症するまでは感染を広げません。<br>**くしゃみ：** 発症後、30～90秒ごと（平均約1分）に自動で発生。前方5m以内・左右それぞれ20度の範囲にいる仲間へ、1人ずつ60％で感染。<br>**VC・チャット：** 発症後、前方3m以内・左右それぞれ30度の範囲にいる仲間へ、1人ずつ30％で感染。VCはひとまとまりの発話につき1回、チャットは1投稿につき1回判定。|**感染した仲間：** その場で元の役職を失い、インフルエンザへ変更。30秒後に発症し、さらに感染を広げます。<br>**敵への音：** くしゃみは全方向の敵にも届きます。基本は半径5mで、敵の聴力によって変わります。<br>死亡・蘇生で発症までの時間はリセットされず、ステージ終了で解除。1人では抽選対象外。|発症時間、HP、くしゃみ間隔、感染範囲・角度・確率、敵への音|
-|![][i42]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品を同時につかむとStrengthを約1.5倍相当に強化するアップグレードを付与（上限Lv200）し、衝突による価値減少を半減。3m以内で2人ともしゃがみ、被弾せず3秒静止すると共有最大HPの10％と両者の全スタミナを回復し、60秒の共通待ち時間が発生。15m以上離れた相方へ走る間は速度約1.25倍、5m以内で終了。納品エリア外で3秒共同運搬した品を、2人が品の5m以内にいる状態で搬入すると価値＋10％。1品1回、ステージ合計上限$5,000。|2人以上で最大1組、相方は固定。片方が死亡すると2人とも死亡し、片方の蘇生で同じ回復量を共有して2人とも復活。片方への感染で2人ともInfluenzaとなり共有解除。ステージ終了・相方離脱でも共有を解除し、残りHP割合を維持。ペア内HP渡し・コピーは不可。購入装備は共同運搬の対象外。|抽選、運搬、休憩、合流、納品|
+|![][i41]<br>Influenza|潜伏期間後に最大HPを設定値へ固定。自動くしゃみで前方の仲間へ感染し、周囲の敵にも気づかれます。通常VC・チャットでも前方の近い仲間へ感染します。感染を広げるのは発症後のみ。|感染した仲間は即座に元の役職を失ってInfluenzaとなり、潜伏期間後に発症。死亡・蘇生でタイマーはリセットせず、ステージ終了で解除。連続発話は1回扱い。敵の聴力でくしゃみの聞こえる距離が変わります。ソロ抽選なし。|潜伏・HP・くしゃみ間隔・感染距離/角度/確率・聴覚|
+|![][i42]<br>Twins|2人の現在HP・最大HPを合算して共有。同じ貴重品の共同運搬で一時Strength（上限Lv200）と衝突損失軽減。近くで共にしゃがんで静止すると共有HPを回復し、スタミナは全回復。遠い相方へ走ると加速。共同運搬した品を2人が近くにいる状態で納品すると、品ごとに1回、ステージ予算内で価値を加算。|2人以上、固定ペア1組まで。片方の死亡で両者死亡、1回の蘇生で両者を1回分のHPで蘇生。感染で両者がInfluenzaになり共有終了。ステージ終了・切断でも解除しHP割合を維持。ペア内HP移譲・コピー不可、ショップ品は運搬強化対象外。|抽選・共同運搬・休憩・合流・納品|
 |![][i43]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所・カート上で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
 |![][i44]<br>DualWielder|近接武器を1人で持つと左0.5mに同じ武器が現れ、動きと攻撃を0.3秒遅れで再現。電池・耐久度は共有し、2本目の命中分も消費。|手放す・持ち替え・死亡・役職変更で消滅。持ち帰り不可。近接武器がなければ抽選対象外。|遅延、左への距離|
 |![][i45]<br>Rigger|Human Adventure Cable：敵への命中ダメージ2倍、拘束時間1.5倍、命中・投げの耐久消費50％。|自動発動。対プレイヤーは変化なし。ケーブルがなければ通常抽選から除外。Standard・Cooperative・Challenge。|各倍率|
-|![][i46]<br>Negotiator|交渉権0から開始。Big・Wide・Tall・VeryTallを本人がトラック外で20m運び納品所で手放すと1回、Tier3を本人が倒すと1回。各条件はステージごとに1回、最大2回。次のショップで本人が商品を見せると必ず通常の値引き。拒否破損・共通回数の消費なし。|死亡・能力喪失で全失効し同ステージ再獲得不可。ショップ退出で失効、中断は消費なし。役職・残数、`/roles`、入店通知。Standard・Cooperative。|抽選設定のみ|
+|![][i46]<br>Negotiator|交渉権0から開始。本人の条件達成納品で1回、指定Tierの本人討伐で1回。各ステージ1回ずつ、最大2回。次のショップで本人が商品を見せると必ず通常の値引き。拒否破損・共通回数消費なし。|トラック納品は対象外。死亡・能力喪失で全失効、同ステージ再獲得不可。ショップ退出で失効、中断は消費なし。役職・残数・`/roles`・入店通知。Standard/Cooperative。|抽選・運搬距離/サイズ・敵Tier|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -623,7 +643,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |`King.UpgradeRadius`|12|1–30 m|味方に強化を付与する範囲。|
 |`HUD.ResourceHudEnabled`|true|真偽値|左上に自分の能力残量を表示。役職一覧とは独立。|
 |`HUD.ResourceHudScalePercent`|100|50–200|残量HUDの大きさ。画面内に収まるよう自動調整。|
-|`HUD.ResourceHudOffsetX` / `ResourceHudOffsetY`|0 / 0|0–3840 / 0–2160|スタミナ直下を基準に、残量表示を右／下へ移動します。|
+|`HUD.ResourceHudOffsetX` / `ResourceHudOffsetY`|0 / 0|0–3840 / 0–2160|スタミナ直下を基準に、残量表示を右／下へ移動する。|
 
 能力の残量はスタミナ直下に縦1列で表示し、項目が多い場合は収まるよう縮小します。役職一覧には各プレイヤーの役職を表示。残量HUDを使う場合は、ホストと同じバージョンのRoleShuffleを導入してください。
 
@@ -642,6 +662,16 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |`Porter.AllowedSizes`|Tiny,Small,Medium|Tiny・Small・Medium・Big・Wide・Tall・VeryTallをカンマ区切り|収納可能サイズ。空欄・不明な名前は追加許可しない。|
 |`Lifter.StrengthLevel`|200|0～200|役職中に付与するStrengthアップグレードのレベル。|
 |`Twins.CarryStrengthMultiplier`|1.5|1～3|共同運搬中のStrength目標倍率。上限Lv200まで一時アップグレードを付与。|
+|`Negotiator.DeliveryCarryDistance`|20|1–200 m|納品所で手放すまでに本人がトラック外で運ぶ距離。|
+|`Negotiator.DeliveryAllowedSizes`|Big,Wide,Tall,VeryTall|サイズ名のカンマ区切り|納品対象サイズ。大文字小文字・周囲空白は無視。空欄は納品獲得なし、不明名は無視。|
+|`Negotiator.EnemyTier`|3|1–3|本人討伐の対象となる敵本来のTier。完全一致で、Enhanced報酬補正は対象外。|
+|`Twins.CollisionReductionPercent`|50|0–100%|共同運搬時の衝突価値損失を軽減。|
+|`Twins.RestRadius` / `RestHoldSeconds`|3 / 3|0.5–10 m / 1–30 s|休憩距離 / 被弾せずしゃがんで静止する時間。|
+|`Twins.RestHealPercent` / `RestCooldownSeconds`|10 / 60|0–100% / 1–600 s|共有最大HPに対する回復率 / ペア共通クールタイム。中断は消費なし。|
+|`Twins.RendezvousStartRange` / `RendezvousEndRange`|15 / 5|1–100 m / 0.5–100 m|合流支援の開始/終了距離。小さい方を終了距離として使用。|
+|`Twins.RendezvousSpeedMultiplier`|1.25|1–2|離れた相方へ走る倍率。Speedレベルへ切り上げ。|
+|`Twins.DeliveryCarrySeconds` / `DeliveryRadius`|3 / 5|1–30 s / 0.5–20 m|納品区域外で共同運搬する時間 / 納品時の2人と品の距離。|
+|`Twins.DeliveryBonusPercent` / `DeliveryStageLimit`|10 / 5000|0–100% / 0–10000|共同納品の価値加算率 / ペアのステージ予算。品ごとに1回。|
 |`Lifter.LightItemStrengthLevel`|1|0～200|軽量品・ショップ装備（カート・バイクを除く）を保持するStrengthレベル。|
 |`Stinker.BreakGraceSeconds`|0.5|0～10秒|出現したウラン貴重品が壊れるまでの猶予。|
 |`Influenza.IncubationSeconds`|30|0～300秒|感染から発症までの時間。|
@@ -655,31 +685,31 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 ### 設定
 
-すべての設定はREPOConfigから変更可能です。ホスト設定はセッション全体へ、ローカル設定はMOD導入者本人のHUDだけに反映されます。
+REPOConfigで編集。`HUD.*`は本人の表示設定、それ以外はホスト設定です。複数キーの行では、省略したセクション名は最初のキーと共通です。
 
 #### 一般、通知、HUD
 
-|キー|デフォルト|範囲・値|内容|管理|
-|---|---:|---|---|---|
-|`General.Enabled`|true|On/Off|ステージごとの役職割り当てを有効化。|ホスト|
-|`General.UniqueRoles`|true|On/Off|抽選可能な役職を一巡するまで重複を避けます。|ホスト|
-|`General.ShopUpgradeItemCount`|0|0～30|各ショップへ要求するアップグレードアイテム数です。0でショップの抽選対象から除外します。|ホスト|
-|`Compatibility.EnhancedEnemyRewardsEnabled`|true|On/Off|有効時、Elite Enemy VariantsのEnhanced個体をVampireの回復量とHunterの追加オーブ品質の計算で1段階上として扱います。|ホスト|
-|`Notifications.Enabled`|true|On/Off|役職名と役職効果のチャット／TTS通知を有効化。|ホスト|
-|`Notifications.DelaySeconds`|2.5|0～30|Stage Flux未導入時の役職通知までの秒数。|ホスト|
-|`Notifications.StageFluxDelaySeconds`|5|0～30|Stage Flux導入時、役職通知までに最低限待つ秒数。Stage FluxのTTS終了後、さらに1.5秒間の無音を確認します。|ホスト|
-|`HUD.Enabled`|true|On/Off|ステージ中、現在の全役職を表示。|ローカル|
-|`HUD.RoleDisplay`|`NameOnly`|`IconAndName`, `NameOnly`, `IconOnly`|役職のアイコン＋名前、名前のみ、アイコンのみを選択します。プレイヤー名は常に表示。|ローカル|
-|`HUD.IconSize`|64|32～128|HUD全体の倍率を適用する前の役職アイコンの大きさです。6人分の高さを確保し、画面に収まる倍率へ調整します。|ローカル|
-|`HUD.Anchor`|`BottomLeft`|`TopLeft`, `TopCenter`, `TopRight`, `MiddleLeft`, `MiddleCenter`, `MiddleRight`, `BottomLeft`, `BottomCenter`, `BottomRight`|HUDの基準位置を選択します。|ローカル|
-|`HUD.Alignment`|`Left`|`Left`, `Center`, `Right`|役職テキストの揃え方を選択します。|ローカル|
-|`HUD.OffsetX`|0|`-3840`～3840|基準位置からの水平オフセットです。単位はピクセルです。|ローカル|
-|`HUD.OffsetY`|80|`-2160`～2160|基準位置からの垂直オフセットです。単位はピクセルです。|ローカル|
-|`HUD.ScalePercent`|70|50～200|HUDの表示倍率。|ローカル|
-|`HUD.PlayersPerPage`|8|2～20|自分の固定表示を含め、同時に表示する最大人数です。6以上なら、文字やアイコンが高くても6人分の表示領域を確保します。|ローカル|
-|`HUD.PageIntervalSeconds`|5|1～30|各役職ページを表示する秒数。|ローカル|
-|`HUD.TransitionDurationSeconds`|0.2|0～1|役職ページ切替時のフェード時間。|ローカル|
-|`HUD.PinLocalPlayer`|true|On/Off|自分の役職をすべてのページへ固定表示。|ローカル|
+|キー|デフォルト|範囲・値|内容|
+|---|---:|---|---|
+|`General.Enabled`|true|On/Off|ステージごとの役職割り当てを有効化。|
+|`General.UniqueRoles`|true|On/Off|抽選可能な役職を一巡するまで重複を避けます。|
+|`General.ShopUpgradeItemCount`|0|0～30|各ショップへ要求するアップグレードアイテム数。0でショップの抽選対象から除外する。|
+|`Compatibility.EnhancedEnemyRewardsEnabled`|true|On/Off|有効時、Elite Enemy VariantsのEnhanced個体をVampireの回復量とHunterの追加オーブ品質の計算で1段階上として扱います。|
+|`Notifications.Enabled`|true|On/Off|役職名と役職効果のチャット／TTS通知を有効化。|
+|`Notifications.DelaySeconds`|2.5|0～30|Stage Flux未導入時の役職通知までの秒数。|
+|`Notifications.StageFluxDelaySeconds`|5|0～30|Stage Flux導入時、役職通知までに最低限待つ秒数。Stage FluxのTTS終了後、さらに1.5秒間の無音を確認する。|
+|`HUD.Enabled`|true|On/Off|ステージ中、現在の全役職を表示。|
+|`HUD.RoleDisplay`|`NameOnly`|`IconAndName`, `NameOnly`, `IconOnly`|役職のアイコン＋名前、名前のみ、アイコンのみを選択する。プレイヤー名は常に表示。|
+|`HUD.IconSize`|64|32～128|HUD全体の倍率を適用する前の役職アイコンの大きさ。6人分の高さを確保し、画面に収まる倍率へ調整する。|
+|`HUD.Anchor`|`BottomLeft`|`TopLeft`, `TopCenter`, `TopRight`, `MiddleLeft`, `MiddleCenter`, `MiddleRight`, `BottomLeft`, `BottomCenter`, `BottomRight`|HUDの基準位置を選択する。|
+|`HUD.Alignment`|`Left`|`Left`, `Center`, `Right`|役職テキストの揃え方を選択する。|
+|`HUD.OffsetX`|0|`-3840`～3840|基準位置からの水平オフセット。単位はピクセル。|
+|`HUD.OffsetY`|80|`-2160`～2160|基準位置からの垂直オフセット。単位はピクセル。|
+|`HUD.ScalePercent`|70|50～200|HUDの表示倍率。|
+|`HUD.PlayersPerPage`|8|2～20|自分の固定表示を含め、同時に表示する最大人数。6以上なら、文字やアイコンが高くても6人分の表示領域を確保する。|
+|`HUD.PageIntervalSeconds`|5|1～30|各役職ページを表示する秒数。|
+|`HUD.TransitionDurationSeconds`|0.2|0～1|役職ページ切替時のフェード時間。|
+|`HUD.PinLocalPlayer`|true|On/Off|自分の役職をすべてのページへ固定表示。|
 
 #### 役職バランス
 
@@ -690,17 +720,17 @@ Showcase役は`Bomber`、`Stinker`、`Mage`、`Gambler`、`Trickster`、`King`�
 |キー|デフォルト|範囲・値|内容|
 |---|---:|---|---|
 |`Role Balance - Guarantees.ShowcaseEnabled`|true|On/Off|参加人数別のShowcase最低保証を有効化。|
-|`Role Balance - Guarantees.ShowcaseMinimums`|`3:1,7:2,14:3,24:4`|`参加人数:最低人数`の組|参加人数ごとに保証するShowcaseの最低人数です。|
+|`Role Balance - Guarantees.ShowcaseMinimums`|`3:1,7:2,14:3,24:4`|`参加人数:最低人数`の組|参加人数ごとに保証するShowcaseの最低人数。|
 |`Role Balance - Guarantees.SupportEnabled`|true|On/Off|参加人数別のSupport最低保証を有効化。|
-|`Role Balance - Guarantees.SupportMinimums`|`4:1,8:2,14:3,24:4`|`参加人数:最低人数`の組|参加人数ごとに保証するSupportの最低人数です。|
+|`Role Balance - Guarantees.SupportMinimums`|`4:1,8:2,14:3,24:4`|`参加人数:最低人数`の組|参加人数ごとに保証するSupportの最低人数。|
 |`Role Balance - Limits.Enabled`|true|On/Off|Danger、Hardship、少人数時の複合上限を有効化。|
 |`Role Balance - Limits.DangerMaximums`|`1:1,8:2,16:3`|`参加人数:上限`の組|参加人数ごとの`Bomber`、`Stinker`、`Werewolf`、`Influenza`の合計上限。|
 |`Role Balance - Limits.HardshipMaximums`|`1:1,12:2`|`参加人数:上限`の組|参加人数ごとの`Courier`、`Tuna`、`Influenza`の合計上限。|
-|`Role Balance - Limits.SmallPartyMaximumPlayers`|4|1～30|DangerとHardshipの複合上限を使用する最大参加人数です。|
-|`Role Balance - Limits.SmallPartyCombinedMaximum`|1|1～30|少人数時に許可するDangerとHardshipの合計最大人数です。|
+|`Role Balance - Limits.SmallPartyMaximumPlayers`|4|1～30|DangerとHardshipの複合上限を使用する最大参加人数。|
+|`Role Balance - Limits.SmallPartyCombinedMaximum`|1|1～30|少人数時に許可するDangerとHardshipの合計最大人数。|
 |`Role Balance - Variety.PreventSameRole`|true|On/Off|ほかの候補がある場合、同じプレイヤーへの同役職の連続割り当てを防ぎます。|
-|`Role Balance - Variety.HardshipCooldownStages`|2|0～10|`Courier`、`Tuna`、`Influenza`のいずれかの後、そのプレイヤーをこれらの役職から通常除外するステージ数です。|
-|`Role Balance - Variety.ExcludeUnavailableRoles`|true|On/Off|必要な敵、武器、使用対象が存在しない状況依存役を抽選から除外します。|
+|`Role Balance - Variety.HardshipCooldownStages`|2|0～10|`Courier`、`Tuna`、`Influenza`のいずれかの後、そのプレイヤーをこれらの役職から通常除外するステージ数。|
+|`Role Balance - Variety.ExcludeUnavailableRoles`|true|On/Off|必要な敵、武器、使用対象が存在しない状況依存役を抽選から除外する。|
 
 #### 基礎アップグレード
 
@@ -736,10 +766,10 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Base Upgrades.MapPlayerCountUpgradeLevels`|空欄|`レベル:設定値`の組、設定値0～1|Map Player Count基礎値。|
 |`Base Upgrades.DeathHeadBatteryUpgradeLevels`|空欄|`レベル:設定値`の組、設定値0～200|Death Head Battery基礎値。|
 |`Base Upgrade Draw.Enabled`|true|On/Off|ショップ後の共有Base Upgrade抽選を有効化。|
-|`Base Upgrade Draw.MaximumLevel`|200|0～200|正のトラック抽選で到達できる最大目標値。Map Player Countは最大1のままです。|
-|`Base Upgrade Draw.CappedUpgradeWeightMultiplier`|0.25|0～1|アップグレードが抽選上限に近づくほどWeightが低下し、上限でこの倍率になります。設定分とトラック抽選分の合計を使用します。0では上限到達後に対象外となり、1では低下しません。All Upgradesは対象外です。|
-|`Base Upgrade Draw.WeightFalloffExponent`|2|0.1～10|抽選Weightの低下カーブです。1は一定のペースで低下し、大きい値ほど上限付近まで重みを維持。|
-|`Base Upgrade Draw.ChangeAmountWeights`|`-1:10,0:15,1:60,2:15`|`増減値:重み`の組、増減値`-200`～200、重み0～1000|抽選される増減値の相対Weightです。|
+|`Base Upgrade Draw.MaximumLevel`|200|0～200|正のトラック抽選で到達できる最大目標値。Map Player Countは最大1のまま。|
+|`Base Upgrade Draw.CappedUpgradeWeightMultiplier`|0.25|0～1|アップグレードが抽選上限に近づくほどWeightが低下し、上限でこの倍率になります。設定分とトラック抽選分の合計を使用する。0では上限到達後に対象外となり、1では低下しません。All Upgradesは対象外。|
+|`Base Upgrade Draw.WeightFalloffExponent`|2|0.1～10|抽選Weightの低下カーブ。1は一定のペースで低下し、大きい値ほど上限付近まで重みを維持。|
+|`Base Upgrade Draw.ChangeAmountWeights`|`-1:10,0:15,1:60,2:15`|`増減値:重み`の組、増減値`-200`～200、重み0～1000|抽選される増減値の相対Weight。|
 |`Base Upgrade Draw Selection.Health`|true|On/Off|抽選対象にする。|
 |`Base Upgrade Draw Selection.Stamina`|true|On/Off|抽選対象にする。|
 |`Base Upgrade Draw Selection.ExtraJump`|true|On/Off|抽選対象にする。|
@@ -753,19 +783,19 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Base Upgrade Draw Selection.MapPlayerCount`|true|On/Off|抽選対象にする。|
 |`Base Upgrade Draw Selection.DeathHeadBattery`|true|On/Off|抽選対象にする。|
 |`Base Upgrade Draw Selection.AllUpgrades`|true|On/Off|ONの種類だけを対象に、正の一括抽選を有効化。|
-|`Base Upgrade Draw Weights.Health`|20|0～1000|Healthの相対Weightです。|
-|`Base Upgrade Draw Weights.Stamina`|40|0～1000|Staminaの相対Weightです。|
-|`Base Upgrade Draw Weights.ExtraJump`|10|0～1000|Extra Jumpの相対Weightです。|
-|`Base Upgrade Draw Weights.Speed`|30|0～1000|Speedの相対Weightです。|
-|`Base Upgrade Draw Weights.Strength`|20|0～1000|Strengthの相対Weightです。|
-|`Base Upgrade Draw Weights.Range`|30|0～1000|Rangeの相対Weightです。|
-|`Base Upgrade Draw Weights.Launch`|10|0～1000|Launchの相対Weightです。|
-|`Base Upgrade Draw Weights.TumbleClimb`|10|0～1000|Tumble Climbの相対Weightです。|
-|`Base Upgrade Draw Weights.TumbleWings`|10|0～1000|Tumble Wingsの相対Weightです。|
-|`Base Upgrade Draw Weights.CrouchRest`|30|0～1000|Crouch Restの相対Weightです。|
-|`Base Upgrade Draw Weights.MapPlayerCount`|10|0～1000|Map Player Countの相対Weightです。|
-|`Base Upgrade Draw Weights.DeathHeadBattery`|10|0～1000|Death Head Batteryの相対Weightです。|
-|`Base Upgrade Draw Weights.AllUpgrades`|1|0～1000|正の結果で使う`ALL UPGRADES`の相対Weightです。|
+|`Base Upgrade Draw Weights.Health`|20|0～1000|Healthの相対Weight。|
+|`Base Upgrade Draw Weights.Stamina`|40|0～1000|Staminaの相対Weight。|
+|`Base Upgrade Draw Weights.ExtraJump`|10|0～1000|Extra Jumpの相対Weight。|
+|`Base Upgrade Draw Weights.Speed`|30|0～1000|Speedの相対Weight。|
+|`Base Upgrade Draw Weights.Strength`|20|0～1000|Strengthの相対Weight。|
+|`Base Upgrade Draw Weights.Range`|30|0～1000|Rangeの相対Weight。|
+|`Base Upgrade Draw Weights.Launch`|10|0～1000|Launchの相対Weight。|
+|`Base Upgrade Draw Weights.TumbleClimb`|10|0～1000|Tumble Climbの相対Weight。|
+|`Base Upgrade Draw Weights.TumbleWings`|10|0～1000|Tumble Wingsの相対Weight。|
+|`Base Upgrade Draw Weights.CrouchRest`|30|0～1000|Crouch Restの相対Weight。|
+|`Base Upgrade Draw Weights.MapPlayerCount`|10|0～1000|Map Player Countの相対Weight。|
+|`Base Upgrade Draw Weights.DeathHeadBattery`|10|0～1000|Death Head Batteryの相対Weight。|
+|`Base Upgrade Draw Weights.AllUpgrades`|1|0～1000|正の結果で使う`ALL UPGRADES`の相対Weight。|
 
 抽選Weightの初期値はStaminaが40、Speed・Range・Crouch Restが30、Health・Strengthが20、その他の対象アップグレードが10、ALL UPGRADESが1です。大きい値ほど選ばれやすくなります。上限に近づくほどWeightが低下し、上限では`CappedUpgradeWeightMultiplier`の倍率になります。ショップの商品数の設定は影響しません。
 
@@ -798,104 +828,104 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Ghost.HealIntervalSeconds`|2|0.5～60|死亡中の回復間隔（秒）。|
 |`Ghost.TotalHealingLimit`|50|0～10000|味方全員で共有するステージごとの回復上限。蘇生では戻りません。|
 |`Ghost.CarrierSpeedBonusLevels`|1|0～20|頭を持つ間のSpeed加算レベル。重複せず、King支援とは強い方を優先。|
-|`Bomber.DistancePerGrenade`|8|1～100|グレネードを1個設置するために必要な移動距離。単位はメートルです。|
-|`Bomber.MaximumActiveGrenades`|30|1～30|Bomberごとに保持する生成済みグレネードの最大数です。さらに設置すると最も古いものを削除します。|
-|`Bomber.AllowTruckSpawns`|false|On/Off|トラック内でのグレネード設置を許可します。|
+|`Bomber.DistancePerGrenade`|8|1～100|グレネードを1個設置するために必要な移動距離。単位はメートル。|
+|`Bomber.MaximumActiveGrenades`|30|1～30|Bomberごとに保持する生成済みグレネードの最大数。さらに設置すると最も古いものを削除する。|
+|`Bomber.AllowTruckSpawns`|false|On/Off|トラック内でのグレネード設置を許可する。|
 |`Bomber.ExplosiveGrenadesEnabled`|true|On/Off|ランダム抽選へバニラのExplosive Grenadeを含めます。|
 |`Bomber.StunGrenadesEnabled`|true|On/Off|ランダム抽選へバニラのStun Grenadeを含めます。|
 |`Bomber.ShockwaveGrenadesEnabled`|true|On/Off|ランダム抽選へバニラのShockwave Grenadeを含めます。|
 |`Bomber.DuctTapedGrenadesEnabled`|true|On/Off|ランダム抽選へバニラのDuct Taped Grenadeを含めます。|
-|`Medic.HealAmount`|5|1～100|1回につき周囲の各プレイヤーを回復する量です。|
-|`Medic.HealIntervalSeconds`|2|0.1～30|Medicの回復間隔です。|
-|`Medic.HealRadius`|5|1～30|回復可能な最大距離。単位はメートルです。|
-|`Medic.TotalHealingLimit`|150|1～10000|Medic一人が1ステージで回復できる合計HPです。対象が実際に失っているHPだけを消費します。|
-|`Phoenix.ReviveDelaySeconds`|2|2～10|復活までの最低待ち時間。頭が動いている間は、さらに待機します。|
-|`Phoenix.RevivalHealth`|25|1～1000|Phoenix復活後のHPです。プレイヤーの最大HPが上限。|
-|`Courier.Damage`|1|1～100|トラック外で1回ごとに受けるダメージです。|
-|`Courier.DamageIntervalSeconds`|0.1|0.05～10|トラック外でダメージを受ける間隔です。|
+|`Medic.HealAmount`|5|1～100|1回につき周囲の生存中の仲間を回復するHP。本人は対象外。|
+|`Medic.HealIntervalSeconds`|2|0.1～30|Medicの回復間隔。|
+|`Medic.HealRadius`|5|1～30|回復可能な最大距離。単位はメートル。|
+|`Medic.TotalHealingLimit`|150|1～10000|Medic一人が1ステージで回復できる合計HP。対象が実際に失っているHPだけを消費する。|
+|`Phoenix.ReviveDelaySeconds`|2|2～10|復活までの最低待ち時間。頭が動いている間は、さらに待機する。|
+|`Phoenix.RevivalHealth`|25|1～1000|Phoenix復活後のHP。プレイヤーの最大HPが上限。|
+|`Courier.Damage`|1|1～100|トラック外で1回ごとに受けるダメージ。|
+|`Courier.DamageIntervalSeconds`|0.1|0.05～10|トラック外でダメージを受ける間隔。|
 |`Rescuer.ReviveDelaySeconds`|2|0～10|死亡後の最低待ち時間。復活できるようになるまで頭をつかみ続けてください。|
 |`Rescuer.MaximumRevives`|2|1～10|Rescuer1人あたり、1ステージで復活できる最大回数。|
-|`Rescuer.RevivalHealth`|25|1～1000|Rescuerによる復活後のHPです。対象の最大HPが上限。|
-|`Vampire.Tier1HealAmount`|5|1～100|周囲でDanger Level 1の敵が死亡した際の回復量です。|
-|`Vampire.Tier2HealAmount`|10|1～100|周囲でDanger Level 2の敵が死亡した際の回復量です。|
-|`Vampire.Tier3HealAmount`|50|1～100|周囲でDanger Level 3の敵が死亡した際の回復量です。|
-|`Vampire.Radius`|10|1～50|死亡した敵からの最大距離。単位はメートルです。|
+|`Rescuer.RevivalHealth`|25|1～1000|Rescuerによる復活後のHP。対象の最大HPが上限。|
+|`Vampire.Tier1HealAmount`|5|1～100|周囲でDanger Level 1の敵が死亡した際の回復量。|
+|`Vampire.Tier2HealAmount`|10|1～100|周囲でDanger Level 2の敵が死亡した際の回復量。|
+|`Vampire.Tier3HealAmount`|50|1～100|周囲でDanger Level 3の敵が死亡した際の回復量。|
+|`Vampire.Radius`|10|1～50|死亡した敵からの最大距離。単位はメートル。|
 |`Tuna.StationaryDelaySeconds`|3|0.1～30|停止してからダメージが始まるまでの秒数。|
-|`Tuna.Damage`|1|1～100|停止中に1回ごとに受けるダメージです。|
-|`Tuna.DamageIntervalSeconds`|0.1|0.05～10|停止中にダメージを受ける間隔です。|
+|`Tuna.Damage`|1|1～100|停止中に1回ごとに受けるダメージ。|
+|`Tuna.DamageIntervalSeconds`|0.1|0.05～10|停止中にダメージを受ける間隔。|
 |`Musician.HealAmount`|5|1～100|1回につき生存者1人を回復するHP。|
 |`Musician.HealRadius`|10|1～50|回復範囲（m）。|
 |`Musician.HealCooldownSeconds`|1|0.1～30|全楽器共通の回復間隔（秒）。|
 |`Musician.TotalHealingLimit`|1000|1～10000|1ステージの合計回復HP。本人と味方で共用。HUDに残量を表示。|
-|`Mage.CastIntervalSeconds`|3|0.1～30|魔法発動の最短間隔です。|
+|`Mage.CastIntervalSeconds`|3|0.1～30|魔法発動の最短間隔。|
 |`Mage.BeamDurationSeconds`|5|0.1～30|ビーム魔法の継続秒数。手持ちの杖には適用しません。|
-|`Mage.StarExpression`|`Angry`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`star`を発動する表情です。|
-|`Mage.RollExpression`|`Sad`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`roll`を発動する表情です。|
-|`Mage.GravityExpression`|`Suspicious`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`gravity`を発動する表情です。|
-|`Mage.VoidExpression`|`EyesClosed`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`void`を発動する表情です。|
-|`Mage.LaserExpression`|`Scared`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`laser`を発動する表情です。|
+|`Mage.StarExpression`|`Angry`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`star`を発動する表情。|
+|`Mage.RollExpression`|`Sad`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`roll`を発動する表情。|
+|`Mage.GravityExpression`|`Suspicious`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`gravity`を発動する表情。|
+|`Mage.VoidExpression`|`EyesClosed`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`void`を発動する表情。|
+|`Mage.LaserExpression`|`Scared`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|`laser`を発動する表情。|
 |`Mage.AutoRecoveryEnabled`|true|On/Off|ダメージを受けていないMageのHP自動回復を有効化。|
 |`Mage.AutoRecoveryDelaySeconds`|10|0～300|最後にダメージを受けてから自動回復が始まるまでの秒数。|
-|`Mage.AutoRecoveryIntervalSeconds`|2|0.1～60|HPを自動回復する間隔です。|
-|`Mage.AutoRecoveryAmount`|1|0～100|自動回復1回あたりの回復量です。|
+|`Mage.AutoRecoveryIntervalSeconds`|2|0.1～60|HPを自動回復する間隔。|
+|`Mage.AutoRecoveryAmount`|1|0～100|自動回復1回あたりの回復量。|
 |`Mage.AutoRecoveryTotalHealingLimit`|120|1～10000|プレイヤーごとの、1ステージ中の自動回復の累計上限。他の回復は数えず、死亡・復活・役職変更でも使用済みの回復量はリセットされません。|
-|`Mage.StarHealthCost`|10|0～100|`star`の発動成功後に消費するHPです。|
-|`Mage.GravityHealthCost`|10|0～100|`gravity`の発動成功後に消費するHPです。|
-|`Mage.RollHealthCost`|15|0～100|`roll`の発動成功後に消費するHPです。|
-|`Mage.VoidHealthCost`|30|0～100|`void`の発動成功後に消費するHPです。|
-|`Mage.LaserHealthCost`|50|0～100|`laser`の発動成功後に消費するHPです。|
+|`Mage.StarHealthCost`|10|0～100|`star`の発動成功後に消費するHP。|
+|`Mage.GravityHealthCost`|10|0～100|`gravity`の発動成功後に消費するHP。|
+|`Mage.RollHealthCost`|15|0～100|`roll`の発動成功後に消費するHP。|
+|`Mage.VoidHealthCost`|30|0～100|`void`の発動成功後に消費するHP。|
+|`Mage.LaserHealthCost`|50|0～100|`laser`の発動成功後に消費するHP。|
 |`Gambler.WinChancePercent`|50|0～100|Valuableを破壊せず、勝利倍率を適用する確率。|
 |`Gambler.WinValueMultiplier`|2|0～10|勝利時にValuableへ適用する価格倍率。|
-|`Gambler.GambitGreenHealAmount`|50|25～1000|Gamblerに対するGambitの緑結果で回復する合計HPです。|
-|`Gambler.GambitRedDamage`|100|50～1000|Gamblerに対するGambitの赤結果で受ける合計ダメージです。|
+|`Gambler.GambitGreenHealAmount`|50|25～1000|Gamblerに対するGambitの緑結果で回復する合計HP。|
+|`Gambler.GambitRedDamage`|100|50～1000|Gamblerに対するGambitの赤結果で受ける合計ダメージ。|
 |`Gambler.GambitWhiteHealthUpgradeLevels`|5|0～200|Gambitの白結果で、そのステージ中のみ追加するHealthアップグレードレベル。|
-|`Hunter.WeaponBatteryConsumptionPercent`|75|0～100|Hunterが使用する武器バッテリー消費量の通常時に対する割合です。|
+|`Hunter.WeaponBatteryConsumptionPercent`|75|0～100|Hunterが使用する武器バッテリー消費量の通常時に対する割合。|
 |`Hunter.DoubleOrbChancePercent`|10|0～100|Hunterが敵を倒した際、特賞に外れた場合に通常のオーブ個数を2倍にする確率。|
 |`Hunter.JackpotOrbChancePercent`|0.5|0～100|Hunterが敵を倒した際、特賞目標を使用する確率。不足分は追加しますが、通常ドロップが目標を上回る場合は減らしません。|
-|`Hunter.JackpotOrbCount`|10|1～30|Hunterの特賞で使用する目標オーブ個数です。|
+|`Hunter.JackpotOrbCount`|10|1～30|Hunterの特賞で使用する目標オーブ個数。|
 |`Hunter.GuaranteedOrbEveryKills`|5|0～100|追加オーブを保証する対象撃破数。0で保証なし。抽選の追加分を含む。|
-|`Stinker.DistancePerCloud`|2|1～100|ウラン雲の通過地点を記録する間隔です。|
-|`Stinker.MinimumSafetyDistance`|2|1～30|最新の発生待ち地点にウラン雲を発生させるために必要なStinker本人との最低距離。古い待機地点は順番に発生します。|
-|`Stinker.AllowTruckSpawns`|false|On/Off|トラック内でウラン雲の地点記録と発生を許可します。|
+|`Stinker.DistancePerCloud`|2|1～100|ウラン雲の通過地点を記録する間隔。|
+|`Stinker.MinimumSafetyDistance`|2|1～30|最新の発生待ち地点にウラン雲を発生させるために必要なStinker本人との最低距離。古い待機地点は順番に発生する。|
+|`Stinker.AllowTruckSpawns`|false|On/Off|トラック内でウラン雲の地点記録と発生を許可する。|
 |`Trickster.ActiveSeconds`|25|1～120|設置したデコイを削除するまでの秒数。|
-|`Trickster.DecoyExpression`|`Happy`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|デコイを設置する表情です。|
+|`Trickster.DecoyExpression`|`Happy`|`Disabled`, `Angry`, `Sad`, `Suspicious`, `EyesClosed`, `Scared`, `Happy`|デコイを設置する表情。|
 |`Trickster.CooldownSeconds`|45|1～300|敵を引きつけたデコイの終了後、次に設置できるまでの秒数。|
 |`Trickster.NoTargetCooldownSeconds`|10|0～300|敵を一体も引きつけなかったデコイの終了後、次に設置できるまでの秒数。|
-|`Trickster.InvestigateRadius`|40|1～100|デコイを中心に敵へ調査を指示する半径です。単位はメートルです。|
-|`Trickster.PulseIntervalSeconds`|1|0.25～10|敵へ調査を指示する間隔です。|
-|`Trickster.PlacementDistance`|2|0.5～10|Tricksterの前方へデコイを設置する距離。単位はメートルです。|
-|`Mechanic.RepairPercentPerSecond`|2|0～100|Mechanicが破損Valuableを直接保持している間、毎秒修復する元価格に対する合計割合です。|
-|`Mechanic.MaximumRepairPercentPerStage`|50|0～100|Mechanic一人が1ステージで修復できる元価格に対する合計割合です。|
-|`Electrician.ChargePercentPerSecond`|10|0～100|Electricianが使用していない充電可能アイテムを直接保持している間、毎秒回復する合計バッテリー割合です。|
-|`Electrician.MaximumChargePercentPerStage`|100|0～1000|Electrician一人が1ステージで回復できる合計バッテリー割合です。|
+|`Trickster.InvestigateRadius`|40|1～100|デコイを中心に敵へ調査を指示する半径。単位はメートル。|
+|`Trickster.PulseIntervalSeconds`|1|0.25～10|敵へ調査を指示する間隔。|
+|`Trickster.PlacementDistance`|2|0.5～10|Tricksterの前方へデコイを設置する距離。単位はメートル。|
+|`Mechanic.RepairPercentPerSecond`|2|0～100|Mechanicが破損Valuableを直接保持している間、毎秒修復する元価格に対する合計割合。|
+|`Mechanic.MaximumRepairPercentPerStage`|50|0～100|Mechanic一人が1ステージで修復できる元価格に対する合計割合。|
+|`Electrician.ChargePercentPerSecond`|10|0～100|Electricianが使用していない充電可能アイテムを直接保持している間、毎秒回復する合計バッテリー割合。|
+|`Electrician.MaximumChargePercentPerStage`|100|0～1000|Electrician一人が1ステージで回復できる合計バッテリー割合。|
 |`Warden.AdditionalStunSeconds`|3|0～30|Wardenが敵へ発生させたスタンに追加する秒数。|
 |`Ninja.VisionRecognitionMultiplier`|2|1～10|敵が視覚でNinjaを認識するまでの時間へ適用する倍率。|
 |`Executioner.StunnedDamageMultiplier`|2|1～10|攻撃前からスタンしている敵への直接攻撃ダメージ倍率。|
 |`Rider.EnemyDamageMultiplier`|3|1～10|Riderが運転中の車両が敵へ与える衝突ダメージ倍率。|
 |`Rider.PlayerKnockbackMultiplier`|2|1～10|プレイヤーへ元から発生する車両Tumbleノックバック倍率。|
-|`Influencer.PlayerRadius`|20|1～100|周囲の生存中の仲間を数える半径です。単位はメートルです。|
-|`Influencer.PlayerCheckIntervalSeconds`|0.5|0.1～10|周囲人数と動的アップグレードを確認する間隔です。|
+|`Influencer.PlayerRadius`|20|1～100|周囲の生存中の仲間を数える半径。単位はメートル。|
+|`Influencer.PlayerCheckIntervalSeconds`|0.5|0.1～10|周囲人数と動的アップグレードを確認する間隔。|
 |`Influencer.NoiseRadiusMultiplier`|2|1～10|足音、着地音、VC、チャットTTSの敵探知範囲倍率。|
-|`Influencer.TTSInvestigateRadius`|20|1～100|定期TTSが発生させる敵探知範囲です。|
+|`Influencer.TTSInvestigateRadius`|20|1～100|定期TTSが発生させる敵探知範囲。|
 |`Influencer.MinimumTTSIntervalSeconds`|20|1～300|定期TTS間隔を抽選する最小秒数。|
-|`Influencer.MaximumTTSIntervalSeconds`|40|1～300|定期TTS間隔を抽選する最大秒数。最小値より小さい場合は、小さい方を最小値として使用します。|
+|`Influencer.MaximumTTSIntervalSeconds`|40|1～300|定期TTS間隔を抽選する最大秒数。最小値より小さい場合は、小さい方を最小値として使用する。|
 |`Influencer.TTSQuietPeriodSeconds`|1.5|0～10|本人のTTS終了後、定期発言までに必要な無音時間。|
-|`Influencer.<Upgrade>UpgradeScaling`|アップグレードごと|`人数:レベル`の組|周囲人数に応じた最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`1:1,2:4,3:9,4:13,5:20`です。対象はBase Upgradesと同じで、空欄ならレベルを付与しません。|
+|`Influencer.<Upgrade>UpgradeScaling`|初期値表参照|`人数:レベル`の組|周囲人数に応じた最低目標値。役職前の値は下げず、空欄は付与なし。|
 |`Werewolf.PlayerDamageMultiplier`|2|1～10|Werewolfが他のプレイヤーへ与える特定可能なダメージ倍率。|
-|`Berserker.<Upgrade>UpgradeScaling`|アップグレードごと|`HP割合:レベル`の組|残りHPが指定割合以下の間に使う最低目標値で、役職付与前のレベルは下げません。例としてStrengthの既定値は`80:1,60:4,40:9,20:13,10:20`です。対象はHealthを除くBase Upgradesと同じで、空欄ならレベルを付与しません。|
+|`Berserker.<Upgrade>UpgradeScaling`|初期値表参照|`HP割合:レベル`の組|HPがしきい値以下の最低目標値。役職前の値は下げず、空欄は付与なし。Healthは設定対象外。|
 |`Bodyguard.HealthUpgradeLevels`|11|0～200|BodyguardのHealth目標値。|
-|`Bodyguard.ProtectionRadius`|15|1～100|仲間を保護できる最大距離。単位はメートルです。|
-|`Bodyguard.DamageSharePercent`|50|0～100|BodyguardのHPを1残して肩代わりする敵ダメージ割合です。|
-|`Rammer.TumbleAttackDamage`|100|0～100000|RammerのTumble Attackが敵へ与えるダメージです。|
-|`Rammer.SelfDamage`|15|0～100000|RammerのTumble Attackが敵へ命中した後、自身が受けるダメージです。|
+|`Bodyguard.ProtectionRadius`|15|1～100|仲間を保護できる最大距離。単位はメートル。|
+|`Bodyguard.DamageSharePercent`|50|0～100|BodyguardのHPを1残して肩代わりする敵ダメージ割合。|
+|`Rammer.TumbleAttackDamage`|100|0～100000|RammerのTumble Attackが敵へ与えるダメージ。|
+|`Rammer.SelfDamage`|15|0～100000|RammerのTumble Attackが敵へ命中した後、自身が受けるダメージ。|
 |`Diver.UnderfloorDurationSeconds`|10|1～120|Diverが死亡せず床下に滞在できる最大秒数。|
-|`Diver.MovementForce`|8|1～30|Diverが床下を自由移動するときの力です。|
-|`Sniper.ReferenceDistance`|6|1～50|敵へのダメージが1倍になる距離。単位はメートルです。|
+|`Diver.MovementForce`|8|1～30|Diverが床下を自由移動するときの力。|
+|`Sniper.ReferenceDistance`|6|1～50|敵へのダメージが1倍になる距離。単位はメートル。|
 |`Sniper.MinimumDamageMultiplier`|0.5|0～1|密着時の敵ダメージ倍率。元が正のダメージなら最低1ダメージを与えます。|
 |`Sniper.MaximumDamageMultiplier`|2|1～10|遠距離での敵ダメージの最高倍率。|
-|`Sniper.MaximumMultiplierDistance`|18|1～100|最高倍率へ到達する距離。基準距離以下の場合は、基準距離の直後として扱います。|
+|`Sniper.MaximumMultiplierDistance`|18|1～100|最高倍率に達する距離。実効下限は`ReferenceDistance + 0.1` m。|
 |`Avenger.DamageMultiplier`|1.5|1～10|他のプレイヤーが死亡した後の、敵へのダメージ倍率。|
-|`Avenger.DurationSeconds`|30|1～120|敵へのダメージ増加が続く秒数。別の死亡で残り時間を更新します。|
+|`Avenger.DurationSeconds`|30|1～120|敵へのダメージ増加が続く秒数。別の死亡で残り時間を更新する。|
 |`Avenger.TriggerRadius`|30|1～100|Avengerが発動する、死亡したプレイヤーからの最大距離。|
 |`Avenger.AllyHitDamageThreshold`|15|1～1000|敵の一撃で失うHPの発動閾値。|
 |`Avenger.AllyHitTriggerRadius`|15|1～100|被弾した味方までの最大距離（m）。|
@@ -910,7 +940,6 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 
 基礎アップグレードの初期値はHealthが1、ほかが0です。役職のアップグレード設定は、その役職で使用するレベルを表し、基礎値への加算ではありません。InfluencerとBerserkerは条件が変わっても元の高い強化を維持。`Tracker`は高い基礎強化を維持し、基礎値が高くても抽選されます。`Rammer`はステージ中のLaunch・Tumble Climb・Tumble Wingsを0にします。Throwには影響しません。
 
-InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたはセミコロンで区切ります。Influencerは到達した人数条件のうち最後の目標値、Berserkerは現在到達している最も低いHP境界の目標値を適用。目標値が0になる組はデフォルトの記述から省略し、明示的に0へ上書きしたい場合だけ`条件:0`を手動で追加します。レベルはMap Player Countだけ0～1、ほかは0～100です。形式が正しくない項目は無視されます。
 
 ### プレイヤー向けツール
 
@@ -925,6 +954,18 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - **抽選履歴：** 完了したトラック抽選の直近50回を表示。レベル・対象・抽選値・実際の目標値の前後を記録し、変化なしや上限到達も残します。ホストのセーブに保存してMOD導入済み参加者と共有し、中断した抽選は記録しません。
 
 `HUD.FontSize`の初期値は28（範囲16～48）で、個人設定です。HUDの初期表示形式は`NameOnly`です。
+
+動的強化（`<Upgrade>UpgradeScaling`）はカンマ/セミコロン区切り。Influencerは最後の到達人数（0–30）、Berserkerは到達済みの最低HP境界（0–100%）を使用。重複は末尾優先、不正項目は無視。レベル0–200、MapPlayerCountのみ0–1。空欄/0は役職分の付与なしで、強いBaseは維持。初期値表の—は空欄、N/Aは設定なし。
+
+|Upgrade|Influencer|Berserker|
+|---|---|---|
+|Strength|`1:1,2:4,3:9,4:13,5:20`|`80:1,60:4,40:9,20:13,10:20`|
+|Speed|`1:1,2:2,3:3,4:3,5:3`|`80:1,60:2,40:3,20:3,10:4`|
+|Stamina|`1:3,2:6,3:10,4:12,5:15`|`80:3,60:6,40:10,20:12,10:20`|
+|ExtraJump|`2:1,3:2,4:4,5:5`|`60:1,40:2,20:4,10:5`|
+|TumbleWings|`1:1,2:2,3:3,4:4,5:5`|—|
+|Health|`4:6,5:11`|N/A|
+|Range, Launch, TumbleClimb, CrouchRest, MapPlayerCount, DeathHeadBattery|—|—|
 
 ### 通知とHUD
 

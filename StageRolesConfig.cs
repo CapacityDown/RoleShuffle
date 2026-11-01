@@ -41,7 +41,7 @@ internal sealed class StageRolesConfig
         RoleConfigMigration.Apply(config);
 
         Enabled = BindBool(config, "General", "Enabled", true, "Enables stage role assignment.");
-        UniqueRoles = BindBool(config, "General", "UniqueRoles", true, "Avoids duplicate roles until every enabled role has been assigned once.");
+        UniqueRoles = BindBool(config, "General", "UniqueRoles", true, "Prefers different roles within the party; allows repeats when eligible roles run out. Twins still assigns one pair.");
         ShopUpgradeItemCount = BindInt(config, "General", "ShopUpgradeItemCount", 0, 0, 30, "Number of upgrade items requested for each shop.");
 
         EnhancedEnemyRewardsEnabled = BindBool(
@@ -50,7 +50,6 @@ internal sealed class StageRolesConfig
             "EnhancedEnemyRewardsEnabled",
             true,
             "Treats Elite Enemy Variants Enhanced enemies as one tier higher for Vampire healing and Hunter bonus-orb quality.");
-
 
         ShowcaseGuaranteesEnabled = BindBool(config, "Role Balance - Guarantees", "ShowcaseEnabled", true, "Guarantees event-focused roles according to the configured party-size tiers.");
         ShowcaseMinimumsByPlayerCount = PartySizeScaling(
@@ -68,13 +67,13 @@ internal sealed class StageRolesConfig
             "Minimum Support roles by party size.");
 
         RiskCombinationLimitsEnabled = BindBool(config, "Role Balance - Limits", "Enabled", true, "Limits simultaneous Danger and Hardship roles during normal assignment.");
-        DangerRoleLimit = PartySizeScaling(config, "Role Balance - Limits", "DangerMaximums", "1:1,8:2,16:3", "Maximum simultaneous Bomber, Stinker, and Werewolf roles by party size.");
-        HardshipRoleLimit = PartySizeScaling(config, "Role Balance - Limits", "HardshipMaximums", "1:1,12:2", "Maximum simultaneous Courier and Tuna roles by party size.");
+        DangerRoleLimit = PartySizeScaling(config, "Role Balance - Limits", "DangerMaximums", "1:1,8:2,16:3", "Maximum simultaneous Bomber, Stinker, Werewolf and Influenza roles by party size.");
+        HardshipRoleLimit = PartySizeScaling(config, "Role Balance - Limits", "HardshipMaximums", "1:1,12:2", "Maximum simultaneous Courier, Tuna and Influenza roles by party size.");
         SmallPartyCombinedRiskPlayerCount = BindInt(config, "Role Balance - Limits", "SmallPartyMaximumPlayers", 4, 1, MaximumSupportedPlayers, "Largest party size that uses the combined Danger and Hardship limit.");
         SmallPartyCombinedRiskRoleLimit = BindInt(config, "Role Balance - Limits", "SmallPartyCombinedMaximum", 1, 1, MaximumSupportedPlayers, "Maximum combined Danger and Hardship roles in a small party.");
 
         PreventConsecutiveSameRole = BindBool(config, "Role Balance - Variety", "PreventSameRole", true, "Prevents a player from receiving the same role in consecutive stages when another role is available.");
-        HardshipPersonalCooldownStages = BindInt(config, "Role Balance - Variety", "HardshipCooldownStages", 2, 0, 10, "Stages after Courier or Tuna during which that player cannot normally receive either Hardship role.");
+        HardshipPersonalCooldownStages = BindInt(config, "Role Balance - Variety", "HardshipCooldownStages", 2, 0, 10, "Stages after Courier, Tuna or Influenza during which that player normally cannot receive any of these Hardship roles.");
         ExcludeUnavailableContextRoles = BindBool(config, "Role Balance - Variety", "ExcludeUnavailableRoles", true, "Excludes context-dependent roles when their required player, enemy, weapon, or vanilla object is not available.");
 
         AnnouncementsEnabled = BindBool(config, "Notifications", "Enabled", true, "Enables role-name and role-effect chat and TTS notifications.");
@@ -83,7 +82,7 @@ internal sealed class StageRolesConfig
 
         HudFontSize = BindInt(config, "HUD", "FontSize", 28, 16, 48, "HUD text size before overall scaling.");
         HudEnabled = BindBool(config, "HUD", "Enabled", true, "Shows every player's assigned role during a stage.");
-        HudResourcesEnabled = BindBool(config, "HUD", "ResourceHudEnabled", true, "Shows your finite ability resources at the top left, independently of the role list. Requires RoleShuffle on this player and a 4.5 host.");
+        HudResourcesEnabled = BindBool(config, "HUD", "ResourceHudEnabled", true, "Shows your finite ability resources at the top left, independently of the role list. Requires RoleShuffle on this player and a compatible RoleShuffle host.");
         HudResourceScale = BindInt(config, "HUD", "ResourceHudScalePercent", 100, 50, 200, "Ability resource HUD scale; automatically reduced to fit the screen.");
         HudResourceOffsetX = BindInt(config, "HUD", "ResourceHudOffsetX", 0, 0, 3840, "Additional rightward offset from vanilla HP/stamina, in native HUD units. Zero aligns the icons and numbers.");
         HudResourceOffsetY = BindInt(config, "HUD", "ResourceHudOffsetY", 0, 0, 2160, "Additional downward offset below vanilla stamina, in native HUD units. Zero uses the native row spacing.");
@@ -260,7 +259,7 @@ internal sealed class StageRolesConfig
 
         MedicEnabled = RoleEnabled(config, "Medic");
         MedicWeight = RoleWeight(config, "Medic");
-        MedicHealAmount = BindInt(config, "Medic", "HealAmount", 5, 1, 100, "Health restored to each nearby player per tick.");
+        MedicHealAmount = BindInt(config, "Medic", "HealAmount", 5, 1, 100, "HP restored to each nearby living ally per tick; excludes the Medic.");
         MedicHealIntervalSeconds = BindFloat(config, "Medic", "HealIntervalSeconds", 2f, 0.1f, 30f, "Seconds between Medic healing ticks.");
         MedicHealRadius = BindFloat(config, "Medic", "HealRadius", 5f, 1f, 30f, "Maximum distance from the Medic for healing.");
         MedicTotalHealingLimit = BindInt(config, "Medic", "TotalHealingLimit", 150, 1, 10000, "Maximum total health restored by each Medic per stage.");
@@ -268,7 +267,7 @@ internal sealed class StageRolesConfig
         PhoenixEnabled = RoleEnabled(config, "Phoenix");
         PhoenixWeight = RoleWeight(config, "Phoenix");
         PhoenixRevivalHealth = BindInt(config, "Phoenix", "RevivalHealth", 25, 1, 1000, "Health restored after Phoenix revival, capped at the player's maximum health.");
-        PhoenixReviveDelaySeconds = BindFloat(config, "Phoenix", "ReviveDelaySeconds", 2f, 2f, 10f, "Delay before revival. Phoenix always waits at least two seconds.");
+        PhoenixReviveDelaySeconds = BindFloat(config, "Phoenix", "ReviveDelaySeconds", 2f, 2f, 10f, "Minimum delay after death before Phoenix can revive. The death head must also be stationary; moving heads can make the wait longer.");
 
         JoblessEnabled = RoleEnabled(config, "Courier");
         JoblessWeight = RoleWeight(config, "Courier", 20);
@@ -294,7 +293,7 @@ internal sealed class StageRolesConfig
         RescuerEnabled = RoleEnabled(config, "Rescuer");
         RescuerWeight = RoleWeight(config, "Rescuer", 80);
         RescuerRevivalHealth = BindInt(config, "Rescuer", "RevivalHealth", 25, 1, 1000, "Health restored to a player revived by Rescuer, capped at the player's maximum health.");
-        RescuerReviveDelaySeconds = BindFloat(config, "Rescuer", "ReviveDelaySeconds", 2f, 0f, 10f, "Delay before reviving another player.");
+        RescuerReviveDelaySeconds = BindFloat(config, "Rescuer", "ReviveDelaySeconds", 2f, 0f, 10f, "Minimum time since the target died before grabbing their death head can revive them. This is not a continuous grab duration. Moving heads are allowed.");
         RescuerMaximumRevives = BindInt(config, "Rescuer", "MaximumRevives", 2, 1, 10, "Maximum revivals per stage.");
 
         VampireEnabled = RoleEnabled(config, "Vampire");
@@ -462,7 +461,7 @@ internal sealed class StageRolesConfig
         SniperReferenceDistance = BindFloat(config, "Sniper", "ReferenceDistance", 6f, 1f, 50f, "Distance in meters where Sniper deals normal damage.");
         SniperMinimumDamageMultiplier = BindFloat(config, "Sniper", "MinimumDamageMultiplier", 0.5f, 0f, 1f, "Damage multiplier at zero distance.");
         SniperMaximumDamageMultiplier = BindFloat(config, "Sniper", "MaximumDamageMultiplier", 2f, 1f, 10f, "Maximum long-range damage multiplier.");
-        SniperMaximumMultiplierDistance = BindFloat(config, "Sniper", "MaximumMultiplierDistance", 18f, 1f, 100f, "Distance in meters where Sniper reaches the maximum damage multiplier.");
+        SniperMaximumMultiplierDistance = BindFloat(config, "Sniper", "MaximumMultiplierDistance", 18f, 1f, 100f, "Distance in metres where Sniper reaches maximum damage. If this is not above ReferenceDistance, the effective distance is ReferenceDistance + 0.1 m.");
 
         ImitatorEnabled = RoleEnabled(config, "Imitator");
         ImitatorWeight = RoleWeight(config, "Imitator");
@@ -501,9 +500,15 @@ internal sealed class StageRolesConfig
         InfluenzaSpeechSilenceSeconds = BindFloat(config, "Influenza", "SpeechSilenceSeconds", 0.75f, 0.1f, 5f, "Silent gap required before voice counts as a new utterance. Text chat always uses one check per message.");
         InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
-        TwinsEnabled = RoleEnabled(config, "Twins");
         NegotiatorEnabled = RoleEnabled(config, "Negotiator");
         NegotiatorWeight = RoleWeight(config, "Negotiator");
+        NegotiatorDeliveryCarryDistance = BindFloat(config, "Negotiator", "DeliveryCarryDistance", 20f, 1f, 200f,
+            "Metres personally carried outside the truck before releasing a valuable at extraction. Applies to delivery checks; existing rights are kept. One delivery reward per stage, one separate kill reward, at most two rights.");
+        NegotiatorDeliveryAllowedSizes = config.Bind("Negotiator", "DeliveryAllowedSizes", "Big,Wide,Tall,VeryTall",
+            "Comma-separated valuable sizes eligible for extraction delivery: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Names ignore case and surrounding spaces; unknown names are ignored. Blank disables delivery earnings. Truck delivery never qualifies.");
+        NegotiatorEnemyTier = BindInt(config, "Negotiator", "EnemyTier", 3, 1, 3,
+            "Exact native enemy tier required for a personally credited kill. Only this tier qualifies; Enhanced enemy reward bonuses do not change it. One kill reward per stage. Existing rights are kept.");
+
         RiggerEnemyDamageMultiplier = BindFloat(config, "Rigger", "EnemyDamageMultiplier", 2f, 1f, 10f, "Human Adventure Cable direct hit damage multiplier against enemies.");
         RiggerEnabled = RoleEnabled(config, "Rigger");
         RiggerWeight = RoleWeight(config, "Rigger");
@@ -521,6 +526,7 @@ internal sealed class StageRolesConfig
         PorterUnloadSeconds = BindFloat(config, "Porter", "FullUnloadSeconds", 10f, 0f, 60f, "Seconds to unload a full load inside the truck or extraction area; scales with stored weight. Leaving the area or losing cargo to an enemy hit restarts the wait.");
         PorterDropOnEnemyHit = BindBool(config, "Porter", "DropOnEnemyHit", true, "Scatter all stored valuables on a confirmed enemy hit that reduces HP. Death releases all cargo.");
         PorterAllowedSizes = config.Bind("Porter", "AllowedSizes", "Tiny,Small,Medium", "Comma-separated allowed valuable sizes: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Empty or unknown entries allow no additional sizes. Shop equipment is excluded.");
+        TwinsEnabled = RoleEnabled(config, "Twins");
         TwinsWeight = RoleWeight(config, "Twins");
         TwinsCarryStrengthMultiplier = BindFloat(config, "Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f, "Strength multiplier converted to temporary upgrade levels while both twins hold the same valuable. Rounded up to whole levels, capped at 200. Shop equipment is excluded.");
         TwinsCollisionReductionPercent = BindFloat(config, "Twins", "CollisionReductionPercent", 50f, 0f, 100f, "Percentage of collision value loss prevented during cooperative carrying.");
@@ -536,7 +542,6 @@ internal sealed class StageRolesConfig
         TwinsDeliveryBonusPercent = BindFloat(config, "Twins", "DeliveryBonusPercent", 10f, 0f, 100f, "Value bonus for a qualified valuable entering the truck or extraction area. Each valuable pays only once.");
         TwinsDeliveryStageLimit = BindInt(config, "Twins", "DeliveryStageLimit", 5000, 0, 10000, "Maximum total extra value for joint delivery per pair and stage.");
 
-
         SuperbotEnabled = BindBool(config, "???1", "Enabled", true, "???");
         DisasterEnabled = BindBool(config, "???2", "Enabled", true, "???");
     }
@@ -544,6 +549,9 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<bool> TwinsEnabled { get; }
     internal ConfigEntry<bool> NegotiatorEnabled { get; }
     internal ConfigEntry<int> NegotiatorWeight { get; }
+    internal ConfigEntry<float> NegotiatorDeliveryCarryDistance { get; }
+    internal ConfigEntry<string> NegotiatorDeliveryAllowedSizes { get; }
+    internal ConfigEntry<int> NegotiatorEnemyTier { get; }
     internal ConfigEntry<float> RiggerEnemyDamageMultiplier { get; }
     internal ConfigEntry<bool> RiggerEnabled { get; }
     internal ConfigEntry<int> RiggerWeight { get; }
@@ -1011,6 +1019,8 @@ internal sealed class StageRolesConfig
         Mathf.Clamp(StinkerDistance.Value, 1f, 100f);
     internal float ClampedStinkerSafetyDistance =>
         Mathf.Clamp(StinkerSafetyDistance.Value, 1f, 30f);
+    internal float SniperEffectiveMaximumDistance => Math.Max(
+        SniperReferenceDistance.Value + 0.1f, SniperMaximumMultiplierDistance.Value);
     internal float ClampedJoblessInterval => Mathf.Clamp(JoblessDamageIntervalSeconds.Value, 0.05f, 10f);
     internal float ClampedTunaDamageInterval => Mathf.Clamp(TunaDamageIntervalSeconds.Value, 0.05f, 10f);
 
@@ -1066,13 +1076,13 @@ internal sealed class StageRolesConfig
     }
 
     private static ConfigEntry<bool> RoleEnabled(ConfigFile config, string section) =>
-        BindBool(config, section, "Enabled", true, "Includes this role in stage assignment.");
+        BindBool(config, section, "Enabled", true, "Includes this role in future random assignments. Turning it off does not remove an already assigned role.");
 
     private static ConfigEntry<int> RoleWeight(
         ConfigFile config,
         string section,
         int defaultValue = 100) =>
-        BindInt(config, section, "Weight", defaultValue, 0, 1000, "Relative assignment weight.");
+        BindInt(config, section, "Weight", defaultValue, 0, 1000, "Relative random-assignment weight, not a percentage. Zero excludes this role from random draws; current assignments stay unchanged.");
 
     private static ConfigEntry<string> PartySizeScaling(
         ConfigFile config,
@@ -1084,7 +1094,9 @@ internal sealed class StageRolesConfig
             section,
             key,
             defaultValue,
-            description + " Use comma-separated party size:limit pairs.");
+            description + " Use comma-separated party size:limit pairs; both numbers accept 0-30. " +
+            "Invalid pairs are ignored; the last duplicate party size wins. " +
+            (section == "Role Balance - Limits" ? "Effective limits are at least 1." : "Zero disables the minimum at that party size."));
 
     private static ConfigEntry<string> ExpressionName(
         ConfigFile config,

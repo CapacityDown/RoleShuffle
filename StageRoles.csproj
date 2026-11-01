@@ -63,6 +63,7 @@
     <Compile Include="DualWielderRuntime.cs" />
     <Compile Include="RiggerRuntime.cs" />
     <Compile Include="NegotiatorState.cs" />
+    <Compile Include="NegotiatorRules.cs" />
     <Compile Include="NegotiatorRuntime.cs" />
     <Compile Include="NegotiatorEarning.cs" />
     <Compile Include="NegotiatorPatches.cs" />

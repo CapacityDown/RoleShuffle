@@ -5,6 +5,7 @@
     <GameManagedDir Condition="'$(GameManagedDir)' == ''">E:/SteamLibrary/steamapps/common/REPO/REPO_Data/Managed</GameManagedDir>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../NegotiatorRules.cs" Link="NegotiatorRules.cs" />
     <Compile Include="../../RoleWireId.cs" Link="RoleWireId.cs" />
     <Compile Include="../LocalizationChecks/Stubs.cs" Link="CatalogStubs.cs" />
     <Compile Include="../../RoleGuideSync.cs" Link="RoleGuideSync.cs" />
