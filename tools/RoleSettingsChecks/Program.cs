@@ -320,8 +320,10 @@ foreach (RoleGuideLanguage language in Enum.GetValues<RoleGuideLanguage>())
     {
         Check(catalog.ContainsKey(preset.Name) && catalog.ContainsKey(preset.Description), "Preset labels and descriptions exist in every language");
     }
+    foreach (string key in new[] { "Custom {0}", "Save current: {0}", "Overwrite: {0}", "Confirm overwrite: {0}", "Saved.", "Empty", "Saved presets unavailable.", "Change player roles", "Testing is disabled.", "Only the host can change player roles.", "Roles can only be changed during a stage.", "Select a player.", "All players", "Select a second player for Twins.", "Random role", "Roles updated.", "Player is no longer available.", "Select two different living players.", "A Twins pair already exists.", "Use All players to replace an existing Twins pair.", "Could not change roles." })
+        Check(catalog.ContainsKey(key), "New menu text translated: " + language + "/" + key);
     RoleMenu.Show(config, presets: true, language);
-    Check(RoleMenu.Entries.Count(e => e.OnClick != null) == 6, "Localized preset page keeps navigation and all apply actions");
+    Check(RoleMenu.Entries.Count(e => e.OnClick != null) == 9, "Localized preset page keeps navigation, built-in presets and three save actions");
 }
 Console.WriteLine($"Role settings checks passed: {checks}");
 int baseStart = checks;
@@ -417,3 +419,6 @@ foreach (var language in Enum.GetValues<RoleGuideLanguage>())
 Console.WriteLine($"Base Upgrade settings checks passed: {checks - baseStart}");
 
 Console.WriteLine($"Base Upgrade save adjustment checks passed: {SaveAdjustmentChecks.Run(config, file, baseService, directory)}");
+
+CustomPresetChecks.Run(directory);
+RoleTestMenuChecks.Run(config);

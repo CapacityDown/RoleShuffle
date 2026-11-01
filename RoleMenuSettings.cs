@@ -8,6 +8,8 @@ namespace REPOJP.StageRoles;
 
 internal sealed partial class RoleMenu
 {
+    private static int _presetOverwriteSlot = -1;
+
     private static string RoleSettingsSignature()
     {
         bool editable = RoleSelectionSettings.CanEdit;
@@ -15,7 +17,7 @@ internal sealed partial class RoleMenu
         signature.Append(RoleGuideSync.VisibilitySignature(_config));
         if (editable)
         {
-            signature.Append('|').Append(_config.Enabled.Value);
+            signature.Append('|').Append(_config.Enabled.Value).Append(':').Append(StageRolesPlugin.Instance.RoleSettings.CustomPresets.Revision);
             foreach (StageRole role in RoleCatalog.AllRoles)
                 signature.Append('|').Append(_config.RoleIsEnabled(role)).Append(':').Append(_config.RoleWeightValue(role));
         }
@@ -60,6 +62,34 @@ internal sealed partial class RoleMenu
         {
             Button(Localized("BACK TO ROLE SETTINGS"), () => SwitchView(page, RoleMenuView.Settings));
             Text(Localized("Presets change role ON/OFF only."));
+            if (editable)
+            {
+                var saved = StageRolesPlugin.Instance.RoleSettings.CustomPresets;
+                if (!saved.Available) Text(Localized("Saved presets unavailable."));
+                for (int slot = 0; slot < CustomRolePresets.Capacity; slot++)
+                {
+                    int index = slot;
+                    string name = RoleText.Format("Custom {0}", _guideLanguage, slot + 1);
+                    var preset = saved.Get(slot);
+                    Text(name + " — " + (preset == null ? Localized("Empty") :
+                        RoleText.Format("Enabled roles: {0}/{1}", _guideLanguage, preset.Count, RoleCatalog.AllRoles.Count)));
+                    Button(RoleText.Format("Apply: {0}", _guideLanguage, name), () =>
+                    {
+                        if (StageRolesPlugin.Instance.RoleSettings.TryApplyCustomPreset(index)) SwitchView(page, RoleMenuView.Settings);
+                    }, preset != null);
+                    bool confirm = preset != null && _presetOverwriteSlot == index;
+                    string key = confirm ? "Confirm overwrite: {0}" : preset == null ? "Save current: {0}" : "Overwrite: {0}";
+                    Button(RoleText.Format(key, _guideLanguage, name), () =>
+                    {
+                        if (!RoleSelectionSettings.CanEdit) return;
+                        if (confirm && _presetOverwriteSlot != index) return;
+                        if (preset != null && !confirm) { _presetOverwriteSlot = index; return; }
+                        if (StageRolesPlugin.Instance.RoleSettings.TrySaveCustomPreset(index, confirm))
+                        { _utilityMessage = Localized("Saved."); _presetOverwriteSlot = -1; }
+                    }, saved.Available);
+                    if (confirm) Button(Localized("CANCEL"), () => _presetOverwriteSlot = -1);
+                }
+            }
             foreach (RolePresetDefinition preset in RolePresets.All)
             {
                 Button(RoleText.Format("Apply: {0}", _guideLanguage, Localized(preset.Name)), () =>

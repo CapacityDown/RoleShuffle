@@ -77,6 +77,9 @@
     <Compile Include="CombatRoleRuntime.cs" />
     <Compile Include="TrackerRoleRuntime.cs" />
     <Compile Include="RolePresets.cs" />
+    <Compile Include="CustomRolePresets.cs" />
+    <Compile Include="RoleTestMenuService.cs" />
+    <Compile Include="RoleMenuTesting.cs" />
     <Compile Include="RoleSelectionSettings.cs" />
     <Compile Include="BaseUpgradeDrawSelection.cs" />
     <Compile Include="BaseUpgradeSelectionSettings.cs" />

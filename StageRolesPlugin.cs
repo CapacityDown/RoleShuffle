@@ -38,6 +38,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
     internal static ManualLogSource ModLogger { get; private set; } = null!;
     internal StageRolesConfig Settings { get; private set; } = null!;
     internal RoleSelectionSettings RoleSettings { get; private set; } = null!;
+    internal RoleTestMenuService RoleTests { get; private set; } = null!;
     internal BaseUpgradeSelectionSettings BaseUpgradeSettings { get; private set; } = null!;
     internal StageRoleController Controller { get; private set; } = null!;
     internal NegotiatorRuntime Negotiator { get; private set; } = null!;
@@ -62,6 +63,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         _controllerObject.transform.SetParent(transform, false);
         Controller = _controllerObject.AddComponent<StageRoleController>();
         Controller.Initialize(Settings);
+        RoleTests = new RoleTestMenuService(Settings, Controller);
         Negotiator = gameObject.AddComponent<NegotiatorRuntime>();
         Negotiator.Initialize(Settings);
         RoleHud hud = gameObject.AddComponent<RoleHud>();

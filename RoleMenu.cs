@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 567;
+    private const int RoleUiBuildNumber = 569;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -126,6 +126,11 @@ internal sealed partial class RoleMenu : MonoBehaviour
         RoleGuideLanguage savedLanguage = GameLocalization.Language;
         if (_guideLanguage != savedLanguage)
         { _guideLanguage = savedLanguage; _utilityMessage = string.Empty; SwitchView(_openPage, _activeView); return; }
+        if (_activeView == RoleMenuView.RoleTesting)
+        {
+            if (_openSignature != RoleTestingSignature()) RefreshRoleTestingRows(_openPage);
+            return;
+        }
         if (_activeView is RoleMenuView.Settings or RoleMenuView.Presets)
         {
             if (_openSignature != RoleSettingsSignature()) RefreshRoleSettingsRows(_openPage);
@@ -336,10 +341,18 @@ internal sealed partial class RoleMenu : MonoBehaviour
             _selectedAssignmentKey = string.Empty;
             _selectLocalAssignmentOnRefresh = true;
         }
+        if (_activeView != view)
+        {
+            _presetOverwriteSlot = -1;
+            _testTarget = string.Empty;
+            _testChoosePartner = false;
+        }
         _activeView = view;
         _utilityMessage = string.Empty;
         UpdateNavigationLabels();
         page.scrollView.SetScrollPosition(0f);
+        if (view == RoleMenuView.RoleTesting)
+        { RefreshRoleTestingRows(page); return; }
         if (view is RoleMenuView.Settings or RoleMenuView.Presets)
         { RefreshRoleSettingsRows(page); return; }
         if (view == RoleMenuView.BaseUpgradeSettings)
@@ -383,7 +396,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Button(_settingsButton, "ROLE SETTINGS", _activeView is RoleMenuView.Settings or RoleMenuView.Presets);
         Button(_baseUpgradesButton, "BASE UPGRADES", _activeView is RoleMenuView.BaseUpgrades or RoleMenuView.BaseUpgradeSettings);
         Button(_historyButton, "DRAW HISTORY", _activeView == RoleMenuView.History);
-        Button(_toolsButton, "TOOLS", _activeView is RoleMenuView.Tools or RoleMenuView.Report);
+        Button(_toolsButton, "TOOLS", _activeView is RoleMenuView.Tools or RoleMenuView.Report or RoleMenuView.RoleTesting);
         Button(_backButton, "Back", false);
         if (_openPage != null)
         {
@@ -396,6 +409,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 RoleMenuView.BaseUpgradeSettings => "Base Upgrade Settings",
                 RoleMenuView.History => "Draw History",
                 RoleMenuView.Tools => "Tools",
+                RoleMenuView.RoleTesting => "Change player roles",
                 RoleMenuView.Report => "Bug Report",
                 _ => "Base Upgrades"
             });
@@ -685,7 +699,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private static string UtilitySignature() => _activeView switch
     {
         RoleMenuView.History => (BaseUpgradeHistory.IsDisplayPreview ? "preview:" : "") + (BaseUpgradeHistory.DisplayPayload ?? "unavailable"),
-        RoleMenuView.Tools => RoleSyncStatus.Instance?.Describe(_guideLanguage) ?? "",
+        RoleMenuView.Tools => (RoleSyncStatus.Instance?.Describe(_guideLanguage) ?? "") + "|testing:" + TestRoles.Visible,
         _ => StageRolesPlugin.Instance.BugReport.LatestPath + _utilityMessage
     };
 
@@ -708,15 +722,17 @@ internal sealed partial class RoleMenu : MonoBehaviour
         }
         void Button(string label, Action action)
         {
+            RoleMenuView view = _activeView;
             entries.Add(new RoleMenuEntry("> " + label, 18, FontStyles.Bold, 40, false, UseLanguageFont, () =>
             {
+                if (_openPage != page || _activeView != view) return;
                 try { action(); }
                 catch (Exception exception)
                 {
                     _utilityMessage = Localized("Operation failed. Check the RoleShuffle log.", "操作に失敗しました。RoleShuffleのログを確認してください。");
                     StageRolesPlugin.ModLogger.LogError(exception);
                 }
-                if (_openPage == page && !RoleHudEditor.IsOpen && _issuesDialog == null) RefreshUtilityRows(page);
+                if (_openPage == page && _activeView == view && !RoleHudEditor.IsOpen && _issuesDialog == null) RefreshUtilityRows(page);
             }));
         }
 
@@ -736,6 +752,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         }
         else if (_activeView == RoleMenuView.Tools)
         {
+            if (TestRoles.Visible) Button(Localized("Change player roles"), () => SwitchView(page, RoleMenuView.RoleTesting));
             Text(Localized("SYNC STATUS", "同期状態") + "\n" + (RoleSyncStatus.Instance?.Describe(_guideLanguage) ?? ""));
             Text(Localized("Display-data sync status.", "表示データの同期状態です。"));
             Button(Localized("REFRESH DISPLAY DATA", "表示データを再取得"), () => RoleSyncStatus.Instance?.RequestRefresh());
@@ -1146,6 +1163,9 @@ internal sealed partial class RoleMenu : MonoBehaviour
 
     private static void ClearOpenPageTracking()
     {
+        _testTarget = string.Empty;
+        _testChoosePartner = false;
+        _presetOverwriteSlot = -1;
         RoleHudEditor.Instance?.Close(false);
         if (_issuesDialog != null) _issuesDialog.PageStateSet(MenuPage.PageState.Closing);
         _issuesDialog = null;
@@ -1253,6 +1273,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Report,
         Settings,
         Presets,
-        BaseUpgradeSettings
+        BaseUpgradeSettings,
+        RoleTesting
     }
 }

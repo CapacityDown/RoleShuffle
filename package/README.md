@@ -38,7 +38,7 @@ Install with a mod manager or place `RoleShuffle.dll` in the profile's `BepInEx/
 
 Lobby/Escape → `ROLES` → `ROLE SETTINGS`: host toggles, including secrets, share MOD settings and affect future assignments. Guests can view supported hosts’ settings.
 
-`PRESETS` replaces role switches only. Weights, abilities, balance, Base Upgrades and HUD settings stay. Weight 0 stays excluded. Manual selections show `Custom` and remain until applying a preset.
+`PRESETS` changes role ON/OFF only; weights, abilities, balance, Base Upgrades and HUD stay. Weight 0 stays excluded. Save the current selection in `Custom 1–3`, apply it later, or confirm an overwrite. Slots persist across restarts in the current profile.
 
 |Preset|Enabled roles|Play style|
 |---|---|---|
@@ -423,13 +423,14 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 
 The default Base level is Health 1 and 0 for other upgrades. Role upgrade settings specify the level used during that role; they are not levels added to Base. Influencer and Berserker preserve stronger upgrades when their conditions change. `Tracker` keeps stronger Base upgrades and remains eligible at high Base levels. `Rammer` sets Launch, Tumble Climb and Tumble Wings to 0 during the stage. Throw is unaffected.
 
-Influencer and Berserker scaling accepts comma- or semicolon-separated `condition:level` pairs. Influencer applies the last target whose player-count condition has been reached. Berserker applies the target belonging to the lowest configured HP threshold currently reached. Default expressions omit pairs whose target level would be 0; add a `condition:0` pair manually when an explicit zero override is needed. Levels are limited to 0–100, except Map Player Count which is limited to 0–1. Entries in the wrong format are ignored.
+Influencer/Berserker use comma- or semicolon-separated `condition:level` pairs: the last reached player-count target for Influencer, or the lowest reached HP threshold for Berserker. Defaults omit zero-level pairs; add `condition:0` to force zero. Levels: 0–100 (Map Player Count: 0–1). Malformed entries are ignored.
 
 ### Player tools
 
 Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` or `DRAW HISTORY`.
 
 - **Role guide:** `Overview` summarizes abilities; `Details` shows host-configured values and limits. `Draw eligibility` shows your current candidates and exclusion reasons. Conditions may depend on other players; stage items remain unconfirmed until generation.
+- **Role changes:** with testing enabled, hosts can use `TOOLS` → `Change player roles` during stages. Select a player or all players; Twins requires two living players.
 - **HUD editor:** in `TOOLS`, drag the HUD sample and adjust its anchor, alignment, text/icon size, scale, mode and visibility. `SAVE` keeps local settings; `CANCEL` or Esc discards them; `RESET` previews defaults. Mouse controls also work in the lobby.
 - **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports contain mod versions, settings and recent activity, are saved in `BepInEx/RoleShuffleReports`, and are never sent automatically.
 - **Language:** Menus support all 21 R.E.P.O. languages, including Arabic, Thai and regional Spanish/Portuguese. They follow the game setting. Roulette upgrade names use the game’s translations. Role names, setting identifiers, commands and diagnostics stay English.
@@ -441,7 +442,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 ### Notifications and HUD
 
 - **Resources:** the remaining healing, revives, repair, charge and wagers appear below stamina as cyan icons and numbers in one column. The display fits the available space, and empty resources turn red. It appears while you are alive and have the mod installed. Adjust it with `HUD.ResourceHud*`.
-- Role emblems appear beside roles in `CURRENT ROLES` and `ROLE GUIDE`, and optionally in the HUD. The area outside each hexagonal emblem is transparent. Unrevealed secret roles use a shared question-mark emblem until revealed. Emblems are visible to players who have the mod installed.
+- Mod users see role emblems in `CURRENT ROLES`, `ROLE GUIDE` and optionally the HUD. Hexagon exteriors are transparent; unrevealed secrets share a question-mark emblem.
 - At stage start, each player announces the assigned English role name through vanilla chat and TTS.
 - RoleShuffle's forced notification TTS does not attract enemies. Ordinary microphone input and other world sounds keep their vanilla behavior unless suppressed by Ninja.
 - When Stage Flux is present, RoleShuffle uses the separate Stage Flux announcement delay to avoid overlapping stage-start messages.
@@ -515,9 +516,9 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 ### ロール選択とプリセット
 
-ロビー／Escメニューの`ROLES`→`ロール設定`で、ホストが各役職のON/OFFを変更できます。無効な役職とシークレットも表示。設定は`Enabled`に保存され、途中参加者を含む次の抽選から適用し、割当済みの役職は維持します。参加者は閲覧のみ可能で、非対応の旧ホストでは未受信と表示します。
+ロビー／Escの`ROLES`→`ロール設定`で、ホストがシークレットを含む各役職のON/OFFを保存できます。途中参加者を含む次の抽選から適用し、現在の役職は維持。参加者は閲覧のみで、旧ホストの未対応データは未受信と表示します。
 
-`プリセット`は全役職のON/OFFのみを置き換えます。重み・能力値・バランス・Base Upgrade・HUD設定は維持。重み0の役職はONでも抽選されません。個別設定は`カスタム`と表示され、プリセットを適用するまで維持されます。
+`プリセット`は役職のON/OFFだけを変更し、重み・能力値・バランス・Base Upgrade・HUDは維持します。重み0は抽選されません。「カスタム1～3」に現在の構成を保存して再適用でき、上書きは確認後に実行します。保存枠は同じプロファイルの再起動後も保持します。
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|
@@ -916,6 +917,7 @@ InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたは�
 Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW HISTORY`を選択します。
 
 - **ロールガイド：** 「概要」は能力の要約、「詳細」はホスト設定の値・条件・制限を表示。「抽選状況」で自分の候補と対象外の理由を確認できます。他の人の抽選結果で変わる条件があり、必要アイテムの有無はステージ生成後に確定します。
+- **役職変更：** テスト有効時、ホストはステージ中に`TOOLS`→「プレイヤーの役職変更」で対象者または全員を選べます。Twinsは生存する2人を指定します。
 - **HUD編集：** `TOOLS`でサンプルをドラッグし、基準位置・整列・文字／アイコンサイズ・全体倍率・表示形式・表示切替を調整します。「保存」で個人設定を保存、「取消」またはEscで破棄、「初期値」で初期状態をプレビューします。ロビーでもマウスで操作可能です。
 - **不具合レポート：** `TOOLS`からコピーまたはファイルを開き、内容と発生手順を確認してGitHub Issuesへ投稿します。MODのバージョン・設定・最近の動作状況を含み、`BepInEx/RoleShuffleReports`へ保存します。自動送信はしません。
 - **言語：** メニューなどの表示はR.E.P.O.本体の言語に自動で合わせます。アラビア語・タイ語・地域別のスペイン語とポルトガル語を含む全21言語に対応します。ルーレットのアップグレード名は各プレイヤーの本体言語に合わせた公式名称になります。役職名・設定の識別名・コマンド・診断本文は英語です。

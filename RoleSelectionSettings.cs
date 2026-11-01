@@ -7,6 +7,22 @@ namespace REPOJP.StageRoles;
 
 internal sealed class RoleSelectionSettings(StageRolesConfig settings, ConfigFile file)
 {
+    internal CustomRolePresets CustomPresets { get; } = new(System.IO.Path.ChangeExtension(file.ConfigFilePath, ".presets.json"));
+
+    internal bool TrySaveCustomPreset(int slot, bool overwrite = false) =>
+        CanEdit && CustomPresets.TrySave(slot, settings.RoleIsEnabled, overwrite);
+
+    internal bool TryApplyCustomPreset(int slot)
+    {
+        if (!CanEdit) return false;
+        var preset = CustomPresets.Get(slot);
+        if (preset == null) return false;
+        Dictionary<StageRole, bool> values = new();
+        foreach (StageRole role in RoleCatalog.AllRoles) values[role] = preset.Includes(role);
+        Save(values);
+        return true;
+    }
+
     internal static bool CanEdit => GameManager.instance != null &&
         (!SemiFunc.IsMultiplayer() || PhotonNetwork.IsMasterClient);
 

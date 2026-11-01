@@ -102,7 +102,7 @@ namespace Photon.Pun
     { public new bool TryGetValue(string key, out object value) => base.TryGetValue(key, out value!); }
 }
 namespace TMPro { public enum FontStyles { Normal, Bold } }
-namespace MenuLib.MonoBehaviors { public sealed class REPOPopupPage { } }
+namespace MenuLib.MonoBehaviors { public sealed class REPOPopupPage { public TestScroll scrollView = new(); } public sealed class TestScroll { public int Resets; public void SetScrollPosition(float value) { if (value == 0) Resets++; } } }
 namespace REPOJP.StageRoles
 {
     internal sealed class TestLogger
@@ -117,6 +117,7 @@ namespace REPOJP.StageRoles
         internal static TestLogger ModLogger = new();
         internal static StageRolesPlugin Instance = new();
         internal RoleSelectionSettings RoleSettings = null!;
+        internal RoleTestMenuService RoleTests = null!;
         internal BaseUpgradeSelectionSettings BaseUpgradeSettings = null!;
     }
     internal static class RoleCatalog
@@ -148,7 +149,7 @@ namespace REPOJP.StageRoles
     }
     internal sealed partial class RoleMenu
     {
-        private enum RoleMenuView { Settings, Presets, BaseUpgrades, BaseUpgradeSettings }
+        private enum RoleMenuView { Settings, Presets, BaseUpgrades, BaseUpgradeSettings, Tools, RoleTesting }
         private static StageRolesConfig _config = null!;
         private static MenuLib.MonoBehaviors.REPOPopupPage _openPage = new();
         private static RoleMenuView _activeView;
@@ -162,7 +163,7 @@ namespace REPOJP.StageRoles
         private static string[] WrapGuideText(object measurement, string value, float width, RoleGuideLanguage language) => new[] { value };
         private static string Localized(string text) => RoleText.Get(text, _guideLanguage);
         private static void SwitchView(MenuLib.MonoBehaviors.REPOPopupPage page, RoleMenuView view)
-        { _activeView = view; if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view == RoleMenuView.BaseUpgradeSettings) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
+        { _activeView = view; if (view == RoleMenuView.RoleTesting) RefreshRoleTestingRows(page); else if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view == RoleMenuView.BaseUpgradeSettings) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
         private static void OpenDrawEligibility(MenuLib.MonoBehaviors.REPOPopupPage page) { }
         private static string DisplayUpgradeName(string name) => name;
         private static string SignedValue(int value) => value.ToString("+0;-0;0", System.Globalization.CultureInfo.InvariantCulture);
@@ -174,6 +175,11 @@ namespace REPOJP.StageRoles
         private static void ApplyEntries(object page, IReadOnlyList<RoleMenuEntry> entries) => Entries = entries;
         internal static void Show(StageRolesConfig config, bool presets = false, RoleGuideLanguage language = RoleGuideLanguage.English)
         { _config = config; _guideLanguage = language; _activeView = presets ? RoleMenuView.Presets : RoleMenuView.Settings; RefreshRoleSettingsRows(_openPage); }
+        internal static void ShowTests(StageRolesConfig config)
+        { _config = config; _guideLanguage = RoleGuideLanguage.English; _activeView = RoleMenuView.RoleTesting; _testTarget = ""; _testChoosePartner = false; _utilityMessage = ""; RefreshRoleTestingRows(_openPage); }
+        internal static bool TestingPageVisible => _activeView == RoleMenuView.RoleTesting;
+        internal static int TestScrollResets => _openPage.scrollView.Resets;
+        internal static void RefreshTests() => RefreshRoleTestingRows(_openPage);
         internal static void ShowBase(StageRolesConfig config, RoleGuideLanguage language = RoleGuideLanguage.English)
         { _config = config; _guideLanguage = language; _activeView = RoleMenuView.BaseUpgradeSettings; RefreshBaseUpgradeSettingsRows(_openPage); }
         internal static void RefreshBaseIfChanged()

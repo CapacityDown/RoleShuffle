@@ -108,6 +108,13 @@ historical version numbers, deployment profiles and superseded design choices.
   The user cancelled the preceding Bomber solo-exclusion request: Bomber remains
   eligible in singleplayer and one-player rooms.
 
+- On 2026-11-02 the user requested three saved custom role presets and a
+  test-only role-change menu. Presets store role ON/OFF only, locally per profile,
+  across restarts; weights/abilities and assigned roles are unchanged on save.
+  Confirm occupied-slot overwrites in the UI. Host/solo changes use the existing
+  production test-command paths, recheck authority/testing/stage at action time,
+  address exact player identities and assign Twins to two living players together.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

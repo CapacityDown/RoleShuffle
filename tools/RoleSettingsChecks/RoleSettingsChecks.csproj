@@ -11,6 +11,9 @@
     <Compile Include="../../TruckDrawWeight.cs" Link="TruckDrawWeight.cs" />
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
+    <Compile Include="../../CustomRolePresets.cs" Link="CustomRolePresets.cs" />
+    <Compile Include="../../RoleTestMenuService.cs" Link="RoleTestMenuService.cs" />
+    <Compile Include="../../RoleMenuTesting.cs" Link="RoleMenuTesting.cs" />
     <Compile Include="../../RolePresets.cs" Link="RolePresets.cs" />
     <Compile Include="../../RoleSelectionSettings.cs" Link="RoleSelectionSettings.cs" />
     <Compile Include="../../RoleMenuSettings.cs" Link="RoleMenuSettings.cs" />
