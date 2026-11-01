@@ -3,29 +3,46 @@ using System.Collections.Generic;
 
 namespace REPOJP.StageRoles;
 
-// Session entitlement: one grant per player per stage, no accumulation, and
-// only the immediately following shop may consume it. Kept outside assignments.
+internal enum NegotiatorReward { Delivery = 1, EnemyKill = 2 }
+
+// Stage earnings survive normal stage completion, but never death or role loss.
 internal sealed class NegotiatorState
 {
-    private readonly Dictionary<string, bool> _tickets = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _granted = new(StringComparer.Ordinal);
+    internal const int MaximumRights = 2;
+    private readonly Dictionary<string, int> _tickets = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int> _earned = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _participants = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _revoked = new(StringComparer.Ordinal);
     internal bool InShop { get; private set; }
-    internal IEnumerable<string> Players => _tickets.Keys;
-    internal void BeginStage() => _granted.Clear();
-    internal void Grant(string id)
+    internal void BeginStage() { _earned.Clear(); _participants.Clear(); _revoked.Clear(); }
+    internal void Activate(string id)
     {
-        if (InShop || string.IsNullOrEmpty(id) || !_granted.Add(id)) return;
-        _tickets[id] = true;
+        if (!InShop && !string.IsNullOrEmpty(id)) _participants.Add(id);
     }
-    // Keep the per-stage grant marker: changing away and back cannot farm rights.
-    internal bool Revoke(string id) => _tickets.Remove(id);
+    internal bool CanEarn(string id, NegotiatorReward reward) => !InShop &&
+        _participants.Contains(id) && !_revoked.Contains(id) && Remaining(id) < MaximumRights &&
+        (!_earned.TryGetValue(id, out int mask) || (mask & (int)reward) == 0);
+    internal bool TryEarn(string id, NegotiatorReward reward)
+    {
+        if (!CanEarn(id, reward)) return false;
+        _earned.TryGetValue(id, out int mask);
+        _earned[id] = mask | (int)reward;
+        _tickets[id] = Remaining(id) + 1;
+        return true;
+    }
+    internal bool Revoke(string id)
+    {
+        if (!_participants.Contains(id) && !_tickets.ContainsKey(id)) return false;
+        bool removed = _tickets.Remove(id);
+        return _revoked.Add(id) || removed;
+    }
     internal bool Has(string id) => _tickets.ContainsKey(id);
-    internal int Remaining(string id) => _tickets.TryGetValue(id, out bool unused) && unused ? 1 : 0;
+    internal int Remaining(string id) => _tickets.TryGetValue(id, out int count) ? count : 0;
     internal void EnterShop() => InShop = true;
     internal bool Consume(string id)
     {
         if (!InShop || Remaining(id) == 0) return false;
-        _tickets[id] = false;
+        _tickets[id]--;
         return true;
     }
     internal void LeaveShop()
@@ -34,5 +51,8 @@ internal sealed class NegotiatorState
         _tickets.Clear();
         InShop = false;
     }
-    internal void Reset() { _tickets.Clear(); _granted.Clear(); InShop = false; }
+    internal void Reset()
+    {
+        _tickets.Clear(); _earned.Clear(); _participants.Clear(); _revoked.Clear(); InShop = false;
+    }
 }

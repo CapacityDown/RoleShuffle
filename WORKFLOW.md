@@ -119,7 +119,17 @@ historical version numbers, deployment profiles and superseded design choices.
   to a role without that capability. Apply this to test rerolls, infection and
   effective-role changes. Normal stage completion still carries the right into
   the next shop. The user's subsequent instruction also revokes rights on death
-  in stages or shops. Revival does not restore them; keep the one-grant-per-stage guard.
+  in stages or shops. Revival does not restore them; keep the per-stage revocation lock.
+
+- On 2026-11-02 the user approved earned Negotiator rights, initially zero.
+  Once per stage, earn one by personally carrying a Big/Wide/Tall/VeryTall
+  valuable at least 20 m outside the truck and releasing it at an extraction
+  point (never the truck), and one by personally killing a native Tier3 enemy.
+  Each source rewards once; hold at most two. Death or loss of the capability
+  revokes all rights and blocks further earnings that stage, including before
+  the first reward. Stage completion preserves rights for the next shop;
+  shop exit expires them. Each completed discount consumes one; interruptions
+  and repeated completion callbacks do not consume an extra right.
 
 ## Builds and deployment
 

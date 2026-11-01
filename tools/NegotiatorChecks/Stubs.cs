@@ -1,19 +1,47 @@
 namespace UnityEngine
 {
     public class MonoBehaviour { }
-    public static class Time { public static float unscaledTime; }
+    public enum FindObjectsSortMode { InstanceID }
+    public static class Object
+    {
+        public static PhysGrabObject[] Items = Array.Empty<PhysGrabObject>();
+        public static T[] FindObjectsByType<T>(FindObjectsSortMode mode) => Items.OfType<T>().ToArray();
+    }
+    public struct Vector3(float x, float y, float z)
+    {
+        public float x = x, y = y, z = z;
+        public float magnitude => MathF.Sqrt(x*x+y*y+z*z);
+        public static Vector3 operator -(Vector3 a, Vector3 b) => new(a.x-b.x,a.y-b.y,a.z-b.z);
+    }
+    public class Transform { public Vector3 position; }
+    public static class Time { public static float unscaledTime, time; }
     public static class Random { public static int Range(int min, int max) => min; }
 }
 public class PlayerAvatar
 {
     public string Id = "a", Name = "Player";
-    public bool Alive = true;
+    public bool Alive = true, InTruck;
+    public UnityEngine.Transform transform = new();
     public void PlayerDeathRPC(int id) { }
 }
 public class PhysGrabObject
 {
     public ItemAttributes Item = new();
-    public T? GetComponent<T>() where T : class => Item as T;
+    public ValuableObject? Valuable;
+    public RoomVolumeCheck Rooms = new();
+    public PlayerAvatar? Holder;
+    public T? GetComponent<T>() where T : class => Item as T ?? Valuable as T ?? Rooms as T;
+    public T? GetComponentInChildren<T>() where T : class => null;
+    public T? GetComponentInParent<T>() where T : class => null;
+}
+public class ValuableVolume { public enum Type { Tiny, Small, Medium, Big, Wide, Tall, VeryTall } }
+public class ValuableObject { public ValuableVolume.Type volumeType; public float dollarValueCurrent = 100; }
+public class RoomVolume { public bool Truck, Extraction; }
+public class RoomVolumeCheck
+{
+    public List<RoomVolume> CurrentRooms = new();
+    public Action? Refresh;
+    public void CheckSet() => Refresh?.Invoke();
 }
 public class ItemAttributes { public int value = 30; }
 public class ShopKeeper
@@ -46,11 +74,12 @@ namespace REPOJP.StageRoles
     internal readonly record struct AbilityValue(AbilityMetric Metric, int Remaining, int Limit);
     internal record AbilitySnapshot(string SteamId, StageRole Assigned, StageRole Effective, IReadOnlyList<AbilityValue> Values);
     internal readonly record struct RoleSnapshot(string SteamId, string PlayerName, StageRole Role, StageRole EffectiveRole);
-    internal class RoleAssignment(string id, StageRole role) { internal string SteamId = id; internal StageRole Role = role; }
+    internal class RoleAssignment(string id, StageRole role) { internal string SteamId = id; internal StageRole Role = role; internal PlayerAvatar Player = SemiFunc.Players.First(p => p.Id == id); }
     internal static class RoleCatalog { internal static bool HasCapability(StageRole role, StageRole capability) => role == capability || role == StageRole.Superbot; }
     internal class Entry<T>(T value) { internal T Value = value; }
     internal class StageRolesConfig { internal Entry<bool> Enabled = new(true); }
-    internal static class PlayerState { internal static bool IsLiving(PlayerAvatar? p) => p?.Alive == true; }
+    internal static class UtilityRoleRuntime { internal static bool IsHeldBy(PhysGrabObject item, RoleAssignment a) => item.Holder == a.Player; }
+    internal static class PlayerState { internal static bool IsInTruck(PlayerAvatar p) => p.InTruck; internal static bool IsLiving(PlayerAvatar? p) => p?.Alive == true; }
     internal static class PlayerIdentity
     {
         internal static string SteamId(PlayerAvatar? p) => p?.Id ?? "";

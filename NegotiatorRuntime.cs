@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace REPOJP.StageRoles;
 
-internal sealed class NegotiatorRuntime : MonoBehaviour
+internal sealed partial class NegotiatorRuntime : MonoBehaviour
 {
     private readonly NegotiatorState _state = new();
     private readonly HashSet<PlayerAvatar> _announced = new();
@@ -14,13 +14,17 @@ internal sealed class NegotiatorRuntime : MonoBehaviour
     private string _reservedId = string.Empty;
     private float _refreshAt;
     internal void Initialize(StageRolesConfig config) => _config = config;
-    internal void BeginStage() => _state.BeginStage();
+    internal void BeginStage()
+    {
+        _state.BeginStage(); _stageActive = true; _cargo.Clear(); _nextCargoAt = 0;
+    }
+    internal void EndStage() { _stageActive = false; _cargo.Clear(); }
     internal void Capture(IReadOnlyList<RoleAssignment> assignments)
     {
         if (!_config.Enabled.Value || !SemiFunc.IsMasterClientOrSingleplayer()) return;
         foreach (RoleAssignment assignment in assignments)
         {
-            if (RoleCatalog.HasCapability(assignment.Role, StageRole.Negotiator)) _state.Grant(assignment.SteamId);
+            if (RoleCatalog.HasCapability(assignment.Role, StageRole.Negotiator)) _state.Activate(assignment.SteamId);
             else RoleChanged(assignment);
         }
     }
@@ -36,6 +40,7 @@ internal sealed class NegotiatorRuntime : MonoBehaviour
     private void Revoke(string id)
     {
         if (!SemiFunc.IsMasterClientOrSingleplayer() || !_state.Revoke(id)) return;
+        _cargo.Remove(id);
         if (string.Equals(_reservedId, id, StringComparison.Ordinal))
         {
             _keeper = null; _item = null; _reservedId = string.Empty;
@@ -58,8 +63,10 @@ internal sealed class NegotiatorRuntime : MonoBehaviour
     internal void Complete(ShopKeeper keeper, PhysGrabObject? item)
     {
         if (!Guaranteed(keeper, item) || !_state.Consume(_reservedId)) return;
+        string id = _reservedId;
+        Release(keeper); // A repeated completion callback must not spend the second right.
         foreach (PlayerAvatar player in SemiFunc.PlayerGetList())
-            if (PlayerIdentity.SteamId(player) == _reservedId)
+            if (PlayerIdentity.SteamId(player) == id)
                 StageRolesPlugin.Instance.Controller.NotifyShopMessage(player, "Discounted");
         _refreshAt = 0;
     }
@@ -70,6 +77,7 @@ internal sealed class NegotiatorRuntime : MonoBehaviour
     }
     internal void SceneChanged()
     {
+        EndStage();
         _state.LeaveShop();
         _keeper = null; _item = null; _reservedId = string.Empty;
         _announced.Clear(); _refreshAt = 0;
@@ -99,7 +107,7 @@ internal sealed class NegotiatorRuntime : MonoBehaviour
             if (!_state.Has(id)) continue;
             roles.Add(new RoleSnapshot(id, PlayerIdentity.Name(player), StageRole.Negotiator, StageRole.Negotiator));
             abilities.Add(new AbilitySnapshot(id, StageRole.Negotiator, StageRole.Negotiator,
-                new[] { new AbilityValue(AbilityMetric.Negotiation, _state.Remaining(id), 1) }));
+                new[] { new AbilityValue(AbilityMetric.Negotiation, _state.Remaining(id), NegotiatorState.MaximumRights) }));
             if (PlayerState.IsLiving(player) && RoleNotifier.CanNotify() && _announced.Add(player))
                 StageRolesPlugin.Instance.Controller.NotifyShopMessage(player, "Negotiator");
         }
@@ -110,6 +118,12 @@ internal sealed class NegotiatorRuntime : MonoBehaviour
 
 internal sealed partial class StageRoleController
 {
+    internal void NotifyNegotiationEarned(RoleAssignment assignment) =>
+        _notifier.NotifyConditional(assignment.Player, "Negotiation+1", () =>
+            RoleCatalog.HasCapability(assignment.Role, StageRole.Negotiator) &&
+            PlayerState.IsLiving(assignment.Player) &&
+            StageRolesPlugin.Instance.Negotiator.Remaining(assignment.SteamId) > 0);
+
     internal void NotifyShopMessage(PlayerAvatar player, string message) =>
         _notifier.NotifyConditional(player, message, () =>
             StageRolesPlugin.Instance.Negotiator.HasShopRole(player));

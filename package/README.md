@@ -53,7 +53,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 ### Role command
 
 - Chat `/roles` announces only your assigned role name; vanilla guests can also use it.
-- In shops, Negotiator holders can confirm their role. Otherwise, outside stages: `YourRole:Unavailable`.
+- Negotiator holders can check their role in shops. Otherwise outside stages: `YourRole:Unavailable`.
 
 ### How roles are assigned
 
@@ -122,7 +122,7 @@ Party-size, context and balance restrictions apply; presets preserve `General.En
 |![][i43]<br>Porter|Solo-hold a Tiny/Small/Medium valuable for 3 s outside delivery areas to store it. Capacity 15 by weight, no count limit. In delivery areas or aboard a cart, unload in 10 s at full load or 5 s at half.|Enemy HP damage scatters all cargo. Speed levels fall with weight (rounded down): 0 at full load, restored on unloading. Leaving or spilling resets the wait. Death/role change/disconnect/stage end returns cargo. No shop gear. Private capacity/unload notices.|Capacity, sizes, hold/unload time, enemy-hit drop|
 |![][i44]<br>DualWielder|Holding a melee weapon alone creates a matching weapon 0.5 m left, repeating its movement and attacks 0.3 s later. Both share and consume battery/durability.|Copy disappears on release, switching, death or role change. Cannot be picked up or kept. Excluded without melee weapons.|Delay, left offset|
 |![][i45]<br>Rigger|Human Adventure Cable: 2x enemy hit damage, 1.5x enemy restraint time, 50% hit/throw durability cost.|Automatic. Player effects unchanged. Requires a cable for normal draws. Standard/Cooperative/Challenge.|All three multipliers|
-|![][i46]<br>Negotiator|One guaranteed negotiation in the next shop. Present a shop item to the Shopkeeper yourself for the normal successful discount, without rejection damage or spending shared attempts.|Lost on death or role change. No stacking; expires after that shop. Interrupted attempts are free. Role and remaining use appear in the shop; `/roles` and an entry announcement also identify the holder. Standard/Cooperative.|Selection settings only|
+|![][i46]<br>Negotiator|Starts at 0. Big/Wide/Tall/VeryTall carried personally 20 m outside the truck, then released at extraction: +1. Personal Tier3 kill: +1. Each once/stage; max 2. Next shop: present items yourself for guaranteed normal discounts without rejection damage or shared attempts.|Death/ability loss revokes all; no re-earning that stage. Expires on shop exit; interruptions free. Shop role/HUD, `/roles`, entry notice. Standard/Cooperative.|Selection only|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 
@@ -603,7 +603,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |![][i43]<br>Porter|納品エリア外でTiny・Small・Mediumの貴重品を1人で3秒つかむと収納。重量15まで、個数制限なし。トラック・納品所・カート上で荷下ろし。満載10秒、半分で5秒。|敵からHPダメージで全収納品をばらまく。重量に比例してSpeedレベルが減少（端数切り捨て）、満載で0、荷下ろしで復元。エリア退出・被弾落下で待ち直し。死亡・役職変更・離脱・ステージ終了は全返却。購入装備は対象外。満載・収納不可・荷下ろし完了を本人に通知。|重量上限、サイズ、収納・荷下ろし時間、被弾時落下|
 |![][i44]<br>DualWielder|近接武器を1人で持つと左0.5mに同じ武器が現れ、動きと攻撃を0.3秒遅れで再現。電池・耐久度は共有し、2本目の命中分も消費。|手放す・持ち替え・死亡・役職変更で消滅。持ち帰り不可。近接武器がなければ抽選対象外。|遅延、左への距離|
 |![][i45]<br>Rigger|Human Adventure Cable：敵への命中ダメージ2倍、拘束時間1.5倍、命中・投げの耐久消費50％。|自動発動。対プレイヤーは変化なし。ケーブルがなければ通常抽選から除外。Standard・Cooperative・Challenge。|各倍率|
-|![][i46]<br>Negotiator|次のショップで1回、本人が商品を店主に見せると必ず値引き。拒否による破損を起こさず、通常の成功時と同じ値引きを受けます。共通の交渉回数は消費しません。|死亡・役職変更で失効。蓄積不可で、そのショップを出ると失効。中断時は消費なし。ショップでも役職・残数を表示し、入店時の通知と`/roles`でも確認できます。Standard・Cooperativeに含まれます。|抽選設定のみ|
+|![][i46]<br>Negotiator|交渉権0から開始。Big・Wide・Tall・VeryTallを本人がトラック外で20m運び納品所で手放すと1回、Tier3を本人が倒すと1回。各条件はステージごとに1回、最大2回。次のショップで本人が商品を見せると必ず通常の値引き。拒否破損・共通回数の消費なし。|死亡・能力喪失で全失効し同ステージ再獲得不可。ショップ退出で失効、中断は消費なし。役職・残数、`/roles`、入店通知。Standard・Cooperative。|抽選設定のみ|
 |![][iu]<br>???1|???|???|???|
 |![][iu]<br>???2|???|???|???|
 

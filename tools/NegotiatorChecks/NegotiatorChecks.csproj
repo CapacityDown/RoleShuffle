@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="../../NegotiatorState.cs" Link="NegotiatorState.cs" />
     <Compile Include="../../NegotiatorRuntime.cs" Link="NegotiatorRuntime.cs" />
+    <Compile Include="../../NegotiatorEarning.cs" Link="NegotiatorEarning.cs" />
     <Compile Include="../../NegotiatorPatches.cs" Link="NegotiatorPatches.cs" />
     <Reference Include="0Harmony">
       <HintPath>$(NuGetPackageRoot)harmonyx/2.7.0/lib/netstandard2.0/0Harmony.dll</HintPath>

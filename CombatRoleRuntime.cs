@@ -20,6 +20,8 @@ internal sealed partial class StageRoleController
         if (after < 0 || after >= before) return;
         RecordEnemyAttacker(enemy, attacker);
         RoleAssignment? assignment = attacker != null ? FindAssignment(attacker) : null;
+        if (after == 0 && assignment != null && enemy.GetComponent<EnemyHealth>() is EnemyHealth defeated)
+            StageRolesPlugin.Instance.Negotiator.EnemyDefeated(assignment, ResolveEnemyTier(defeated));
         if (assignment?.Role == StageRole.Brawler && PlayerState.IsLiving(attacker) &&
             collider.GetComponentInParent<ItemMelee>() != null)
             assignment.BrawlerCombo.Confirm(enemy.GetInstanceID(), Time.time, Time.frameCount, _config.BrawlerComboTimeout.Value);

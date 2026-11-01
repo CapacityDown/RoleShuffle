@@ -423,10 +423,14 @@ internal sealed partial class StageRoleController : MonoBehaviour
             TwinsCargoReleased(grabbedObject);
             foreach (RoleAssignment assignment in _assignments)
                 if (assignment.Player != null && assignment.Player.photonView != null &&
-                    assignment.Player.photonView.ViewID == playerViewId && assignment.Overhaul.CargoId == objectId)
+                    assignment.Player.photonView.ViewID == playerViewId)
                 {
-                    _overhaul.CargoReleased(assignment, grabbedObject, _notifier);
-                    assignment.Overhaul.ResetCargo();
+                    StageRolesPlugin.Instance.Negotiator.CargoReleased(assignment, grabbedObject);
+                    if (assignment.Overhaul.CargoId == objectId)
+                    {
+                        _overhaul.CargoReleased(assignment, grabbedObject, _notifier);
+                        assignment.Overhaul.ResetCargo();
+                    }
                 }
         }
         if (_engineerSuppressedTrapIds.Contains(objectId) ||
@@ -1383,6 +1387,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         TickGhostSupport();
         _eventRoles.Tick(_assignments);
         _overhaul.Tick(_assignments, _notifier, TwinsStrengthUpgradeMultiplier);
+        StageRolesPlugin.Instance.Negotiator.TickStage(_assignments);
         _mage.MaintainSpawnedObjects();
         RefreshRescueDeaths();
         foreach (RoleAssignment assignment in _assignments)
@@ -3185,6 +3190,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         bool deactivate)
     {
         StopTwins();
+        StageRolesPlugin.Instance?.Negotiator?.EndStage();
         CaptureRoleHistory();
         _stageReady = false;
         _assignmentsInitialized = false;

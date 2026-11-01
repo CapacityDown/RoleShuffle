@@ -26,8 +26,9 @@ internal sealed partial class StageRoleController
         void Seconds(AbilityMetric metric, float until) =>
             values.Add(new AbilityValue(metric, Mathf.CeilToInt(Mathf.Max(0f, until - Time.time)), 0));
         // Publish stage resources only while the effective role has the ability.
-        if (Has(StageRole.Negotiator) && StageRolesPlugin.Instance.Negotiator.Remaining(assignment.SteamId) > 0)
-            Budget(AbilityMetric.Negotiation, 0, 1);
+        if (Has(StageRole.Negotiator))
+            values.Add(new AbilityValue(AbilityMetric.Negotiation,
+                StageRolesPlugin.Instance.Negotiator.Remaining(assignment.SteamId), NegotiatorState.MaximumRights));
         if (Has(StageRole.Ghost)) Budget(AbilityMetric.GhostHealing, assignment.GhostHealingUsed, _config.GhostTotalHealingLimit.Value);
         if (assignment.Role == StageRole.Porter)
         {
