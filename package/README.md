@@ -451,7 +451,7 @@ Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` o
 - Influencer speech and Influenza sneezes wait for their own player's messages and remain audible to enemies. Diver counts at 15-second marks (30, 15), then every second from 10 to 0, interrupting previous speech; normal notices wait.
 - The local `ROLES` list defaults to names at the bottom left, with your role pinned and pages rotating every 5 seconds. It fits six multilingual/icon rows when `HUD.PlayersPerPage` is 6 or higher; smaller limits are respected. Long player names are shortened to keep role names visible. See HUD settings above.
 - The Base Upgrade draw animation is shown to the host and participants who have RoleShuffle installed.
-- Open `ROLES` at the top-right of Escape (`CURRENT ROLES`) or the lobby (`ROLE GUIDE`; current roles unavailable). Your role appears first and expanded; click players to toggle descriptions. The left column also opens `BASE UPGRADES`: host targets, configured targets and accumulated truck-draw bonuses.
+- Open `ROLES` at the top-right of Escape (`CURRENT ROLES`) or the lobby (`ROLE GUIDE`; current roles unavailable). Your role appears first with its overview expanded; click players to toggle overviews. The left column also opens `BASE UPGRADES`: host targets, configured targets and accumulated truck-draw bonuses.
 - `ROLE GUIDE` explains enabled roles in your selected language. In multiplayer, descriptions use the host's settings. If a description is unavailable in your language, it appears in English. Single-player uses your own settings.
 
 ### Compatibility
@@ -938,7 +938,7 @@ Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW 
 - Influencerの発言とInfluenzaのくしゃみは本人のメッセージを待ち、敵にも聞こえます。Diverは残り時間を15秒刻み（30、15）、残り10秒から0秒までは毎秒発話します。前の発話を中断してカウントを優先し、通常の通知を待機させます。
 - `ROLES`一覧は初期設定で左下に名前のみを表示し、自分を固定して5秒ごとにページを切り替えます。`HUD.PlayersPerPage`が6以上なら多言語・アイコン付きでも6人分を確保し、6未満は設定を優先します。長いプレイヤー名は、役職名が見えるよう短く表示。表示・サイズ設定は上表を参照してください。
 - Base Upgradeの抽選演出は、ホストとRoleShuffleを導入している参加者に表示されます。
-- Esc／ロビー右上の`ROLES`から開きます。Escでは`CURRENT ROLES`、ロビーでは`ROLE GUIDE`を表示。自分が先頭に並び、プレイヤーをクリックすると説明を開閉可能です。`BASE UPGRADES`では共有目標・設定値・累積抽選値を確認し、参加者にはホストの値を表示。
+- Esc／ロビー右上の`ROLES`から開きます。Escでは`CURRENT ROLES`、ロビーでは`ROLE GUIDE`を表示。自分の役職の概要を先頭に表示し、プレイヤーをクリックすると概要を開閉可能です。`BASE UPGRADES`では共有目標・設定値・累積抽選値を確認し、参加者にはホストの値を表示。
 - `ROLE GUIDE`では有効な役職の説明を選択した言語で表示。マルチプレイではホストの設定値に沿った説明になります。選択言語の説明がない場合は英語で表示。シングルプレイでは自分の設定を使用します。
 
 ### 互換性

@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 569;
+    private const int RoleUiBuildNumber = 570;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -501,20 +501,12 @@ internal sealed partial class RoleMenu : MonoBehaviour
 
                 if (isSelected)
                 {
-                    IReadOnlyDictionary<StageRole, string> descriptions =
-                        RoleGuideSync.Read(_config, _guideLanguage);
-                    string description = descriptions.TryGetValue(
+                    string description = RoleGuidePresentation.Describe(
                         snapshot.Role,
-                        out string value)
-                            ? value
-                            : RoleGuideCatalog.GenericDescription(
-                                snapshot.Role,
-                                _guideLanguage);
-                    if (RoleCatalog.IsSecretRole(snapshot.Role))
-                    {
-                        description = RoleGuideCatalog
-                            .RevealedSecretDescription(snapshot.Role, _guideLanguage, descriptions.TryGetValue(StageRole.Influenza, out string illness) ? illness : null);
-                    }
+                        _guideLanguage,
+                        details: false,
+                        configuredDetails: null,
+                        secretRevealed: true);
                     TMP_Text measurementText = MeasurementText(page);
                     foreach (string line in WrapGuideText(
                                  measurementText,
@@ -967,10 +959,11 @@ internal sealed partial class RoleMenu : MonoBehaviour
             // body line. Keep it inside the existing padding so wheel distance
             // and row heights are unaffected on all Roles pages.
             bool separate = entry.SeparatorBefore || control || entry.EmblemRole.HasValue || entry.Adjustment != null;
-            // Adjacent buttons form one group, including disabled controls.
+            // Adjacent buttons form one group unless an explicit divider starts a new one.
             bool consecutiveButtons = index > 0 && (control || entry.Adjustment != null) &&
                 (entries[index - 1].OnClick != null || entries[index - 1].IsControl || entries[index - 1].Adjustment != null);
-            row.Separator.gameObject.SetActive(_activeView != RoleMenuView.Guide && index > 0 && separate && !consecutiveButtons);
+            row.Separator.gameObject.SetActive(_activeView != RoleMenuView.Guide && index > 0 && separate &&
+                (entry.SeparatorBefore || !consecutiveButtons));
             row.Separator.rectTransform.sizeDelta = new Vector2(contentWidth, 1f);
             row.Separator.rectTransform.anchoredPosition = new Vector2(0f, entry.Height + 2f);
             row.Label.rectTransform.gameObject.SetActive(true);

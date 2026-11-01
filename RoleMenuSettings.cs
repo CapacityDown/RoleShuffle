@@ -35,7 +35,8 @@ internal sealed partial class RoleMenu
             foreach (string line in WrapGuideText(MeasurementText(page), value, ContentWidth(page), _guideLanguage))
                 entries.Add(new RoleMenuEntry(line, GuideFontSize, FontStyles.Normal, GuideLineHeight, false, UseLanguageFont));
         }
-        void Button(string label, Action action, bool enabled = true, StageRole? emblem = null, bool emblemGrayedOut = false)
+        void Button(string label, Action action, bool enabled = true, StageRole? emblem = null,
+            bool emblemGrayedOut = false, bool separatorBefore = false)
         {
             Action? click = enabled ? () =>
             {
@@ -50,7 +51,8 @@ internal sealed partial class RoleMenu
             } : null;
             entries.Add(new RoleMenuEntry(label, 20, FontStyles.Bold, emblem.HasValue ? 56 : 40,
                 false, UseLanguageFont, click, emblem, emblem.HasValue && RoleCatalog.IsSecretRole(emblem.Value),
-                isControl: true, emblemGrayedOut: emblemGrayedOut, isOff: emblemGrayedOut));
+                isControl: true, emblemGrayedOut: emblemGrayedOut, isOff: emblemGrayedOut,
+                separatorBefore: separatorBefore));
         }
         bool Enabled(StageRole role) => editable ? _config.RoleIsEnabled(role) : RoleGuideSync.IsVisible(role, _config);
 
@@ -96,7 +98,7 @@ internal sealed partial class RoleMenu
                 {
                     if (StageRolesPlugin.Instance.RoleSettings.TryApplyPreset(preset.Id))
                         SwitchView(page, RoleMenuView.Settings);
-                }, editable);
+                }, editable, separatorBefore: preset.Id == RolePreset.Standard);
                 Text(Localized(preset.Description));
                 Text(RoleText.Format("Enabled roles: {0}/{1}", _guideLanguage, preset.Count, RoleCatalog.AllRoles.Count));
             }
