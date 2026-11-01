@@ -115,6 +115,12 @@ historical version numbers, deployment profiles and superseded design choices.
   production test-command paths, recheck authority/testing/stage at action time,
   address exact player identities and assign Twins to two living players together.
 
+- On 2026-11-02 the user requested revocation of Negotiator rights when changing
+  to a role without that capability. Apply this to test rerolls, infection and
+  effective-role changes. Normal stage completion still carries the right into
+  the next shop. The user's subsequent instruction also revokes rights on death
+  in stages or shops. Revival does not restore them; keep the one-grant-per-stage guard.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

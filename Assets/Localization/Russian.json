@@ -331,5 +331,6 @@
   "Select two different living players.": "Выберите двух разных живых игроков.",
   "A Twins pair already exists.": "Другая пара Twins уже существует.",
   "Use All players to replace an existing Twins pair.": "Выберите «Все игроки», чтобы заменить существующую пару Twins.",
-  "Could not change roles.": "Не удалось изменить роли."
+  "Could not change roles.": "Не удалось изменить роли.",
+  "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or changing to a role without this ability removes the right. It cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "Вы получаете одну гарантированную попытку торга для следующего магазина. Лично покажите товар продавцу: он даст обычную скидку за успешный торг, без повреждений из-за отказа. Общие попытки не расходуются. Право теряется при смерти или смене на роль без этой способности. Оно не накапливается и сгорает при выходе из этого магазина. Прерванный торг его не расходует. В магазине видны ваша роль и оставшееся использование."
 }

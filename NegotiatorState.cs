@@ -17,6 +17,8 @@ internal sealed class NegotiatorState
         if (InShop || string.IsNullOrEmpty(id) || !_granted.Add(id)) return;
         _tickets[id] = true;
     }
+    // Keep the per-stage grant marker: changing away and back cannot farm rights.
+    internal bool Revoke(string id) => _tickets.Remove(id);
     internal bool Has(string id) => _tickets.ContainsKey(id);
     internal int Remaining(string id) => _tickets.TryGetValue(id, out bool unused) && unused ? 1 : 0;
     internal void EnterShop() => InShop = true;

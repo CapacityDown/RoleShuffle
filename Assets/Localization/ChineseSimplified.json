@@ -331,5 +331,6 @@
   "Select two different living players.": "请选择两名不同的存活玩家。",
   "A Twins pair already exists.": "已有另一对Twins。",
   "Use All players to replace an existing Twins pair.": "要解除现有Twins组合，请选择所有玩家。",
-  "Could not change roles.": "无法更改角色。"
+  "Could not change roles.": "无法更改角色。",
+  "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or changing to a role without this ability removes the right. It cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "获得一次下次商店可用的必定成功议价机会。亲自向店主展示商品，即可获得普通议价成功时的折扣，且不会因拒绝而损坏商品。不消耗全员共用的议价次数。死亡或更换为不具备此能力的角色时失效。不可累积，离开该商店后失效。中断议价不会消耗次数。商店内也会显示你的角色和剩余次数。"
 }

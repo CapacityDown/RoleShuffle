@@ -3,8 +3,8 @@
 Run `dotnet run --project tools/NegotiatorChecks -c Release`.
 
 Runs the production entitlement state, runtime and patches with lightweight
-Unity/player adapters. Verifies one non-stacking next-shop grant; death, role
-changes, avatar reconnection, expiry and run resets; pending, reserved and used
+Unity/player adapters. Verifies one non-stacking next-shop grant; revocation on death and role
+changes that lose the capability, avatar reconnection, expiry and run resets; pending, reserved and used
 states; shop role/budget publication and short notices; interruption retries;
 consumption only after a real price reduction; ordinary negotiations unchanged.
 

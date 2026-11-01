@@ -331,5 +331,6 @@
   "Select two different living players.": "Välj två olika levande spelare.",
   "A Twins pair already exists.": "Ett annat Twins-par finns redan.",
   "Use All players to replace an existing Twins pair.": "Välj Alla spelare för att ersätta ett befintligt Twins-par.",
-  "Could not change roles.": "Det gick inte att ändra roller."
+  "Could not change roles.": "Det gick inte att ändra roller.",
+  "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or changing to a role without this ability removes the right. It cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "Få en garanterad förhandling i nästa butik. Visa själv ett butiksföremål för Shopkeeper för normal lyckad rabatt utan avvisningsskada. Förbrukar inga gemensamma förhandlingsförsök. Rätten försvinner vid död eller byte till en roll utan denna förmåga. Den kan inte staplas och går ut när den butiken slutar. Avbrutna förhandlingar förbrukar den inte. Butiken visar din roll och återstående användning."
 }

@@ -956,6 +956,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private void ResetAssignmentForRoleChange(RoleAssignment assignment)
     {
+        StageRolesPlugin.Instance.Negotiator.RoleChanged(assignment);
         _porter.ReleaseAll(assignment.SteamId);
         _dualWielder.Release(assignment.SteamId);
         _tracker.Forget(assignment);

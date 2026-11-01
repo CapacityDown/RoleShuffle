@@ -331,5 +331,6 @@
   "Select two different living players.": "Selecione dois jogadores vivos diferentes.",
   "A Twins pair already exists.": "Já existe outra dupla de Twins.",
   "Use All players to replace an existing Twins pair.": "Selecione Todos os jogadores para substituir uma dupla de Twins existente.",
-  "Could not change roles.": "Não foi possível alterar os papéis."
+  "Could not change roles.": "Não foi possível alterar os papéis.",
+  "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or changing to a role without this ability removes the right. It cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "Receba uma negociação garantida para a próxima loja. Apresente pessoalmente um artigo ao lojista para receber o desconto normal de uma negociação bem-sucedida, sem dano por rejeição. Não consome tentativas compartilhadas. O direito é perdido ao morrer ou mudar para uma função sem essa habilidade. Não acumula e expira ao sair daquela loja. Negociações interrompidas não o consomem. A loja mostra sua função e o uso restante."
 }

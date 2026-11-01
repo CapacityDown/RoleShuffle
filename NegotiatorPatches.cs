@@ -92,6 +92,12 @@ internal static class NegotiatorPatches
     }
     [HarmonyPatch(typeof(ShopKeeper), "ItemReactionClearRefs"), HarmonyPostfix]
     private static void Release(ShopKeeper __instance) => Runtime?.Release(__instance);
+    [HarmonyPatch(typeof(PlayerAvatar), nameof(PlayerAvatar.PlayerDeathRPC)), HarmonyPostfix]
+    private static void Died(PlayerAvatar __instance, bool ___deadSet)
+    {
+        // Only accepted deaths revoke the right; this also runs outside stages.
+        if (___deadSet) Runtime?.PlayerDied(__instance);
+    }
     [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.ResetAllStats)), HarmonyPostfix]
     private static void ResetRun() => Runtime?.Reset();
 }

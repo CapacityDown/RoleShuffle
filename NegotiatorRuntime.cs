@@ -19,7 +19,28 @@ internal sealed class NegotiatorRuntime : MonoBehaviour
     {
         if (!_config.Enabled.Value || !SemiFunc.IsMasterClientOrSingleplayer()) return;
         foreach (RoleAssignment assignment in assignments)
+        {
             if (RoleCatalog.HasCapability(assignment.Role, StageRole.Negotiator)) _state.Grant(assignment.SteamId);
+            else RoleChanged(assignment);
+        }
+    }
+    internal void RoleChanged(RoleAssignment assignment)
+    {
+        if (!RoleCatalog.HasCapability(assignment.Role, StageRole.Negotiator))
+            Revoke(assignment.SteamId);
+    }
+    internal void PlayerDied(PlayerAvatar player)
+    {
+        if (player != null) Revoke(PlayerIdentity.SteamId(player));
+    }
+    private void Revoke(string id)
+    {
+        if (!SemiFunc.IsMasterClientOrSingleplayer() || !_state.Revoke(id)) return;
+        if (string.Equals(_reservedId, id, StringComparison.Ordinal))
+        {
+            _keeper = null; _item = null; _reservedId = string.Empty;
+        }
+        _refreshAt = 0;
     }
     internal int Remaining(string id) => _state.Remaining(id);
     internal bool HasShopRole(PlayerAvatar player) => _state.InShop && _state.Has(PlayerIdentity.SteamId(player));

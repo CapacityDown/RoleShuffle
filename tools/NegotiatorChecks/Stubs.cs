@@ -4,7 +4,12 @@ namespace UnityEngine
     public static class Time { public static float unscaledTime; }
     public static class Random { public static int Range(int min, int max) => min; }
 }
-public class PlayerAvatar { public string Id = "a", Name = "Player"; public bool Alive = true; }
+public class PlayerAvatar
+{
+    public string Id = "a", Name = "Player";
+    public bool Alive = true;
+    public void PlayerDeathRPC(int id) { }
+}
 public class PhysGrabObject
 {
     public ItemAttributes Item = new();
@@ -36,7 +41,7 @@ public static class SemiFunc
 }
 namespace REPOJP.StageRoles
 {
-    internal enum StageRole { Negotiator, Runner, Superbot }
+    internal enum StageRole { Negotiator, Runner, Superbot, Influenza }
     internal enum AbilityMetric { Negotiation }
     internal readonly record struct AbilityValue(AbilityMetric Metric, int Remaining, int Limit);
     internal record AbilitySnapshot(string SteamId, StageRole Assigned, StageRole Effective, IReadOnlyList<AbilityValue> Values);

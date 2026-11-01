@@ -242,5 +242,6 @@
   "Select two different living players.": "生存している異なる2人を選んでください。",
   "A Twins pair already exists.": "別のTwinsペアが存在します。",
   "Use All players to replace an existing Twins pair.": "既存のTwinsを解除する場合は全プレイヤーを選んでください。",
-  "Could not change roles.": "役職を変更できませんでした。"
+  "Could not change roles.": "役職を変更できませんでした。",
+  "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or changing to a role without this ability removes the right. It cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "次のショップで使える交渉権を1回分獲得します。本人が商品を店主に見せると、拒否による破損を起こさず、通常の交渉成功時と同じ値引きを受けられます。全員共通の交渉回数は消費しません。死亡するか、この能力を持たない役職に変わると失効します。蓄積はできず、そのショップを出ると失効します。中断した交渉では消費しません。ショップでも役職と残り回数を確認できます。"
 }

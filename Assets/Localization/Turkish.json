@@ -331,5 +331,6 @@
   "Select two different living players.": "Hayatta olan iki farklı oyuncu seçin.",
   "A Twins pair already exists.": "Başka bir Twins çifti zaten var.",
   "Use All players to replace an existing Twins pair.": "Mevcut Twins çiftini değiştirmek için Tüm oyuncular seçeneğini kullanın.",
-  "Could not change roles.": "Roller değiştirilemedi."
+  "Could not change roles.": "Roller değiştirilemedi.",
+  "Gain one guaranteed negotiation for the next shop. Present a shop item to the Shopkeeper yourself to receive the normal successful discount without rejection damage. It uses none of the shared negotiation attempts. Death or changing to a role without this ability removes the right. It cannot stack and expires at the end of that shop. Interrupted negotiations do not consume it. The shop shows your role and remaining use.": "Sonraki dükkân için bir garantili pazarlık hakkı kazanırsın. Bir mağaza eşyasını dükkân sahibine kendin göstererek reddedilme hasarı olmadan normal başarılı pazarlık indirimini alırsın. Ortak denemeler harcanmaz. Hak ölünce veya bu yeteneğe sahip olmayan bir role geçince kaybolur. Biriktirilemez ve o dükkândan çıkınca sona erer. Yarıda kesilen pazarlık hakkı tüketmez. Dükkânda rolün ve kalan kullanım gösterilir."
 }

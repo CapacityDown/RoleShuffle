@@ -53,8 +53,8 @@ void Hook(string name, params object?[] args) => typeof(NegotiatorPatches).GetMe
 runtime.BeginStage(); Grant(one.Id); Grant(one.Id); Grant(other.Id, StageRole.Runner);
 Check(runtime.Remaining(one.Id) == 1 && runtime.Remaining(other.Id) == 0, "One entitlement without stacking, no grant for unrelated role");
 Check(!runtime.CanUse(one), "Cannot spend before shop");
-Grant(one.Id, StageRole.Runner); runtime.SceneChanged(); Tick();
-Check(runtime.Remaining(one.Id) == 1, "Role change and transition retain earned right");
+runtime.SceneChanged(); Tick();
+Check(runtime.Remaining(one.Id) == 1, "Normal stage transition retains earned right");
 SemiFunc.Shop = true; var keeper = new ShopKeeper(); ShopKeeper.instance = keeper;
 SemiFunc.Generated = false; Tick(); Check(!runtime.CanUse(one), "Do not enter shop during generation");
 SemiFunc.Generated = true; RoleNotifier.Ready = false; Tick();
@@ -80,8 +80,8 @@ Check(!runtime.Guaranteed(new ShopKeeper(), item) && !runtime.Guaranteed(keeper,
 Check(NegotiatorPatches.Positive(false, keeper, item), "Failure becomes success before dislike recording");
 Hook("AfterDiscount", keeper, item, item.Item.value); Check(runtime.Remaining(one.Id) == 1, "No price reduction means no consumption");
 Hook("Release", keeper); Check(runtime.CanUse(one) && !runtime.Guaranteed(keeper, item), "Interrupted scan can retry without consuming");
-runtime.Reserve(keeper, item, one); one.Alive = false;
-Check(runtime.Guaranteed(keeper, item), "Already accepted negotiation stays safe if presenter dies"); one.Alive = true;
+runtime.Reserve(keeper, item, one);
+Check(runtime.Guaranteed(keeper, item), "Living presenter's accepted negotiation is guaranteed");
 item.Item.value = 18; Hook("AfterDiscount", keeper, item, 30);
 Check(runtime.Remaining(one.Id) == 0 && !runtime.CanUse(one), "Actual discount consumes exactly once");
 Hook("AfterDiscount", keeper, item, 30); Hook("Release", keeper); Tick();
@@ -106,4 +106,63 @@ foreach (string context in new[] { "menu", "lobby", "arena", "client", "disabled
     Tick(); Check(runtime.Remaining(one.Id) == 0, "Clear stale rights: " + context);
     SemiFunc.MainMenu = SemiFunc.LobbyMenu = SemiFunc.Arena = false; SemiFunc.Authority = config.Enabled.Value = true;
 }
+// A different effective role revokes the entitlement, not just its stage HUD.
+runtime.Reset(); runtime.BeginStage(); Grant(one.Id); Grant(other.Id);
+Grant(one.Id, StageRole.Runner);
+Check(runtime.Remaining(one.Id) == 0 && runtime.Remaining(other.Id) == 1,
+    "Assignment capture revokes only the changed player's right");
+Grant(one.Id);
+Check(runtime.Remaining(one.Id) == 0, "Changing back cannot reacquire within the same stage");
+runtime.Capture(Array.Empty<RoleAssignment>());
+Check(runtime.Remaining(other.Id) == 1, "An empty assignment list does not revoke shop carryover");
+runtime.RoleChanged(new RoleAssignment(other.Id, StageRole.Superbot));
+Check(runtime.Remaining(other.Id) == 1, "Inherited capability retains its right");
+SemiFunc.Authority = false;
+runtime.RoleChanged(new RoleAssignment(other.Id, StageRole.Runner));
+Check(runtime.Remaining(other.Id) == 1, "Non-host cannot revoke rights");
+SemiFunc.Authority = true;
+runtime.RoleChanged(new RoleAssignment(other.Id, StageRole.Influenza));
+Check(runtime.Remaining(other.Id) == 0, "Infection's common role-change callback revokes the right");
+
+runtime.BeginStage(); Grant(one.Id); Grant(other.Id);
+Check(runtime.Remaining(one.Id) == 1 && runtime.Remaining(other.Id) == 1, "A new stage can grant fresh rights");
+runtime.RoleChanged(new RoleAssignment(one.Id, StageRole.Runner));
+runtime.SceneChanged(); SemiFunc.Shop = true; Tick();
+Check(!runtime.HasShopRole(one) && !runtime.CanUse(one), "Revoked holder cannot negotiate in the next shop");
+Check(RoleAssignmentSync.Last.All(r => r.SteamId != one.Id) &&
+    RoleAbilitySync.Last.All(s => s.SteamId != one.Id), "Revoked holder has no shop role or resource HUD");
+Check(runtime.HasShopRole(other) && runtime.CanUse(other), "Unchanged holder carries the right into the shop");
+runtime.Reserve(keeper, item, other);
+Check(runtime.Guaranteed(keeper, item), "Other holder can reserve a discount");
+runtime.RoleChanged(new RoleAssignment(other.Id, StageRole.Runner));
+Check(!runtime.Guaranteed(keeper, item) && !runtime.HasShopRole(other),
+    "Revocation invalidates a reserved negotiation and shop role");
+Tick();
+Check(RoleAssignmentSync.Last.Count == 0 && RoleAbilitySync.Last.Count == 0,
+    "Shop publication removes revoked holders entirely");
+runtime.SceneChanged(); SemiFunc.Shop = false;
+// Confirmed native death hooks apply in stages and shops, with no revival refund.
+var avatarType = game.MainModule.Types.Single(t => t.Name == "PlayerAvatar");
+Check(avatarType.Fields.Any(f => f.Name == "deadSet" && f.FieldType.FullName == "System.Boolean") &&
+    avatarType.Methods.Any(m => m.Name == "PlayerDeathRPC"), "Installed death callback and confirmation field exist");
+runtime.Reset(); runtime.BeginStage(); Grant(one.Id); Grant(other.Id);
+Hook("Died", one, false);
+Check(runtime.Remaining(one.Id) == 1, "Rejected death RPC does not revoke");
+SemiFunc.Authority = false; Hook("Died", one, true); SemiFunc.Authority = true;
+Check(runtime.Remaining(one.Id) == 1, "Client death callback cannot mutate host rights");
+one.Alive = false; Hook("Died", one, true);
+Check(runtime.Remaining(one.Id) == 0 && runtime.Remaining(other.Id) == 1, "Stage death revokes only the victim's right");
+Hook("Died", one, true); one.Alive = true; Grant(one.Id);
+Check(runtime.Remaining(one.Id) == 0, "Duplicate death and revival cannot restore the grant");
+runtime.SceneChanged(); SemiFunc.Shop = true; Tick();
+Check(!runtime.HasShopRole(one) && runtime.HasShopRole(other), "Dead former holder carries no right into the shop");
+runtime.Reserve(keeper, item, other);
+Check(runtime.Guaranteed(keeper, item), "Surviving holder can still negotiate");
+other.Alive = false; Hook("Died", other, true);
+Check(!runtime.Guaranteed(keeper, item) && runtime.Remaining(other.Id) == 0, "Shop death cancels the reserved guarantee");
+other.Alive = true; Grant(other.Id); Tick();
+Check(!runtime.CanUse(other) && !runtime.HasShopRole(other), "Shop revival does not restore the right");
+Check(RoleAssignmentSync.Last.Count == 0 && RoleAbilitySync.Last.Count == 0, "Death removes shop roles and resource HUD rows");
+runtime.SceneChanged(); SemiFunc.Shop = false; runtime.BeginStage(); Grant(other.Id);
+Check(runtime.Remaining(other.Id) == 1, "A later stage may grant a new right after death");
 Console.WriteLine($"PASS: {checks} Negotiator runtime, entitlement, shop display and installed-game patch checks.");
