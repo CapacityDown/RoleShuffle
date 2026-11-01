@@ -1600,7 +1600,9 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
                 if (text.font != font) text.font = font;
                 if (text.gameObject.name == "UpgradeSlotHeader") text.text = RoleText.Get("Upgrade", language);
                 if (text.gameObject.name == "DeltaSlotHeader") text.text = RoleText.Get("Change", language);
-                text.isRightToLeftText = (text == _upgradeSlotText || text == _upgradeSlotNextText) && GameLocalization.RightToLeft;
+                RoleTextLayout.Apply(text, language);
+                // Keep the numeric delta reel left-to-right in every locale.
+                if (text == _deltaSlotText || text == _deltaSlotNextText) text.isRightToLeftText = false;
             }
         }
     }

@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 564;
+    private const int RoleUiBuildNumber = 567;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -373,6 +373,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             if (button == null) return;
             button.labelTMP.text = (active ? "> " : "  ") + Localized(key);
             button.labelTMP.font = RoleGuideFont.ForLanguage(button.labelTMP.font, _guideLanguage);
+            RoleTextLayout.Apply(button.labelTMP, _guideLanguage);
             button.labelTMP.enableAutoSizing = true;
             button.labelTMP.fontSizeMin = 12;
             button.labelTMP.fontSizeMax = 20;
@@ -399,6 +400,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 _ => "Base Upgrades"
             });
             _openPage.headerTMP.font = RoleGuideFont.ForLanguage(_openPage.headerTMP.font, _guideLanguage);
+            RoleTextLayout.Apply(_openPage.headerTMP, _guideLanguage);
             _openPage.headerTMP.enableAutoSizing = true;
             _openPage.headerTMP.fontSizeMin = 18;
             _openPage.headerTMP.fontSizeMax = 32;
@@ -791,7 +793,10 @@ internal sealed partial class RoleMenu : MonoBehaviour
         var dialog = _issuesDialog.GetComponent<MenuPageTwoOptions>();
         if (dialog == null) { _issuesDialog = null; return; }
         foreach (TextMeshProUGUI label in _issuesDialog.GetComponentsInChildren<TextMeshProUGUI>(true))
+        {
             label.font = RoleGuideFont.ForLanguage(label.font, _guideLanguage) ?? label.font;
+            RoleTextLayout.Apply(label, _guideLanguage);
+        }
         dialog.option1Button.buttonTextString = Localized("OPEN IN BROWSER", "ブラウザーで開く");
         dialog.option2Button.buttonTextString = Localized("CANCEL", "取消");
         dialog.bodyTextMesh.textWrappingMode = TextWrappingModes.Normal;
@@ -841,8 +846,11 @@ internal sealed partial class RoleMenu : MonoBehaviour
         TextWrappingModes previousWrapping = measurementText.textWrappingMode;
         bool previousAutoSizing = measurementText.enableAutoSizing;
         TMP_FontAsset previousFont = measurementText.font;
+        bool previousShaping = measurementText.useTextShaper;
+        bool previousRtl = measurementText.isRightToLeftText;
         try
         {
+            RoleTextLayout.Apply(measurementText, language);
             float wrapWidth = contentWidth;
             if (language != RoleGuideLanguage.English)
             {
@@ -904,59 +912,13 @@ internal sealed partial class RoleMenu : MonoBehaviour
             measurementText.textWrappingMode = previousWrapping;
             measurementText.enableAutoSizing = previousAutoSizing;
             measurementText.font = previousFont;
+            measurementText.useTextShaper = previousShaping;
+            measurementText.isRightToLeftText = previousRtl;
         }
         return lines;
     }
 
-    private static IReadOnlyList<string> WrapTokens(string text)
-    {
-        List<string> tokens = new();
-        StringBuilder westernToken = new();
-        TextElementEnumerator elements =
-            StringInfo.GetTextElementEnumerator(text);
-        while (elements.MoveNext())
-        {
-            string element = elements.GetTextElement();
-            char first = element[0];
-            if (first == '\n')
-            {
-                if (westernToken.Length > 0)
-                {
-                    tokens.Add(westernToken.ToString());
-                    westernToken.Clear();
-                }
-                tokens.Add("\n");
-                continue;
-            }
-            if (first == '\r')
-            {
-                continue;
-            }
-            if (char.IsWhiteSpace(first) || IsCjk(first))
-            {
-                if (westernToken.Length > 0)
-                {
-                    tokens.Add(westernToken.ToString());
-                    westernToken.Clear();
-                }
-                tokens.Add(char.IsWhiteSpace(first) ? " " : element);
-                continue;
-            }
-            westernToken.Append(element);
-        }
-        if (westernToken.Length > 0)
-        {
-            tokens.Add(westernToken.ToString());
-        }
-        return tokens;
-    }
-
-    private static bool IsCjk(char value) =>
-        value is >= '\u3040' and <= '\u30ff' or
-        >= '\u3400' and <= '\u4dbf' or
-        >= '\u4e00' and <= '\u9fff' or
-        >= '\uf900' and <= '\ufaff' or
-        >= '\uff00' and <= '\uffef';
+    private static IReadOnlyList<string> WrapTokens(string text) => RoleTextLayout.Tokens(text);
 
     private static void ApplyEntries(
         REPOPopupPage page,
@@ -999,9 +961,10 @@ internal sealed partial class RoleMenu : MonoBehaviour
             TMP_Text labelText = row.Label.labelTMP;
             labelText.richText = false;
             labelText.text = entry.Text;
-            labelText.alignment = entry.Wrap
-                ? TextAlignmentOptions.TopLeft
-                : TextAlignmentOptions.Left;
+            RoleTextLayout.Apply(labelText, _guideLanguage);
+            labelText.alignment = _guideLanguage == RoleGuideLanguage.Arabic
+                ? (entry.Wrap ? TextAlignmentOptions.TopRight : TextAlignmentOptions.Right)
+                : (entry.Wrap ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.Left);
             labelText.fontSize = entry.FontSize;
             labelText.fontStyle = entry.FontStyle;
             labelText.textWrappingMode = entry.Wrap ? TextWrappingModes.Normal : TextWrappingModes.NoWrap;

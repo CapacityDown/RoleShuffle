@@ -17,7 +17,14 @@ internal enum RoleGuideLanguage
     Russian,
     Polish,
     Turkish,
-    Ukrainian
+    Ukrainian,
+    Arabic,
+    Danish,
+    Finnish,
+    Swedish,
+    Thai,
+    PortuguesePortugal,
+    SpanishLatinAmerica
 }
 
 internal static class RoleLanguage
@@ -38,6 +45,9 @@ internal static class RoleLanguage
         if (normalized.StartsWith("zh"))
             return normalized.Contains("hant") || normalized is "zh-tw" or "zh-hk" or "zh-mo"
                 ? RoleGuideLanguage.ChineseTraditional : RoleGuideLanguage.ChineseSimplified;
+        if (normalized is "pt-pt") return RoleGuideLanguage.PortuguesePortugal;
+        if (normalized is "es-419" or "es-mx" or "es-ar" or "es-cl" or "es-co" or "es-pe")
+            return RoleGuideLanguage.SpanishLatinAmerica;
         string language = normalized.Split('-')[0];
         return language switch
         {
@@ -46,7 +56,10 @@ internal static class RoleLanguage
             "es" => RoleGuideLanguage.Spanish, "pt" => RoleGuideLanguage.PortugueseBrazilian,
             "it" => RoleGuideLanguage.Italian, "ru" => RoleGuideLanguage.Russian,
             "pl" => RoleGuideLanguage.Polish, "tr" => RoleGuideLanguage.Turkish,
-            "uk" => RoleGuideLanguage.Ukrainian, _ => RoleGuideLanguage.English
+            "uk" => RoleGuideLanguage.Ukrainian, "ar" => RoleGuideLanguage.Arabic,
+            "da" => RoleGuideLanguage.Danish, "fi" => RoleGuideLanguage.Finnish,
+            "sv" => RoleGuideLanguage.Swedish, "th" => RoleGuideLanguage.Thai,
+            _ => RoleGuideLanguage.English
         };
     }
     internal static RoleGuideLanguage Next(RoleGuideLanguage current) =>
@@ -66,6 +79,13 @@ internal static class RoleLanguage
         RoleGuideLanguage.Polish => "Polski",
         RoleGuideLanguage.Turkish => "Türkçe",
         RoleGuideLanguage.Ukrainian => "Українська",
+        RoleGuideLanguage.Arabic => "العربية",
+        RoleGuideLanguage.Danish => "Dansk",
+        RoleGuideLanguage.Finnish => "Suomi",
+        RoleGuideLanguage.Swedish => "Svenska",
+        RoleGuideLanguage.Thai => "ไทย",
+        RoleGuideLanguage.PortuguesePortugal => "Português (Portugal)",
+        RoleGuideLanguage.SpanishLatinAmerica => "Español (Latinoamérica)",
         _ => "English"
     };
     internal static bool NeedsTranslation(RoleGuideLanguage language) =>

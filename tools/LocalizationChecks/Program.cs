@@ -11,7 +11,7 @@ void Check(bool condition, string message)
     if (!condition) throw new Exception(message);
 }
 var languages = Enum.GetValues<RoleGuideLanguage>();
-Check(languages.Length == 14, "Expected 14 supported languages");
+Check(languages.Length == 21, "Expected all 21 native game locales");
 Check(RoleLanguage.Names.Distinct().Count() == languages.Length, "Native names must be unique");
 foreach (var language in languages)
 {
@@ -36,7 +36,7 @@ foreach (var language in languages)
         "Disaster's additional ability remains concealed before discovery: " + language);
 }
 var englishCatalog = RoleText.Catalog(RoleGuideLanguage.English);
-string[] PlaceholderSet(string text) => Regex.Matches(text, @"\{\d+\}").Select(m => m.Value).Distinct().Order().ToArray();
+string[] PlaceholderSet(string text) => Regex.Matches(text, @"\{\d+\}").Select(m => m.Value).Order().ToArray();
 foreach (var language in languages.Where(RoleLanguage.NeedsTranslation))
 {
     var catalog = RoleText.Catalog(language);

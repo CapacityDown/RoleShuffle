@@ -29,6 +29,8 @@ internal static class RoleGuideFont
         string resource = language switch
         {
             RoleGuideLanguage.Korean => "Korean",
+            RoleGuideLanguage.Arabic => "Arabic",
+            RoleGuideLanguage.Thai => "Thai",
             RoleGuideLanguage.ChineseTraditional => "ChineseTraditional",
             RoleGuideLanguage.ChineseSimplified => "ChineseSimplified",
             _ => "European"
@@ -53,7 +55,7 @@ internal static class RoleGuideFont
         UnicodeFonts[name] = null;
         try
         {
-            string extension = name == "European" ? ".ttf" : ".otf";
+            string extension = name is "European" or "Arabic" or "Thai" ? ".ttf" : ".otf";
             using var stream = typeof(RoleGuideFont).Assembly.GetManifestResourceStream(
                 $"REPOJP.StageRoles.Assets.Fonts.{name}{extension}");
             if (stream == null) throw new FileNotFoundException("Embedded font: " + name);

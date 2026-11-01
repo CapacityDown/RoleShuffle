@@ -7,8 +7,14 @@ The subset families are renamed to `RoleShuffle Names`, `RoleShuffle European`,
 `RoleShuffle Korean`, `RoleShuffle ChineseSimplified`, and `RoleShuffle ChineseTraditional`.
 Japanese role text continues to use the existing Checkpoint Revenge font.
 At runtime, all fallback font faces use the same 0.72 scale correction as Japanese
-to match the game's Latin glyph size. This also covers native language names in
-REPOConfig; the primary game font keeps its original scale.
+to match the game's Latin glyph size. The primary game font keeps its original scale.
+
+Arabic.ttf and Thai.ttf are unmodified Noto Sans Arabic/Thai Regular fonts; the
+complete files retain Arabic presentation forms and mark-positioning tables.
+Their URLs, revision, SHA-256 and lengths are recorded in arabic-thai-sources.json.
+Both use the same OFL-NotoSans.txt already shipped as LICENSES/NotoSans-OFL.txt.
+Their upstream family names are unchanged. The game TMP shaper supplies Arabic
+joining/bidi and Thai mark shaping; no global font configuration is changed.
 
 Sources:
 - https://github.com/notofonts/noto-cjk (revision in `source-commit.txt`)
@@ -23,6 +29,5 @@ python tools/build_localization_fonts.py --source-root <source-directory>
 ```
 
 The DLL extracts fonts to `BepInEx/cache/RoleShuffle/Fonts` using content-hashed
-filenames. TMP generates glyph atlases dynamically. The Names and European fonts
-also provide fallback glyphs for REPOConfig's language choices. No OS font install
+filenames. TMP generates glyph atlases dynamically. The language follows the game setting; the former MOD language selector is retired. No OS font install
 or font download is required by players.

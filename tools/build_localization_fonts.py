@@ -20,7 +20,7 @@ for name, source in [('Names','sc'), ('European','sc'), ('Korean','kr'), ('Chine
     if name == 'European':
         chars.update(range(0xa0,0x250))
         chars.update(range(0x400,0x530))
-        catalogs = [p for p in (root/'Assets/Localization').glob('*.json') if p.stem not in ['Japanese','ChineseSimplified','ChineseTraditional','Korean']]
+        catalogs = [p for p in (root/'Assets/Localization').glob('*.json') if p.stem not in ['Japanese','ChineseSimplified','ChineseTraditional','Korean','Arabic','Thai']]
     elif name == 'Names': catalogs=[]
     else: catalogs=[root/f'Assets/Localization/{name}.json']
     for catalog in catalogs:

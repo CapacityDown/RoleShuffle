@@ -81,8 +81,14 @@ historical version numbers, deployment profiles and superseded design choices.
 - On 2026-10-31 the user requested native game-language following. Roles menus
   and roulette labels read the local R.E.P.O. language, never a separate saved
   MOD override. The roulette uses vanilla upgrade display-name translations and
-  keeps canonical IDs on the network. Preserve the existing 14 menu catalogs,
-  with English fallback for other languages. Retire UI.GuideLanguage with a backup.
+  keeps canonical IDs on the network. Support all 21 installed v0.5.0 locales,
+  including separate pt-BR/pt-PT and es-ES/es-419 catalogs. Unknown future locales
+  fall back to English. Retire UI.GuideLanguage with a backup.
+- On 2026-11-01 the user requested every native game language. Use bundled
+  Arabic/Thai fonts and the game TMP text shaper for joined Arabic, bidi and Thai
+  marks. Apply direction per MOD text and reset it on language changes. Preserve
+  logical text order, Thai grapheme clusters, canonical role names and compact
+  notification tokens; do not change global TMP settings.
 - Repair the legacy Japanese font's missing Unity 6 material from its original
   atlas and the current game SDF shader before it can become a fallback font.
   Keep glyph metrics intact and avoid inserting MOD fonts into global TMP settings.

@@ -59,6 +59,7 @@ def catalog():
 if __name__ == '__main__':
     output = ROOT / 'Assets' / 'Localization' / 'English.json'
     output.parent.mkdir(parents=True, exist_ok=True)
-    values = catalog()
+    values = json.loads(output.read_text(encoding='utf-8')) if output.exists() else {}
+    values.update(catalog())  # Preserve templates required by older hosts.
     output.write_text(json.dumps(values, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f'{len(values)} English phrases: {output}')

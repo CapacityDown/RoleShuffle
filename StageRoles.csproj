@@ -107,6 +107,7 @@
     <Compile Include="RoleGuideFont.cs" />
     <Compile Include="RoleFontMaterial.cs" />
     <Compile Include="GameLocalization.cs" />
+    <Compile Include="RoleTextLayout.cs" />
     <Compile Include="RoleHud.cs" />
     <Compile Include="RoleResourceHud.cs" />
     <Compile Include="RoleResourceLayout.cs" />

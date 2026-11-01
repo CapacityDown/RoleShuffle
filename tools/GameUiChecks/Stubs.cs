@@ -19,6 +19,7 @@ namespace UnityEngine
 }
 namespace TMPro
 {
+    public class TMP_Text { public bool useTextShaper, isRightToLeftText; }
     public class TMP_FontAsset
     {
         public string name = "Old bundled Japanese font";

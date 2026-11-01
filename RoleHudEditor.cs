@@ -172,6 +172,7 @@ internal sealed class RoleHudEditor : MonoBehaviour
     {
         GameObject obj = new("Editor Label", typeof(RectTransform), typeof(TextMeshProUGUI)); obj.transform.SetParent(parent, false);
         var label = obj.GetComponent<TextMeshProUGUI>(); label.font = _font; label.fontSize = fontSize;
+        RoleTextLayout.Apply(label, _language);
         label.text = text; label.color = Color.white; label.richText = false; label.raycastTarget = false;
         label.textWrappingMode = TextWrappingModes.NoWrap; label.overflowMode = TextOverflowModes.Ellipsis;
         label.rectTransform.anchorMin = label.rectTransform.anchorMax = new Vector2(0, 1);

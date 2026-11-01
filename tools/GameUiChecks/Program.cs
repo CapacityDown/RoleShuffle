@@ -9,18 +9,38 @@ var cases = new Dictionary<string,RoleGuideLanguage> {
     ["zh-TW"] = RoleGuideLanguage.ChineseTraditional, ["zh-Hant-HK"] = RoleGuideLanguage.ChineseTraditional,
     ["zh-Hans"] = RoleGuideLanguage.ChineseSimplified, ["fr-FR"] = RoleGuideLanguage.French,
     ["de-DE"] = RoleGuideLanguage.German, ["es-ES"] = RoleGuideLanguage.Spanish,
-    ["es-419"] = RoleGuideLanguage.Spanish, ["pt-BR"] = RoleGuideLanguage.PortugueseBrazilian,
-    ["pt-PT"] = RoleGuideLanguage.PortugueseBrazilian, ["it-IT"] = RoleGuideLanguage.Italian,
+    ["es-419"] = RoleGuideLanguage.SpanishLatinAmerica, ["pt-BR"] = RoleGuideLanguage.PortugueseBrazilian,
+    ["pt-PT"] = RoleGuideLanguage.PortuguesePortugal, ["it-IT"] = RoleGuideLanguage.Italian,
     ["ru-RU"] = RoleGuideLanguage.Russian, ["pl-PL"] = RoleGuideLanguage.Polish,
     ["tr-TR"] = RoleGuideLanguage.Turkish, ["uk-UA"] = RoleGuideLanguage.Ukrainian,
-    ["th-TH"] = RoleGuideLanguage.English, ["ar-SA"] = RoleGuideLanguage.English,
-    ["sv-SE"] = RoleGuideLanguage.English, ["fi-FI"] = RoleGuideLanguage.English
+    ["th-TH"] = RoleGuideLanguage.Thai, ["ar-SA"] = RoleGuideLanguage.Arabic,
+    ["sv-SE"] = RoleGuideLanguage.Swedish, ["fi-FI"] = RoleGuideLanguage.Finnish,
+    ["da-DK"] = RoleGuideLanguage.Danish, ["ar-001"] = RoleGuideLanguage.Arabic,
+    ["es-MX"] = RoleGuideLanguage.SpanishLatinAmerica, ["hu-HU"] = RoleGuideLanguage.English
 };
 foreach (var entry in cases)
 {
     Check(RoleLanguage.FromLocaleCode(entry.Key) == entry.Value, "Native locale mapping " + entry.Key);
     Check(RoleLanguage.FromLocaleCode(entry.Key.ToUpperInvariant().Replace('-', '_')) == entry.Value, "Case and separator " + entry.Key);
 }
+var nativeCodes = System.Text.Json.JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "repo050-locales.json")))!;
+Check(nativeCodes.Length == 21 && nativeCodes.Select(RoleLanguage.FromLocaleCode).Distinct().Count() == 21,
+    "Each installed v0.5.0 locale maps to its own catalog, with no English fallback");
+var textLayout = new TMP_Text();
+foreach (var language in new[] { RoleGuideLanguage.Arabic, RoleGuideLanguage.Thai, RoleGuideLanguage.Japanese, RoleGuideLanguage.English })
+{
+    RoleTextLayout.Apply(textLayout, language);
+    Check(textLayout.useTextShaper && textLayout.isRightToLeftText == (language == RoleGuideLanguage.Arabic), "Shaping and direction reset on locale switch");
+}
+foreach (string phrase in new[] { "ความเสียหายเพิ่มขึ้น", "เก็บของมีค่าไว้ในรถ", "น้ำ", "เริ่มต้น", "العربية Strength 200 HP", "日本語の説明", "Two words\nNext line" })
+{
+    var tokens = RoleTextLayout.Tokens(phrase);
+    Check(string.Concat(tokens) == phrase, "Wrapping preserves graphemes and logical order: " + phrase);
+    Check(tokens.All(token => System.Globalization.CharUnicodeInfo.GetUnicodeCategory(token, 0) != System.Globalization.UnicodeCategory.NonSpacingMark), "No detached Thai or Arabic combining mark");
+    Check(tokens.All(token => token[^1] is < '\u0e40' or > '\u0e44'), "No orphaned Thai preposed vowel");
+}
+Check(RoleTextLayout.Tokens("ความเสียหายเพิ่มขึ้น").Count > 3, "Thai text has wrapping opportunities without spaces");
+Check(RoleTextLayout.Tokens("العربية").Count == 1, "Arabic words are not split between connected letters");
 Check(RoleLanguage.FromLocaleCode(null) == RoleGuideLanguage.English, "Startup without locale");
 Check(GameLocalization.Language == RoleGuideLanguage.English, "No manager during early startup");
 LocalizationManager.instance = new() { ActiveLocale = new() };
