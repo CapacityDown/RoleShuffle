@@ -387,6 +387,24 @@ internal sealed class RoleAssignmentPlanner
         return result;
     }
 
+    internal bool BlockedByHistory(string steamId, StageRole role) => IsBlockedByHistory(steamId, role);
+
+    internal bool IsInitialCandidate(string steamId, StageRole role, IReadOnlyList<StageRole> enabledRoles,
+        int playerCount, bool applyHistory)
+    {
+        if (!Contains(enabledRoles, role)) return false;
+        bool selectingPair = _selectingPair;
+        try
+        {
+            _selectingPair = true;
+            // Each candidate is independent at the start of a draw. Reuse the
+            // real rules without rescanning every role for every preview row.
+            return Candidates(steamId, new[] { role }, Array.Empty<StageRole>(), playerCount,
+                applyHistory, true, true, null).Count > 0;
+        }
+        finally { _selectingPair = selectingPair; }
+    }
+
     private bool IsBlockedByHistory(string steamId, StageRole role)
     {
         if (_config.PreventConsecutiveSameRole.Value &&
@@ -482,7 +500,7 @@ internal sealed class RoleAssignmentPlanner
               SuperbotRelativeWeightDivisor;
         if (_recentRolesByPlayer.TryGetValue(
                 steamId,
-                out List<StageRole> recentRoles) &&
+                out List<StageRole>? recentRoles) &&
             recentRoles.Contains(role))
         {
             weight /= RecentRoleWeightDivisor;

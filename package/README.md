@@ -429,10 +429,10 @@ Influencer and Berserker scaling accepts comma- or semicolon-separated `conditio
 
 Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` or `DRAW HISTORY`.
 
-- **Role guide:** opens in `Overview` with short ability summaries. Select `Details` for the host's configured values, conditions and limits.
+- **Role guide:** `Overview` summarizes abilities; `Details` shows host-configured values and limits. `Draw eligibility` shows your current candidates and exclusion reasons. Conditions may depend on other players; stage items remain unconfirmed until generation.
 - **HUD editor:** in `TOOLS`, drag the HUD sample and adjust its anchor, alignment, text/icon size, scale, mode and visibility. `SAVE` keeps local settings; `CANCEL` or Esc discards them; `RESET` previews defaults. Mouse controls also work in the lobby.
 - **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports contain mod versions, settings and recent activity, are saved in `BepInEx/RoleShuffleReports`, and are never sent automatically.
-- **Language:** Roles menus, descriptions, HUD editor, history and sync status follow the language selected in R.E.P.O. There is no separate MOD language setting. The 14 available menu translations are used automatically; other languages fall back to English. Roulette upgrade names use the game’s own translations for each player. Role names, setting identifiers, commands and diagnostics remain English.
+- **Language:** Menus follow R.E.P.O.’s language (14 translations; English fallback). Roulette upgrade names use the game’s translations. Role names, setting identifiers, commands and diagnostics stay English.
 - **Sync status:** `TOOLS` shows whether roles, guide, Base Upgrades and history are current. `REFRESH DISPLAY DATA` refreshes these displays without changing roles or upgrades.
 - **Draw history:** shows the latest 50 completed truck draws, including level, target, rolled change and actual before/after targets. Zero/capped results are retained; cancelled draws are omitted. History is saved with the host’s run and shared with installed participants.
 
@@ -915,7 +915,7 @@ InfluencerとBerserkerの記述式は、`条件:レベル`をカンマまたは�
 
 Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW HISTORY`を選択します。
 
-- **ロールガイド：** 最初は「概要」で能力を短く表示。「詳細」に切り替えると、ホストが設定した値・発動条件・制限を確認できます。
+- **ロールガイド：** 「概要」は能力の要約、「詳細」はホスト設定の値・条件・制限を表示。「抽選状況」で自分の候補と対象外の理由を確認できます。他の人の抽選結果で変わる条件があり、必要アイテムの有無はステージ生成後に確定します。
 - **HUD編集：** `TOOLS`でサンプルをドラッグし、基準位置・整列・文字／アイコンサイズ・全体倍率・表示形式・表示切替を調整します。「保存」で個人設定を保存、「取消」またはEscで破棄、「初期値」で初期状態をプレビューします。ロビーでもマウスで操作可能です。
 - **不具合レポート：** `TOOLS`からコピーまたはファイルを開き、内容と発生手順を確認してGitHub Issuesへ投稿します。MODのバージョン・設定・最近の動作状況を含み、`BepInEx/RoleShuffleReports`へ保存します。自動送信はしません。
 - **言語：** メニュー・説明・HUD編集・履歴・同期状態はR.E.P.O.本体で選んだ言語に連動します。MOD側での言語設定は不要です。対応する14言語の翻訳を自動で使用し、それ以外は英語で表示します。ルーレットのアップグレード名は各プレイヤーの本体言語に合わせた公式名称になります。役職名・設定の識別名・コマンド・診断本文は英語です。

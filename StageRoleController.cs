@@ -2978,11 +2978,11 @@ internal sealed partial class StageRoleController : MonoBehaviour
         roles.RemoveAll(RoleCatalog.IsSecretRole);
     }
 
-    private void RemoveUnavailableContextRoles(List<StageRole> roles)
+    private bool RemoveUnavailableContextRoles(List<StageRole> roles)
     {
         if (!_config.ExcludeUnavailableContextRoles.Value)
         {
-            return;
+            return true;
         }
 
         try
@@ -3045,11 +3045,13 @@ internal sealed partial class StageRoleController : MonoBehaviour
             {
                 roles.Remove(StageRole.Electrician);
             }
+            return true;
         }
         catch (Exception exception)
         {
             StageRolesPlugin.ModLogger.LogDebug(
                 $"Context-dependent role availability check was skipped: {exception.Message}");
+            return false;
         }
     }
 

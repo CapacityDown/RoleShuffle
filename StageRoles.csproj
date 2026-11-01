@@ -68,6 +68,10 @@
     <Compile Include="PorterSpeed.cs" />
     <Compile Include="PrivatePlayerSpeech.cs" />
     <Compile Include="RoleGuidePresentation.cs" />
+    <Compile Include="RoleDrawEligibility.cs" />
+    <Compile Include="RoleDrawEligibilityRuntime.cs" />
+    <Compile Include="RoleDrawEligibilitySync.cs" />
+    <Compile Include="RoleMenuEligibility.cs" />
     <Compile Include="TrackerRules.cs" />
     <Compile Include="CombatRoleRules.cs" />
     <Compile Include="CombatRoleRuntime.cs" />

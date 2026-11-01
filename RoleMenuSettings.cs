@@ -74,6 +74,7 @@ internal sealed partial class RoleMenu
         else
         {
             Button(Localized("PRESETS"), () => SwitchView(page, RoleMenuView.Presets));
+            Button(Localized("Draw eligibility"), () => OpenDrawEligibility(page));
             if (!available) Text(Localized("Host role settings are not available yet."));
             else
             {

@@ -93,5 +93,13 @@ foreach(var (name,type) in new[]{("currentState","ValuableMusicInstrument/State"
 var sound=continuous.Methods.Single(m=>m.Name=="SoundUpdate");
 foreach(string name in new[]{"LoudnessUpdate","SoundHarmonica","SoundPanFlute","SoundMouthHarp"})
     Check(sound.Body.Instructions.Any(i=>i.Operand is MethodReference m && m.Name==name),"Native audio path: "+name);
+using var plugin=AssemblyDefinition.ReadAssembly("bin/Release/netstandard2.1/RoleShuffle.dll");
+var startup=plugin.MainModule.Types.Single(t=>t.Name=="StageRolesPlugin").Methods.Single(m=>m.Name=="Awake");
+var instructions=startup.Body.Instructions;
+int registration=-1;
+for(int i=0;i<instructions.Count;i++)
+    if(instructions[i].Operand is TypeReference t && t.Name=="MusicianPatches")registration=i;
+Check(registration>=0 && instructions.Skip(registration+1).Take(3).Any(i=>i.Operand is MethodReference m && m.Name=="PatchAll"),
+    "Plugin startup installs the Musician instrument hooks");
 Console.WriteLine($"PASS: {checks} Musician cooldown, budget, native hook and context checks.");
 Console.WriteLine("Production sources with deterministic stand-ins and installed-game metadata; live Unity/voice transport is untested.");

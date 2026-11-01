@@ -163,6 +163,7 @@ namespace REPOJP.StageRoles
         private static string Localized(string text) => RoleText.Get(text, _guideLanguage);
         private static void SwitchView(MenuLib.MonoBehaviors.REPOPopupPage page, RoleMenuView view)
         { _activeView = view; if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view == RoleMenuView.BaseUpgradeSettings) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
+        private static void OpenDrawEligibility(MenuLib.MonoBehaviors.REPOPopupPage page) { }
         private static string DisplayUpgradeName(string name) => name;
         private static string SignedValue(int value) => value.ToString("+0;-0;0", System.Globalization.CultureInfo.InvariantCulture);
         internal record RoleMenuEntry(string Text, float Size, TMPro.FontStyles Style, float Height, bool Wrap,

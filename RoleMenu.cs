@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 562;
+    private const int RoleUiBuildNumber = 564;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -219,6 +219,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             : RoleMenuView.Guide;
         _guideLanguage = GameLocalization.Language;
         _guideDetails = false;
+        _guideEligibility = false;
         _utilityMessage = string.Empty;
         _openSignature = string.Empty;
         _selectedAssignmentKey = string.Empty;
@@ -576,12 +577,22 @@ internal sealed partial class RoleMenu : MonoBehaviour
         }
 
         List<RoleMenuEntry> entries = new(visibleRoles.Count * 4);
-        entries.Add(new RoleMenuEntry((_guideDetails ? "  " : "> ") + Localized("Overview", "概要"),
+        entries.Add(new RoleMenuEntry((!_guideEligibility && !_guideDetails ? "> " : "  ") + Localized("Overview", "概要"),
             20f, FontStyles.Bold, 36f, false, UseLanguageFont,
             () => SwitchGuideMode(page, false), isControl: true));
-        entries.Add(new RoleMenuEntry((_guideDetails ? "> " : "  ") + Localized("Details", "詳細"),
+        entries.Add(new RoleMenuEntry((!_guideEligibility && _guideDetails ? "> " : "  ") + Localized("Details", "詳細"),
             20f, FontStyles.Bold, 36f, false, UseLanguageFont,
             () => SwitchGuideMode(page, true), isControl: true));
+        entries.Add(new RoleMenuEntry((_guideEligibility ? "> " : "  ") + Localized("Draw eligibility"),
+            20f, FontStyles.Bold, 36f, false, UseLanguageFont,
+            () => OpenDrawEligibility(page), isControl: true));
+        if (_guideEligibility)
+        {
+            AddDrawEligibilityRows(page, entries);
+            ApplyEntries(page, entries);
+            _openSignature = BuildGuideSignature();
+            return;
+        }
         for (int roleIndex = 0; roleIndex < visibleRoles.Count; roleIndex++)
         {
             StageRole role = visibleRoles[roleIndex];
@@ -631,7 +642,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
 
     private static void SwitchGuideMode(REPOPopupPage page, bool details)
     {
-        if (!ReferenceEquals(_openPage, page) || _activeView != RoleMenuView.Guide || _guideDetails == details) return;
+        if (!ReferenceEquals(_openPage, page) || _activeView != RoleMenuView.Guide || (!_guideEligibility && _guideDetails == details)) return;
+        _guideEligibility = false;
         _guideDetails = details;
         page.scrollView.SetScrollPosition(0f);
         RefreshGuideRows(page);
@@ -652,7 +664,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
             _guideSignature = payload + "|enabled:" + visibility +
                 "|secrets:" + revealed;
         }
-        return _guideSignature + "|details:" + _guideDetails;
+        return _guideSignature + "|details:" + _guideDetails + "|eligibility:" + _guideEligibility +
+            (_guideEligibility ? RoleDrawEligibilitySync.Signature + "|self:" + PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal()) : string.Empty);
     }
 
     private static bool IsRoleAssigned(StageRole role)
@@ -1196,6 +1209,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _selectLocalAssignmentOnRefresh = false;
         _guideLanguage = RoleGuideLanguage.English;
         _guideDetails = false;
+        _guideEligibility = false;
         _assignmentsEnabled = true;
     }
 

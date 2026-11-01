@@ -95,6 +95,13 @@ historical version numbers, deployment profiles and superseded design choices.
   reset on stage end. Both settings are configurable; show remaining budget on
   the resource HUD and notify exhaustion with `MusicEmpty`.
 
+- On 2026-11-01 the user requested current draw eligibility in Roles menus.
+  Preview the viewer's own fresh whole-party draw using host conditions and the
+  production candidate/history rules. Keep the preview read-only and RNG-free;
+  distinguish conditional and unconfirmed roles, and conceal secret conditions.
+  The user cancelled the preceding Bomber solo-exclusion request: Bomber remains
+  eligible in singleplayer and one-player rooms.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

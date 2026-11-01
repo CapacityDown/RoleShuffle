@@ -1,4 +1,5 @@
 ## 5.0.0
+- Roles menus show your current draw eligibility and exclusion reasons based on player count, settings, Base Upgrades, role history and stage items. Unconfirmed and conditional choices are identified.
 - Musician supports Pan Flute, Harmonica and Mouth Harp as well as the existing instruments. All instruments share a configurable one-second healing cooldown and a 1000 HP stage budget for self and allies. The resource HUD shows the remaining budget.
 - Added Negotiator: one guaranteed negotiation in the next shop, using the normal successful discount without rejection damage or spending shared attempts. The right survives death and role changes, cannot stack, and expires after that shop. Shop role displays, remaining-use HUD and notices identify its holder. Available in Standard and Cooperative presets.
 - Added Rigger: Human Adventure Cable deals 2x direct hit damage to enemies, holds them 1.5x as long and consumes half durability on hits and throws. All three bonuses are configurable. Normally excluded without a cable; available in Standard, Cooperative and Challenge presets.

@@ -99,6 +99,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             _harmony.PatchAll(typeof(DualWielderPatches));
             _harmony.PatchAll(typeof(RiggerPatches));
             _harmony.PatchAll(typeof(NegotiatorPatches));
+            _harmony.PatchAll(typeof(MusicianPatches));
             _harmony.PatchAll(typeof(MageStaffProjectilePatch));
             _harmony.PatchAll(typeof(MageBeamCarrierStartPatch));
             _harmony.PatchAll(typeof(MageBeamCarrierAimPatch));
@@ -125,6 +126,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         RoleHudEditor.Instance?.Close(false);
         BaseUpgradeHistory.ClearDisplayPreview();
         Controller?.StageEnding();
+        RoleDrawEligibilitySync.Invalidate();
         Negotiator?.SceneChanged();
     }
 
@@ -133,6 +135,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         if (Time.unscaledTime >= _nextPrivacyRefresh)
         { _nextPrivacyRefresh = Time.unscaledTime + 1f; BugReport.RememberPlayers(); }
         if (GameManager.instance == null) return;
+        RoleDrawEligibilitySync.Tick(Controller);
         if (_settingsPublishPending && Time.unscaledTime >= _settingsPublishAt)
         {
             _settingsPublishPending = false;
@@ -177,6 +180,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
 
     private void ConfigSettingChanged(object sender, SettingChangedEventArgs args)
     {
+        RoleDrawEligibilitySync.Invalidate();
         if (!Settings.SetRoleCommandEnabled.Value)
         {
             BaseUpgradeHistory.ClearDisplayPreview();
