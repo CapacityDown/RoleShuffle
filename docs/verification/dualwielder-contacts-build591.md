@@ -65,3 +65,11 @@ deployment remains pending until the game closes. No user configuration changed.
 - ZIP: `RoleShuffle.zip`; versioned copy: `output/release/RoleShuffle-5.0.0.zip`.
 - Backup: `tmp/deployments/before-build591-20261103-053900`.
 - Deployment record: `tmp/deploy-build591.json`.
+
+## Deployment completed
+
+Deployed to RSO_TEST on 2026-11-03 at 15:03 JST after R.E.P.O. exited.
+All seven deployed files match the package by SHA-256; the deployed DLL matches
+build591. Previous profile files and configuration were backed up to
+`tmp/deployments/before-build591-20261103-060351`. Configuration was not changed.
+This supersedes the pending deployment above. Live gameplay remains untested.
