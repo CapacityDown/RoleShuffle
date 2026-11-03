@@ -1,0 +1,159 @@
+{
+  "game_assembly_sha256": "aa6b1ce0deef8d2b7104a3722864c4ba94c107257726471f8e44b45c99e36888",
+  "scope": "Valuable/Trap-named component types absent from the retained analysis_repo_gamelibs source inventory; not a prefab count or live multiplayer certification.",
+  "components": [
+    {
+      "type": "LighterValuable",
+      "label_ja": "ライター",
+      "status": "pending",
+      "methods": [
+        "Update",
+        "FixedUpdate"
+      ]
+    },
+    {
+      "type": "SnakeInACanValuable",
+      "label_ja": "蛇入りの缶",
+      "status": "pending",
+      "methods": [
+        "Update",
+        "SnakeOut"
+      ]
+    },
+    {
+      "type": "ValuableCubeOfKnowledge",
+      "label_ja": "知識のキューブ",
+      "status": "pending",
+      "methods": [
+        "SideActivate",
+        "TalkInvestigateLogic",
+        "ItemReject"
+      ]
+    },
+    {
+      "type": "ValuableDesertBirdCage",
+      "label_ja": "鳥かご",
+      "status": "pending",
+      "methods": [
+        "StateIdle",
+        "ChirpSet"
+      ]
+    },
+    {
+      "type": "ValuableDesertEnergyCrystalChunk",
+      "label_ja": "エネルギー結晶",
+      "status": "pending",
+      "methods": [
+        "EnergizeLogic",
+        "BreakImpulseChargeCloud"
+      ]
+    },
+    {
+      "type": "ValuableDesertExplosiveTower",
+      "label_ja": "爆薬の塔",
+      "status": "pending",
+      "methods": [
+        "StateTrigger",
+        "StateExplode"
+      ]
+    },
+    {
+      "type": "ValuableDesertExplosiveTowerDynamite",
+      "label_ja": "塔から飛散するダイナマイト",
+      "status": "pending",
+      "methods": [
+        "Explode"
+      ]
+    },
+    {
+      "type": "ValuableDesertGolfcart",
+      "label_ja": "ゴルフカート",
+      "status": "pending",
+      "methods": [
+        "FixedUpdateActive",
+        "HurtColliderLogic"
+      ]
+    },
+    {
+      "type": "ValuableDesertPopcornStand",
+      "label_ja": "ポップコーン屋台",
+      "status": "pending",
+      "methods": [
+        "RevLogic",
+        "InvestigateLogic"
+      ]
+    },
+    {
+      "type": "ValuableDesertSnowGlobe",
+      "label_ja": "スノードーム",
+      "status": "cosmetic",
+      "methods": [
+        "Update"
+      ]
+    },
+    {
+      "type": "ValuableDesertZeroGravCrystal",
+      "label_ja": "無重力結晶",
+      "status": "pending",
+      "methods": [
+        "AffectSpawnLogic",
+        "AffectRenewLogic"
+      ]
+    },
+    {
+      "type": "ValuableHorseOnWheels",
+      "label_ja": "車輪付きの馬",
+      "status": "automatic_trap",
+      "methods": [
+        "Update",
+        "FixedUpdate"
+      ]
+    },
+    {
+      "type": "ValuableMusicInstrument",
+      "label_ja": "ハーモニカ・パンフルート・口琴",
+      "status": "pending",
+      "methods": [
+        "StateAttached",
+        "SoundUpdate",
+        "EnemySetInvestigate"
+      ]
+    },
+    {
+      "type": "ValuableRattleSnake",
+      "label_ja": "ガラガラヘビの飾り",
+      "status": "cosmetic",
+      "methods": [
+        "Update",
+        "TryPlayRattleSound"
+      ]
+    },
+    {
+      "type": "ValuableShootingCowboy",
+      "label_ja": "銃を撃つカウボーイ",
+      "status": "cowboy_fixed",
+      "methods": [
+        "Update",
+        "Shoot",
+        "FireBullet"
+      ]
+    },
+    {
+      "type": "ValuableSprings",
+      "label_ja": "装飾のばね動作（補助処理）",
+      "status": "cosmetic",
+      "methods": [
+        "Update"
+      ]
+    },
+    {
+      "type": "ValuableWizardCrystal",
+      "label_ja": "魔法の結晶",
+      "status": "pending",
+      "methods": [
+        "Destroyed",
+        "AffectMultiplayer"
+      ]
+    }
+  ]
+}

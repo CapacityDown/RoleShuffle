@@ -452,6 +452,12 @@ internal sealed partial class StageRoleController : MonoBehaviour
 
     private static void ResetEngineerEffectState(Component effect)
     {
+        if (effect is ValuableShootingCowboy cowboy)
+        {
+            EngineerCowboySuppression.Reset(cowboy);
+            return;
+        }
+
         if (effect is not Trap trap)
         {
             return;
