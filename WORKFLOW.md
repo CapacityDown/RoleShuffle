@@ -10,7 +10,7 @@ historical version numbers, deployment profiles and superseded design choices.
 
 - Work in `RoleShuffle`; preserve the original `StageRoles` checkout and previous
   release artifacts so the stable version can be restored.
-- Keep the MOD name RoleShuffle. Continue the current development version (5.0.0)
+- Keep the MOD name RoleShuffle. Continue the current development version (5.0.1)
   unless the user changes it. Do not revive the old overhaul setting.
 - On 2026-10-03 the user requested a complete rollback of the Tuna changes in
   build503. Retain Tuna's build502 behavior: per-frame movement checks, stage-start
@@ -26,7 +26,7 @@ historical version numbers, deployment profiles and superseded design choices.
   into `main`, including the role-safety audit, its diagnostic results and
   hashes, and the verification tools committed as `d4c2698`.
 - Perform development in `RoleShuffle` on a branch named `version/<version>`;
-  the current working branch is `version/5.0.0`. Commit and push ongoing work
+  the current working branch is `version/5.0.1`. Commit and push ongoing work
   to that version's branch instead of directly to `main`.
 - When the user changes the version, complete the relevant verification and
   merge the outgoing version's branch into `main`, then push and verify `main`.
@@ -62,7 +62,7 @@ historical version numbers, deployment profiles and superseded design choices.
   including after role reassignment or revival. Other damage remains unchanged.
 
 - On 2026-10-30 the user moved the v4.6.1 contents to v5.0.0 and requested
-  R.E.P.O. v0.5.0 compatibility. Develop on `version/5.0.0`; the previous
+  R.E.P.O. v0.5.0 compatibility. That work used `version/5.0.0`; the previous
   v4.6.1 branch and release archives remain recoverable. The v5.0.0 changelog
   includes Courier easing and final-extraction protection.
 
@@ -151,6 +151,11 @@ historical version numbers, deployment profiles and superseded design choices.
   consumption. Exclude the owner and original weapon; preserve vanilla stage
   friendly-fire rules. Scenery feedback does not consume durability. Remote
   player hits must not invoke the host's local weapon-disarm routine.
+
+- On 2026-11-03 the user started v5.0.1. Integrate completed v5.0.0 into
+  `main`, then develop on `version/5.0.1`. Preserve the published v5.0.0
+  ZIP and changelog; add a v5.0.1 changelog section only when there is a
+  player-facing change to describe.
 
 ## Builds and deployment
 
