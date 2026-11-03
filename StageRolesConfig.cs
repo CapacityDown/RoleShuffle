@@ -500,32 +500,6 @@ internal sealed class StageRolesConfig
         InfluenzaSpeechSilenceSeconds = BindFloat(config, "Influenza", "SpeechSilenceSeconds", 0.75f, 0.1f, 5f, "Silent gap required before voice counts as a new utterance. Text chat always uses one check per message.");
         InfluenzaSneezeNoiseRadius = BindFloat(config, "Influenza", "SneezeNoiseRadius", 5f, 0f, 100f, "Base distance in metres at which enemies hear sneezes, in every direction. Enemy hearing modifies this distance. Zero disables this enemy alert.");
 
-        NegotiatorEnabled = RoleEnabled(config, "Negotiator");
-        NegotiatorWeight = RoleWeight(config, "Negotiator");
-        NegotiatorDeliveryCarryDistance = BindFloat(config, "Negotiator", "DeliveryCarryDistance", 20f, 1f, 200f,
-            "Metres personally carried outside the truck before releasing a valuable at extraction. Applies to delivery checks; existing rights are kept. One delivery reward per stage, one separate kill reward, at most two rights.");
-        NegotiatorDeliveryAllowedSizes = config.Bind("Negotiator", "DeliveryAllowedSizes", "Big,Wide,Tall,VeryTall",
-            "Comma-separated valuable sizes eligible for extraction delivery: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Names ignore case and surrounding spaces; unknown names are ignored. Blank disables delivery earnings. Truck delivery never qualifies.");
-        NegotiatorEnemyTier = BindInt(config, "Negotiator", "EnemyTier", 3, 1, 3,
-            "Exact native enemy tier required for a personally credited kill. Only this tier qualifies; Enhanced enemy reward bonuses do not change it. One kill reward per stage. Existing rights are kept.");
-
-        RiggerEnemyDamageMultiplier = BindFloat(config, "Rigger", "EnemyDamageMultiplier", 2f, 1f, 10f, "Human Adventure Cable direct hit damage multiplier against enemies.");
-        RiggerEnabled = RoleEnabled(config, "Rigger");
-        RiggerWeight = RoleWeight(config, "Rigger");
-        RiggerEnemyHoldMultiplier = BindFloat(config, "Rigger", "EnemyHoldDurationMultiplier", 1.5f, 1f, 3f, "Enemy restraint duration multiplier while using the Human Adventure Cable.");
-        RiggerDurabilityMultiplier = BindFloat(config, "Rigger", "DurabilityConsumptionMultiplier", 0.5f, 0.1f, 1f, "Human Adventure Cable durability consumed on hits and throws. 0.5 means half the normal cost.");
-
-        DualWielderEnabled = RoleEnabled(config, "DualWielder");
-        DualWielderWeight = RoleWeight(config, "DualWielder");
-        DualWielderDelaySeconds = BindFloat(config, "DualWielder", "FollowDelaySeconds", 0.3f, 0.05f, 2f, "Seconds by which the second melee weapon follows the first. Battery and durability are shared; both weapons consume them on hit.");
-        DualWielderLeftOffset = BindFloat(config, "DualWielder", "LeftOffset", 0.5f, 0.1f, 1.5f, "Distance in metres to the player's left for the second melee weapon.");
-        PorterEnabled = RoleEnabled(config, "Porter");
-        PorterWeight = RoleWeight(config, "Porter");
-        PorterCapacity = BindFloat(config, "Porter", "Capacity", 15f, 1f, 100f, "Maximum combined weight of stored valuables. No item-count limit.");
-        PorterHoldSeconds = BindFloat(config, "Porter", "HoldSeconds", 3f, 1f, 30f, "Continuous solo holding outside delivery areas required to store a valuable.");
-        PorterUnloadSeconds = BindFloat(config, "Porter", "FullUnloadSeconds", 10f, 0f, 60f, "Seconds to unload a full load inside the truck or extraction area; scales with stored weight. Leaving the area or losing cargo to an enemy hit restarts the wait.");
-        PorterDropOnEnemyHit = BindBool(config, "Porter", "DropOnEnemyHit", true, "Scatter all stored valuables on a confirmed enemy hit that reduces HP. Death releases all cargo.");
-        PorterAllowedSizes = config.Bind("Porter", "AllowedSizes", "Tiny,Small,Medium", "Comma-separated allowed valuable sizes: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Empty or unknown entries allow no additional sizes. Shop equipment is excluded.");
         TwinsEnabled = RoleEnabled(config, "Twins");
         TwinsWeight = RoleWeight(config, "Twins");
         TwinsCarryStrengthMultiplier = BindFloat(config, "Twins", "CarryStrengthMultiplier", 1.5f, 1f, 3f, "Strength multiplier converted to temporary upgrade levels while both twins hold the same valuable. Rounded up to whole levels, capped at 200. Shop equipment is excluded.");
@@ -542,7 +516,36 @@ internal sealed class StageRolesConfig
         TwinsDeliveryBonusPercent = BindFloat(config, "Twins", "DeliveryBonusPercent", 10f, 0f, 100f, "Value bonus for a qualified valuable entering the truck or extraction area. Each valuable pays only once.");
         TwinsDeliveryStageLimit = BindInt(config, "Twins", "DeliveryStageLimit", 5000, 0, 10000, "Maximum total extra value for joint delivery per pair and stage.");
 
+        PorterEnabled = RoleEnabled(config, "Porter");
+        PorterWeight = RoleWeight(config, "Porter");
+        PorterCapacity = BindFloat(config, "Porter", "Capacity", 15f, 1f, 100f, "Maximum combined weight of stored valuables. No item-count limit.");
+        PorterHoldSeconds = BindFloat(config, "Porter", "HoldSeconds", 3f, 1f, 30f, "Continuous solo holding outside delivery areas required to store a valuable.");
+        PorterUnloadSeconds = BindFloat(config, "Porter", "FullUnloadSeconds", 10f, 0f, 60f, "Seconds to unload a full load inside the truck or extraction area; scales with stored weight. Leaving the area or losing cargo to an enemy hit restarts the wait.");
+        PorterDropOnEnemyHit = BindBool(config, "Porter", "DropOnEnemyHit", true, "Scatter all stored valuables on a confirmed enemy hit that reduces HP. Death releases all cargo.");
+        PorterAllowedSizes = config.Bind("Porter", "AllowedSizes", "Tiny,Small,Medium", "Comma-separated allowed valuable sizes: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Empty or unknown entries allow no additional sizes. Shop equipment is excluded.");
+
+        DualWielderEnabled = RoleEnabled(config, "DualWielder");
+        DualWielderWeight = RoleWeight(config, "DualWielder");
+        DualWielderDelaySeconds = BindFloat(config, "DualWielder", "FollowDelaySeconds", 0.3f, 0.05f, 2f, "Seconds by which the second melee weapon follows the first. Battery and durability are shared; both weapons consume them on hit.");
+        DualWielderLeftOffset = BindFloat(config, "DualWielder", "LeftOffset", 0.5f, 0.1f, 1.5f, "Distance in metres to the player's left for the second melee weapon.");
+
+        RiggerEnemyDamageMultiplier = BindFloat(config, "Rigger", "EnemyDamageMultiplier", 2f, 1f, 10f, "Human Adventure Cable direct hit damage multiplier against enemies.");
+        RiggerEnabled = RoleEnabled(config, "Rigger");
+        RiggerWeight = RoleWeight(config, "Rigger");
+        RiggerEnemyHoldMultiplier = BindFloat(config, "Rigger", "EnemyHoldDurationMultiplier", 1.5f, 1f, 3f, "Enemy restraint duration multiplier while using the Human Adventure Cable.");
+        RiggerDurabilityMultiplier = BindFloat(config, "Rigger", "DurabilityConsumptionMultiplier", 0.5f, 0.1f, 1f, "Human Adventure Cable durability consumed on hits and throws. 0.5 means half the normal cost.");
+
+        NegotiatorEnabled = RoleEnabled(config, "Negotiator");
+        NegotiatorWeight = RoleWeight(config, "Negotiator");
+        NegotiatorDeliveryCarryDistance = BindFloat(config, "Negotiator", "DeliveryCarryDistance", 20f, 1f, 200f,
+            "Metres personally carried outside the truck before releasing a valuable at extraction. Applies to delivery checks; existing rights are kept. One delivery reward per stage, one separate kill reward, at most two rights.");
+        NegotiatorDeliveryAllowedSizes = config.Bind("Negotiator", "DeliveryAllowedSizes", "Big,Wide,Tall,VeryTall",
+            "Comma-separated valuable sizes eligible for extraction delivery: Tiny, Small, Medium, Big, Wide, Tall, VeryTall. Names ignore case and surrounding spaces; unknown names are ignored. Blank disables delivery earnings. Truck delivery never qualifies.");
+        NegotiatorEnemyTier = BindInt(config, "Negotiator", "EnemyTier", 3, 1, 3,
+            "Exact native enemy tier required for a personally credited kill. Only this tier qualifies; Enhanced enemy reward bonuses do not change it. One kill reward per stage. Existing rights are kept.");
+
         SuperbotEnabled = BindBool(config, "???1", "Enabled", true, "???");
+
         DisasterEnabled = BindBool(config, "???2", "Enabled", true, "???");
     }
 

@@ -206,3 +206,7 @@ Follow [RELEASE_DOCUMENT_GUIDE.md](RELEASE_DOCUMENT_GUIDE.md), including:
   the earlier ZIP and compare every archived entry with its validated source.
 - Render and inspect all pages of generated PDFs. Report automated validation
   and actual game verification separately and accurately.
+
+- On 2026-11-03 the user requested role-number order. Keep role-specific
+  REPOConfig bindings and role rows in each README settings table in public
+  role-number order, with hidden roles last; preserve existing configuration keys.

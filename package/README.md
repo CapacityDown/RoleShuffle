@@ -152,25 +152,7 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 
 |Setting|Default|Range|Effect|
 |---|---|---|---|
-|`Rigger.EnemyDamageMultiplier` / `Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|2 / 1.5 / 0.5|1–10 / 1–3 / 0.1–1|Enemy hit damage / restraint time / durability cost.|
-|`DualWielder.FollowDelaySeconds` / `DualWielder.LeftOffset`|0.3 s / 0.5 m|0.05–2 s / 0.1–1.5 m|Copy delay and offset.|
-|`Porter.Capacity`|15|1–100|Total cargo weight limit; no item-count limit. HUD: weight, current cargo value and unloading time.|
-|`Porter.HoldSeconds`|3|1–30 s|Continuous solo hold before storage.|
-|`Porter.FullUnloadSeconds`|10|0–60 s|Full-load unloading time; scales with weight. 0 unloads immediately.|
-|`Porter.DropOnEnemyHit`|true|Boolean|Enemy HP damage scatters all cargo.|
-|`Porter.AllowedSizes`|Tiny,Small,Medium|Comma-separated: Tiny, Small, Medium, Big, Wide, Tall, VeryTall|Allowed sizes; empty/unknown entries allow no additional sizes.|
 |`Lifter.StrengthLevel`|200|0–200|Strength upgrade level while the role is active.|
-|`Twins.CarryStrengthMultiplier`|1.5|1–3|Co-carry Strength target multiplier, granted as temporary upgrades up to level 200.|
-|`Negotiator.DeliveryCarryDistance`|20|1–200 m|Personal carry distance outside the truck before release at extraction.|
-|`Negotiator.DeliveryAllowedSizes`|Big,Wide,Tall,VeryTall|Comma-separated native size names|Allowed delivery sizes; case/spacing ignored. Blank disables delivery earnings; unknown names ignored.|
-|`Negotiator.EnemyTier`|3|1–3|Exact native tier for a personal kill; Enhanced reward bonuses do not qualify.|
-|`Twins.CollisionReductionPercent`|50|0–100%|Co-carry collision loss prevented.|
-|`Twins.RestRadius` / `RestHoldSeconds`|3 / 3|0.5–10 m / 1–30 s|Rest distance / continuous crouched stillness without damage.|
-|`Twins.RestHealPercent` / `RestCooldownSeconds`|10 / 60|0–100% / 1–600 s|Shared max-HP healing / pair cooldown. Interrupted rest costs nothing.|
-|`Twins.RendezvousStartRange` / `RendezvousEndRange`|15 / 5|1–100 m / 0.5–100 m|Reunion assist start/end; smaller value is always the end.|
-|`Twins.RendezvousSpeedMultiplier`|1.25|1–2|Sprint multiplier toward a distant partner, rounded up to Speed levels.|
-|`Twins.DeliveryCarrySeconds` / `DeliveryRadius`|3 / 5|1–30 s / 0.5–20 m|Joint carry time outside delivery areas / both partners’ distance at delivery.|
-|`Twins.DeliveryBonusPercent` / `DeliveryStageLimit`|10 / 5000|0–100% / 0–10000|Value bonus / pair’s stage budget; each item pays once.|
 |`Lifter.LightItemStrengthLevel`|1|0–200|Holding level for light objects/shop equipment, excluding carts/bikes.|
 |`Stinker.BreakGraceSeconds`|0.5|0–10 s|Delay before a spawned uranium valuable breaks.|
 |`Influenza.IncubationSeconds`|30|0–300 s|Delay from infection to symptoms.|
@@ -181,6 +163,24 @@ Host: REPOConfig → RoleShuffle → role name. Defaults are listed above. Stren
 |`Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent`|60 / 30|0–100%|Chance per teammate per sneeze / utterance or message.|
 |`Influenza.SpeechSilenceSeconds`|0.75|0.1–5 s|Silent gap that starts a new utterance.|
 |`Influenza.SneezeNoiseRadius`|5|0–100 m|Enemy hearing distance, modified by enemy hearing. Zero disables the alert.|
+|`Twins.CarryStrengthMultiplier`|1.5|1–3|Co-carry Strength target multiplier, granted as temporary upgrades up to level 200.|
+|`Twins.CollisionReductionPercent`|50|0–100%|Co-carry collision loss prevented.|
+|`Twins.RestRadius` / `RestHoldSeconds`|3 / 3|0.5–10 m / 1–30 s|Rest distance / continuous crouched stillness without damage.|
+|`Twins.RestHealPercent` / `RestCooldownSeconds`|10 / 60|0–100% / 1–600 s|Shared max-HP healing / pair cooldown. Interrupted rest costs nothing.|
+|`Twins.RendezvousStartRange` / `RendezvousEndRange`|15 / 5|1–100 m / 0.5–100 m|Reunion assist start/end; smaller value is always the end.|
+|`Twins.RendezvousSpeedMultiplier`|1.25|1–2|Sprint multiplier toward a distant partner, rounded up to Speed levels.|
+|`Twins.DeliveryCarrySeconds` / `DeliveryRadius`|3 / 5|1–30 s / 0.5–20 m|Joint carry time outside delivery areas / both partners’ distance at delivery.|
+|`Twins.DeliveryBonusPercent` / `DeliveryStageLimit`|10 / 5000|0–100% / 0–10000|Value bonus / pair’s stage budget; each item pays once.|
+|`Porter.Capacity`|15|1–100|Total cargo weight limit; no item-count limit. HUD: weight, current cargo value and unloading time.|
+|`Porter.HoldSeconds`|3|1–30 s|Continuous solo hold before storage.|
+|`Porter.FullUnloadSeconds`|10|0–60 s|Full-load unloading time; scales with weight. 0 unloads immediately.|
+|`Porter.DropOnEnemyHit`|true|Boolean|Enemy HP damage scatters all cargo.|
+|`Porter.AllowedSizes`|Tiny,Small,Medium|Comma-separated: Tiny, Small, Medium, Big, Wide, Tall, VeryTall|Allowed sizes; empty/unknown entries allow no additional sizes.|
+|`DualWielder.FollowDelaySeconds` / `DualWielder.LeftOffset`|0.3 s / 0.5 m|0.05–2 s / 0.1–1.5 m|Copy delay and offset.|
+|`Rigger.EnemyDamageMultiplier` / `Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|2 / 1.5 / 0.5|1–10 / 1–3 / 0.1–1|Enemy hit damage / restraint time / durability cost.|
+|`Negotiator.DeliveryCarryDistance`|20|1–200 m|Personal carry distance outside the truck before release at extraction.|
+|`Negotiator.DeliveryAllowedSizes`|Big,Wide,Tall,VeryTall|Comma-separated native size names|Allowed delivery sizes; case/spacing ignored. Blank disables delivery earnings; unknown names ignored.|
+|`Negotiator.EnemyTier`|3|1–3|Exact native tier for a personal kill; Enhanced reward bonuses do not qualify.|
 
 ### Configuration
 
@@ -303,11 +303,6 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |Key|Default|Range / values|Effect|
 |---|---:|---|---|
 |`Tank.HealthUpgradeLevels`|21|0–200|Min Health level guaranteed to Tank.|
-|`Tracker.HealthUpgradeLevels`|3|0–200|Min Health level; preserves stronger Base upgrades.|
-|`Tracker.EnemyDetectionRange`|25|1–100|Enemy detection distance (m), including through walls.|
-|`Tracker.DangerAlertRange`|8|0–100|Close warning distance (m), capped at detection range. 0 disables warnings.|
-|`Tracker.NotificationIntervalSeconds`|20|5–120|Min report interval (s). Close warnings bypass normal reports' wait, with their own same-length interval.|
-|`Tracker.DistanceChangeThreshold`|5|1–50|Distance change (m) for an update. Target changes, turns of 60° or above/below changes also update.|
 |`Runner.SpeedUpgradeLevels`|6|0–200|Min Speed level guaranteed to Runner.|
 |`Runner.StaminaUpgradeLevels`|46|0–200|Min Stamina level guaranteed to Runner.|
 |`Jumper.ExtraJumpUpgradeLevels`|10|0–200|Extra Jump levels granted to Jumper.|
@@ -315,6 +310,11 @@ Each standard role has host settings `<Role>.Enabled = true` and `<Role>.Weight 
 |`Climber.ClimbUpgradeLevels`|50|0–200|Tumble Climb levels granted to Climber.|
 |`Climber.RangeUpgradeLevels`|20|0–200|Range levels granted to Climber.|
 |`Flyer.WingsUpgradeLevels`|10|0–200|Tumble Wings levels granted to Flyer.|
+|`Tracker.HealthUpgradeLevels`|3|0–200|Min Health level; preserves stronger Base upgrades.|
+|`Tracker.EnemyDetectionRange`|25|1–100|Enemy detection distance (m), including through walls.|
+|`Tracker.DangerAlertRange`|8|0–100|Close warning distance (m), capped at detection range. 0 disables warnings.|
+|`Tracker.NotificationIntervalSeconds`|20|5–120|Min report interval (s). Close warnings bypass normal reports' wait, with their own same-length interval.|
+|`Tracker.DistanceChangeThreshold`|5|1–50|Distance change (m) for an update. Target changes, turns of 60° or above/below changes also update.|
 |`Ghost.DeathHeadBatteryUpgradeLevels`|50|0–200|Death Head Battery levels granted to Ghost.|
 |`Ghost.HealRadius`|5|0–30|Healing radius around the head (m).|
 |`Ghost.HealAmount`|1|0–100|HP per ally per pulse.|
@@ -653,25 +653,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 |設定|初期値|範囲|効果|
 |---|---|---|---|
-|`Rigger.EnemyDamageMultiplier` / `Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|2 / 1.5 / 0.5|1～10 / 1～3 / 0.1～1|敵への命中ダメージ／拘束時間／耐久消費。|
-|`DualWielder.FollowDelaySeconds` / `DualWielder.LeftOffset`|0.3秒 / 0.5m|0.05～2秒 / 0.1～1.5m|追従の遅延と左への距離。|
-|`Porter.Capacity`|15|1～100|収納重量の上限。個数制限なし。HUDに重量・収納品の現在合計金額・荷下ろし残り時間を表示。|
-|`Porter.HoldSeconds`|3|1～30秒|収納まで1人でつかみ続ける時間。|
-|`Porter.FullUnloadSeconds`|10|0～60秒|満載時の荷下ろし時間。重量に比例。0なら即座に完了。|
-|`Porter.DropOnEnemyHit`|true|真偽値|敵からHPダメージで全収納品をばらまく。|
-|`Porter.AllowedSizes`|Tiny,Small,Medium|Tiny・Small・Medium・Big・Wide・Tall・VeryTallをカンマ区切り|収納可能サイズ。空欄・不明な名前は追加許可しない。|
 |`Lifter.StrengthLevel`|200|0～200|役職中に付与するStrengthアップグレードのレベル。|
-|`Twins.CarryStrengthMultiplier`|1.5|1～3|共同運搬中のStrength目標倍率。上限Lv200まで一時アップグレードを付与。|
-|`Negotiator.DeliveryCarryDistance`|20|1–200 m|納品所で手放すまでに本人がトラック外で運ぶ距離。|
-|`Negotiator.DeliveryAllowedSizes`|Big,Wide,Tall,VeryTall|サイズ名のカンマ区切り|納品対象サイズ。大文字小文字・周囲空白は無視。空欄は納品獲得なし、不明名は無視。|
-|`Negotiator.EnemyTier`|3|1–3|本人討伐の対象となる敵本来のTier。完全一致で、Enhanced報酬補正は対象外。|
-|`Twins.CollisionReductionPercent`|50|0–100%|共同運搬時の衝突価値損失を軽減。|
-|`Twins.RestRadius` / `RestHoldSeconds`|3 / 3|0.5–10 m / 1–30 s|休憩距離 / 被弾せずしゃがんで静止する時間。|
-|`Twins.RestHealPercent` / `RestCooldownSeconds`|10 / 60|0–100% / 1–600 s|共有最大HPに対する回復率 / ペア共通クールタイム。中断は消費なし。|
-|`Twins.RendezvousStartRange` / `RendezvousEndRange`|15 / 5|1–100 m / 0.5–100 m|合流支援の開始/終了距離。小さい方を終了距離として使用。|
-|`Twins.RendezvousSpeedMultiplier`|1.25|1–2|離れた相方へ走る倍率。Speedレベルへ切り上げ。|
-|`Twins.DeliveryCarrySeconds` / `DeliveryRadius`|3 / 5|1–30 s / 0.5–20 m|納品区域外で共同運搬する時間 / 納品時の2人と品の距離。|
-|`Twins.DeliveryBonusPercent` / `DeliveryStageLimit`|10 / 5000|0–100% / 0–10000|共同納品の価値加算率 / ペアのステージ予算。品ごとに1回。|
 |`Lifter.LightItemStrengthLevel`|1|0～200|軽量品・ショップ装備（カート・バイクを除く）を保持するStrengthレベル。|
 |`Stinker.BreakGraceSeconds`|0.5|0～10秒|出現したウラン貴重品が壊れるまでの猶予。|
 |`Influenza.IncubationSeconds`|30|0～300秒|感染から発症までの時間。|
@@ -682,6 +664,24 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 |`Influenza.SneezeChancePercent` / `Influenza.SpeechChancePercent`|60 / 30|0～100％|くしゃみ／発話・投稿ごとの、仲間1人あたりの感染確率。|
 |`Influenza.SpeechSilenceSeconds`|0.75|0.1～5秒|別の発話として判定する無音時間。|
 |`Influenza.SneezeNoiseRadius`|5|0～100m|敵に聞こえる基本距離。敵の聴力で変化。0で反応なし。|
+|`Twins.CarryStrengthMultiplier`|1.5|1～3|共同運搬中のStrength目標倍率。上限Lv200まで一時アップグレードを付与。|
+|`Twins.CollisionReductionPercent`|50|0–100%|共同運搬時の衝突価値損失を軽減。|
+|`Twins.RestRadius` / `RestHoldSeconds`|3 / 3|0.5–10 m / 1–30 s|休憩距離 / 被弾せずしゃがんで静止する時間。|
+|`Twins.RestHealPercent` / `RestCooldownSeconds`|10 / 60|0–100% / 1–600 s|共有最大HPに対する回復率 / ペア共通クールタイム。中断は消費なし。|
+|`Twins.RendezvousStartRange` / `RendezvousEndRange`|15 / 5|1–100 m / 0.5–100 m|合流支援の開始/終了距離。小さい方を終了距離として使用。|
+|`Twins.RendezvousSpeedMultiplier`|1.25|1–2|離れた相方へ走る倍率。Speedレベルへ切り上げ。|
+|`Twins.DeliveryCarrySeconds` / `DeliveryRadius`|3 / 5|1–30 s / 0.5–20 m|納品区域外で共同運搬する時間 / 納品時の2人と品の距離。|
+|`Twins.DeliveryBonusPercent` / `DeliveryStageLimit`|10 / 5000|0–100% / 0–10000|共同納品の価値加算率 / ペアのステージ予算。品ごとに1回。|
+|`Porter.Capacity`|15|1～100|収納重量の上限。個数制限なし。HUDに重量・収納品の現在合計金額・荷下ろし残り時間を表示。|
+|`Porter.HoldSeconds`|3|1～30秒|収納まで1人でつかみ続ける時間。|
+|`Porter.FullUnloadSeconds`|10|0～60秒|満載時の荷下ろし時間。重量に比例。0なら即座に完了。|
+|`Porter.DropOnEnemyHit`|true|真偽値|敵からHPダメージで全収納品をばらまく。|
+|`Porter.AllowedSizes`|Tiny,Small,Medium|Tiny・Small・Medium・Big・Wide・Tall・VeryTallをカンマ区切り|収納可能サイズ。空欄・不明な名前は追加許可しない。|
+|`DualWielder.FollowDelaySeconds` / `DualWielder.LeftOffset`|0.3秒 / 0.5m|0.05～2秒 / 0.1～1.5m|追従の遅延と左への距離。|
+|`Rigger.EnemyDamageMultiplier` / `Rigger.EnemyHoldDurationMultiplier` / `Rigger.DurabilityConsumptionMultiplier`|2 / 1.5 / 0.5|1～10 / 1～3 / 0.1～1|敵への命中ダメージ／拘束時間／耐久消費。|
+|`Negotiator.DeliveryCarryDistance`|20|1–200 m|納品所で手放すまでに本人がトラック外で運ぶ距離。|
+|`Negotiator.DeliveryAllowedSizes`|Big,Wide,Tall,VeryTall|サイズ名のカンマ区切り|納品対象サイズ。大文字小文字・周囲空白は無視。空欄は納品獲得なし、不明名は無視。|
+|`Negotiator.EnemyTier`|3|1–3|本人討伐の対象となる敵本来のTier。完全一致で、Enhanced報酬補正は対象外。|
 
 ### 設定
 
@@ -810,11 +810,6 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |キー|デフォルト|範囲・値|内容|
 |---|---:|---|---|
 |`Tank.HealthUpgradeLevels`|21|0～200|Tankに保証する最低Healthレベル。|
-|`Tracker.HealthUpgradeLevels`|3|0～200|Healthの最低レベル。より高い基礎強化を維持。|
-|`Tracker.EnemyDetectionRange`|25|1～100|壁越しを含む敵の検知距離（m）。|
-|`Tracker.DangerAlertRange`|8|0～100|接近警告の距離（m）。検知距離が上限、0で警告無効。|
-|`Tracker.NotificationIntervalSeconds`|20|5～120|通常通知の最短間隔（秒）。接近警告は通常の待ち時間を無視しますが、警告同士には同じ間隔を設けます。|
-|`Tracker.DistanceChangeThreshold`|5|1～50|更新する距離変化（m）。対象変更、方向が60度変化、上下の変化でも更新。|
 |`Runner.SpeedUpgradeLevels`|6|0～200|Runnerに保証する最低Speedレベル。|
 |`Runner.StaminaUpgradeLevels`|46|0～200|Runnerに保証する最低Staminaレベル。|
 |`Jumper.ExtraJumpUpgradeLevels`|10|0～200|Jumperへ付与するExtra Jumpレベル。|
@@ -822,6 +817,11 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 |`Climber.ClimbUpgradeLevels`|50|0～200|Climberへ付与するTumble Climbレベル。|
 |`Climber.RangeUpgradeLevels`|20|0～200|Climberへ付与するRangeレベル。|
 |`Flyer.WingsUpgradeLevels`|10|0～200|Flyerへ付与するTumble Wingsレベル。|
+|`Tracker.HealthUpgradeLevels`|3|0～200|Healthの最低レベル。より高い基礎強化を維持。|
+|`Tracker.EnemyDetectionRange`|25|1～100|壁越しを含む敵の検知距離（m）。|
+|`Tracker.DangerAlertRange`|8|0～100|接近警告の距離（m）。検知距離が上限、0で警告無効。|
+|`Tracker.NotificationIntervalSeconds`|20|5～120|通常通知の最短間隔（秒）。接近警告は通常の待ち時間を無視しますが、警告同士には同じ間隔を設けます。|
+|`Tracker.DistanceChangeThreshold`|5|1～50|更新する距離変化（m）。対象変更、方向が60度変化、上下の変化でも更新。|
 |`Ghost.DeathHeadBatteryUpgradeLevels`|50|0～200|Ghostへ付与するDeath Head Batteryレベル。|
 |`Ghost.HealRadius`|5|0～30|頭からの回復範囲（m）。|
 |`Ghost.HealAmount`|1|0～100|1回・1人あたりの回復HP。|
