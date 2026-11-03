@@ -55,6 +55,7 @@
     <Compile Include="TwinsRules.cs" />
     <Compile Include="TwinsRuntime.cs" />
     <Compile Include="TwinsPatches.cs" />
+    <Compile Include="TwinsHealthUpgradePatch.cs" />
     <Compile Include="PorterRules.cs" />
     <Compile Include="PorterRuntime.cs" />
     <Compile Include="PorterStorage.cs" />

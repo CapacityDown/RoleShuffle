@@ -37,6 +37,10 @@ namespace UnityEngine
 }
 namespace HarmonyLib
 {
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class HarmonyPatch(Type type,string name):Attribute { public Type Type=type; public string Name=name; }
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class HarmonyPrefix:Attribute { }
     public static class AccessTools
     {
         public static System.Reflection.FieldInfo? Field(Type t,string name)=>t.GetField(name,System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.NonPublic);
@@ -59,6 +63,7 @@ public class PlayerAvatar : Component
     public PhotonView photonView=new();
     public bool isCrouching=false,isSprinting=false,deadSet=false;
     public int Deaths,Revivals;
+    public bool Local;
     public PlayerAvatar()
     {
         playerHealth.Player=this;
@@ -111,6 +116,29 @@ public class PunManager
     public static PunManager instance=new();
     public Dictionary<string,int> Saved=new();
     public void UpdateStat(string key,string id,int health)=>Saved[id]=health;
+    // Installed v0.5.0: upgrade the level and maximum on every peer, heal only the owner.
+    public int UpgradePlayerHealth(string id,int value=1)
+    {
+        UpgradeService.TryGetLevels(id,out var levels);
+        int before=levels.GetValueOrDefault("playerUpgradeHealth");
+        int delta=Math.Max(0,before+value)-before;
+        if(delta==0)return before;
+        UpgradeService.Levels[id]["playerUpgradeHealth"]=before+delta;
+        UpdateHealthRightAway(id,delta);
+        return before+delta;
+    }
+    private void UpdateHealthRightAway(string id,int delta)
+    {
+        TwinsHealthUpgradePatch.Prefix(id,delta);
+        var p=UnityEngine.Object.World.OfType<PlayerAvatar>().Single(x=>x.Id==id);
+        p.playerHealth.maxHealth+=20*delta;
+        if(p.Local && !p.deadSet)
+        {
+            int before=p.playerHealth.health;
+            p.playerHealth.health=Math.Clamp(before+20*delta,0,p.playerHealth.maxHealth);
+            StageRoleController.Current?.ObserveTwinsHealth(p,before,p.playerHealth.health,p.playerHealth.maxHealth);
+        }
+    }
 }
 namespace REPOJP.StageRoles
 {
@@ -145,6 +173,11 @@ namespace REPOJP.StageRoles
     }
     internal class RoleNotifier
     { public void NotifyConditional(PlayerAvatar p,string text,Func<bool> condition){} public void NotifyResponse(PlayerAvatar p,string text){} }
+    internal sealed class StageRolesPlugin
+    {
+        internal static StageRolesPlugin Instance=new();
+        internal StageRoleController? Controller=>StageRoleController.Current;
+    }
     internal sealed partial class StageRoleController
     {
         internal static StageRoleController? Current;
@@ -152,9 +185,15 @@ namespace REPOJP.StageRoles
         private readonly StageRolesConfig _config=new();
         private readonly RoleNotifier _notifier=new();
         internal bool RoleAssignmentsReady=true;
-        private static bool IsAuthority()=>true;
+        internal bool Authority=true;
+        private bool IsAuthority()=>Authority;
         internal StageRoleController() { Current=this;Time.time=0;UnityEngine.Object.World.Clear();UpgradeService.Levels.Clear();UpgradeService.Calls.Clear(); }
-        internal void Start(PlayerAvatar a,PlayerAvatar b){_assignments.Add(new(a.Id,a));_assignments.Add(new(b.Id,b));BeginTwins();}
+        internal void Start(PlayerAvatar a,PlayerAvatar b)
+        {
+            _assignments.Add(new(a.Id,a));_assignments.Add(new(b.Id,b));
+            foreach(var p in new[]{a,b})UpgradeService.Levels[p.Id]=new(){["playerUpgradeHealth"]=(p.playerHealth.maxHealth-100)/20};
+            BeginTwins();
+        }
         internal void Tick(float t){Time.time=t;TickTwins();}
         internal void End()=>StopTwins();
         internal void Depart(PlayerAvatar p){_assignments.RemoveAll(a=>a.Player==p);TickTwins();}

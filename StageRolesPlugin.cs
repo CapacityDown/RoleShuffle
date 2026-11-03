@@ -83,6 +83,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         {
             _harmony.PatchAll(typeof(LifecyclePatches));
             _harmony.PatchAll(typeof(TwinsPatches));
+            _harmony.PatchAll(typeof(TwinsHealthUpgradePatch));
             _harmony.PatchAll(typeof(RoleExpressionPatches));
             _harmony.PatchAll(typeof(NinjaVisionPatch));
             _harmony.PatchAll(typeof(NinjaVoiceInvestigationPatch));

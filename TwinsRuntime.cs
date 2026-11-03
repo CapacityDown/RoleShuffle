@@ -14,6 +14,7 @@ internal sealed partial class StageRoleController
         internal readonly RoleAssignment[] Members = { first, second };
         internal readonly PlayerAvatar[] Players = { first.Player, second.Player };
         internal readonly int[] Maximum = new int[2];
+        internal readonly int[] PendingUpgradeHealing = new int[2];
         internal readonly int[] SpeedBonus = new int[2];
         internal readonly Vector3[] Positions = { first.Player.transform.position, second.Player.transform.position };
         internal readonly TwinsCooperation Cooperation = new();
@@ -88,6 +89,25 @@ internal sealed partial class StageRoleController
         }
     }
 
+    internal void ApplyTwinsHealthUpgrade(string steamId, int levels)
+    {
+        TwinPair? pair = _twins;
+        if (pair == null || !RoleAssignmentsReady || !IsAuthority() || levels == 0) return;
+        for (int i = 0; i < pair.Members.Length; i++)
+        {
+            if (pair.Members[i].SteamId != steamId) continue;
+            // The native hook receives the actual clamped level delta, once per player.
+            int before = pair.Maximum[i];
+            pair.Maximum[i] = (int)Math.Clamp((long)before + 20L * levels, 1L, int.MaxValue / 2L);
+            int restored = Math.Min(pair.PendingUpgradeHealing[i], Math.Max(0, pair.Maximum[i] - before));
+            pair.PendingUpgradeHealing[i] = levels > 0 ? pair.PendingUpgradeHealing[i] - restored : 0;
+            if (!pair.Dead && restored > 0)
+                pair.Health = (int)Math.Min(pair.SharedMaximum, (long)pair.Health + restored);
+            pair.Dirty = true;
+            return;
+        }
+    }
+
     internal void ObserveTwinsHealth(PlayerAvatar player, int previous, int current, int maximum)
     {
         TwinPair? pair = _twins;
@@ -100,14 +120,20 @@ internal sealed partial class StageRoleController
                 pair.Health = Math.Max(pair.Health, Math.Clamp(current, 1, pair.SharedMaximum));
             return;
         }
-        if (maximum != pair.SharedMaximum)
-        {
-            int i = TwinIndex(player);
-            pair.Maximum[i] = (int)Math.Clamp((long)pair.Maximum[i] + maximum - pair.SharedMaximum, 1L, int.MaxValue / 2L);
-        }
+        // Owner packets can carry the previous shared maximum, or arrive before the
+        // native upgrade event. Only actual upgrade deltas change each contribution.
         int delta = current - previous;
         if (delta < 0) pair.Cooperation.InterruptRest();
-        pair.Health = (int)Math.Clamp((long)pair.Health + delta, 0L, pair.SharedMaximum);
+        long next = (long)pair.Health + delta;
+        if (delta > 0 && maximum > pair.SharedMaximum && next > pair.SharedMaximum)
+        {
+            // An owner's native +20 heal may precede the host's item event. Keep
+            // only the overflow, and release it when the matching upgrade arrives.
+            int i = TwinIndex(player);
+            pair.PendingUpgradeHealing[i] = (int)Math.Min((long)maximum - pair.SharedMaximum,
+                pair.PendingUpgradeHealing[i] + next - pair.SharedMaximum);
+        }
+        pair.Health = (int)Math.Clamp(next, 0L, pair.SharedMaximum);
         pair.Dirty = true;
         if (current == 0 || pair.Health == 0) TwinDied(player);
     }
@@ -119,6 +145,7 @@ internal sealed partial class StageRoleController
         if (pair.Health > 0 && TwinDead?.GetValue(player) is not true && PlayerState.TryGetCurrentHealth(player, out int current) && current > 0) return;
         if (pair.DeathSent && pair.RevivalSource == null) return;
         pair.Health = 0;
+        Array.Clear(pair.PendingUpgradeHealing, 0, pair.PendingUpgradeHealing.Length);
         pair.Dead = true;
         pair.DeathSent = true;
         pair.RevivalSource = null;
@@ -215,6 +242,7 @@ internal sealed partial class StageRoleController
     {
         TwinPair? pair = _twins;
         if (pair == null || !pair.Dirty || (pair.Dead && pair.RevivalSource != null)) return;
+        pair.Health = Math.Clamp(pair.Health, 0, pair.SharedMaximum);
         pair.Dirty = false;
         foreach (PlayerAvatar player in pair.Players) WriteTwinsHealth(player, pair.Health, pair.SharedMaximum);
     }

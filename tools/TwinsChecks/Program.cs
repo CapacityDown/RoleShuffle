@@ -43,6 +43,81 @@ c.Tick(.1f);c.Tick(3.2f);item.GetComponent<RoomVolumeCheck>()!.CurrentRooms.Add(
 Check(item.GetComponent<ValuableObject>()!.dollarValueCurrent==11000,"Qualified cargo gets ten percent on release into truck");
 c.Tick(4);c.TwinsCargoReleased(item);Check(item.GetComponent<ValuableObject>()!.dollarValueCurrent==11000,"Delivery cannot pay repeatedly");
 item.Holders.Remove("b");Check(c.TwinsStrengthUpgradeMultiplier(a)==1,"Releasing either holder removes the buff");c.End();
+// The host observes a vanilla remote upgrade before any owner health packet arrives.
+(c,a,b)=Pair();PunManager.instance.UpgradePlayerHealth("a");c.Tick(.1f);
+Check(a.playerHealth.maxHealth==260 && b.playerHealth.maxHealth==260,"A remote Health upgrade publishes the new shared maximum without waiting for healing");
+Check(c.Pool==160,"Maximum-only synchronization does not fabricate healing");
+a.playerHealth.UpdateHealthRPC(180,260,false,false);c.Tick(.2f);
+Check(c.Pool==180 && b.playerHealth.health==180,"Native owner upgrade healing is shared once");
+c.End();
+Check(a.playerHealth.maxHealth==140 && b.playerHealth.maxHealth==120,"Unlink retains the upgrade only on its original recipient");
+
+// A host-owned upgrade heals through the ordinary owner callback, exactly once.
+(c,a,b)=Pair();a.Local=true;PunManager.instance.UpgradePlayerHealth("a");c.Tick(.1f);
+Check(c.Pool==180 && a.playerHealth.maxHealth==260 && b.playerHealth.maxHealth==260,"Host-owned upgrade shares maximum and its one native heal");
+b.playerHealth.UpdateHealthRPC(180,240,false,false);c.Tick(.2f);
+Check(c.Pool==180 && b.playerHealth.maxHealth==260,"A partner's stale maximum cannot undo an upgrade");
+a.playerHealth.UpdateHealthRPC(180,280,false,false);c.Tick(.3f);
+Check(a.playerHealth.maxHealth==260 && c.Pool==180,"A late client maximum cannot count the same upgrade twice");
+c.End();
+Check(a.playerHealth.maxHealth==140 && b.playerHealth.maxHealth==120 && a.playerHealth.health==96 && b.playerHealth.health==83,"Unlink keeps original recipient levels and shared remaining-HP proportions");
+
+// The owner can publish its healed HP before the host processes the item event.
+(c,a,b)=Pair();a.playerHealth.UpdateHealthRPC(180,260,false,false);
+PunManager.instance.UpgradePlayerHealth("a");c.Tick(.1f);
+Check(c.Pool==180 && a.playerHealth.maxHealth==260 && b.playerHealth.maxHealth==260,"Owner health packet before native event does not double the maximum");
+c.End();
+
+// Full-health owner packets must not lose their native upgrade healing while waiting.
+(c,a,b)=Pair();c.Hit(a,-80);c.Tick(.1f);
+a.playerHealth.UpdateHealthRPC(260,260,false,false);c.Tick(.2f);
+Check(c.Pool==240 && b.playerHealth.maxHealth==240,"Unconfirmed larger owner maximum cannot raise the authoritative pool");
+a.playerHealth.UpdateHealthRPC(260,260,false,false);
+PunManager.instance.UpgradePlayerHealth("a");c.Tick(.3f);
+Check(c.Pool==260 && a.playerHealth.health==260 && b.playerHealth.maxHealth==260,"An early full-health owner packet preserves its one upgrade heal, even if repeated");
+c.End();
+(c,a,b)=Pair();c.Hit(a,-80);c.Tick(.1f);
+a.playerHealth.UpdateHealthRPC(260,260,false,false);c.Hit(b,999);c.Tick(.2f);
+PunManager.instance.UpgradePlayerHealth("a");c.Tick(.3f);
+Check(c.Pool==0 && a.Revivals==0 && b.Revivals==0,"Death discards deferred upgrade healing");
+c.End();
+
+// Both personal uses, or one retained AllPlayers use, have two real recipients.
+(c,a,b)=Pair();PunManager.instance.UpgradePlayerHealth("a");PunManager.instance.UpgradePlayerHealth("b");c.Tick(.1f);
+Check(a.playerHealth.maxHealth==280 && b.playerHealth.maxHealth==280,"Two real player increments contribute once each to shared maximum");
+a.playerHealth.UpdateHealthRPC(180,260,false,false);c.Tick(.2f);
+b.playerHealth.UpdateHealthRPC(180,260,false,false);c.Tick(.3f);
+Check(a.playerHealth.maxHealth==280 && b.playerHealth.maxHealth==280,"Delayed packets from both upgraded owners preserve the combined maximum");
+c.End();Check(a.playerHealth.maxHealth==140 && b.playerHealth.maxHealth==140,"Both recipients keep their own increment after unlink");
+
+(c,a,b)=Pair();a.Local=true;c.Hit(a,-80);c.Tick(.1f);
+PunManager.instance.UpgradePlayerHealth("a");c.Tick(.2f);
+Check(c.Pool==260 && b.playerHealth.health==260 && b.playerHealth.maxHealth==260,"A full pool gains exactly 20 current and maximum HP");
+PunManager.instance.UpgradePlayerHealth("a",-100);c.Tick(.3f);
+Check(c.Pool==220 && a.playerHealth.maxHealth==220 && b.playerHealth.maxHealth==220,"Native clamped level reduction is applied once, without double damage");
+PunManager.instance.UpgradePlayerHealth("a",-1);c.Tick(.4f);
+Check(c.Pool==220 && b.playerHealth.maxHealth==220,"No-op upgrade below level zero cannot change shared health");
+c.End();Check(a.playerHealth.maxHealth==100 && b.playerHealth.maxHealth==120,"Clamped reduction restores the correct individual maximum");
+
+(c,a,b)=Pair();PunManager.instance.UpgradePlayerHealth("b",3);c.Tick(.1f);
+Check(a.playerHealth.maxHealth==300 && b.playerHealth.maxHealth==300,"Multi-level Health increases use the actual level delta");
+c.End();
+
+(c,a,b)=Pair();c.Hit(a,999);c.Tick(.1f);PunManager.instance.UpgradePlayerHealth("a");c.Tick(.2f);
+Check(c.Pool==0 && a.playerHealth.maxHealth==260 && b.playerHealth.maxHealth==260 && a.Revivals==0 && b.Revivals==0,"Maximum increase while dead never heals or revives the pair");
+a.Revive();a.playerHealth.UpdateHealthRPC(25,240,false,false);c.Tick(.7f);
+Check(c.Pool==25 && a.playerHealth.maxHealth==260 && b.playerHealth.maxHealth==260,"Paired revival retains the upgraded shared maximum");
+c.End();
+
+(c,a,b)=Pair();var outsider=new PlayerAvatar{Id="outsider"};PunManager.instance.UpgradePlayerHealth("outsider");c.Tick(.1f);
+Check(a.playerHealth.maxHealth==240 && b.playerHealth.maxHealth==240 && outsider.playerHealth.maxHealth==140,"Other players' upgrades do not alter the pair");
+c.Authority=false;TwinsHealthUpgradePatch.Prefix("a",1);c.Authority=true;c.Tick(.2f);
+Check(a.playerHealth.maxHealth==240 && b.playerHealth.maxHealth==240,"Only the authority changes the shared maximum");
+c.RoleAssignmentsReady=false;TwinsHealthUpgradePatch.Prefix("a",1);c.RoleAssignmentsReady=true;c.Tick(.3f);
+Check(a.playerHealth.maxHealth==240 && b.playerHealth.maxHealth==240,"Inactive assignments do not consume upgrade deltas");
+c.End();TwinsHealthUpgradePatch.Prefix("a",1);
+Check(a.playerHealth.maxHealth==120 && b.playerHealth.maxHealth==120,"Upgrades after unlink leave the former pair alone");
+
 var state=new TwinsCooperation();state.ObserveCarry(1,true,false,0,3);state.ObserveCarry(1,true,false,3,3);
 Check(state.Deliver(1,true,false,10000,10,5000)==0,"Both players must be near delivery");
 Check(state.Deliver(1,true,true,100000,10,5000)==5000&&state.DeliveryBonusUsed==5000,"Bonus capped before dispatch");

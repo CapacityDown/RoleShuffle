@@ -2,6 +2,7 @@
   <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
   <ItemGroup>
     <Compile Include="../../TwinsRuntime.cs" Link="TwinsRuntime.cs" />
+    <Compile Include="../../TwinsHealthUpgradePatch.cs" Link="TwinsHealthUpgradePatch.cs" />
     <Compile Include="../../TwinsRules.cs" Link="TwinsRules.cs" />
     <Compile Include="../../StageRole.cs" Link="StageRole.cs" />
   </ItemGroup>
