@@ -167,7 +167,8 @@ Rules:
 - Use the exact release version without a leading `v`, matching the current RoleShuffle convention.
 - Preserve earlier published release history. Correct factual errors or reword technical explanations into player-facing effects when requested; do not add unpublished development history.
 - Use short, user-visible `Added`, `Changed`, `Fixed`, `Improved`, or `Removed` statements.
-- Consolidate related implementation work into one user-facing bullet.
+- Keep each distinct change in its own bullet, even when several changes support the same game version. Group only details describing the same change.
+- For v5.0.0, list R.E.P.O. v0.5.0 compatibility first as a standalone item.
 - Describe each version's final net changes relative to the previous released version. Do not list intermediate changes, reversals, or fixes to features introduced within the same version; incorporate their final behavior into the feature summary.
 - Do not include Japanese, development diary entries, debugging steps, private field names, method names, raw stack traces, or build hashes.
 - Mention compatibility changes when they alter observable behavior.

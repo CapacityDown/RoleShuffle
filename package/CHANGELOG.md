@@ -1,14 +1,28 @@
 ## 5.0.0
-- Updated compatibility for R.E.P.O. v0.5.0, including Engineer support for new special valuables, DualWielder hits on objects, scenery and players, the Roles menu, Japanese text display and mouse-wheel scrolling. Current Roles shows concise role overviews.
+- Updated compatibility for R.E.P.O. v0.5.0.
+- Added Engineer support for new special valuables.
+- Added DualWielder hits on objects, scenery and players.
+- Fixed the Roles menu not opening.
+- Improved Japanese text display.
+- Fixed mouse-wheel scrolling moving too little.
+- Changed Current Roles to show concise role overviews.
 - Save and apply three custom role-selection presets, retained across restarts, with confirmation before overwriting.
 - With testing enabled, hosts can change player roles from the Roles menu during a stage, including selecting two living players for Twins.
 - Roles menus show your current draw eligibility and exclusion reasons based on player count, settings, Base Upgrades, role history and stage items. Unconfirmed and conditional choices are identified.
-- Musician supports Pan Flute, Harmonica and Mouth Harp as well as the existing instruments. All instruments share a configurable one-second healing cooldown and a 1000 HP stage budget for self and allies. The resource HUD shows the remaining budget.
+- Added Musician support for Pan Flute, Harmonica and Mouth Harp.
+- Added a configurable one-second healing cooldown shared by all Musician instruments.
+- Added a 1000 HP stage healing budget for Musician, shared between self and allies. The resource HUD shows the remaining budget.
 - Added Negotiator: earn up to two guaranteed shop discounts per stage. By default, earn one for personally carrying a Big/Wide/Tall/VeryTall valuable at least 20 m outside the truck and releasing it at extraction, and one for a personal Tier3 kill. Delivery distance, allowed valuable sizes and the exact enemy tier are configurable. Each source rewards once. No rejection damage or shared attempts are used. Death or ability loss revokes all rights and prevents re-earning that stage; shop exit expires unused rights. Includes shop role display, remaining-rights HUD and notices. Available in Standard and Cooperative presets.
 - Added Rigger: Human Adventure Cable deals 2x direct hit damage to enemies, holds them 1.5x as long and consumes half durability on hits and throws. All three bonuses are configurable. Normally excluded without a cable; available in Standard, Cooperative and Challenge presets.
-- Menus support all 21 game languages and follow the game setting automatically, with Arabic text direction, Thai text wrapping and regional Spanish/Portuguese translations. Roulette upgrade names use each player’s game-language translations; long names fit within the reel.
-- Strength role bonuses use upgrades: Lifter sets a configurable level (default 200), King grants up to five temporary levels, and Twins co-carrying grants temporary levels targeting about 1.5x Strength (level cap 200). Heavy-object handling follows the game; temporary levels are removed when their effect ends.
-- Eased Courier with a 120-second HP-loss pause at stage start and after revival. Delivery pauses now last 90/120/180/240/240/240/300 seconds for Tiny/Small/Medium/Big/Wide/Tall/VeryTall valuables. Automatic HP loss stops after the final extraction for the rest of the stage.
+- Menus support all 21 game languages and follow the game setting automatically, with Arabic text direction, Thai text wrapping and regional Spanish/Portuguese translations.
+- Roulette upgrade names use each player’s game-language translations; long names fit within the reel.
+- Changed Strength role bonuses to use upgrades. Heavy-object handling follows the game; temporary levels are removed when their effect ends.
+- Changed Lifter to set a configurable Strength upgrade level (default 200).
+- Changed King to grant up to five temporary Strength upgrade levels.
+- Changed Twins co-carrying to grant temporary Strength upgrade levels targeting about 1.5x Strength (level cap 200).
+- Eased Courier with a 120-second HP-loss pause at stage start and after revival.
+- Extended Courier delivery pauses to 90/120/180/240/240/240/300 seconds for Tiny/Small/Medium/Big/Wide/Tall/VeryTall valuables.
+- Stopped Courier automatic HP loss after the final extraction for the rest of the stage.
 
 ## 4.6.0
 - Split the role guide into Overview for short ability summaries and Details for configured values, conditions and limits.
