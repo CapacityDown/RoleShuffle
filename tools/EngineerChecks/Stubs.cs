@@ -9,6 +9,7 @@ namespace UnityEngine
         public T[] GetComponentsInChildren<T>(bool inactive) => Owner!.Components.OfType<T>().ToArray();
         public T? GetComponent<T>() => Owner!.Components.OfType<T>().FirstOrDefault();
         public T? GetComponentInChildren<T>(bool inactive) => GetComponent<T>();
+        public T? GetComponentInParent<T>() => GetComponent<T>();
     }
     public class GameObject { public bool activeSelf = true; public void SetActive(bool active) => activeSelf = active; }
     public class Transform { public Quaternion localRotation = Quaternion.Euler(10, 20, 30); }
@@ -18,8 +19,8 @@ namespace UnityEngine
         public static Quaternion Euler(float x, float y, float z) => new(x, y, z);
     }
     public class LineRenderer : Component { }
-    public enum ParticleSystemStopBehavior { StopEmittingAndClear }
-    public class ParticleSystem
+    public enum ParticleSystemStopBehavior { StopEmittingAndClear, StopEmitting }
+    public class ParticleSystem : Component
     {
         public bool isPlaying = true;
         public void Stop(bool children, ParticleSystemStopBehavior behavior) => isPlaying = false;
@@ -28,12 +29,21 @@ namespace UnityEngine
 public class PhysGrabObject : UnityEngine.Component
 {
     public readonly List<UnityEngine.Component> Components = new();
-    public PhysGrabObject() { Owner = this; Components.Add(this); }
+    public Photon.Pun.PhotonView? photonView = new();
+    public List<PhysGrabber> playerGrabbing = new();
+    public PhysGrabObject() { Owner = this; Components.Add(this); Add(photonView!); }
     public T Add<T>(T component) where T : UnityEngine.Component { component.Owner = this; Components.Add(component); return component; }
 }
 public class Trap : UnityEngine.Component { [MethodImpl(MethodImplOptions.NoInlining)] public void TrapActivate() { } }
 public class ValuableHorseOnWheels : Trap
 {
+    public enum State { Inactive, Idle, MoveForward }
+    private State currentState;
+    public Sound? soundMove = new();
+    public bool MaterialReset;
+    private void UpdateState(State state) => currentState = state;
+    private void StateIdle(bool fixedUpdate) { if (!fixedUpdate) MaterialReset = true; }
+
     [MethodImpl(MethodImplOptions.NoInlining)] public void Update() { }
     [MethodImpl(MethodImplOptions.NoInlining)] public void FixedUpdate() { }
 }
@@ -64,7 +74,7 @@ public class ValuableShootingCowboy : UnityEngine.Component
 namespace REPOJP.StageRoles
 {
     // Tests exercise production catalog, hook selection and cleanup; holder
-    // authentication is unchanged production controller code, not simulated here.
+    // authentication stays in the production controller and is checked separately.
     public class StageRolesPlugin
     {
         public static StageRolesPlugin? Instance = new();

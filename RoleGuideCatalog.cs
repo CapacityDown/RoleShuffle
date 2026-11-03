@@ -227,7 +227,7 @@ internal static class RoleGuideCatalog
                 "The clouds appear one at a time and can harm other players.") +
                 RoleText.Format(RoleOverhaulDescriptions.StinkerGrace, RoleGuideLanguage.English, config.StinkerBreakGraceSeconds.Value),
             StageRole.Engineer =>
-                "Prevents supported effect valuables from activating while the Engineer holds them. Camera, Propane Tank, Snowmobile, Flashlight, Clown Doll, and Love Potion are not affected.",
+                "Prevents supported effect valuables from activating while the Engineer holds them. Camera, Propane Tank, Snowmobile, Flashlight, Clown Doll, and Love Potion are not affected. Some effects fade gradually; vanilla players may still see or hear effects.",
             StageRole.Trickster => (
                 $"Type decoy in chat to place a fixed Scream Doll that attracts enemies within {Number(config.TricksterInvestigateRadius.Value)} m for {Number(config.TricksterActiveSeconds.Value)} seconds. " +
                 $"Selecting the configured {config.TricksterExpression.Value} facial expression performs the same action. " +
@@ -355,7 +355,7 @@ internal static class RoleGuideCatalog
                 "雲は一つずつ発生し、他のプレイヤーにも危険です。" +
                 RoleText.Format(RoleOverhaulDescriptions.StinkerGrace, RoleGuideLanguage.Japanese, config.StinkerBreakGraceSeconds.Value),
             StageRole.Engineer =>
-                "対応する効果付きValuableを持っている間、その効果の発動を防ぎます。Camera、Propane Tank、Snowmobile、Flashlight、Clown Doll、Love Potionには効果がありません。",
+                "対応する効果付きValuableを持っている間、その効果の発動を防ぎます。Camera、Propane Tank、Snowmobile、Flashlight、Clown Doll、Love Potionには効果がありません。一部の効果は徐々に消えます。MOD未導入の参加者には見た目や音が残る場合があります。",
             StageRole.Trickster =>
                 $"チャットでdecoyと入力すると、半径{Number(config.TricksterInvestigateRadius.Value)}m以内の敵を{Number(config.TricksterActiveSeconds.Value)}秒間引きつける固定式Scream Dollを設置します。" +
                 $"設定した{config.TricksterExpression.Value}の表情を選択する操作でも発動します。" +

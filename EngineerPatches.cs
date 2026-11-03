@@ -173,8 +173,23 @@ internal static class EngineerEffectCatalog
         "ValuableWizardTimeGlass"
     };
 
-    private static readonly HashSet<string> EffectTypeNames =
-        new(FrameEffectTypeNames, StringComparer.Ordinal);
+    internal static readonly string[] ModernEffectTypeNames =
+    {
+        "LighterValuable", "SnakeInACanValuable", "ValuableCubeOfKnowledge",
+        "ValuableDesertBirdCage", "ValuableDesertEnergyCrystalChunk",
+        "ValuableDesertExplosiveTower", "ValuableDesertExplosiveTowerDynamite",
+        "ValuableDesertGolfcart", "ValuableDesertPopcornStand",
+        "ValuableDesertZeroGravCrystal", "ValuableMusicInstrument", "ValuableWizardCrystal"
+    };
+
+    private static readonly HashSet<string> EffectTypeNames = CreateEffectNames();
+
+    private static HashSet<string> CreateEffectNames()
+    {
+        var names = new HashSet<string>(FrameEffectTypeNames, StringComparer.Ordinal);
+        names.UnionWith(ModernEffectTypeNames);
+        return names;
+    }
 
     internal static bool IsEffectValuable(PhysGrabObject valuable)
     {

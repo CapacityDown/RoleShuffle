@@ -95,6 +95,11 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
             _harmony.PatchAll(typeof(InfluencerInvestigationRadiusPatch));
             _harmony.PatchAll(typeof(EngineerTrapUpdatePatches));
             _harmony.PatchAll(typeof(EngineerEffectActivationPatches));
+            _harmony.PatchAll(typeof(EngineerModernFramePatch));
+            _harmony.PatchAll(typeof(EngineerModernActionPatch));
+            _harmony.PatchAll(typeof(EngineerModernConditionPatch));
+            _harmony.PatchAll(typeof(EngineerGolfcartDriverPatch));
+            _harmony.PatchAll(typeof(EngineerInstrumentNoisePatch));
             _harmony.PatchAll(typeof(ShopPatches));
             _harmony.PatchAll(typeof(UpgradeItemRetentionPatch));
             _harmony.PatchAll(typeof(NotificationEnemyReactionPatches));

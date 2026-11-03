@@ -10,6 +10,9 @@
     <None Update="repo050-valuable-audit.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../../EngineerPatches.cs" Link="EngineerPatches.cs" />
     <Compile Include="../../EngineerCowboySuppression.cs" Link="EngineerCowboySuppression.cs" />
+    <Compile Include="../../EngineerModernPatches.cs" Link="EngineerModernPatches.cs" />
+    <Compile Include="../../EngineerModernEffects.cs" Link="EngineerModernEffects.cs" />
+    <Compile Include="../../EngineerGrabVisibility.cs" Link="EngineerGrabVisibility.cs" />
     <Reference Include="0Harmony">
       <HintPath>$(NuGetPackageRoot)harmonyx/2.7.0/lib/netstandard2.0/0Harmony.dll</HintPath>
     </Reference>

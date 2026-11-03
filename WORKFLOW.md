@@ -139,6 +139,13 @@ historical version numbers, deployment profiles and superseded design choices.
   and compare README keys/defaults/ranges in both languages. Dynamic upgrade
   levels accept 0-200 except MapPlayerCount 0-1; do not reintroduce the old 100 cap.
 
+- On 2026-11-03 the user requested Engineer support for the new v0.5.0
+  effect valuables. Preserve native cleanup, destruction and earned puzzle value;
+  pause/resume standalone dynamite fuses without resetting elapsed progress.
+  Restore client-visible grabbers after suppression, including co-holders and
+  role changes. Document short effect expiry and remaining vanilla-client audio
+  or visuals; distinguish automated native-contract checks from live testing.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

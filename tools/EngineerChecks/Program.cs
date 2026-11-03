@@ -41,9 +41,9 @@ using (var audit = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Com
         foreach (var method in entry.GetProperty("methods").EnumerateArray())
             Check(native.Methods.Any(m => m.Name == method.GetString()), "Audited native effect exists: " + name + "." + method.GetString());
         bool automatic = native.BaseType.Name == "Trap";
-        bool explicitTarget = EngineerEffectCatalog.FrameEffectTypeNames.Contains(name) || activations.Any(a => a.TypeName == name);
+        bool explicitTarget = EngineerEffectCatalog.FrameEffectTypeNames.Contains(name) || EngineerEffectCatalog.ModernEffectTypeNames.Contains(name) || activations.Any(a => a.TypeName == name);
         string status = entry.GetProperty("status").GetString()!;
-        Check(status switch { "automatic_trap" => automatic, "cowboy_fixed" => explicitTarget, _ => !automatic && !explicitTarget }, "Audit matches current coverage: " + name);
+        Check(status switch { "automatic_trap" => automatic, "cowboy_fixed" or "modern" => explicitTarget, _ => !automatic && !explicitTarget }, "Audit matches current coverage: " + name);
     }
 }
 
@@ -104,4 +104,5 @@ Check(cowboy.FrameCalls == 1, "Missing optional visuals do not break suppression
 StageRolesPlugin.Instance = null;
 Dispatch("Update", true);
 Check(cowboy.FrameCalls == 2, "Absent controller leaves native behavior alone");
+ModernChecks.Run(game, Check);
 Console.WriteLine($"PASS: {checks} Engineer catalog, native bindings, cleanup and prefix lifecycle checks.");

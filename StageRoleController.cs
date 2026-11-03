@@ -64,6 +64,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         new(StringComparer.Ordinal);
     private readonly Dictionary<int, EnemyAttackCredit> _enemyLastAttacker = new();
     private readonly Dictionary<int, HashSet<int>> _grabbersByObjectId = new();
+    private readonly EngineerGrabVisibility _engineerGrabVisibility = new();
     private readonly HashSet<int> _engineerSuppressedTrapIds = new();
     private readonly Dictionary<int, float> _engineerSuppressionGraceUntil = new();
     private StageRolesConfig _config = null!;
@@ -295,6 +296,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
             {
                 if (Time.time < graceUntil)
                 {
+                    _engineerGrabVisibility.Hide(valuable);
                     ResetEngineerEffectState(effect);
                     return true;
                 }
@@ -302,9 +304,10 @@ internal sealed partial class StageRoleController : MonoBehaviour
             }
             foreach (PhysGrabber grabber in valuable.playerGrabbing)
             {
-                if (grabber?.playerAvatar != null &&
+                if (grabber?.playerAvatar != null && PlayerState.IsLiving(grabber.playerAvatar) &&
                     PlayerHasRole(grabber.playerAvatar, StageRole.Engineer))
                 {
+                    _engineerGrabVisibility.Hide(valuable);
                     ResetEngineerEffectState(effect);
                     LogEngineerSuppression(valuable);
                     return true;
@@ -321,8 +324,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
                         ? grabberView.GetComponent<PlayerAvatar>() ??
                           grabberView.GetComponent<PhysGrabber>()?.playerAvatar
                         : null;
-                    if (PlayerHasRole(player, StageRole.Engineer))
+                    if (PlayerState.IsLiving(player) && PlayerHasRole(player, StageRole.Engineer))
                     {
+                        _engineerGrabVisibility.Hide(valuable);
                         ResetEngineerEffectState(effect);
                         LogEngineerSuppression(valuable);
                         return true;
@@ -362,17 +366,25 @@ internal sealed partial class StageRoleController : MonoBehaviour
                 : null;
             if (grabber?.playerAvatar == null ||
                 grabberPhotonView == null ||
-                !PlayerHasRole(grabber.playerAvatar, StageRole.Engineer) ||
+                !PlayerState.IsLiving(grabber.playerAvatar) ||
                 !SemiFunc.OwnerOnlyRPC(messageInfo, grabberPhotonView))
             {
                 return false;
             }
 
+            if (!PlayerHasRole(grabber.playerAvatar, StageRole.Engineer) &&
+                !ShouldSuppressEngineerEffect(grabbedObject))
+            {
+                if (!grabbedObject.playerGrabbing.Contains(grabber))
+                    _engineerGrabVisibility.NativeGrabWillBeVisible(grabbedObject, playerViewId);
+                return false;
+            }
             if (!grabbedObject.playerGrabbing.Contains(grabber))
             {
                 grabbedObject.playerGrabbing.Add(grabber);
             }
             RecordGrabStarted(grabbedObject, playerViewId);
+            _engineerGrabVisibility.Hide(grabbedObject);
             _engineerSuppressionGraceUntil.Remove(
                 grabbedObject.GetInstanceID());
             StageRolesPlugin.ModLogger.LogDebug(
@@ -457,6 +469,9 @@ internal sealed partial class StageRoleController : MonoBehaviour
             EngineerCowboySuppression.Reset(cowboy);
             return;
         }
+
+        if (effect is ValuableHorseOnWheels horse)
+            EngineerModernEffects.RestHorse(horse);
 
         if (effect is not Trap trap)
         {
@@ -1385,6 +1400,7 @@ internal sealed partial class StageRoleController : MonoBehaviour
         {
             assignment.RevivalHeadStillness.Observe(assignment.Player);
         }
+        _engineerGrabVisibility.Tick(ShouldSuppressEngineerEffect);
         TickInfluenza();
         TickTwins();
         _porter.Tick(_assignments, _notifier);
@@ -3193,6 +3209,8 @@ internal sealed partial class StageRoleController : MonoBehaviour
         StopTwins();
         StageRolesPlugin.Instance?.Negotiator?.EndStage();
         CaptureRoleHistory();
+        _engineerGrabVisibility.Clear();
+        EngineerModernEffects.Clear();
         _stageReady = false;
         _assignmentsInitialized = false;
         _stageGeneration++;

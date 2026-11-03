@@ -5,7 +5,7 @@
     {
       "type": "LighterValuable",
       "label_ja": "ライター",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "Update",
         "FixedUpdate"
@@ -14,7 +14,7 @@
     {
       "type": "SnakeInACanValuable",
       "label_ja": "蛇入りの缶",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "Update",
         "SnakeOut"
@@ -23,7 +23,7 @@
     {
       "type": "ValuableCubeOfKnowledge",
       "label_ja": "知識のキューブ",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "SideActivate",
         "TalkInvestigateLogic",
@@ -33,7 +33,7 @@
     {
       "type": "ValuableDesertBirdCage",
       "label_ja": "鳥かご",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "StateIdle",
         "ChirpSet"
@@ -42,7 +42,7 @@
     {
       "type": "ValuableDesertEnergyCrystalChunk",
       "label_ja": "エネルギー結晶",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "EnergizeLogic",
         "BreakImpulseChargeCloud"
@@ -51,7 +51,7 @@
     {
       "type": "ValuableDesertExplosiveTower",
       "label_ja": "爆薬の塔",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "StateTrigger",
         "StateExplode"
@@ -60,7 +60,7 @@
     {
       "type": "ValuableDesertExplosiveTowerDynamite",
       "label_ja": "塔から飛散するダイナマイト",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "Explode"
       ]
@@ -68,7 +68,7 @@
     {
       "type": "ValuableDesertGolfcart",
       "label_ja": "ゴルフカート",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "FixedUpdateActive",
         "HurtColliderLogic"
@@ -77,7 +77,7 @@
     {
       "type": "ValuableDesertPopcornStand",
       "label_ja": "ポップコーン屋台",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "RevLogic",
         "InvestigateLogic"
@@ -94,7 +94,7 @@
     {
       "type": "ValuableDesertZeroGravCrystal",
       "label_ja": "無重力結晶",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "AffectSpawnLogic",
         "AffectRenewLogic"
@@ -112,7 +112,7 @@
     {
       "type": "ValuableMusicInstrument",
       "label_ja": "ハーモニカ・パンフルート・口琴",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "StateAttached",
         "SoundUpdate",
@@ -149,7 +149,7 @@
     {
       "type": "ValuableWizardCrystal",
       "label_ja": "魔法の結晶",
-      "status": "pending",
+      "status": "modern",
       "methods": [
         "Destroyed",
         "AffectMultiplayer"
