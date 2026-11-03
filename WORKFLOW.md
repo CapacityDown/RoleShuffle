@@ -146,6 +146,12 @@ historical version numbers, deployment profiles and superseded design choices.
   role changes. Document short effect expiry and remaining vanilla-client audio
   or visuals; distinguish automated native-contract checks from live testing.
 
+- On 2026-11-03 the user requested DualWielder hits against non-enemy targets.
+  Use attack-only contact sensors, native per-target cooldowns and shared weapon
+  consumption. Exclude the owner and original weapon; preserve vanilla stage
+  friendly-fire rules. Scenery feedback does not consume durability. Remote
+  player hits must not invoke the host's local weapon-disarm routine.
+
 ## Builds and deployment
 
 - Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set

@@ -62,6 +62,7 @@
     <Compile Include="PorterCart.cs" />
     <Compile Include="DualWielderHistory.cs" />
     <Compile Include="DualWielderRuntime.cs" />
+    <Compile Include="DualWielderContacts.cs" />
     <Compile Include="RiggerRuntime.cs" />
     <Compile Include="NegotiatorState.cs" />
     <Compile Include="NegotiatorRules.cs" />

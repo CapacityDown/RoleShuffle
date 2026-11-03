@@ -398,9 +398,11 @@ internal static class RoleGuideCatalog
         ? $"Human Adventure Cableで敵を拘束できる時間が{Number(c.RiggerEnemyHoldMultiplier.Value)}倍になり、命中・投げで消費する耐久度が通常の{Number(c.RiggerDurabilityMultiplier.Value * 100f)}％になります。通常のケーブル操作で自動発動します。ケーブルの直接命中で敵に与えるダメージは{Number(c.RiggerEnemyDamageMultiplier.Value)}倍になります。プレイヤーの拘束時間やプレイヤーへのダメージは変わりません。死亡・役職変更後は強化が止まります。ケーブルがない場合は通常の抽選から除外されます。"
         : $"The Human Adventure Cable restrains enemies for {Number(c.RiggerEnemyHoldMultiplier.Value)}x as long and consumes {Number(c.RiggerDurabilityMultiplier.Value * 100f)}% of normal durability on hits and throws. Direct cable hits deal {Number(c.RiggerEnemyDamageMultiplier.Value)}x damage to enemies. Activates automatically during normal cable use. Player restraint duration and damage to players are unchanged. Bonuses stop on death or role change. Normally excluded from draws when no cable is available.";
 
-    private static string DualWielderDescription(StageRolesConfig c, bool japanese) => japanese
+    private static string DualWielderDescription(StageRolesConfig c, bool japanese) => (japanese
         ? $"近接武器を1人で持つと、同じ武器を左{Number(c.DualWielderLeftOffset.Value)}mに1本生成します。2本目は元の武器の動きと攻撃を{Number(c.DualWielderDelaySeconds.Value)}秒遅れて再現します。電池・耐久度は共有し、2本目の命中分も消費します。手放す・持ち替える・死亡する・役職が変わると2本目は消えます。生成した武器は拾って持ち帰れません。近接武器がない場合は通常の抽選から除外されます。"
-        : $"Holding a melee weapon alone creates one matching weapon {Number(c.DualWielderLeftOffset.Value)} m to your left. It repeats the original weapon's movement and attacks after {Number(c.DualWielderDelaySeconds.Value)} seconds. Both weapons share battery and durability; hits with the copy consume them too. Releasing or switching the weapon, death or a role change removes the copy. The copy cannot be picked up or kept. Normally excluded from draws when no melee weapon is available.";
+        : $"Holding a melee weapon alone creates one matching weapon {Number(c.DualWielderLeftOffset.Value)} m to your left. It repeats the original weapon's movement and attacks after {Number(c.DualWielderDelaySeconds.Value)} seconds. Both weapons share battery and durability; hits with the copy consume them too. Releasing or switching the weapon, death or a role change removes the copy. The copy cannot be picked up or kept. Normally excluded from draws when no melee weapon is available.") +
+        (japanese ? "貴重品・物体・地形・他プレイヤーにも、バニラのルールに従って命中します。"
+            : " Also hits valuables, objects, scenery and other players using vanilla rules.");
 
     private static string PorterDescription(StageRolesConfig c, bool japanese)
     {

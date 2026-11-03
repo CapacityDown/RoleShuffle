@@ -90,6 +90,7 @@ internal sealed class DualWielderEcho : MonoBehaviour
 {
     internal static readonly FieldInfo? Hurt = AccessTools.Field(typeof(ItemMelee), "hurtCollider");
     internal static readonly FieldInfo? Battery = AccessTools.Field(typeof(ItemMelee), "itemBattery");
+    private static readonly FieldInfo? HitBoxTimer = AccessTools.Field(typeof(ItemMelee), "hitBoxTimer");
     private static readonly FieldInfo? HitTimer = AccessTools.Field(typeof(ItemMelee), "hitTimer");
     private static readonly FieldInfo? Attacker = AccessTools.Field(typeof(HurtCollider), "playerCausingHurtOverride");
     private static readonly FieldInfo? InstanceName = AccessTools.Field(typeof(ItemAttributes), "instanceName");
@@ -103,7 +104,8 @@ internal sealed class DualWielderEcho : MonoBehaviour
     private HurtCollider? _hurt;
     private readonly List<Collider> _solidColliders = new();
     private readonly DualWielderHistory _history = new();
-    private bool _ready, _closed;
+    private bool _ready, _closed, _attacking;
+    private DualWielderContacts? _contacts;
     private float _delay, _offset, _destroyRetryAt;
 
     internal void Initialize(PlayerAvatar owner, ItemMelee source, StageRolesConfig config)
@@ -111,12 +113,20 @@ internal sealed class DualWielderEcho : MonoBehaviour
         Owner = owner; Source = source; _config = config;
         _copy = GetComponent<ItemMelee>(); _physics = GetComponent<PhysGrabObject>(); _body = GetComponent<Rigidbody>();
         if (_copy == null || _physics == null || _body == null || Hurt?.FieldType != typeof(HurtCollider) ||
-            Battery?.FieldType != typeof(ItemBattery) || HitTimer?.FieldType != typeof(float) ||
+            Battery?.FieldType != typeof(ItemBattery) || HitTimer?.FieldType != typeof(float) || HitBoxTimer?.FieldType != typeof(float) ||
             Attacker?.FieldType != typeof(PlayerAvatar) || InstanceName?.FieldType != typeof(string) || Timers == null)
             throw new NotSupportedException("Native melee contract changed.");
         foreach (HurtCollider hurt in GetComponentsInChildren<HurtCollider>(true)) hurt.enabled = false;
         foreach (Collider collider in GetComponentsInChildren<Collider>(true))
-            if (collider.GetComponentInParent<HurtCollider>(true) == null) _solidColliders.Add(collider);
+            if (collider.enabled && !collider.isTrigger && collider.GetComponentInParent<HurtCollider>(true) == null &&
+                (collider is not MeshCollider mesh || mesh.convex))
+            {
+                // Detect contact without a kinematic copy shoving its owner or the world.
+                collider.isTrigger = true;
+                _solidColliders.Add(collider);
+            }
+            else if (collider.GetComponentInParent<HurtCollider>(true) == null) collider.enabled = false;
+        _contacts = new DualWielderContacts(this, _copy, _physics);
         ItemBattery? duplicateBattery = GetComponent<ItemBattery>();
         if (duplicateBattery != null) duplicateBattery.enabled = false;
         _delay = config.DualWielderDelaySeconds.Value;
@@ -157,6 +167,7 @@ internal sealed class DualWielderEcho : MonoBehaviour
             _copy.usesBatteryLogic = Source.usesBatteryLogic;
             if (!_hurt.ignorePlayers.Contains(Owner)) _hurt.ignorePlayers.Add(Owner);
             PhysGrabObject originalPhysics = Source.GetComponent<PhysGrabObject>();
+            if (!_hurt.ignoreObjects.Contains(_physics)) _hurt.ignoreObjects.Add(_physics);
             if (!_hurt.ignoreObjects.Contains(originalPhysics)) _hurt.ignoreObjects.Add(originalPhysics);
             Attacker!.SetValue(_hurt, Owner);
             if (_delay != _config.DualWielderDelaySeconds.Value || _offset != _config.DualWielderLeftOffset.Value)
@@ -182,7 +193,7 @@ internal sealed class DualWielderEcho : MonoBehaviour
         if (!SemiFunc.IsMasterClientOrSingleplayer()) return;
         if (!Held()) { Close(); return; }
         if (_hurt == null) return;
-        if (!_history.Sample(Time.time - _delay, out DualWielderPose pose)) { _hurt.gameObject.SetActive(false); return; }
+        if (!_history.Sample(Time.time - _delay, out DualWielderPose pose)) { SetAttacking(false); return; }
         HoldPhysics();
         _body.position = pose.Position; _body.rotation = pose.Rotation;
         transform.SetPositionAndRotation(pose.Position, pose.Rotation);
@@ -192,12 +203,13 @@ internal sealed class DualWielderEcho : MonoBehaviour
         bool charged = !Source.usesBatteryLogic || (battery != null && battery.batteryLife > 0);
         bool active = pose.Attacking && charged && !(HitTimer!.GetValue(_copy) is float remaining && remaining > 0);
         _hurt.enabled = true;
-        if (_hurt.gameObject.activeSelf != active) _hurt.gameObject.SetActive(active);
+        if (active) HitBoxTimer!.SetValue(_copy, 0.2f);
+        SetAttacking(active);
     }
 
     private void HoldPhysics()
     {
-        foreach (Collider collider in _solidColliders) if (collider != null) collider.enabled = false;
+        foreach (Collider collider in _solidColliders) if (collider != null) collider.enabled = _attacking;
         _body.useGravity = false;
         _physics.OverrideKinematic(1f);
         _physics.OverrideGrabDisable(1f);
@@ -205,11 +217,44 @@ internal sealed class DualWielderEcho : MonoBehaviour
         _physics.DisableDeathPitEffect(1f);
     }
 
+    private void SetAttacking(bool active)
+    {
+        _attacking = active;
+        foreach (Collider collider in _solidColliders) if (collider != null) collider.enabled = active;
+        if (_hurt != null && _hurt.gameObject.activeSelf != active) _hurt.gameObject.SetActive(active);
+    }
+
+    internal bool CanContact => SemiFunc.IsMasterClientOrSingleplayer() && Held() && _attacking &&
+        _hurt != null && _hurt.isActiveAndEnabled &&
+        !(HitTimer!.GetValue(_copy) is float timer && timer > 0) &&
+        (!Source.usesBatteryLogic || Source.GetComponent<ItemBattery>() is { batteryLife: > 0 });
+
+    private void OnTriggerEnter(Collider other) => OnTriggerStay(other);
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!CanContact) return;
+        try { _contacts?.Touch(_hurt!, other); }
+        catch (Exception error)
+        {
+            StageRolesPlugin.ModLogger.LogWarning($"DualWielder contact stopped: {error.Message}");
+            Close();
+        }
+    }
+
+    internal void HitPlayer(HurtCollider hurt, PlayerAvatar player)
+    {
+        if (CanContact) _contacts?.HitPlayer(hurt, player);
+    }
+
+    internal void PlayerHitFeedback() => _contacts?.PlayerHitFeedback();
+
     internal void Close()
     {
         if (!_closed)
         {
             _closed = true;
+            SetAttacking(false);
             foreach (HurtCollider hurt in GetComponentsInChildren<HurtCollider>(true)) hurt.enabled = false;
             ItemAttributes? item = GetComponent<ItemAttributes>();
             if (item != null && ItemManager.instance != null) ItemManager.instance.spawnedItems.Remove(item);
@@ -236,7 +281,7 @@ internal sealed class DualWielderEcho : MonoBehaviour
 internal static class DualWielderPatches
 {
     private static DualWielderEcho? Echo(Component instance) =>
-        SemiFunc.IsMasterClientOrSingleplayer() ? instance.GetComponent<DualWielderEcho>() : null;
+        SemiFunc.IsMasterClientOrSingleplayer() ? instance.GetComponentInParent<DualWielderEcho>(true) : null;
 
     [HarmonyPrefix, HarmonyPatch(typeof(ItemMelee), "Update")]
     private static bool MeleeUpdate(ItemMelee __instance)
@@ -247,6 +292,26 @@ internal static class DualWielderPatches
     }
     [HarmonyPrefix, HarmonyPatch(typeof(ItemMelee), "FixedUpdate")]
     private static bool MeleeFixed(ItemMelee __instance) => Echo(__instance) == null;
+
+    [HarmonyPrefix, HarmonyPriority(Priority.Last), HarmonyPatch(typeof(HurtCollider), "PlayerHurt")]
+    private static bool PlayerHit(HurtCollider __instance, PlayerAvatar __0)
+    {
+        DualWielderEcho? echo = Echo(__instance);
+        if (echo == null) return true;
+        echo.HitPlayer(__instance, __0);
+        return false;
+    }
+
+    [HarmonyPrefix, HarmonyPatch(typeof(ItemMelee), nameof(ItemMelee.PlayerSwingHit))]
+    private static bool PlayerFeedback(ItemMelee __instance)
+    {
+        DualWielderEcho? echo = Echo(__instance);
+        if (echo == null) return true;
+        // Native PlayerSwingHit disarms the LOCAL player; a host-detected remote
+        // hit must never disarm the host who is holding the original weapon.
+        echo.PlayerHitFeedback();
+        return false;
+    }
 
     [HarmonyPrefix, HarmonyPatch(typeof(ItemManager), nameof(ItemManager.AddSpawnedItem))]
     private static bool SaveList(ItemAttributes __0) => Echo(__0) == null;

@@ -35,7 +35,10 @@ try {
     foreach ($expected in @(
         @('ItemMelee','hurtCollider','HurtCollider'), @('ItemMelee','itemBattery','ItemBattery'),
         @('ItemMelee','hitTimer','System.Single'), @('HurtCollider','playerCausingHurtOverride','PlayerAvatar'),
-        @('ItemAttributes','instanceName','System.String')
+        @('ItemAttributes','instanceName','System.String'),
+        @('ItemMelee','hitBoxTimer','System.Single'), @('ItemMelee','enemyOrPVPDurabilityLossCooldown','System.Single'),
+        @('HurtCollider','onImpactPlayerAvatar','PlayerAvatar'), @('PhysGrabObjectImpactDetector','destroyDisable','System.Boolean'),
+        @('PhysGrabHinge','joint','UnityEngine.HingeJoint'), @('PlayerAvatar','tumble','PlayerTumble'), @('PlayerAvatar','isTumbling','System.Boolean')
     )) {
         $type = $game.MainModule.Types | Where-Object Name -eq $expected[0]
         Check (($type.Fields | Where-Object Name -eq $expected[1]).FieldType.FullName -eq $expected[2]) ('Reflection contract: ' + $expected[0] + '.' + $expected[1])
@@ -56,6 +59,25 @@ try {
     $detector = (AllTypes $hurtType.NestedTypes).Methods | Where-Object { $_.HasBody -and (Calls $_ 'EnemyHurt') }
     Check ([bool]($detector.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'playerCausingHurtOverride' })) 'Native collision detector uses the explicit attack owner'
     Check ([bool]($detector.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -eq 'playerCausingHurt' })) 'Native detector publishes attacker for role hit accounting'
+    foreach ($expected in @(
+        @('CanHit',5,'System.Boolean'), @('PhysObjectHurt',7,'System.Boolean'),
+        @('HitForceGet',2,'UnityEngine.Vector3'), @('PlayerHurt',1,'System.Void')
+    )) {
+        $method = @($hurtType.Methods | Where-Object Name -eq $expected[0])
+        Check ($method.Count -eq 1 -and $method[0].Parameters.Count -eq $expected[1] -and $method[0].ReturnType.FullName -eq $expected[2]) ('Native contact signature: ' + $expected[0])
+    }
+    foreach ($entry in @(@('PlayerHealth','HurtOtherRPC','Hurt'), @('PlayerAvatar','ForceImpulseRPC','ForceImpulse'), @('PlayerTumble','TumbleRequestRPC','TumbleSet'))) {
+        $nativeType = $game.MainModule.Types | Where-Object Name -eq $entry[0]
+        $method = $nativeType.Methods | Where-Object Name -eq $entry[1]
+        Check (Calls $method 'MasterAndOwnerOnlyRPC') ('Native owner validation: ' + $entry[1])
+        Check (Calls $method $entry[2]) ('Native target action: ' + $entry[1])
+    }
+    $healthType = $game.MainModule.Types | Where-Object Name -eq PlayerHealth
+    $healthRpc = $healthType.Methods | Where-Object Name -eq HurtOtherRPC
+    Check (Calls $healthRpc 'get_IsMine') 'Remote damage is subtracted only by the target owner'
+    $ground = $melee.Methods | Where-Object Name -eq GroundHit
+    Check (Calls $ground 'SwingHitRPC') 'Scenery uses native hit feedback'
+    Check ([bool]($ground.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'hitBoxTimer' })) 'Scenery hit requires active native attack timer'
     $patches = $plugin.MainModule.Types | Where-Object Name -eq DualWielderPatches
     $targets = [Collections.Generic.HashSet[string]]::new()
     foreach ($patch in $patches.Methods) {
@@ -73,7 +95,7 @@ try {
             }
         }
     }
-    foreach ($target in @('ItemMelee.Update','ItemMelee.FixedUpdate','ItemManager.AddSpawnedItem','StatsManager.ItemFetchName','ItemEquippable.RPC_RequestEquip','PhysGrabObject.GrabLinkRPC','PhysGrabObject.GrabStartedRPC','PhysGrabObject.GrabPlayerAddRPC')) {
+    foreach ($target in @('ItemMelee.Update','ItemMelee.FixedUpdate','HurtCollider.PlayerHurt','ItemMelee.PlayerSwingHit','ItemManager.AddSpawnedItem','StatsManager.ItemFetchName','ItemEquippable.RPC_RequestEquip','PhysGrabObject.GrabLinkRPC','PhysGrabObject.GrabStartedRPC','PhysGrabObject.GrabPlayerAddRPC')) {
         Check ($targets.Contains($target)) ('Required hook missing: ' + $target)
     }
     $pluginType = $plugin.MainModule.Types | Where-Object Name -eq StageRolesPlugin
