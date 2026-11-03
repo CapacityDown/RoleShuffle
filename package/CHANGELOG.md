@@ -7,7 +7,6 @@
 - Fixed mouse-wheel scrolling moving too little.
 - Changed Current Roles to show concise role overviews.
 - Save and apply three custom role-selection presets, retained across restarts, with confirmation before overwriting.
-- With testing enabled, hosts can change player roles from the Roles menu during a stage, including selecting two living players for Twins.
 - Roles menus show your current draw eligibility and exclusion reasons based on player count, settings, Base Upgrades, role history and stage items. Unconfirmed and conditional choices are identified.
 - Added Musician support for Pan Flute, Harmonica and Mouth Harp.
 - Added a configurable one-second healing cooldown shared by all Musician instruments.

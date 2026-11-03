@@ -439,7 +439,6 @@ The default Base level is Health 1 and 0 for other upgrades. Role upgrade settin
 Open `ROLES` in the top-right of the Escape or lobby menu, then select `TOOLS` or `DRAW HISTORY`.
 
 - **Role guide:** `Overview` summarizes abilities; `Details` shows host-configured values and limits. `Draw eligibility` shows your current candidates and exclusion reasons. Conditions may depend on other players; stage items remain unconfirmed until generation.
-- **Role changes:** with testing enabled, hosts can use `TOOLS` → `Change player roles` during stages. Select a player or all players; Twins requires two living players.
 - **HUD editor:** in `TOOLS`, drag the HUD sample and adjust its anchor, alignment, text/icon size, scale, mode and visibility. `SAVE` keeps local settings; `CANCEL` or Esc discards them; `RESET` previews defaults. Mouse controls also work in the lobby.
 - **Bug report:** in `TOOLS`, copy or open the report, review it, add reproduction steps and submit through `OPEN GITHUB ISSUES`. Reports include mod versions/settings/recent activity, save to `BepInEx/RoleShuffleReports`, and are never sent automatically.
 - **Language:** Menus support all 21 R.E.P.O. languages, including Arabic, Thai and regional Spanish/Portuguese. They follow the game setting. Roulette upgrade names use the game’s translations. Role names, setting identifiers, commands and diagnostics stay English.
@@ -946,7 +945,6 @@ OFFの種類は次回以降の個別・一括抽選から除外し、基礎値�
 Escまたはロビーメニュー右上の`ROLES`から、`TOOLS`または`DRAW HISTORY`を選択します。
 
 - **ロールガイド：** 「概要」は能力の要約、「詳細」はホスト設定の値・条件・制限を表示。「抽選状況」で自分の候補と対象外の理由を確認できます。他の人の抽選結果で変わる条件があり、必要アイテムの有無はステージ生成後に確定します。
-- **役職変更：** テスト有効時、ホストはステージ中に`TOOLS`→「プレイヤーの役職変更」で対象者または全員を選べます。Twinsは生存する2人を指定します。
 - **HUD編集：** `TOOLS`でサンプルをドラッグし、基準位置・整列・文字／アイコンサイズ・全体倍率・表示形式・表示切替を調整します。「保存」で個人設定を保存、「取消」またはEscで破棄、「初期値」で初期状態をプレビューします。ロビーでもマウスで操作可能です。
 - **不具合レポート：** `TOOLS`からコピーまたはファイルを開き、内容と発生手順を確認してGitHub Issuesへ投稿します。MODのバージョン・設定・最近の動作状況を含み、`BepInEx/RoleShuffleReports`へ保存します。自動送信はしません。
 - **言語：** メニューなどの表示はR.E.P.O.本体の言語に自動で合わせます。アラビア語・タイ語・地域別のスペイン語とポルトガル語を含む全21言語に対応します。ルーレットのアップグレード名は各プレイヤーの本体言語に合わせた公式名称になります。役職名・設定の識別名・コマンド・診断本文は英語です。

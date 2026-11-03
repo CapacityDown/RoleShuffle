@@ -130,8 +130,8 @@ Use English first and Japanese second. The two sections must describe the same r
   - Default upgrade or effect
   - Important limitation or risk
   - Configurable values
-- Do not document internal testing commands in release documentation.
-- Document every REPOConfig entry, including its exact key, default, allowed range or choices, effect, and whether it is host-controlled or local UI configuration.
+- Do not document internal test modes, commands, settings or testing-only screens in release documentation, even when they are included in the packaged DLL.
+- Document every player-facing REPOConfig entry, excluding internal testing settings, including its exact key, default, allowed range or choices, effect, and whether it is host-controlled or local UI configuration.
 - State that upgrade items are removed from the shop by default when that remains the released behavior.
 - Describe Stage Flux as optional compatibility. Include the deterministic revival priority: Stage Flux Second Chance is evaluated before RoleShuffle Phoenix; if Second Chance activates, Phoenix is preserved.
 - Include concise warnings for roles that can damage players or create hazards, including Bomber, Courier, Tuna, and Mage.
@@ -147,7 +147,7 @@ Use English first and Japanese second. The two sections must describe the same r
 - Use backticks for configuration keys, literal role names where needed, and numeric examples.
 - Use tables for roles and configuration because they contain repeated fields.
 - Do not claim that a feature is synchronized to vanilla participants unless it has been tested through the host-only path.
-- Do not describe unreleased work, planned roles, or local test commands that are not included in the packaged DLL.
+- Do not describe unreleased work or planned roles that are not included in the packaged DLL.
 
 ## 5. `CHANGELOG.md`
 
@@ -215,7 +215,7 @@ The README normally does not display the package version. Avoid adding a version
 - [ ] README English and Japanese sections describe the same behavior.
 - [ ] `python tools/check_release_markdown.py` passes before creating the ZIP; check the archived Markdown against the validated source files.
 - [ ] Every released role is listed once in each role catalog.
-- [ ] Role counts agree everywhere, and internal testing commands are not documented.
+- [ ] Role counts agree everywhere, and internal testing features are not documented.
 - [ ] Every visible REPOConfig entry has a default and explanation.
 - [ ] CHANGELOG is English-only, newest-first, and user-facing, with no empty line after a version heading.
 - [ ] Player-facing documents contain no within-version development history or implementation details.
