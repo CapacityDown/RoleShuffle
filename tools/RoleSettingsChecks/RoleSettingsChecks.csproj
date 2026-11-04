@@ -12,6 +12,7 @@
     <Compile Include="../../RoleLanguage.cs" Link="RoleLanguage.cs" />
     <Compile Include="../../RoleText.cs" Link="RoleText.cs" />
     <Compile Include="../../CustomRolePresets.cs" Link="CustomRolePresets.cs" />
+    <Compile Include="../../PresetNoteInputText.cs" Link="PresetNoteInputText.cs" />
     <Compile Include="../../RoleTestMenuService.cs" Link="RoleTestMenuService.cs" />
     <Compile Include="../../RoleMenuTesting.cs" Link="RoleMenuTesting.cs" />
     <Compile Include="../../RolePresets.cs" Link="RolePresets.cs" />

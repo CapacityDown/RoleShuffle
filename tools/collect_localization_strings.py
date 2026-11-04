@@ -26,12 +26,12 @@ def catalog():
             return placeholder
         value = re.sub(r'\{[^{}]+\}', parameter, value)
         result[value] = value
-    for filename in ['RoleMenu.cs', 'RoleMenuSettings.cs', 'RoleMenuBaseUpgradeSettings.cs', 'RoleMenuBaseUpgradeLevels.cs', 'RoleMenuTesting.cs', 'RoleHudEditor.cs', 'PlayerUtilitiesRuntime.cs']:
+    for filename in ['RoleMenu.cs', 'RoleMenuSettings.cs', 'RoleMenuPresetNotes.cs', 'RoleMenuBaseUpgradeSettings.cs', 'RoleMenuBaseUpgradeLevels.cs', 'RoleMenuTesting.cs', 'RoleHudEditor.cs', 'PlayerUtilitiesRuntime.cs']:
         source = (ROOT / filename).read_text(encoding='utf-8-sig')
         for match in re.finditer(r'(?:Localized|Pick)\(\s*' + TOKEN, source):
             value = decode(match[1])
             result[value] = value
-        if filename in ('RoleMenuSettings.cs', 'RoleMenuBaseUpgradeSettings.cs'):
+        if filename in ('RoleMenuSettings.cs', 'RoleMenuPresetNotes.cs', 'RoleMenuBaseUpgradeSettings.cs'):
             for match in re.finditer(r'RoleText\.Format\(\s*' + TOKEN, source):
                 value = decode(match[1])
                 result[value] = value

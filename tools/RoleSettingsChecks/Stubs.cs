@@ -101,7 +101,7 @@ namespace Photon.Pun
     public sealed class Properties : Dictionary<string, object>
     { public new bool TryGetValue(string key, out object value) => base.TryGetValue(key, out value!); }
 }
-namespace TMPro { public enum FontStyles { Normal, Bold } }
+namespace TMPro { public enum FontStyles { Normal, Bold } public interface ITextPreprocessor { string PreprocessText(string text); } }
 namespace MenuLib.MonoBehaviors { public sealed class REPOPopupPage { public TestScroll scrollView = new(); } public sealed class TestScroll { public int Resets; public void SetScrollPosition(float value) { if (value == 0) Resets++; } } }
 namespace REPOJP.StageRoles
 {
@@ -164,6 +164,8 @@ namespace REPOJP.StageRoles
         private static string Localized(string text) => RoleText.Get(text, _guideLanguage);
         private static void SwitchView(MenuLib.MonoBehaviors.REPOPopupPage page, RoleMenuView view)
         { _activeView = view; if (view == RoleMenuView.RoleTesting) RefreshRoleTestingRows(page); else if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view == RoleMenuView.BaseUpgradeSettings) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
+        internal static int NoteEditorSlot = -1;
+        private static void EditCustomPresetNote(MenuLib.MonoBehaviors.REPOPopupPage page, int slot) => NoteEditorSlot = slot;
         private static void OpenDrawEligibility(MenuLib.MonoBehaviors.REPOPopupPage page) { }
         private static string DisplayUpgradeName(string name) => name;
         private static string SignedValue(int value) => value.ToString("+0;-0;0", System.Globalization.CultureInfo.InvariantCulture);

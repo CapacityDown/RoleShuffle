@@ -38,7 +38,7 @@ Install with a mod manager or place `RoleShuffle.dll` in the profile's `BepInEx/
 
 Lobby/Escape → `ROLES` → `ROLE SETTINGS`: host toggles, including secrets, share MOD settings and affect future assignments. Guests can view supported hosts’ settings.
 
-`PRESETS` changes role ON/OFF only; weights, abilities, balance, Base Upgrades and HUD stay. Weight 0 stays excluded. Save the current selection in `Custom 1–3`, apply it later, or confirm an overwrite. Slots persist across restarts in the current profile.
+`PRESETS` changes role ON/OFF only; weights, abilities, balance, Base Upgrades and HUD stay. Weight 0 stays excluded. Save the current selection in `Custom 1–3`, apply it later, or confirm an overwrite. Slots persist across restarts in the current profile. Use `Edit note` on a saved slot to keep a note (up to 120 characters). Blank notes are cleared; overwriting a preset keeps its note.
 
 |Preset|Enabled roles|Play style|
 |---|---|---|
@@ -537,7 +537,7 @@ MODマネージャーで導入するか、`RoleShuffle.dll`をプロファイル
 
 ロビー／Escの`ROLES`→`ロール設定`で、ホストがシークレットを含む各役職のON/OFFを保存できます。途中参加者を含む次の抽選から適用し、現在の役職は維持。参加者は閲覧のみで、旧ホストの未対応データは未受信と表示します。
 
-`プリセット`は役職のON/OFFだけを変更し、重み・能力値・バランス・Base Upgrade・HUDは維持します。重み0は抽選されません。「カスタム1～3」に現在の構成を保存して再適用でき、上書きは確認後に実行します。保存枠は同じプロファイルの再起動後も保持します。
+`プリセット`は役職のON/OFFだけを変更し、重み・能力値・バランス・Base Upgrade・HUDは維持します。重み0は抽選されません。「カスタム1～3」に現在の構成を保存して再適用でき、上書きは確認後に実行します。保存枠は同じプロファイルの再起動後も保持します。保存済みの枠は「メモ編集」で120文字まで記録できます。空欄で保存するとメモを削除し、プリセットの上書き時はメモを保持します。
 
 |プリセット|有効なロール数|遊び方|
 |---|---|---|

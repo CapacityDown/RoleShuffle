@@ -80,6 +80,11 @@ internal sealed partial class RoleMenu
                     Text(name + " — " + (preset == null ? Localized("Empty") :
                         RoleText.Format("Enabled roles: {0}/{1}", _guideLanguage, preset.Count, RoleCatalog.AllRoles.Count)),
                         separatorBefore: true);
+                    if (preset != null)
+                        Text(RoleText.Format("Note: {0}", _guideLanguage,
+                            preset.Note.Length > 0 ? preset.Note : Localized("No note")));
+                    Button(RoleText.Format("Edit note: {0}", _guideLanguage, name),
+                        () => EditCustomPresetNote(page, index), preset != null);
                     Button(RoleText.Format("Apply: {0}", _guideLanguage, name), () =>
                     {
                         if (StageRolesPlugin.Instance.RoleSettings.TryApplyCustomPreset(index)) SwitchView(page, RoleMenuView.Settings);

@@ -1,3 +1,6 @@
+## 5.0.1
+- Added editable notes to the three custom preset slots, retained across restarts and preset overwrites.
+
 ## 5.0.0
 - Updated compatibility for R.E.P.O. v0.5.0.
 - Added Engineer support for new special valuables.

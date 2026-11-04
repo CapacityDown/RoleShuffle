@@ -130,6 +130,8 @@
     <Compile Include="RoleMenuStepper.cs" />
     <Compile Include="RoleMenuBaseUpgradeLevels.cs" />
     <Compile Include="RoleMenuSettings.cs" />
+    <Compile Include="RoleMenuPresetNotes.cs" />
+    <Compile Include="PresetNoteInputText.cs" />
     <Compile Include="RoleMenuBaseUpgradeSettings.cs" />
     <Compile Include="RoleMenuScroll.cs" />
     <Compile Include="RoleEmblems.cs" />

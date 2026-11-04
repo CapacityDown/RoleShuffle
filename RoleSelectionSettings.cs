@@ -12,6 +12,9 @@ internal sealed class RoleSelectionSettings(StageRolesConfig settings, ConfigFil
     internal bool TrySaveCustomPreset(int slot, bool overwrite = false) =>
         CanEdit && CustomPresets.TrySave(slot, settings.RoleIsEnabled, overwrite);
 
+    internal bool TrySetCustomPresetNote(int slot, string? note) =>
+        CanEdit && CustomPresets.TrySetNote(slot, note);
+
     internal bool TryApplyCustomPreset(int slot)
     {
         if (!CanEdit) return false;
