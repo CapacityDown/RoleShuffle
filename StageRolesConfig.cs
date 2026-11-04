@@ -51,6 +51,10 @@ internal sealed class StageRolesConfig
             true,
             "Treats Elite Enemy Variants Enhanced enemies as one tier higher for Vampire healing and Hunter bonus-orb quality.");
 
+        TeamCompositionEnabled = BindBool(config, "Role Balance - Team", "Enabled", false, "Uses simple team targets for future random assignments. Default off; preserves existing balance settings while off.");
+        TeamDangerMaximum = BindInt(config, "Role Balance - Team", "DangerMaximum", 1, 1, MaximumSupportedPlayers, "Preferred maximum Danger roles. Relaxed only when eligible roles run out.");
+        TeamSupportMinimum = BindInt(config, "Role Balance - Team", "SupportMinimum", 1, 0, MaximumSupportedPlayers, "Prioritizes this many eligible Support roles before other guarantees. Never enables an excluded role.");
+
         ShowcaseGuaranteesEnabled = BindBool(config, "Role Balance - Guarantees", "ShowcaseEnabled", true, "Guarantees event-focused roles according to the configured party-size tiers.");
         ShowcaseMinimumsByPlayerCount = PartySizeScaling(
             config,
@@ -620,6 +624,9 @@ internal sealed class StageRolesConfig
     internal ConfigEntry<int> KingStrengthBonus { get; }
     internal ConfigEntry<int> ShopUpgradeItemCount { get; }
     internal ConfigEntry<bool> EnhancedEnemyRewardsEnabled { get; }
+    internal ConfigEntry<bool> TeamCompositionEnabled { get; }
+    internal ConfigEntry<int> TeamDangerMaximum { get; }
+    internal ConfigEntry<int> TeamSupportMinimum { get; }
     internal ConfigEntry<bool> ShowcaseGuaranteesEnabled { get; }
     internal ConfigEntry<string> ShowcaseMinimumsByPlayerCount { get; }
     internal ConfigEntry<bool> SupportGuaranteesEnabled { get; }
@@ -1038,6 +1045,7 @@ internal sealed class StageRolesConfig
             : 0;
 
     internal int SupportMinimumForPlayerCount(int playerCount) =>
+        TeamCompositionEnabled.Value ? Math.Clamp(TeamSupportMinimum.Value, 0, Math.Max(0, playerCount)) :
         SupportGuaranteesEnabled.Value
             ? Mathf.Min(
                 Mathf.Max(0, playerCount),
@@ -1048,6 +1056,7 @@ internal sealed class StageRolesConfig
             : 0;
 
     internal int DangerRoleLimitForPlayerCount(int playerCount) =>
+        TeamCompositionEnabled.Value ? Math.Clamp(TeamDangerMaximum.Value, 1, MaximumSupportedPlayers) :
         PartySizeScalingValue(DangerRoleLimit.Value, playerCount);
 
     internal int HardshipRoleLimitForPlayerCount(int playerCount) =>

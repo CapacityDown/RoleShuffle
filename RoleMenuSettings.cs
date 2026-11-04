@@ -21,7 +21,7 @@ internal sealed partial class RoleMenu
             foreach (StageRole role in RoleCatalog.AllRoles)
                 signature.Append('|').Append(_config.RoleIsEnabled(role)).Append(':').Append(_config.RoleWeightValue(role));
         }
-        return signature.ToString();
+        return signature + RoleFilterSignature + _config.TeamCompositionEnabled.Value + ":" + _config.TeamDangerMaximum.Value + ":" + _config.TeamSupportMinimum.Value;
     }
 
     private static void RefreshRoleSettingsRows(REPOPopupPage page)
@@ -75,8 +75,8 @@ internal sealed partial class RoleMenu
                 for (int slot = 0; slot < CustomRolePresets.Capacity; slot++)
                 {
                     int index = slot;
-                    string name = RoleText.Format("Custom {0}", _guideLanguage, slot + 1);
                     var preset = saved.Get(slot);
+                    string name = PresetLabel(slot, preset);
                     Text(name + " — " + (preset == null ? Localized("Empty") :
                         RoleText.Format("Enabled roles: {0}/{1}", _guideLanguage, preset.Count, RoleCatalog.AllRoles.Count)),
                         separatorBefore: true);
@@ -89,6 +89,28 @@ internal sealed partial class RoleMenu
                     {
                         if (StageRolesPlugin.Instance.RoleSettings.TryApplyCustomPreset(index)) SwitchView(page, RoleMenuView.Settings);
                     }, preset != null);
+                    Button(RoleText.Format("Rename: {0}", _guideLanguage, name), () => RenameCustomPreset(page, index), preset != null);
+                    if (preset != null)
+                        for (int destination = 0; destination < CustomRolePresets.Capacity; destination++)
+                        {
+                            int target = destination;
+                            if (target == index) continue;
+                            Button(RoleText.Format("Duplicate to: {0}", _guideLanguage, PresetLabel(target, saved.Get(target))),
+                                () => PreviewPresetCopy(index, target));
+                        }
+                    if (_presetTransferSlot == index && _presetTransfer != null)
+                    {
+                        var draft = _presetTransfer;
+                        Text(Localized("Duplicate preview"));
+                        Text(PresetLabel(index, draft));
+                        Text(RoleText.Format("Note: {0}", _guideLanguage, draft.Note));
+                        foreach (StageRole role in RoleCatalog.AllRoles)
+                            if (draft.Includes(role) != (preset?.Includes(role) ?? false))
+                                Text((draft.Includes(role) ? "+ " : "- ") + RoleCatalog.DisplayName(role));
+                        Text(Localized("Only this saved slot changes. Active role settings stay unchanged."));
+                        Button(Localized("Confirm save to this slot"), () => ConfirmPresetTransfer(index, draft));
+                        Button(Localized("CANCEL"), ClearPresetTransfer);
+                    }
                     bool confirm = preset != null && _presetOverwriteSlot == index;
                     string key = confirm ? "Confirm overwrite: {0}" : preset == null ? "Save current: {0}" : "Overwrite: {0}";
                     Button(RoleText.Format(key, _guideLanguage, name), () =>
@@ -117,6 +139,8 @@ internal sealed partial class RoleMenu
         {
             Button(Localized("PRESETS"), () => SwitchView(page, RoleMenuView.Presets));
             Button(Localized("Draw eligibility"), () => OpenDrawEligibility(page));
+            AddTeamCompositionControls(page, entries);
+            AddRoleFilters(page, entries);
             if (!available) Text(Localized("Host role settings are not available yet."));
             else
             {
@@ -134,6 +158,7 @@ internal sealed partial class RoleMenu
                 if (editable && !hasCandidate) Text(Localized("No regular roles with a positive weight are enabled. Random assignment has no candidates."));
                 foreach (StageRole role in RoleCatalog.AllRoles)
                 {
+                    if (!MatchesRoleFilter(role)) continue;
                     bool roleEnabled = Enabled(role);
                     string state = Localized(roleEnabled ? "ON" : "OFF");
                     string label = $"[{state}] {RoleCatalog.DisplayName(role)}";

@@ -40,12 +40,13 @@ namespace REPOJP.StageRoles
     internal sealed class StageRolesConfig
     {
         public const int MaximumSupportedPlayers=30;
-        public Setting<bool> Enabled=new(true), ExcludeUnavailableContextRoles=new(true), UniqueRoles=new(true), PreventConsecutiveSameRole=new(true), RiskCombinationLimitsEnabled=new(false);
+        public Setting<bool> Enabled=new(true), ExcludeUnavailableContextRoles=new(true), UniqueRoles=new(true), PreventConsecutiveSameRole=new(true), RiskCombinationLimitsEnabled=new(false), TeamCompositionEnabled=new(false);
+        public Setting<int> TeamDangerMaximum=new(1), TeamSupportMinimum=new(1);
         public Setting<int> HardshipPersonalCooldownStages=new(2), SmallPartyCombinedRiskPlayerCount=new(4), SmallPartyCombinedRiskRoleLimit=new(1);
         public HashSet<StageRole> Off=new(); public Dictionary<StageRole,int> Weights=new();
         public int ShowcaseMinimumForPlayerCount(int n)=>0;
-        public int SupportMinimumForPlayerCount(int n)=>0;
-        public int DangerRoleLimitForPlayerCount(int n)=>1;
+        public int SupportMinimumForPlayerCount(int n)=>TeamCompositionEnabled.Value ? Math.Min(n, TeamSupportMinimum.Value) : 0;
+        public int DangerRoleLimitForPlayerCount(int n)=>TeamCompositionEnabled.Value ? TeamDangerMaximum.Value : 1;
         public int HardshipRoleLimitForPlayerCount(int n)=>1;
         public bool RoleIsEnabled(StageRole r)=>!Off.Contains(r);
         public int RoleWeightValue(StageRole r)=>Weights.GetValueOrDefault(r,100);
@@ -97,6 +98,7 @@ namespace REPOJP.StageRoles
         private static float ContentWidth(MenuLib.MonoBehaviors.REPOPopupPage p)=>500;
         private static IEnumerable<string> WrapGuideText(object obj,string text,float width,RoleGuideLanguage lang)=>new[]{text};
         private static string Localized(string text)=>RoleText.Get(text,_guideLanguage);
+        private static bool MatchesRoleFilter(StageRole role) => true;
         private static void SwitchView(MenuLib.MonoBehaviors.REPOPopupPage p,RoleMenuView view) { }
         internal static List<RoleMenuEntry> Rows()
         { var result=new List<RoleMenuEntry>(); var page=new MenuLib.MonoBehaviors.REPOPopupPage();OpenDrawEligibility(page); if(!_guideEligibility)throw new Exception(); AddDrawEligibilityRows(page,result);return result; }

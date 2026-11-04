@@ -45,6 +45,8 @@ internal sealed partial class RoleMenu
         }
         entries.Add(new RoleMenuEntry(Localized("BASE UPGRADE SETTINGS"), 20, FontStyles.Bold, 40, false, UseLanguageFont,
             () => { if (_openPage == page && _activeView == RoleMenuView.BaseUpgrades) SwitchView(page, RoleMenuView.BaseUpgradeSettings); }));
+        entries.Add(new RoleMenuEntry(Localized("MY UPGRADE DETAILS"), 20, FontStyles.Bold, 40, false, UseLanguageFont,
+            () => SwitchView(page, RoleMenuView.UpgradeDetails), isControl: true));
         if (upgrades.Count == 0) Text(Localized("Base Upgrade data is not available yet."));
         else
         {

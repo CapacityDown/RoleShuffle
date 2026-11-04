@@ -26,12 +26,12 @@ def catalog():
             return placeholder
         value = re.sub(r'\{[^{}]+\}', parameter, value)
         result[value] = value
-    for filename in ['RoleMenu.cs', 'RoleMenuSettings.cs', 'RoleMenuPresetNotes.cs', 'RoleMenuBaseUpgradeSettings.cs', 'RoleMenuBaseUpgradeLevels.cs', 'RoleMenuTesting.cs', 'RoleHudEditor.cs', 'PlayerUtilitiesRuntime.cs']:
+    for filename in [p.name for p in ROOT.glob('RoleMenu*.cs')] + ['RoleHudEditor.cs', 'PlayerUtilitiesRuntime.cs']:
         source = (ROOT / filename).read_text(encoding='utf-8-sig')
         for match in re.finditer(r'(?:Localized|Pick)\(\s*' + TOKEN, source):
             value = decode(match[1])
             result[value] = value
-        if filename in ('RoleMenuSettings.cs', 'RoleMenuPresetNotes.cs', 'RoleMenuBaseUpgradeSettings.cs'):
+        if filename.startswith('RoleMenu'):
             for match in re.finditer(r'RoleText\.Format\(\s*' + TOKEN, source):
                 value = decode(match[1])
                 result[value] = value
@@ -51,7 +51,9 @@ def catalog():
         'BottomLeft', 'BottomCenter', 'BottomRight', 'ON', 'OFF',
         'Host v{0} / Local v{1}',
         'ROLE SETTINGS', 'Role Settings', 'Role Presets', 'Custom', 'Weight 0',
-        'Base Upgrade Settings',
+        'Base Upgrade Settings', 'My Upgrade Details',
+        'All', 'Enhancement', 'Support', 'Combat', 'Special', 'Danger', 'Hardship', 'Secret',
+        'Enabled roles', 'Eligible or conditional', 'Minimum support roles', 'Maximum danger roles',
     ]:
         result[value] = value
     return result

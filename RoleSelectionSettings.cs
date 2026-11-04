@@ -15,6 +15,10 @@ internal sealed class RoleSelectionSettings(StageRolesConfig settings, ConfigFil
     internal bool TrySetCustomPresetNote(int slot, string? note) =>
         CanEdit && CustomPresets.TrySetNote(slot, note);
 
+    internal bool TryRenameCustomPreset(int slot, string? name) => CanEdit && CustomPresets.TryRename(slot, name);
+    internal bool TryStoreCustomPreset(int slot, CustomRolePreset preset, bool overwrite) => CanEdit && CustomPresets.TryStore(slot, preset, overwrite);
+    internal bool TryCopyCustomPreset(int source, int destination, bool overwrite) => CanEdit && CustomPresets.TryCopy(source, destination, overwrite);
+
     internal bool TryApplyCustomPreset(int slot)
     {
         if (!CanEdit) return false;
@@ -28,6 +32,22 @@ internal sealed class RoleSelectionSettings(StageRolesConfig settings, ConfigFil
 
     internal static bool CanEdit => GameManager.instance != null &&
         (!SemiFunc.IsMultiplayer() || PhotonNetwork.IsMasterClient);
+
+    internal bool TrySetTeamComposition(bool enabled)
+    {
+        if (!CanEdit) return false;
+        SaveEntries(file, new Dictionary<ConfigEntry<bool>, bool> { [settings.TeamCompositionEnabled] = enabled });
+        return true;
+    }
+    internal bool TryAdjustTeamTarget(bool support, int delta)
+    {
+        if (!CanEdit) return false;
+        var entry = support ? settings.TeamSupportMinimum : settings.TeamDangerMaximum;
+        int target = (int)Math.Clamp((long)entry.Value + delta, support ? 0 : 1, StageRolesConfig.MaximumSupportedPlayers);
+        if (target == entry.Value) return false;
+        SaveEntries(file, new Dictionary<ConfigEntry<int>, int> { [entry] = target });
+        return true;
+    }
 
     internal bool TrySetEnabled(StageRole role, bool enabled)
     {

@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup><ItemGroup>
+<Compile Include="../../StageRole.cs" Link="StageRole.cs" />
+<Compile Include="../../UpgradeBreakdown.cs" Link="UpgradeBreakdown.cs" />
+<Compile Include="../../UpgradeBreakdownSync.cs" Link="UpgradeBreakdownSync.cs" />
+</ItemGroup></Project>

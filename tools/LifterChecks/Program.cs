@@ -235,6 +235,30 @@ SemiFunc.Players.Remove("changed");
 SetStrength(0);
 Check(StatsManager.instance.Strength["changed"] == 0, "Disconnected avatar does not prevent stored Base restoration");
 
+// Lifecycle sequence across every destination role. The level setter is the real
+// implementation; native RPC/cache adapters remain simulated by this harness.
+foreach (StageRole destination in Enum.GetValues<StageRole>())
+foreach (int target in new[] { 0, 1, 3, 20, 200 })
+{
+    SemiFunc.Authority = true; SemiFunc.Multiplayer = true; controller.Ready = true;
+    SemiFunc.Players["changed"] = lifter.playerAvatar;
+    lifter.playerAvatar.Living = true; lifter.playerAvatar.Role = StageRole.Lifter;
+    SetStrength(200);
+    lifter.playerAvatar.Living = false; lifter.playerAvatar.Role = destination;
+    SetStrength(target);
+    Near(lifter.grabStrength, 1f + 0.2f * target, "Role change while dead resets held strength cache: " + destination);
+    lifter.playerAvatar.Living = true;
+    Near(lifter.grabStrength, 1f + 0.2f * target, "Revival does not restore previous role strength: " + destination);
+    SemiFunc.Players.Remove("changed"); controller.Ready = false; SetStrength(1);
+    // Native rejoin initializes the new guest from the stored upgrade levels.
+    Photon.Pun.PhotonView.GuestLevels["changed"] = StatsManager.instance.Strength["changed"];
+    Photon.Pun.PhotonView.GuestStrength["changed"] = 1.2f;
+    SemiFunc.Players["changed"] = lifter.playerAvatar; lifter.grabStrength = 41;
+    SetStrength(1);
+    Near(lifter.grabStrength, 1.2f, "Reconnect after stage cleanup repairs stale avatar: " + destination);
+    Check(StatsManager.instance.Strength["changed"] == 1 && Photon.Pun.PhotonView.GuestLevels["changed"] == 1,
+        "Host and vanilla guest retain stage base after cleanup: " + destination);
+}
 var pun = game.MainModule.Types.Single(t => t.Name == "PunManager");
 var nativeCacheUpdate = pun.Methods.Single(m => m.Name == "UpdateGrabStrengthRightAway").Body.Instructions;
 Check(nativeCacheUpdate.Any(i => i.OpCode.Code == Mono.Cecil.Cil.Code.Ldc_R4 && (float)i.Operand == 0.2f)

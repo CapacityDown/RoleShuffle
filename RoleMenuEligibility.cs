@@ -33,6 +33,7 @@ internal sealed partial class RoleMenu
         }
         foreach (StageRole role in RoleCatalog.AllRoles)
         {
+            if (!MatchesRoleFilter(role)) continue;
             bool secret = RoleCatalog.IsSecretRole(role);
             DrawReason reason = secret ? DrawReason.Secret : rows != null && rows.TryGetValue(role, out DrawReason value) ? value : DrawReason.PlayerUnknown;
             entries.Add(new RoleMenuEntry(RoleCatalog.DisplayName(role), 20, FontStyles.Bold, 64, false,

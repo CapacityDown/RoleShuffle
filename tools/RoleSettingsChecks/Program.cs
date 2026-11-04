@@ -433,4 +433,5 @@ Console.WriteLine($"Base Upgrade settings checks passed: {checks - baseStart}");
 Console.WriteLine($"Base Upgrade save adjustment checks passed: {SaveAdjustmentChecks.Run(config, file, baseService, directory)}");
 
 CustomPresetChecks.Run(directory);
+QualityOfLifeChecks.Run(directory);
 RoleTestMenuChecks.Run(config);

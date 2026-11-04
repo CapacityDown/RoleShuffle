@@ -7,10 +7,11 @@ using System.Runtime.Serialization.Json;
 
 namespace REPOJP.StageRoles;
 
-internal sealed class CustomRolePreset(IEnumerable<string> names, string note = "")
+internal sealed class CustomRolePreset(IEnumerable<string> names, string note = "", string name = "")
 {
     private readonly HashSet<string> _enabled = new(names, StringComparer.Ordinal);
     internal string Note { get; } = note;
+    internal string Name { get; } = name;
     internal bool Includes(StageRole role) => _enabled.Contains(role.ToString());
     internal int Count
     {
@@ -24,6 +25,7 @@ internal sealed class CustomRolePresets
 {
     internal const int Capacity = 3;
     internal const int MaximumNoteLength = 120;
+    internal const int MaximumNameLength = 32;
     private readonly string _path;
     private CustomRolePreset?[] _slots = new CustomRolePreset?[Capacity];
     internal bool Available { get; private set; } = true;
@@ -38,14 +40,19 @@ internal sealed class CustomRolePresets
             if (new FileInfo(path).Length > 65536) throw new InvalidDataException("Preset file too large.");
             using FileStream stream = File.OpenRead(path);
             var data = (PresetFile?)new DataContractJsonSerializer(typeof(PresetFile)).ReadObject(stream);
-            if (data == null || (data.Version != 1 && data.Version != 2) || data.Slots == null || data.Slots.Length != Capacity)
+            if (data == null || (data.Version < 1 || data.Version > 3) || data.Slots == null || data.Slots.Length != Capacity)
                 throw new InvalidDataException("Unsupported custom presets.");
-            if ((data.Version == 2 && data.Notes == null) || (data.Notes != null && data.Notes.Length != Capacity))
+            if ((data.Version >= 2 && data.Notes == null) || (data.Notes != null && data.Notes.Length != Capacity))
                 throw new InvalidDataException("Invalid custom preset notes.");
+            if ((data.Version == 3 && data.Names == null) || (data.Names != null && data.Names.Length != Capacity))
+                throw new InvalidDataException("Invalid preset names.");
             for (int i = 0; i < Capacity; i++)
             {
                 string[]? names = data.Slots[i];
                 string note = data.Notes?[i] ?? string.Empty;
+                string name = data.Names?[i] ?? string.Empty;
+                if (name != NormalizeNote(name, maximum: MaximumNameLength) || (names == null && name.Length > 0))
+                    throw new InvalidDataException("Invalid preset name.");
                 if (note.Length > MaximumNoteLength || note != NormalizeNote(note) || (names == null && note.Length > 0))
                     throw new InvalidDataException("Invalid custom preset note.");
                 if (names == null) continue; // null is unused; [] is a saved all-OFF preset.
@@ -53,7 +60,7 @@ internal sealed class CustomRolePresets
                     throw new InvalidDataException("Invalid custom preset roles.");
                 // Stable names survive role-number changes. Unknown/removed roles
                 // remain stored but never enable a different or newly added role.
-                _slots[i] = new CustomRolePreset(names, note);
+                _slots[i] = new CustomRolePreset(names, note, name);
             }
         }
         catch (Exception exception)
@@ -71,7 +78,7 @@ internal sealed class CustomRolePresets
         List<string> names = new();
         foreach (StageRole role in RoleCatalog.AllRoles) if (enabled(role)) names.Add(role.ToString());
         var next = (CustomRolePreset?[])_slots.Clone();
-        next[slot] = new CustomRolePreset(names, _slots[slot]?.Note ?? string.Empty);
+        next[slot] = new CustomRolePreset(names, _slots[slot]?.Note ?? string.Empty, _slots[slot]?.Name ?? string.Empty);
         return Write(next);
     }
 
@@ -82,21 +89,45 @@ internal sealed class CustomRolePresets
         string normalized = NormalizeNote(note);
         if (normalized == preset.Note) return true;
         var next = (CustomRolePreset?[])_slots.Clone();
-        next[slot] = new CustomRolePreset(preset.Names, normalized);
+        next[slot] = new CustomRolePreset(preset.Names, normalized, preset.Name);
         return Write(next);
     }
 
+    internal bool TryRename(int slot, string? name)
+    {
+        var preset = Get(slot);
+        if (preset == null) return false;
+        string normalized = NormalizeNote(name, maximum: MaximumNameLength);
+        if (normalized == preset.Name) return true;
+        return TryStore(slot, new CustomRolePreset(preset.Names, preset.Note, normalized), true);
+    }
+
+    internal bool TryStore(int slot, CustomRolePreset preset, bool overwrite)
+    {
+        if (!Available || slot < 0 || slot >= Capacity || (_slots[slot] != null && !overwrite)) return false;
+        var next = (CustomRolePreset?[])_slots.Clone();
+        next[slot] = new CustomRolePreset(preset.Names, NormalizeNote(preset.Note),
+            NormalizeNote(preset.Name, maximum: MaximumNameLength));
+        return Write(next);
+    }
+
+    internal bool TryCopy(int source, int destination, bool overwrite)
+    {
+        var preset = Get(source);
+        return source != destination && preset != null && TryStore(destination, preset, overwrite);
+    }
+
     // Single-line plain text. Avoid splitting UTF-16 pairs at the input limit.
-    internal static string NormalizeNote(string? note, bool trim = true)
+    internal static string NormalizeNote(string? note, bool trim = true, int maximum = MaximumNoteLength)
     {
         StringBuilder result = new();
         if (note != null)
-            for (int i = 0; i < note.Length && result.Length < MaximumNoteLength; i++)
+            for (int i = 0; i < note.Length && result.Length < maximum; i++)
             {
                 char c = note[i];
                 if (char.IsHighSurrogate(c))
                 {
-                    if (i + 1 < note.Length && char.IsLowSurrogate(note[i + 1]) && result.Length + 2 <= MaximumNoteLength)
+                    if (i + 1 < note.Length && char.IsLowSurrogate(note[i + 1]) && result.Length + 2 <= maximum)
                     { result.Append(c).Append(note[++i]); }
                 }
                 else if (char.IsLowSurrogate(c)) continue;
@@ -109,9 +140,9 @@ internal sealed class CustomRolePresets
 
     private bool Write(CustomRolePreset?[] next)
     {
-        var data = new PresetFile { Version = 2, Slots = new string[]?[Capacity], Notes = new string?[Capacity] };
+        var data = new PresetFile { Version = 3, Slots = new string[]?[Capacity], Notes = new string?[Capacity], Names = new string?[Capacity] };
         for (int i = 0; i < Capacity; i++)
-        { data.Slots[i] = next[i]?.Names; data.Notes[i] = next[i]?.Note; }
+        { data.Slots[i] = next[i]?.Names; data.Notes[i] = next[i]?.Note; data.Names[i] = next[i]?.Name; }
         string temporary = _path + "." + Guid.NewGuid().ToString("N") + ".tmp";
         try
         {
@@ -136,5 +167,6 @@ internal sealed class CustomRolePresets
         [DataMember(Name = "version", IsRequired = true)] public int Version;
         [DataMember(Name = "slots", IsRequired = true)] public string[]?[] Slots = null!;
         [DataMember(Name = "notes", EmitDefaultValue = false)] public string?[]? Notes;
+        [DataMember(Name = "names", EmitDefaultValue = false)] public string?[]? Names;
     }
 }

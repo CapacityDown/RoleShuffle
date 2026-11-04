@@ -1,7 +1,7 @@
 # RoleShuffle
 
 R.E.P.O.向け役職MODのソース管理用リポジトリです。
-プレイヤー向けの仕様・設定は[配布用README](package/README.md)、
+プレイヤー向けの基本操作は[配布用README](package/README.md)、詳細設定は[設定ガイド](docs/SETTINGS_GUIDE.md)、
 バージョンごとの変更点は[CHANGELOG](package/CHANGELOG.md)を参照してください。
 過去タスクから引き継いだ作業方法は[作業ガイド](WORKFLOW.md)を参照してください。
 
@@ -49,6 +49,18 @@ dotnet build StageRoles.csproj -c Release --no-restore
 ビルド後は`pwsh -NoProfile -File tools/Test-GameFieldAccess.ps1`を実行し、実ゲームDLLの非公開フィールドを直接参照していないことを確認してください。`pwsh -NoProfile -File tools/Test-Repo050Compatibility.ps1`でゲームへの呼び出し、Harmonyの対象、リフレクションの参照先も検証します。ゲームが別の場所にある場合は`-GameAssembly`で`Assembly-CSharp.dll`のパスを指定します。
 このプロジェクトのビルドではゲームへの自動配備を行いません。
 ゲームで使用する際は、`package/manifest.json`に記載された依存MODを別途導入してください。
+
+## 役職切替の回帰検証
+
+```powershell
+pwsh -NoProfile -File tools/Test-RoleLifecycle.ps1
+dotnet run --project tools/RoleSettingsChecks/RoleSettingsChecks.csproj -c Release
+dotnet run --project tools/UpgradeDetailsChecks/UpgradeDetailsChecks.csproj -c Release
+pwsh -NoProfile -File tools/Test-DrawEligibility.ps1
+```
+
+役職切替・死亡／復活・感染・ステージ終了・再参加の検証をまとめて実行します。
+結果とログは `tmp/role-lifecycle` に保存します。ゲーム・通信を模した検証も含むため、実機の複数人プレイ確認は別途必要です。
 
 ## プレイヤー向けツールの検証
 

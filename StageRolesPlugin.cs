@@ -63,6 +63,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         _controllerObject.transform.SetParent(transform, false);
         Controller = _controllerObject.AddComponent<StageRoleController>();
         Controller.Initialize(Settings);
+        gameObject.AddComponent<UpgradeBreakdownSync>().Initialize(Controller);
         RoleTests = new RoleTestMenuService(Settings, Controller);
         Negotiator = gameObject.AddComponent<NegotiatorRuntime>();
         Negotiator.Initialize(Settings);

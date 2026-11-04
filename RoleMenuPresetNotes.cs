@@ -10,17 +10,31 @@ namespace REPOJP.StageRoles;
 
 internal sealed partial class RoleMenu
 {
-    private static void EditCustomPresetNote(REPOPopupPage parentPage, int slot)
+    private static void EditCustomPresetNote(REPOPopupPage page, int slot)
     {
-        if (_issuesDialog != null || _openPage != parentPage || _activeView != RoleMenuView.Presets ||
-            !RoleSelectionSettings.CanEdit) return;
         var service = StageRolesPlugin.Instance.RoleSettings;
         var preset = service.CustomPresets.Get(slot);
-        if (preset == null) return;
+        if (preset == null || !RoleSelectionSettings.CanEdit) return;
+        OpenRoleTextEditor(page, RoleText.Format("Edit note: {0}", _guideLanguage, PresetLabel(slot, preset)),
+            preset.Note, CustomRolePresets.MaximumNoteLength, value => service.TrySetCustomPresetNote(slot, value));
+    }
+    private static void RenameCustomPreset(REPOPopupPage page, int slot)
+    {
+        var service = StageRolesPlugin.Instance.RoleSettings;
+        var preset = service.CustomPresets.Get(slot);
+        if (preset == null || !RoleSelectionSettings.CanEdit) return;
+        OpenRoleTextEditor(page, RoleText.Format("Rename: {0}", _guideLanguage, PresetLabel(slot, preset)),
+            preset.Name, CustomRolePresets.MaximumNameLength, value => service.TryRenameCustomPreset(slot, value));
+    }
+    private static void OpenRoleTextEditor(REPOPopupPage parentPage, string title, string initial,
+        int maximum, Func<string, bool> saveValue)
+    {
+        if (_issuesDialog != null || _openPage != parentPage) return;
+        var service = StageRolesPlugin.Instance.RoleSettings;
+        var view = _activeView;
         _presetOverwriteSlot = -1;
-        string name = RoleText.Format("Custom {0}", _guideLanguage, slot + 1);
         REPOPopupPage editor = MenuAPI.CreateREPOPopupPage(
-            RoleText.Format("Edit note: {0}", _guideLanguage, name),
+            title,
             REPOPopupPage.PresetSide.Right, shouldCachePage: false, pageDimmerVisibility: true, spacing: 12f);
         var padding = editor.maskPadding;
         padding.top = 24f;
@@ -42,13 +56,13 @@ internal sealed partial class RoleMenu
         void Close(bool save)
         {
             if (closed) return;
-            bool current = _openPage == parentPage && _activeView == RoleMenuView.Presets &&
+            bool current = _openPage == parentPage && _activeView == view &&
                 ReferenceEquals(service, StageRolesPlugin.Instance.RoleSettings);
             if (save && current)
             {
                 try
                 {
-                    if (!service.TrySetCustomPresetNote(slot, input!.inputStringSystem.currentValue))
+                    if (!saveValue(input!.inputStringSystem.currentValue))
                         throw new InvalidOperationException("Preset note is no longer editable.");
                     _utilityMessage = Localized("Saved.");
                 }
@@ -63,7 +77,7 @@ internal sealed partial class RoleMenu
             if (input != null) input.inputStringSystem.isFocused = false;
             _issuesDialogDismissedFrame = Time.frameCount;
             editor.ClosePage(closePagesAddedOnTop: true);
-            if (current) RefreshRoleSettingsRows(parentPage);
+            if (current) RefreshCurrentRoleList(parentPage);
         }
         try
         {
@@ -72,8 +86,8 @@ internal sealed partial class RoleMenu
             editor.AddElementToScrollView(parent =>
             {
                 hint = MenuAPI.CreateREPOLabel(RoleText.Format(
-                    "Up to {0} characters. Leave blank to remove the note.", _guideLanguage,
-                    CustomRolePresets.MaximumNoteLength), parent, Vector2.zero);
+                    "Up to {0} characters. Leave blank to clear.", _guideLanguage,
+                    maximum), parent, Vector2.zero);
                 Style(hint.labelTMP);
                 hint.labelTMP.textWrappingMode = TextWrappingModes.Normal;
                 hint.rectTransform.sizeDelta = new Vector2(ContentWidth(editor), 60f);
@@ -83,9 +97,9 @@ internal sealed partial class RoleMenu
             {
                 input = MenuAPI.CreateREPOInputField(string.Empty, value =>
                 {
-                    string limited = CustomRolePresets.NormalizeNote(value, trim: false);
+                    string limited = CustomRolePresets.NormalizeNote(value, trim: false, maximum: maximum);
                     if (input != null && limited != value) input.inputStringSystem.SetValue(limited, false);
-                }, parent, Vector2.zero, onlyNotifyOnSubmit: false, placeholder: string.Empty, defaultValue: preset.Note);
+                }, parent, Vector2.zero, onlyNotifyOnSubmit: false, placeholder: string.Empty, defaultValue: initial);
                 float width = ContentWidth(editor);
                 input.rectTransform.sizeDelta = new Vector2(width, 40f);
                 input.labelTMP.gameObject.SetActive(false);

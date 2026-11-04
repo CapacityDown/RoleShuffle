@@ -87,4 +87,24 @@ foreach(var lang in Enum.GetValues<RoleGuideLanguage>())foreach(DrawReason flag 
     Check(RoleDrawEligibility.Label(flag,lang).Length>0,"localized status");
 }
 Check(RoleText.Get("Draw eligibility",RoleGuideLanguage.Japanese)=="抽選状況","Japanese navigation");
+// Optional team adjustment must preserve OFF draws and never invent disabled candidates.
+SemiFunc.Multiplayer=true; cfg.Off.Clear(); cfg.Weights.Clear(); cfg.UniqueRoles.Value=true;
+var duo=new List<PlayerAvatar>{new("one"),new("two")};
+var teamPlanner=new RoleAssignmentPlanner(cfg,new Dictionary<string,StageRole>(),new Dictionary<string,List<StageRole>>(),new Dictionary<string,int>(),1);
+var teamPool=new[]{StageRole.Medic,StageRole.Twins,StageRole.Tank,StageRole.Bomber,StageRole.Stinker};
+cfg.TeamCompositionEnabled.Value=false;Rng.Reset();var ordinary=teamPlanner.PlanInitialAssignments(duo,teamPool);
+cfg.TeamSupportMinimum.Value=30;cfg.TeamDangerMaximum.Value=30;Rng.Reset();var off=teamPlanner.PlanInitialAssignments(duo,teamPool);
+Check(ordinary.OrderBy(x=>x.Key).SequenceEqual(off.OrderBy(x=>x.Key)),"OFF ignores new targets without changing seeded draw");
+cfg.TeamCompositionEnabled.Value=true;cfg.TeamSupportMinimum.Value=1;cfg.TeamDangerMaximum.Value=1;
+for(int i=0;i<30;i++)
+{
+    var chosen=teamPlanner.PlanInitialAssignments(duo,teamPool);
+    Check(chosen.Count==2&&chosen.Values.Count(x=>x==StageRole.Medic)==1&&!chosen.Values.Contains(StageRole.Twins),"Support gets priority over pair in a two-player party");
+    Check(chosen.Values.Count(x=>x is StageRole.Bomber or StageRole.Stinker)<=1,"Danger cap respected with alternatives");
+}
+Check(teamPlanner.PlanJoinedAssignment("late",teamPool,new[]{StageRole.Tank},2)==StageRole.Medic,"Late join prioritizes missing support");
+var exhausted=teamPlanner.PlanInitialAssignments(duo,new[]{StageRole.Bomber});
+Check(exhausted.Count==2&&exhausted.Values.All(x=>x==StageRole.Bomber),"Exhausted limit relaxes without introducing disabled roles");
+var absent=teamPlanner.PlanInitialAssignments(duo,new[]{StageRole.Tank,StageRole.Runner});
+Check(absent.Count==2&&absent.Values.All(x=>x is StageRole.Tank or StageRole.Runner),"Unavailable support never forced into pool");
 Console.WriteLine($"PASS: {checks} draw eligibility checks (production planner/runtime/sync/UI; native world and upgrades simulated), full-lobby payload {encoded.Length} bytes.");

@@ -12,7 +12,7 @@ internal static class KingUpgradeAura
     internal static int WithoutBonus(string steamId, string dictionaryName, int level) =>
         Math.Max(0, level - Bonus(steamId, dictionaryName));
 
-    private static int Bonus(string steamId, string dictionaryName) =>
+    internal static int Bonus(string steamId, string dictionaryName) =>
         Applied.TryGetValue(steamId, out var levels) ? levels.GetValueOrDefault(dictionaryName, 0) : 0;
 
     // Absolute role/base resets replace the aura too. The next tick recomputes it.

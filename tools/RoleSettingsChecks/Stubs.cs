@@ -1,6 +1,7 @@
 using BepInEx.Configuration;
 namespace UnityEngine
 {
+    public static class GUIUtility { public static string systemCopyBuffer = ""; }
     public static class Mathf
     {
         public static int Clamp(int value, int min, int max) => Math.Clamp(value, min, max);
@@ -134,6 +135,7 @@ namespace REPOJP.StageRoles
                 BaseUpgradeManualStore.EffectiveLevel(g.DictionaryName, g.Level, g.CommandName == "MapPlayerCount" ? 1 : 200,
                     config.BaseUpgradeManualAdjustmentEnabled.Value))).ToArray();
         internal static IReadOnlyList<StageRole> AllRoles = Enum.GetValues<StageRole>();
+        internal static string AssignmentName(StageRole role) => role.ToString();
         internal static bool IsSecretRole(StageRole role) => role is StageRole.Superbot or StageRole.Disaster;
         internal static string DisplayName(StageRole role) => role switch
         { StageRole.Superbot => "???1", StageRole.Disaster => "???2", StageRole.Jobless => "Courier", _ => role.ToString() };
@@ -149,7 +151,7 @@ namespace REPOJP.StageRoles
     }
     internal sealed partial class RoleMenu
     {
-        private enum RoleMenuView { Settings, Presets, BaseUpgrades, BaseUpgradeSettings, Tools, RoleTesting }
+        private enum RoleMenuView { Settings, Presets, BaseUpgrades, BaseUpgradeSettings, Tools, RoleTesting, Guide, UpgradeDetails }
         private static StageRolesConfig _config = null!;
         private static MenuLib.MonoBehaviors.REPOPopupPage _openPage = new();
         private static RoleMenuView _activeView;
@@ -164,6 +166,12 @@ namespace REPOJP.StageRoles
         private static string Localized(string text) => RoleText.Get(text, _guideLanguage);
         private static void SwitchView(MenuLib.MonoBehaviors.REPOPopupPage page, RoleMenuView view)
         { _activeView = view; if (view == RoleMenuView.RoleTesting) RefreshRoleTestingRows(page); else if (view == RoleMenuView.BaseUpgrades) RefreshBaseUpgradeRows(page); else if (view == RoleMenuView.BaseUpgradeSettings) RefreshBaseUpgradeSettingsRows(page); else RefreshRoleSettingsRows(page); }
+        private static string RoleFilterSignature => "";
+        private static bool MatchesRoleFilter(StageRole role) => true;
+        private static void AddRoleFilters(MenuLib.MonoBehaviors.REPOPopupPage page, List<RoleMenuEntry> entries) { }
+        private static void AddTeamCompositionControls(MenuLib.MonoBehaviors.REPOPopupPage page, List<RoleMenuEntry> entries) { }
+        private static void RenameCustomPreset(MenuLib.MonoBehaviors.REPOPopupPage page, int slot) { }
+        private static void RefreshGuideRows(MenuLib.MonoBehaviors.REPOPopupPage page) { }
         internal static int NoteEditorSlot = -1;
         private static void EditCustomPresetNote(MenuLib.MonoBehaviors.REPOPopupPage page, int slot) => NoteEditorSlot = slot;
         private static void OpenDrawEligibility(MenuLib.MonoBehaviors.REPOPopupPage page) { }
@@ -192,3 +200,5 @@ namespace REPOJP.StageRoles
         { if (_openSignature != BaseUpgradePageSignature()) RefreshBaseUpgradeRows(_openPage); }
     }
 }
+
+namespace REPOJP.StageRoles { internal enum DrawStatus { Eligible, Conditional, Excluded, Unknown } }

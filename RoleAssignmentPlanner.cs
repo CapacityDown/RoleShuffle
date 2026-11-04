@@ -93,6 +93,9 @@ internal sealed class RoleAssignmentPlanner
 
         List<StageRole> selectedRoles = new();
         int playerCount = remaining.Count;
+        if (_config.TeamCompositionEnabled.Value)
+            AssignGuarantee(SupportRoles, _config.SupportMinimumForPlayerCount(playerCount), remaining,
+                enabledRoles, selectedRoles, result, playerCount, "Support");
         AssignTwinsPair(remaining, enabledRoles, selectedRoles, result, playerCount);
         AssignGuarantee(
             ShowcaseRoles,
@@ -170,7 +173,9 @@ internal sealed class RoleAssignmentPlanner
     {
         List<StageRole> selectedRoles = new(reservedRoles);
         HashSet<StageRole>? requiredCategory = null;
-        if (CountCategory(selectedRoles, ShowcaseRoles) <
+        if (_config.TeamCompositionEnabled.Value && CountCategory(selectedRoles, SupportRoles) <
+            _config.SupportMinimumForPlayerCount(connectedPlayerCount)) requiredCategory = SupportRoles;
+        else if (CountCategory(selectedRoles, ShowcaseRoles) <
             _config.ShowcaseMinimumForPlayerCount(connectedPlayerCount))
         {
             requiredCategory = ShowcaseRoles;
@@ -428,7 +433,7 @@ internal sealed class RoleAssignmentPlanner
         IReadOnlyList<StageRole> selectedRoles,
         int playerCount)
     {
-        if (!_config.RiskCombinationLimitsEnabled.Value)
+        if (!_config.RiskCombinationLimitsEnabled.Value && !_config.TeamCompositionEnabled.Value)
         {
             return true;
         }
@@ -447,6 +452,7 @@ internal sealed class RoleAssignmentPlanner
         {
             return false;
         }
+        if (!_config.RiskCombinationLimitsEnabled.Value) return true;
         if (hardship && CountCategory(selectedRoles, HardshipRoles) >=
             Mathf.Clamp(
                 _config.HardshipRoleLimitForPlayerCount(playerCount),

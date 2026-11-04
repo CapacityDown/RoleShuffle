@@ -1,5 +1,10 @@
 ## 5.0.1
 - Added editable notes to the three custom preset slots, retained across restarts and preset overwrites.
+- Added names for custom preset slots.
+- Added duplication between custom preset slots with a difference preview and confirmation.
+- Added a personal upgrade breakdown page showing role, support and cargo effects alongside actual upgrade levels.
+- Added role-name search and category, enabled and draw-eligibility filters.
+- Added optional team composition controls for support minimums and danger limits, disabled by default.
 
 ## 5.0.0
 - Updated compatibility for R.E.P.O. v0.5.0.

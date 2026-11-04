@@ -98,7 +98,7 @@ internal static class CustomPresetChecks
         File.WriteAllText(presetPath,"{\"version\":1,\"slots\":[[\"Tank\",\"FutureRole\"],null,null]}");
         var future = new RoleSelectionSettings(config,file);
         Check(future.CustomPresets.Get(0)!.Note == "" && !future.TrySetCustomPresetNote(1, "empty"), "Legacy slots load blank notes and unused slots cannot have notes");
-        Check(future.TrySetCustomPresetNote(0, "legacy"), "Legacy preset note upgrade writes schema 2");
+        Check(future.TrySetCustomPresetNote(0, "legacy"), "Legacy preset note upgrade writes schema 3");
         var migrated = new RoleSelectionSettings(config,file);
         Check(migrated.CustomPresets.Get(0)!.Names.Contains("FutureRole") && migrated.CustomPresets.Get(0)!.Note == "legacy", "Note upgrade preserves unknown roles");
         Check(future.TryApplyCustomPreset(0) && config.TankEnabled.Value && !config.RunnerEnabled.Value, "Stable role names and unknown future role do not alias role numbers");

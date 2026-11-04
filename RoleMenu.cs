@@ -25,7 +25,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
     private const float RowPadding = 3f;
     private const float RowSpacing = 1.5f;
     private const float LanguageWrapWidthMultiplier = 1f;
-    private const int RoleUiBuildNumber = 595;
+    private const int RoleUiBuildNumber = 597;
     internal static int UiBuildNumber => RoleUiBuildNumber;
 
     private static bool _registered;
@@ -126,6 +126,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         RoleGuideLanguage savedLanguage = GameLocalization.Language;
         if (_guideLanguage != savedLanguage)
         { _guideLanguage = savedLanguage; _utilityMessage = string.Empty; SwitchView(_openPage, _activeView); return; }
+        if (_activeView == RoleMenuView.UpgradeDetails)
+        { if (_openSignature != UpgradeBreakdownSync.Signature) RefreshUpgradeDetails(_openPage); return; }
         if (_activeView == RoleMenuView.RoleTesting)
         {
             if (_openSignature != RoleTestingSignature()) RefreshRoleTestingRows(_openPage);
@@ -344,6 +346,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         if (_activeView != view)
         {
             _presetOverwriteSlot = -1;
+            ClearPresetTransfer();
             _testTarget = string.Empty;
             _testChoosePartner = false;
         }
@@ -351,6 +354,8 @@ internal sealed partial class RoleMenu : MonoBehaviour
         _utilityMessage = string.Empty;
         UpdateNavigationLabels();
         page.scrollView.SetScrollPosition(0f);
+        if (view == RoleMenuView.UpgradeDetails)
+        { RefreshUpgradeDetails(page); return; }
         if (view == RoleMenuView.RoleTesting)
         { RefreshRoleTestingRows(page); return; }
         if (view is RoleMenuView.Settings or RoleMenuView.Presets)
@@ -394,7 +399,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Button(_assignmentsButton, "CURRENT ROLES", _activeView == RoleMenuView.Assignments);
         Button(_guideButton, "ROLE GUIDE", _activeView == RoleMenuView.Guide);
         Button(_settingsButton, "ROLE SETTINGS", _activeView is RoleMenuView.Settings or RoleMenuView.Presets);
-        Button(_baseUpgradesButton, "BASE UPGRADES", _activeView is RoleMenuView.BaseUpgrades or RoleMenuView.BaseUpgradeSettings);
+        Button(_baseUpgradesButton, "BASE UPGRADES", _activeView is RoleMenuView.BaseUpgrades or RoleMenuView.BaseUpgradeSettings or RoleMenuView.UpgradeDetails);
         Button(_historyButton, "DRAW HISTORY", _activeView == RoleMenuView.History);
         Button(_toolsButton, "TOOLS", _activeView is RoleMenuView.Tools or RoleMenuView.Report or RoleMenuView.RoleTesting);
         Button(_backButton, "Back", false);
@@ -406,6 +411,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
                 RoleMenuView.Guide => "Role Guide",
                 RoleMenuView.Settings => "Role Settings",
                 RoleMenuView.Presets => "Role Presets",
+                RoleMenuView.UpgradeDetails => "My Upgrade Details",
                 RoleMenuView.BaseUpgradeSettings => "Base Upgrade Settings",
                 RoleMenuView.History => "Draw History",
                 RoleMenuView.Tools => "Tools",
@@ -581,7 +587,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         List<StageRole> visibleRoles = new();
         foreach (StageRole role in RoleCatalog.AllRoles)
         {
-            if (RoleGuideSync.IsVisible(role, _config)) visibleRoles.Add(role);
+            if (MatchesRoleFilter(role)) visibleRoles.Add(role);
         }
 
         List<RoleMenuEntry> entries = new(visibleRoles.Count * 4);
@@ -594,6 +600,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         entries.Add(new RoleMenuEntry((_guideEligibility ? "> " : "  ") + Localized("Draw eligibility"),
             20f, FontStyles.Bold, 36f, false, UseLanguageFont,
             () => OpenDrawEligibility(page), isControl: true));
+        AddRoleFilters(page, entries);
         if (_guideEligibility)
         {
             AddDrawEligibilityRows(page, entries);
@@ -601,6 +608,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             _openSignature = BuildGuideSignature();
             return;
         }
+        if (visibleRoles.Count == 0) entries.Add(new RoleMenuEntry(Localized("No matching roles."), 18, FontStyles.Normal, 40, false, UseLanguageFont));
         for (int roleIndex = 0; roleIndex < visibleRoles.Count; roleIndex++)
         {
             StageRole role = visibleRoles[roleIndex];
@@ -672,7 +680,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
             _guideSignature = payload + "|enabled:" + visibility +
                 "|secrets:" + revealed;
         }
-        return _guideSignature + "|details:" + _guideDetails + "|eligibility:" + _guideEligibility +
+        return _guideSignature + RoleFilterSignature + "|details:" + _guideDetails + "|eligibility:" + _guideEligibility +
             (_guideEligibility ? RoleDrawEligibilitySync.Signature + "|self:" + PlayerIdentity.SteamId(SemiFunc.PlayerGetLocal()) : string.Empty);
     }
 
@@ -1263,6 +1271,7 @@ internal sealed partial class RoleMenu : MonoBehaviour
         Assignments,
         Guide,
         BaseUpgrades,
+        UpgradeDetails,
         History,
         Tools,
         Report,

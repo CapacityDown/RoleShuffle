@@ -96,6 +96,9 @@ internal sealed class EventRoleRuntime
         }
     }
 
+    internal int AppliedUpgradeGrant(string id, string key) =>
+        _dynamicStates.TryGetValue(id, out var state) && state.Initialized ? state.Granted.GetValueOrDefault(key, 0) : 0;
+
     internal void RetainedUpgradeApplied(string steamId, StageRole role, IReadOnlyList<UpgradeGrant> changes)
     {
         if (!_dynamicStates.TryGetValue(steamId, out var state) || !state.Initialized) return;

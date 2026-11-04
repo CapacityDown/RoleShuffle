@@ -7,11 +7,15 @@ parser.add_argument('inventory',type=Path)
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 entries=json.loads(args.inventory.read_text(encoding='utf-8'))
-text=(root/'package/README.md').read_text(encoding='utf-8')
-assert len(text)<=100000, len(text)
+readme=(root/'package/README.md').read_text(encoding='utf-8')
+assert len(readme)<=100000, len(readme)
+text=(root/'docs/SETTINGS_GUIDE.md').read_text(encoding='utf-8')
 checks=0
 number=r'-?\d+(?:\.\d+)?'
-for language,part in zip(['English','Japanese'],text.split('## 日本語',1)):
+guide_parts=text.split('## 日本語',1)
+readme_parts=readme.split('## 日本語',1)
+for language,guide_part,readme_part in zip(['English','Japanese'],guide_parts,readme_parts):
+    part=guide_part+'\n'+readme_part
     expanded=part
     for size in ['Tiny','Small','Medium','Big','Wide','Tall','VeryTall']:
         expanded+=part.replace('<Size>',size)
@@ -55,4 +59,4 @@ for language,part in zip(['English','Japanese'],text.split('## 日本語',1)):
             if entry['section']==section and entry['key'].endswith('UpgradeScaling') and entry['defaultValue']:
                 assert entry['defaultValue'] in part,(language,'dynamic default',section,entry['key'])
                 checks+=1
-print(f'PASS: {checks} bilingual setting-key/default/range/table checks; README {len(text)} characters.')
+print(f'PASS: {checks} bilingual setting-key/default/range/table checks; README {len(readme)} characters.')
