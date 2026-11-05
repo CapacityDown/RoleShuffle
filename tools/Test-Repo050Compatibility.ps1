@@ -86,6 +86,6 @@ try {
     $leaf = $types['ItemLeafBlower'].Methods | Where-Object Name -eq BatteryDrain
     Check ([bool]($leaf.Body.Instructions | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'DrainContinuous' })) 'Leaf blower must use central drain without a duplicate discount'
     if ($failures.Count -gt 0) { $failures | Sort-Object -Unique | Write-Output; throw "$($failures.Count) failed compatibility checks of $checked." }
-    Write-Output "PASS: $checked installed v0.5.0 calls, Harmony bindings and reflection contracts."
+    Write-Output "PASS: $checked installed game calls, Harmony bindings and reflection contracts."
 }
 finally { $plugin.Dispose(); $game.Dispose() }

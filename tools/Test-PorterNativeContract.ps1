@@ -52,9 +52,12 @@ try {
         Check ([bool]($serialize | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -eq $field })) ('Vanilla guest no longer sends ' + $field)
     }
     $cart = $game.MainModule.Types | Where-Object Name -eq PhysGrabCart
-    $cartStart = ($cart.Methods | Where-Object Name -eq Start).Body.Instructions
-    Check ([bool]($cartStart | Where-Object { $_.OpCode.Name -eq 'ldstr' -and $_.Operand -eq 'In Cart' })) 'Native cart cargo volume path changed'
+    # v0.5.1 moved cargo volume initialization from Start to Awake.
+    $cartInitialization = @($cart.Methods | Where-Object { $_.Name -in @('Awake', 'Start') } | ForEach-Object { $_.Body.Instructions })
+    Check ([bool]($cartInitialization | Where-Object { $_.OpCode.Name -eq 'ldstr' -and $_.Operand -eq 'In Cart' })) 'Native cart cargo volume path changed'
+    Check ([bool]($cartInitialization | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -eq 'inCart' })) 'Native cart cargo volume is no longer initialized'
     $cartObjects = ($cart.Methods | Where-Object Name -eq ObjectsInCart).Body.Instructions
+    Check ([bool]($cartObjects | Where-Object { $_.OpCode.Name -eq 'ldfld' -and $_.Operand.Name -eq 'inCart' })) 'Native cart overlap no longer uses its cargo volume'
     Check ([bool]($cartObjects | Where-Object { $_.Operand -is [Mono.Cecil.MethodReference] -and $_.Operand.Name -eq 'OverlapBox' })) 'Native cart cargo volume no longer uses oriented box'
     $deactivate = ($physics.Methods | Where-Object Name -eq OverrideDeactivate).Body.Instructions
     Check ([bool]($deactivate | Where-Object { $_.Operand -is [Mono.Cecil.FieldReference] -and $_.Operand.Name -eq 'physDisabledPosition' })) 'Native parking position contract changed'

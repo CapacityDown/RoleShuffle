@@ -212,6 +212,7 @@ public sealed class StageRolesPlugin : BaseUnityPlugin
         SceneManager.activeSceneChanged -= ActiveSceneChanged;
         Controller?.Shutdown();
         BaseUpgradeDraw?.Shutdown();
+        GameLocalization.Reset();
         _harmony?.UnpatchSelf();
         StageFluxCompatibility.ClearNotifications();
         RoleGuideSync.Invalidate();

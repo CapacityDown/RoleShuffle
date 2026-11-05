@@ -1,4 +1,6 @@
 ## 5.0.1
+- Updated compatibility for R.E.P.O. v0.5.1.
+- Fixed roulette upgrade names remaining unchanged after switching custom game translations in the same language.
 - Added editable notes to the three custom preset slots, retained across restarts and preset overwrites.
 - Added names for custom preset slots.
 - Added duplication between custom preset slots with a difference preview and confirmation.

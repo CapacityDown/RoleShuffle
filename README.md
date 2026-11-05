@@ -34,7 +34,7 @@ GitHubアカウントでログインするとIssueを投稿できます。
 
 .NET SDK 9.0.xを使用します。`global.json`でSDKの範囲を指定しています。
 NuGet依存関係は`StageRoles.csproj`に定義し、MenuLibのビルド参照は
-`lib/MenuLib.dll`（2.6.0）を同梱しています。ゲーム本体の参照は、インストール済みのR.E.P.O. v0.5.0（Unity 6）を使用します。`REPO_GAME_DIR`をゲームのインストール先に設定してください。ローカルの`Directory.Repo.props`で`RepoManagedDirectory`を指定することもできます。この設定ファイルとゲームDLLはGitに含めません。
+`lib/MenuLib.dll`（2.6.0）を同梱しています。ゲーム本体の参照は、インストール済みのR.E.P.O. v0.5.1（Unity 6）を使用します。`REPO_GAME_DIR`をゲームのインストール先に設定してください。ローカルの`Directory.Repo.props`で`RepoManagedDirectory`を指定することもできます。この設定ファイルとゲームDLLはGitに含めません。
 
 ビルド前に`RoleMenu.cs`の`RoleUiBuildNumber`を1増やしてください。
 失敗したビルドもカウントします。
@@ -46,7 +46,7 @@ dotnet build StageRoles.csproj -c Release --no-restore
 ```
 
 出力先は`bin/Release/netstandard2.1/RoleShuffle.dll`です。
-ビルド後は`pwsh -NoProfile -File tools/Test-GameFieldAccess.ps1`を実行し、実ゲームDLLの非公開フィールドを直接参照していないことを確認してください。`pwsh -NoProfile -File tools/Test-Repo050Compatibility.ps1`でゲームへの呼び出し、Harmonyの対象、リフレクションの参照先も検証します。ゲームが別の場所にある場合は`-GameAssembly`で`Assembly-CSharp.dll`のパスを指定します。
+ビルド後は`pwsh -NoProfile -File tools/Test-GameFieldAccess.ps1`を実行し、実ゲームDLLの非公開フィールドを直接参照していないことを確認してください。`pwsh -NoProfile -File tools/Test-Repo051Compatibility.ps1`でゲームへの呼び出し、Harmonyの対象、リフレクションの参照先も検証します。ゲームが別の場所にある場合、フィールド検証は`-GameAssembly`で`Assembly-CSharp.dll`を、互換性検証は`-GameDirectory`で`REPO_Data/Managed`を指定します。
 このプロジェクトのビルドではゲームへの自動配備を行いません。
 ゲームで使用する際は、`package/manifest.json`に記載された依存MODを別途導入してください。
 

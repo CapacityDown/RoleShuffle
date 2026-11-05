@@ -42,6 +42,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
         "TumbleClimb", "TumbleWings", "CrouchRest", "MapPlayerCount", "DeathHeadBattery", "AllUpgrades"
     };
     private string _uiLocale = string.Empty;
+    private int _uiLocalizationRevision;
     private string? _shownUpgradeCommand;
     private readonly List<UpgradeGrant> _allBaseUpgrades = new();
     private readonly HashSet<string> _enabledDrawNames = new(StringComparer.Ordinal);
@@ -904,7 +905,8 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
 
     private void Update()
     {
-        if (_panelObject != null && _panelObject.activeSelf && _uiLocale != GameLocalization.Code)
+        if (_panelObject != null && _panelObject.activeSelf &&
+            (_uiLocale != GameLocalization.Code || _uiLocalizationRevision != GameLocalization.Revision))
         {
             TryApplyFont();
             if (_shownUpgradeCommand != null) SetUpgradeSlot(_shownUpgradeCommand);
@@ -1589,6 +1591,7 @@ internal sealed class BaseUpgradeDrawRuntime : MonoBehaviour
             return;
         }
         _uiLocale = GameLocalization.Code;
+        _uiLocalizationRevision = GameLocalization.Revision;
         RoleGuideLanguage language = GameLocalization.Language;
         TMP_FontAsset font = RoleGuideFont.ForLanguage(source.font, language) ?? source.font;
         if (_titleText != null) _titleText.text = RoleText.Get("Base Upgrade Draw", language);

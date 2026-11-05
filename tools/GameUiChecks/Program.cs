@@ -77,6 +77,47 @@ Check(GameLocalization.UpgradeName("Delayed") == delayed.Values["ja-JP"], "Faile
 LocalizationManager.instance.ActiveLocale.RightToLeft = true;
 Check(GameLocalization.RightToLeft, "Native directionality is respected for translated upgrade names");
 
+// v0.5.1 reloads custom translations without changing the selected locale.
+var originalManager = LocalizationManager.instance;
+var strength = StatsManager.instance.upgradesInfo["playerUpgradeStrength"].displayNameLocalized!;
+int originalRevision = GameLocalization.Revision;
+for (int i = 0; i < 10; i++) { _ = GameLocalization.Code; _ = GameLocalization.Revision; }
+Check(originalManager.SubscriberCount == 1, "Repeated reads register only one native callback");
+strength.Values["ja-JP"] = "Custom Strength";
+originalManager.UpdateLocalizationOverrides();
+Check(GameLocalization.Revision != originalRevision && GameLocalization.Code == "ja-JP", "Override reload invalidates without a language switch");
+Check(GameLocalization.UpgradeName("Strength") == "Custom Strength", "Same-locale custom translation replaces the cached name");
+int translatedCalls = strength.Calls;
+Check(GameLocalization.UpgradeName("Strength") == "Custom Strength" && strength.Calls == translatedCalls, "Reloaded names are still cached");
+strength.Values["ja-JP"] = "ja-JP:Strength";
+originalManager.UpdateLocalizationOverrides();
+Check(GameLocalization.UpgradeName("Strength") == "ja-JP:Strength", "Disabling overrides restores native names in the same locale");
+
+LocalizationManager.instance = new() { ActiveLocale = new() };
+var replacementManager = LocalizationManager.instance;
+int replacementRevision = GameLocalization.Revision;
+Check(originalManager.SubscriberCount == 0 && replacementManager.SubscriberCount == 1, "Manager replacement transfers the subscription");
+originalManager.UpdateLocalizationOverrides();
+Check(GameLocalization.Revision == replacementRevision, "An old manager cannot invalidate the current display");
+replacementManager.UpdateLocalizationOverrides();
+Check(GameLocalization.Revision != replacementRevision, "A new manager can refresh the current display");
+_ = GameLocalization.UpgradeName("Strength");
+StatsManager.instance = new();
+var replacementStrength = new LocalizedAsset(); replacementStrength.Values["ja-JP"] = "Replacement Strength";
+StatsManager.instance.upgradesInfo["playerUpgradeStrength"] = new() { displayNameLocalized = replacementStrength };
+Check(GameLocalization.UpgradeName("Strength") == "Replacement Strength", "Replacement upgrade tables cannot reuse old names");
+LocalizationManager.instance = null;
+Check(GameLocalization.Code == "en-US" && replacementManager.SubscriberCount == 0, "Missing manager detaches callbacks and uses a safe locale");
+Check(GameLocalization.UpgradeName("Strength") == RoleText.Get("Strength", RoleGuideLanguage.English), "Missing manager cannot expose stale translations");
+LocalizationManager.instance = replacementManager;
+Check(GameLocalization.UpgradeName("Strength") == "Replacement Strength" && replacementManager.SubscriberCount == 1, "A returning manager resubscribes and restores names");
+GameLocalization.Reset();
+Check(replacementManager.SubscriberCount == 0, "Plugin shutdown removes the native callback");
+replacementStrength.Values["ja-JP"] = "After Reset";
+replacementManager.UpdateLocalizationOverrides();
+Check(GameLocalization.UpgradeName("Strength") == "After Reset" && replacementManager.SubscriberCount == 1, "Plugin restart refreshes names and registers once");
+GameLocalization.Reset();
+
 // A pre-Unity 6 bundle retains its atlas but deserializes no TMP_Asset material.
 var atlas = new Texture2D();
 var oldFont = new TMP_FontAsset { atlasTexture = atlas };

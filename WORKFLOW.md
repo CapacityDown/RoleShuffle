@@ -157,9 +157,14 @@ historical version numbers, deployment profiles and superseded design choices.
   ZIP and changelog; add a v5.0.1 changelog section only when there is a
   player-facing change to describe.
 
+- On 2026-11-05 the user requested R.E.P.O. v0.5.1 compatibility. Keep MOD
+  version 5.0.1 and its version branch. Use native localization-change callbacks
+  for same-language custom-translation reloads and refresh visible roulette names.
+  Verify against the installed game and preserve prior release ZIPs.
+
 ## Builds and deployment
 
-- Compile against the installed R.E.P.O. v0.5.0 managed assemblies. Set
+- Compile against the installed R.E.P.O. v0.5.1 managed assemblies. Set
   `REPO_GAME_DIR` or local `Directory.Repo.props`; do not commit game DLLs.
   Require MenuLib 2.6.0 and REPOConfig 1.2.7 from REPOModding.
 - Increment the Role UI build number before each main build attempt. Keep the

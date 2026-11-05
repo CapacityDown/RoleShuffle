@@ -9,14 +9,53 @@ internal static class GameLocalization
     private static string _cachedCode = string.Empty;
     private static readonly Dictionary<string, string> UpgradeNames = new(StringComparer.Ordinal);
 
-    internal static string Code => LocalizationManager.instance != null ? SemiFunc.LocaleGetCode() : "en-US";
+    private static LocalizationManager? _manager;
+    private static StatsManager? _stats;
+    private static int _revision;
+
+    internal static string Code { get { SynchronizeSources(); return _cachedCode; } }
+    internal static int Revision { get { SynchronizeSources(); return _revision; } }
+
+    private static void Invalidate()
+    {
+        UpgradeNames.Clear();
+        unchecked { _revision++; }
+    }
+
+    private static void SynchronizeSources()
+    {
+        LocalizationManager? manager = LocalizationManager.instance;
+        if (!ReferenceEquals(_manager, manager))
+        {
+            if (_manager != null) _manager.RemoveLocalizationChangedCallback(Invalidate);
+            _manager = manager;
+            if (_manager != null) _manager.AddLocalizationChangedCallback(Invalidate);
+            Invalidate();
+        }
+        string code = manager != null ? SemiFunc.LocaleGetCode() : "en-US";
+        StatsManager? stats = StatsManager.instance;
+        if (_cachedCode != code || !ReferenceEquals(_stats, stats))
+        {
+            _cachedCode = code;
+            _stats = stats;
+            Invalidate();
+        }
+    }
+
+    internal static void Reset()
+    {
+        if (_manager != null) _manager.RemoveLocalizationChangedCallback(Invalidate);
+        _manager = null;
+        _stats = null;
+        _cachedCode = string.Empty;
+        Invalidate();
+    }
     internal static RoleGuideLanguage Language => RoleLanguage.FromLocaleCode(Code);
     internal static bool RightToLeft => LocalizationManager.instance?.ActiveLocale?.RightToLeft ?? false;
 
     internal static string UpgradeName(string command)
     {
         string code = Code;
-        if (_cachedCode != code) { UpgradeNames.Clear(); _cachedCode = code; }
         RoleGuideLanguage language = RoleLanguage.FromLocaleCode(code);
         if (string.IsNullOrEmpty(command)) return RoleText.Get("None", language);
         if (command == "AllUpgrades") return RoleText.Get("All Upgrades", language);
@@ -26,7 +65,7 @@ internal static class GameLocalization
             if (LocalizationManager.instance != null && StatsManager.instance != null &&
                 StatsManager.instance.upgradesInfo.TryGetValue("playerUpgrade" + command, out var info))
             {
-                // Same source as vanilla StatsUI, with a cache per local locale.
+                // Same source as vanilla StatsUI; native callbacks also refresh same-locale overrides.
                 string? translated = info.displayNameLocalized?.GetLocalizedString();
                 if (!string.IsNullOrWhiteSpace(translated))
                     return UpgradeNames[command] = translated!;

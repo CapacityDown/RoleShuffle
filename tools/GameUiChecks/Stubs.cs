@@ -37,6 +37,11 @@ public class LocalizationManager
 {
     public static LocalizationManager? instance;
     public LocaleAsset? ActiveLocale;
+    private Action? _callbacks;
+    public int SubscriberCount => _callbacks?.GetInvocationList().Length ?? 0;
+    public void AddLocalizationChangedCallback(Action callback) => _callbacks += callback;
+    public void RemoveLocalizationChangedCallback(Action callback) => _callbacks -= callback;
+    public void UpdateLocalizationOverrides() => _callbacks?.Invoke();
 }
 public static class SemiFunc
 {
