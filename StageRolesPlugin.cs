@@ -11,7 +11,7 @@ namespace REPOJP.StageRoles;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency(RepoConfigGuid, "1.2.7")]
-[BepInDependency(MenuLibGuid, "2.6.0")]
+[BepInDependency(MenuLibGuid, "2.6.2")]
 [BepInDependency(StageFluxGuid, BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class StageRolesPlugin : BaseUnityPlugin
 {

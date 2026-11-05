@@ -19,7 +19,7 @@ Feedback: [GitHub Issues](https://github.com/CapacityDown/RoleShuffle/issues). G
 - R.E.P.O. v0.5.1
 - BepInExPack 5.4.2305
 - REPOConfig 1.2.7
-- MenuLib 2.6.0
+- MenuLib 2.6.2
 
 Later compatible MOD versions are also supported.
 
@@ -222,7 +222,7 @@ RoleShuffleはステージごとに役職を抽選し、移動・回復・戦闘
 - R.E.P.O. v0.5.1
 - BepInExPack 5.4.2305以降の互換バージョン
 - REPOConfig 1.2.7以降の互換バージョン
-- MenuLib 2.6.0以降の互換バージョン
+- MenuLib 2.6.2以降の互換バージョン
 
 ### 導入方法
 

@@ -34,7 +34,7 @@ GitHubアカウントでログインするとIssueを投稿できます。
 
 .NET SDK 9.0.xを使用します。`global.json`でSDKの範囲を指定しています。
 NuGet依存関係は`StageRoles.csproj`に定義し、MenuLibのビルド参照は
-`lib/MenuLib.dll`（2.6.0）を同梱しています。ゲーム本体の参照は、インストール済みのR.E.P.O. v0.5.1（Unity 6）を使用します。`REPO_GAME_DIR`をゲームのインストール先に設定してください。ローカルの`Directory.Repo.props`で`RepoManagedDirectory`を指定することもできます。この設定ファイルとゲームDLLはGitに含めません。
+`lib/MenuLib.dll`（2.6.2）を同梱しています。ゲーム本体の参照は、インストール済みのR.E.P.O. v0.5.1（Unity 6）を使用します。`REPO_GAME_DIR`をゲームのインストール先に設定してください。ローカルの`Directory.Repo.props`で`RepoManagedDirectory`を指定することもできます。この設定ファイルとゲームDLLはGitに含めません。
 
 ビルド前に`RoleMenu.cs`の`RoleUiBuildNumber`を1増やしてください。
 失敗したビルドもカウントします。

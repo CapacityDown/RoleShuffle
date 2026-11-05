@@ -61,7 +61,7 @@ Use valid UTF-8 JSON without comments or trailing commas. Keep the fields in thi
   "description": "【HostOnlyMOD】Random roles shake up every stage with vanilla upgrades and effects—only the host needs the mod! ホスト導入だけで、ステージごとにランダムな役職とバニラの強化・効果を楽しめます！",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2305",
-    "REPOModding-MenuLib-2.6.0",
+    "REPOModding-MenuLib-2.6.2",
     "REPOModding-REPOConfig-1.2.7"
   ]
 }

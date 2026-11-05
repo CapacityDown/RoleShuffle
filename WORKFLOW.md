@@ -166,7 +166,7 @@ historical version numbers, deployment profiles and superseded design choices.
 
 - Compile against the installed R.E.P.O. v0.5.1 managed assemblies. Set
   `REPO_GAME_DIR` or local `Directory.Repo.props`; do not commit game DLLs.
-  Require MenuLib 2.6.0 and REPOConfig 1.2.7 from REPOModding.
+  Require MenuLib 2.6.2 and REPOConfig 1.2.7 from REPOModding.
 - Increment the Role UI build number before each main build attempt. Keep the
   build number in the Role UI, and include it when reporting a build result.
 - Build Release with automatic profile copying disabled:
